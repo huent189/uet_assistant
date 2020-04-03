@@ -1,0 +1,2 @@
+rootProject.name='Courses Assistant'
+include ':app'
