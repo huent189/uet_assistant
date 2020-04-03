@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Courses Assistant</string>
+    <string name="app_name">Trợ lý học tập Công nghệ</string>
+    <string name="short_introduce">Hỗ trợ sinh viên theo dõi và quản lý quá trình
+        \nhọc tập cá nhân, nhận tin tức - thông báo tức thì.</string>
+    <string name="access_courses">Truy cập khóa học</string>
+    <string name="background_light">Highlight background</string>
 </resources>
