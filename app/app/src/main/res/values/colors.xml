@@ -6,4 +6,5 @@
     <color name="background">#282A3B</color>
     <color name="backgroundLight">#A63A4071</color>
     <color name="white">#FFF</color>
+    <color name="whiteDisable">#80FFFFFF</color>
 </resources>

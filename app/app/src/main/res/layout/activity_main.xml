@@ -70,7 +70,7 @@
     <Button
         style="@style/Button"
         android:id="@+id/btnAccess"
-        android:layout_width="220dp"
+        android:layout_width="260dp"
         android:layout_marginBottom="32dp"
         android:layout_marginTop="16dp"
         android:text="@string/access_courses"

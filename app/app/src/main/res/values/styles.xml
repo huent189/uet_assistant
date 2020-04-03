@@ -38,4 +38,14 @@
     <style name="Subtitle" parent="Text">
         <item name="android:textSize">15sp</item>
     </style>
+
+    <style name="EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_height">40dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:background">@drawable/edit_text_background</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:textColorHint">@color/whiteDisable</item>
+        <item name="colorControlNormal">@color/primaryDark</item>
+        <item name="colorControlActivated">@color/primary</item>
+    </style>
 </resources>
