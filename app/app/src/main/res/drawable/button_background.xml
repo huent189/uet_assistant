@@ -1,5 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/accent"/>
-    <corners android:radius="62dp" />
-</shape>
+<!--<shape xmlns:android="http://schemas.android.com/apk/res/android">-->
+<!--    <solid android:color="@color/accent"/>-->
+<!--    <corners android:radius="62dp" />-->
+<!--</shape>-->
+
+<!--<ripple-->
+<!--    android:radius="62dp"-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:color="#88FFFFFF"> &lt;!&ndash; Ripple color :: WHITE &ndash;&gt;-->
+
+<!--    <item>-->
+<!--        <color android:color="@color/accent" /> &lt;!&ndash; Normal bg color :: RED &ndash;&gt;-->
+<!--    </item>-->
+
+<!--    &lt;!&ndash; Make sure the ripple doesn't exceed the bounds &ndash;&gt;-->
+<!--    <item android:id="@android:id/mask">-->
+<!--        <shape>-->
+<!--            <solid android:color="@color/accent"/>-->
+<!--            <corners android:radius="62dp" />-->
+<!--        </shape>-->
+<!--    </item>-->
+<!--</ripple>-->
+
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/whiteDisable">
+    <item android:id="@android:id/mask">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/accent" />
+            <corners android:radius="62dp" />
+        </shape>
+    </item>
+
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/accent" />
+            <corners android:radius="62dp" />
+        </shape>
+    </item>
+</ripple>
