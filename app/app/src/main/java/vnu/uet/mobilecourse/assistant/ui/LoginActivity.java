@@ -1,6 +1,7 @@
-package vnu.uet.mobilecourse.assistant;
+package vnu.uet.mobilecourse.assistant.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import vnu.uet.mobilecourse.assistant.R;
 
 import android.content.Intent;
 import android.os.Bundle;

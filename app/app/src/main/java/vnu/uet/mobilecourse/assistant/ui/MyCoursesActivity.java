@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant;
+package vnu.uet.mobilecourse.assistant.ui;
 
 import android.os.Bundle;
 
@@ -9,6 +9,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import vnu.uet.mobilecourse.assistant.R;
 
 public class MyCoursesActivity extends AppCompatActivity {
 
