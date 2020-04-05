@@ -9,4 +9,7 @@
     <color name="whiteDisable">#80FFFFFF</color>
     <color name="fade">#4DFFFFFF</color>
     <color name="transparent">#00FFFFFF</color>
+
+    <color name="cardColor1">@color/primary</color>
+    <color name="cardColor2">#FDEBDF</color>
 </resources>

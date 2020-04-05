@@ -10,8 +10,11 @@
     <string name="password">Mật khẩu</string>
     <string name="login">Đăng nhập</string>
     <string name="title_activity_my_courses">MyCoursesActivity</string>
+    <string name="title_recently_courses">Khóa học mới truy cập</string>
+    <string name="title_all_courses">Tất cả khóa học</string>
     <string name="title_my_courses">Khóa học</string>
     <string name="title_chat">Tin nhắn</string>
     <string name="title_notifications">Thông báo</string>
     <string name="title_calendar">Lịch biểu</string>
+    <string name="card_course_desc">Thẻ khóa học</string>
 </resources>

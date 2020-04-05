@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="background_light_size">540dp</dimen>
-    <dimen name="view_radius">62dp</dimen>
+    <dimen name="view_radius">30dp</dimen>
     <dimen name="stroke_width">2dp</dimen>
     <dimen name="sibling_margin">8dp</dimen>
     <dimen name="sibling_margin_x2">16dp</dimen>
@@ -11,4 +11,14 @@
     <dimen name="sibling_margin_x4">32dp</dimen>
     <dimen name="sibling_margin_x6">48dp</dimen>
     <dimen name="login_input_field_width">240dp</dimen>
+    <dimen name="button_height">40dp</dimen>
+    <dimen name="card_course_height">340dp</dimen>
+
+    <dimen name="title_size">30sp</dimen>
+    <dimen name="subtitle_size">15sp</dimen>
+    <dimen name="header1_size">22sp</dimen>
+    <dimen name="header2_size">18sp</dimen>
+
+    <dimen name="card_course_start_padding">16dp</dimen>
+    <dimen name="card_course_end_padding">100dp</dimen>
 </resources>
