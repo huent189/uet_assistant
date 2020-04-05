@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.ui.chat;
+package vnu.uet.mobilecourse.assistant.ui.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

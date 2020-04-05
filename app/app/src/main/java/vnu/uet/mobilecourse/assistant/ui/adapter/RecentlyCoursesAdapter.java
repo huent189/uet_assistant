@@ -1,10 +1,7 @@
-package vnu.uet.mobilecourse.assistant.ui.courses;
+package vnu.uet.mobilecourse.assistant.ui.adapter;
 
-import android.animation.ArgbEvaluator;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,26 +9,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.model.Course;
+import vnu.uet.mobilecourse.assistant.ui.courses.CoursesFragment;
+import vnu.uet.mobilecourse.assistant.ui.model.Course;
 
-public class Adapter extends PagerAdapter {
+public class RecentlyCoursesAdapter extends PagerAdapter {
     private List<Course> courses;
 
     private LayoutInflater layoutInflater;
 
-    private Fragment context;
+    private CoursesFragment owner;
 
-    public Adapter(List<Course> courses, Fragment context) {
+    public RecentlyCoursesAdapter(List<Course> courses, CoursesFragment owner) {
         this.courses = courses;
-        this.context = context;
+        this.owner = owner;
     }
 
     @Override
@@ -49,26 +47,35 @@ public class Adapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         Course course = courses.get(position);
 
-        layoutInflater = context.getLayoutInflater();
+        layoutInflater = owner.getLayoutInflater();
+
         View view = layoutInflater.inflate(R.layout.card_course, container, false);
 
-        CardView cvCourseContainer = view.findViewById(R.id.cvCourseContainer);
         ImageView ivThumbnail = view.findViewById(R.id.ivCourseThumbnail);
-        TextView tvTitle = view.findViewById(R.id.tvCourseTitle);
-
         ivThumbnail.setImageResource(course.getThumbnail());
+
+        TextView tvTitle = view.findViewById(R.id.tvCourseTitle);
         tvTitle.setText(course.getTitle());
 
+        CardView cvCourseContainer = view.findViewById(R.id.cvCourseContainer);
+        int cardColor = getBackgroundColor(course.getThumbnail());
+        cvCourseContainer.setCardBackgroundColor(cardColor);
+
+        container.addView(view, 0);
+
+        return view;
+    }
+
+    private int getBackgroundColor(int thumbnailImage) {
         int cardColor;
 
-        switch (course.getThumbnail()) {
+        switch (thumbnailImage) {
             case R.drawable.isometric_course_thumbnail:
                 cardColor = R.color.cardColor1;
                 break;
 
             case R.drawable.isometric_math_course_background:
                 cardColor = R.color.cardColor2;
-                tvTitle.setTextColor(Color.BLACK);
                 break;
 
             default:
@@ -76,12 +83,9 @@ public class Adapter extends PagerAdapter {
                 break;
         }
 
-        cvCourseContainer.setCardBackgroundColor(ContextCompat.getColor(context.getContext(), cardColor));
+        Context context = Objects.requireNonNull(owner.getContext());
 
-        container.addView(view, 0);
-
-
-        return view;
+        return ContextCompat.getColor(context, cardColor);
     }
 
     @Override
