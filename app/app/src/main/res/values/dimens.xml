@@ -21,4 +21,6 @@
 
     <dimen name="card_course_start_padding">16dp</dimen>
     <dimen name="card_course_end_padding">100dp</dimen>
+
+    <dimen name="circle_button_size">34dp</dimen>
 </resources>

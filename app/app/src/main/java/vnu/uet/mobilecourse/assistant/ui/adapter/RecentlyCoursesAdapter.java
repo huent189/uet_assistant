@@ -1,7 +1,6 @@
 package vnu.uet.mobilecourse.assistant.ui.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +13,9 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.PagerAdapter;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.ui.courses.CoursesFragment;
+import vnu.uet.mobilecourse.assistant.ui.view.CoursesFragment;
 import vnu.uet.mobilecourse.assistant.ui.model.Course;
 
 public class RecentlyCoursesAdapter extends PagerAdapter {

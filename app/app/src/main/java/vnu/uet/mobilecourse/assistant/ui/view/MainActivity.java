@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.ui;
+package vnu.uet.mobilecourse.assistant.ui.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 import vnu.uet.mobilecourse.assistant.R;

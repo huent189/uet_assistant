@@ -6,7 +6,7 @@ public class Course {
 
     private String title;
 
-    private String id;
+    private String id = "INT3100 2";
 
     public Course(int thumbnail, String title) {
         this.thumbnail = thumbnail;

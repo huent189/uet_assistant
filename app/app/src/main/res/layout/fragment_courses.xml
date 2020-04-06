@@ -1,53 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_height="match_parent"
+<vnu.uet.mobilecourse.assistant.ui.view.SynchronizedScrollView
+    android:id="@+id/svMyCourses"
+    android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent">
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/background"
-        android:paddingBottom="@dimen/sibling_margin_x2"
-        tools:context=".ui.courses.CoursesFragment">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tvCourseRecently"
-            style="@style/Header1"
-            android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sibling_margin_x3"
-            android:layout_marginTop="@dimen/sibling_margin_x2"
-            android:text="@string/title_recently_courses"
-            android:textAlignment="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:background="@color/background"
+            tools:context=".ui.view.CoursesFragment">
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/vpCourseRecently"
-            style="@style/CardCourse"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvCourseRecently" />
+            <TextView
+                android:id="@+id/tvCourseRecently"
+                style="@style/Header1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/sibling_margin_x3"
+                android:layout_marginTop="@dimen/sibling_margin_x2"
+                android:text="@string/title_recently_courses"
+                android:textAlignment="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/vpCourseRecently"
+                    style="@style/CardCourse"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvCourseRecently" />
+
+                <TextView
+                    android:id="@+id/tvInvisibleAllCoursesTitle"
+                    style="@style/Header1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/sibling_margin_x2"
+                    android:paddingEnd="@dimen/sibling_margin_x3"
+                    android:paddingStart="@dimen/sibling_margin_x3"
+                    android:paddingTop="@dimen/sibling_margin_x2"
+                    android:text="@string/title_all_courses"
+                    android:visibility="invisible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/vpCourseRecently" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvAllCourses"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvInvisibleAllCoursesTitle" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/tvAllCourses"
             style="@style/Header1"
-            android:layout_width="wrap_content"
+            android:background="@color/background"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sibling_margin_x3"
-            android:layout_marginTop="@dimen/sibling_margin_x4"
-            android:text="@string/title_all_courses"
-            android:textAlignment="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vpCourseRecently" />
+            android:paddingStart="@dimen/sibling_margin_x3"
+            android:paddingEnd="@dimen/sibling_margin_x3"
+            android:paddingTop="@dimen/sibling_margin_x2"
+            android:paddingBottom="@dimen/sibling_margin_x2"
+            android:text="@string/title_all_courses" />
 
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/vpAllCourses"
-            style="@style/CardCourse"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvAllCourses" />
+    </FrameLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+</vnu.uet.mobilecourse.assistant.ui.view.SynchronizedScrollView>

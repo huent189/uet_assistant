@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.ui;
+package vnu.uet.mobilecourse.assistant.ui.view;
 
 import android.os.Bundle;
 
