@@ -45,7 +45,7 @@ public class SynchronizedScrollView extends ScrollView {
     }
 
     //Position the views together
-    private void syncViews() {
+    public void syncViews() {
         if(mAnchorView == null || mSyncView == null) {
             return;
         }
@@ -58,9 +58,18 @@ public class SynchronizedScrollView extends ScrollView {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        //Calling this here attaches the views together if they were added
+
+        // Calling this here attaches the views together if they were added
         // before layout finished
-        syncViews();
+        if (!isAnchorOutOfScreen())
+            syncViews();
+    }
+
+    private boolean isAnchorOutOfScreen() {
+        int[] pos = new int[2];
+        mAnchorView.getLocationOnScreen(pos);
+
+        return pos[1] < 0;
     }
 
     @Override
