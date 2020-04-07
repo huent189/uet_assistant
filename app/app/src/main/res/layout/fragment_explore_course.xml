@@ -1,14 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ExploreCourseFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.view.course.ExploreCourseFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/aplThumbnail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        app:elevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-</FrameLayout>
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:contentScrim="@color/primary"
+            app:layout_scrollFlags="scroll|snap|enterAlways"
+            app:collapsedTitleTextAppearance="@style/ToolbarTitleText"
+            app:expandedTitleTextAppearance="@style/ToolbarTitleText"
+            app:expandedTitleMarginBottom="@dimen/sibling_margin_x2"
+            app:title="@string/app_name">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/sibling_margin_x6"
+                    android:layout_marginStart="@dimen/sibling_margin_x2"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/isometric_course_thumbnail"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:paddingTop="@dimen/sibling_margin_x2"
+                android:paddingBottom="0dp"
+                android:paddingStart="@dimen/sibling_margin_x3"
+                android:paddingEnd="@dimen/sibling_margin_x3"
+                android:layout_height="40dp" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/tab_height"
+            app:tabTextAppearance="@style/Subtitle"
+            app:tabBackground="@drawable/tab_item"
+            app:tabIndicator="@null"
+            app:tabMode="scrollable"
+            android:layout_marginTop="@dimen/sibling_margin_x2"
+            app:tabRippleColor="@color/transparent"
+            android:layout_marginStart="@dimen/sibling_margin_x4"
+            app:tabUnboundedRipple="false"
+            android:background="@color/primary">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tiến độ"/>
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Điểm"/>
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bạn cùng lớp"/>
+
+        </com.google.android.material.tabs.TabLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -15,7 +15,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.PagerAdapter;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.ui.view.CoursesFragment;
+import vnu.uet.mobilecourse.assistant.ui.view.course.CoursesFragment;
 import vnu.uet.mobilecourse.assistant.ui.model.Course;
 
 public class RecentlyCoursesAdapter extends PagerAdapter {

@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/background"
-            tools:context=".ui.view.CoursesFragment">
+            tools:context=".ui.view.course.CoursesFragment">
 
             <TextView
                 android:id="@+id/tvCourseRecently"

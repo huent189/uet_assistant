@@ -41,6 +41,8 @@
             style="@style/Button"
             android:layout_width="@dimen/circle_button_size"
             android:layout_height="@dimen/circle_button_size"
+            android:scaleX="0.9"
+            android:scaleY="0.9"
             android:foreground="@drawable/ic_play_arrow_16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

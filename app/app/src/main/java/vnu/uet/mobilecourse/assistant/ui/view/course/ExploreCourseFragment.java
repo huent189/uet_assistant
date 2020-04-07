@@ -1,8 +1,9 @@
-package vnu.uet.mobilecourse.assistant;
+package vnu.uet.mobilecourse.assistant.ui.view.course;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import vnu.uet.mobilecourse.assistant.R;
 
 import android.view.LayoutInflater;
 import android.view.View;

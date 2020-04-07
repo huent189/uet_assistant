@@ -23,4 +23,7 @@
     <dimen name="card_course_end_padding">100dp</dimen>
 
     <dimen name="circle_button_size">40dp</dimen>
+
+    <dimen name="tab_selected_radius">20dp</dimen>
+    <dimen name="tab_height">36dp</dimen>
 </resources>

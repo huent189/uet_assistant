@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.ui.view;
+package vnu.uet.mobilecourse.assistant.ui.view.course;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -30,6 +30,7 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.ui.adapter.AllCoursesAdapter;
 import vnu.uet.mobilecourse.assistant.ui.adapter.RecentlyCoursesAdapter;
 import vnu.uet.mobilecourse.assistant.ui.model.Course;
+import vnu.uet.mobilecourse.assistant.ui.view.SynchronizedScrollView;
 import vnu.uet.mobilecourse.assistant.ui.viewmodel.CoursesViewModel;
 
 public class CoursesFragment extends Fragment {

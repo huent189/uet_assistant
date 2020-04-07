@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.ui.view;
+package vnu.uet.mobilecourse.assistant.ui.view.chat;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;

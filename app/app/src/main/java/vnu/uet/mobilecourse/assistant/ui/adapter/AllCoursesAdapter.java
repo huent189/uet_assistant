@@ -12,11 +12,10 @@ import android.widget.Toast;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.ui.model.Course;
-import vnu.uet.mobilecourse.assistant.ui.view.CoursesFragment;
+import vnu.uet.mobilecourse.assistant.ui.view.course.CoursesFragment;
 
 public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.ViewHolder> {
     private static final String TAG = AllCoursesAdapter.class.getSimpleName();
