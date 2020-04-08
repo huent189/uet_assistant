@@ -38,30 +38,6 @@ public class ChatFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_chat, container, false);
 
-        final TextView textView = root.findViewById(R.id.text_chat);
-
-        chatViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-
-        RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.rvTasks);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-
-        //instantiate your adapter with the list of genres
-        CourseTask task1 = new CourseTask("Slide xxx", "xxx", 22);
-        CourseTask task2 = new CourseTask("Slide xxx", "xxx", 22);
-        CourseTask task3 = new CourseTask("Slide xxx", "xxx", 22);
-        CourseTask task4 = new CourseTask("Slide xxx", "xxx", 22);
-        List<CourseTask> tasks = Arrays.asList(task1, task2, task3, task4);
-        WeeklyTasks weeklyTasks = new WeeklyTasks("Week 1", tasks);
-
-        CourseTaskAdapter adapter = new CourseTaskAdapter(Arrays.asList(weeklyTasks), this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-
         return root;
     }
 

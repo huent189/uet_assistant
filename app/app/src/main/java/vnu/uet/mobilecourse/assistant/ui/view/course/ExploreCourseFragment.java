@@ -2,24 +2,27 @@ package vnu.uet.mobilecourse.assistant.ui.view.course;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
 
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.ui.adapter.CourseTaskAdapter;
-import vnu.uet.mobilecourse.assistant.ui.model.CourseTask;
-import vnu.uet.mobilecourse.assistant.ui.model.WeeklyTasks;
+import vnu.uet.mobilecourse.assistant.ui.adapter.FragmentPageAdapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import com.google.android.material.tabs.TabLayout;
 
 public class ExploreCourseFragment extends Fragment {
+
+    private ViewPager vpCourseContent;
+
+    private FragmentPageAdapter pageAdapter;
+
+    private TabLayout tabLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -27,23 +30,41 @@ public class ExploreCourseFragment extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_explore_course, container, false);
 
+        FragmentManager fragmentManager = getParentFragmentManager();
+        pageAdapter = new FragmentPageAdapter(fragmentManager,
+                new CourseProgressFragment(),
+                new CourseGradeFragment(),
+                new CourseClassmateFragment()
+        );
 
-        RecyclerView recyclerView = root.findViewById(R.id.rvTasks);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        vpCourseContent = root.findViewById(R.id.vpCourseContent);
+        vpCourseContent.setAdapter(pageAdapter);
 
-        //instantiate your adapter with the list of genres
-        CourseTask task1 = new CourseTask("Slide xxx", "xxx", 22);
-        CourseTask task2 = new CourseTask("Slide xxx", "xxx", 22);
-        CourseTask task3 = new CourseTask("Slide xxx", "xxx", 22);
-        CourseTask task4 = new CourseTask("Slide xxx", "xxx", 22);
-        List<CourseTask> tasks = Arrays.asList(task1, task2, task3, task4);
-        WeeklyTasks weeklyTasks = new WeeklyTasks("Week 1", tasks);
+        tabLayout = root.findViewById(R.id.tabLayout);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
 
-        CourseTaskAdapter adapter = new CourseTaskAdapter(Collections.singletonList(weeklyTasks), this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+            }
 
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        vpCourseContent.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         return root;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 }

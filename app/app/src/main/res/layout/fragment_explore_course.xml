@@ -55,6 +55,7 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/tab_height"
             app:tabTextAppearance="@style/Subtitle"
@@ -86,8 +87,8 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTasks"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vpCourseContent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
