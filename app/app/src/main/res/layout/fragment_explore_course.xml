@@ -25,6 +25,7 @@
             app:collapsedTitleTextAppearance="@style/ToolbarTitleText"
             app:expandedTitleTextAppearance="@style/ToolbarTitleText"
             app:expandedTitleMarginBottom="@dimen/sibling_margin_x2"
+            app:expandedTitleMarginStart="@dimen/sibling_margin_x3"
             app:title="@string/app_name">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -62,7 +63,7 @@
             app:tabMode="scrollable"
             android:layout_marginTop="@dimen/sibling_margin_x2"
             app:tabRippleColor="@color/transparent"
-            android:layout_marginStart="@dimen/sibling_margin_x4"
+            android:layout_marginStart="@dimen/sibling_margin_x3"
             app:tabUnboundedRipple="false"
             android:background="@color/primary">
 
@@ -84,5 +85,11 @@
         </com.google.android.material.tabs.TabLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTasks"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

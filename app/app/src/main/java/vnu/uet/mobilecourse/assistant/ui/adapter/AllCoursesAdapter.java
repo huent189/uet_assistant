@@ -12,10 +12,13 @@ import android.widget.Toast;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.ui.model.Course;
 import vnu.uet.mobilecourse.assistant.ui.view.course.CoursesFragment;
+import vnu.uet.mobilecourse.assistant.ui.view.course.ExploreCourseFragment;
 
 public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.ViewHolder> {
     private static final String TAG = AllCoursesAdapter.class.getSimpleName();
@@ -53,8 +56,16 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Vi
         holder.btnAccessCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Fragment fragment = new ExploreCourseFragment();
+                // Insert the fragment by replacing any existing fragment
+                FragmentManager fragmentManager = owner.getParentFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.nav_host_fragment, fragment)
+                        .commit();
+
                 Log.d(TAG, "onClick" + currentCourse.getTitle());
                 Toast.makeText(owner.getContext(), "onClick" + currentCourse.getTitle(), Toast.LENGTH_SHORT).show();
+
             }
         });
     }

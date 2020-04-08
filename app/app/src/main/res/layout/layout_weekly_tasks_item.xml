@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:paddingVertical="@dimen/sibling_margin"
+    android:background="@drawable/ripple_highlight"
+    android:layout_height="wrap_content">
+    
+    <TextView
+        android:id="@+id/tvWeeklyTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/sibling_margin_x4"
+        android:text="Tuần 1"
+        android:textSize="@dimen/header2_size" />
+    
+    <ImageView
+        android:id="@+id/ivExpandArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|end"
+        android:src="@drawable/ic_keyboard_arrow_down_24dp" />
+
+</FrameLayout>

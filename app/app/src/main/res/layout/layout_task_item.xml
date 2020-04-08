@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_marginVertical="@dimen/sibling_margin"
+    android:layout_height="wrap_content">
+    
+    <TextView
+        android:id="@+id/tvTaskTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/sibling_margin_x4"
+        android:paddingStart="@dimen/sibling_margin"
+        android:paddingEnd="0dp"
+        android:textSize="@dimen/header2_size"
+        android:background="@drawable/border_left_background"
+        android:text="Slide 1: What is that about" />
+
+    <ImageView
+        android:id="@+id/ivTaskStatus"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_vertical|end"
+        android:tint="@color/primary"
+        android:scaleX="0.75"
+        android:scaleY="0.75"
+        android:src="@drawable/ic_check_circle_24dp" />
+    
+</FrameLayout>

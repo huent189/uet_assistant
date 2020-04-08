@@ -67,6 +67,10 @@ public class SynchronizedScrollView extends ScrollView {
 
     private boolean isAnchorOutOfScreen() {
         int[] pos = new int[2];
+
+        if (mAnchorView == null)
+            return false;
+
         mAnchorView.getLocationOnScreen(pos);
 
         return pos[1] < 0;
