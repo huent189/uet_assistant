@@ -13,6 +13,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
@@ -56,19 +57,34 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Vi
         holder.btnAccessCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = new ExploreCourseFragment();
-                // Insert the fragment by replacing any existing fragment
-                FragmentManager fragmentManager = owner.getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .addToBackStack(CoursesFragment.class.getName())
-                        .commit();
+                openExploreCourseFragment();
 
-                Log.d(TAG, "onClick" + currentCourse.getTitle());
-                Toast.makeText(owner.getContext(), "onClick" + currentCourse.getTitle(), Toast.LENGTH_SHORT).show();
+                String message = "onClick" + currentCourse.getTitle();
+                Log.d(TAG, message);
+                Toast.makeText(owner.getContext(), message, Toast.LENGTH_SHORT).show();
 
             }
         });
+    }
+
+    private void openExploreCourseFragment() {
+        FragmentActivity activity = owner.getActivity();
+
+        if (activity == null)
+            return;
+
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+
+        Fragment fragment = new ExploreCourseFragment();
+
+        // open explore course fragment
+        fragmentManager.beginTransaction()
+                // insert the fragment by replacing an existing fragment
+                .replace(R.id.fragment_container, fragment)
+                // add previous fragment into back stack
+                .addToBackStack(CoursesFragment.class.getName())
+                // commit transaction
+                .commit();
     }
 
     @Override
