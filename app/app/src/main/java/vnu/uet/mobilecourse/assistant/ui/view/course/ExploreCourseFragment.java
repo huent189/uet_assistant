@@ -30,7 +30,8 @@ public class ExploreCourseFragment extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_explore_course, container, false);
 
-        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
         pageAdapter = new FragmentPageAdapter(fragmentManager,
                 new CourseProgressFragment(),
                 new CourseGradeFragment(),
@@ -41,24 +42,8 @@ public class ExploreCourseFragment extends Fragment {
         vpCourseContent.setAdapter(pageAdapter);
 
         tabLayout = root.findViewById(R.id.tabLayout);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
-        vpCourseContent.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        vpCourseContent
+                .addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         return root;
     }

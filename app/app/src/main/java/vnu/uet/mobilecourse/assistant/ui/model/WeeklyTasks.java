@@ -13,18 +13,14 @@ public class WeeklyTasks extends ExpandableGroup {
 
     private Date end;
 
-    public WeeklyTasks(String title, List items) {
+    public WeeklyTasks(String title, List<CourseTask> items) {
         super(title, items);
     }
 
-//    protected WeeklyTasks(Parcel in) {
-//        super(in);
-//    }
-
-//    public WeeklyTasks(Date begin, Date end) {
-//        this.begin = begin;
-//        this.end = end;
-//    }
+    @Override
+    public List<CourseTask> getItems() {
+        return (List<CourseTask>) super.getItems();
+    }
 
     public Date getBegin() {
         return begin;

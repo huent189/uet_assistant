@@ -58,9 +58,10 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Vi
             public void onClick(View v) {
                 Fragment fragment = new ExploreCourseFragment();
                 // Insert the fragment by replacing any existing fragment
-                FragmentManager fragmentManager = owner.getParentFragmentManager();
+                FragmentManager fragmentManager = owner.getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.nav_host_fragment, fragment)
+                        .replace(R.id.fragment_container, fragment)
+                        .addToBackStack(CoursesFragment.class.getName())
                         .commit();
 
                 Log.d(TAG, "onClick" + currentCourse.getTitle());
