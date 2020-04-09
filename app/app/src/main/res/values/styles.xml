@@ -79,6 +79,7 @@
         <item name="android:background">@drawable/navbar_background</item>
         <item name="itemIconTint">@color/nav_item</item>
         <item name="itemTextColor">@color/nav_item</item>
+        <item name="labelVisibilityMode">labeled</item>
     </style>
     
     

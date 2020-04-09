@@ -9,7 +9,20 @@
         android:id="@+id/navigation_courses"
         android:name="vnu.uet.mobilecourse.assistant.ui.view.course.CoursesFragment"
         android:label="@string/title_my_courses"
-        tools:layout="@layout/fragment_courses" />
+        tools:layout="@layout/fragment_courses" >
+        <action
+            android:id="@+id/action_navigation_courses_to_navigation_notifications"
+            app:destination="@id/navigation_notifications" />
+        <action
+            android:id="@+id/action_navigation_courses_to_navigation_calendar"
+            app:destination="@id/navigation_calendar" />
+        <action
+            android:id="@+id/action_navigation_courses_to_navigation_chat"
+            app:destination="@id/navigation_chat" />
+        <action
+            android:id="@+id/action_navigation_courses_to_navigation_explore_course"
+            app:destination="@id/navigation_explore_course" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"

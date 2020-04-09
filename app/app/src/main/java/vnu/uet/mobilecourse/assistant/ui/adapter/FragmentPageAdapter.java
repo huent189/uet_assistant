@@ -4,11 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class FragmentPageAdapter extends FragmentPagerAdapter {
+public class FragmentPageAdapter extends FragmentStatePagerAdapter {
     private List<Fragment> fragments;
 
     private FragmentPageAdapter(@NonNull FragmentManager fm) {

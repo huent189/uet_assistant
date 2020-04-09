@@ -62,4 +62,6 @@ public class CourseProgressFragment extends Fragment {
         // TODO: Use the ViewModel
     }
 
+
+
 }

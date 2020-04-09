@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.List;
+
 public class ExploreCourseFragment extends Fragment {
 
     private ViewPager vpCourseContent;
@@ -32,13 +34,16 @@ public class ExploreCourseFragment extends Fragment {
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
-        pageAdapter = new FragmentPageAdapter(fragmentManager,
+        Fragment[] pages = new Fragment[] {
                 new CourseProgressFragment(),
                 new CourseGradeFragment(),
                 new CourseClassmateFragment()
-        );
+        };
+
+        pageAdapter = new FragmentPageAdapter(fragmentManager, pages);
 
         vpCourseContent = root.findViewById(R.id.vpCourseContent);
+        vpCourseContent.setOffscreenPageLimit(pages.length);
         vpCourseContent.setAdapter(pageAdapter);
 
         tabLayout = root.findViewById(R.id.tabLayout);
@@ -47,6 +52,7 @@ public class ExploreCourseFragment extends Fragment {
 
         return root;
     }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
