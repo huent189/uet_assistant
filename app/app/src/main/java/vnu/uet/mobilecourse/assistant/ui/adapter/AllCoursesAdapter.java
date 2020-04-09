@@ -1,11 +1,11 @@
 package vnu.uet.mobilecourse.assistant.ui.adapter;
 
+import android.app.Activity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +42,10 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Vi
 
         ViewHolder holder = new ViewHolder(view);
 
-        navController = Navigation.findNavController(owner.getActivity(), R.id.nav_host_fragment);
+        Activity activity = owner.getActivity();
+
+        if (activity != null)
+            navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
 
         return holder;
     }
@@ -60,7 +63,6 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Vi
             @Override
             public void onClick(View v) {
                 navController.navigate(R.id.action_navigation_courses_to_navigation_explore_course);
-//                openExploreCourseFragment();
 
                 String message = "onClick" + currentCourse.getTitle();
                 Log.d(TAG, message);
@@ -70,45 +72,19 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Vi
         });
     }
 
-//    private void openExploreCourseFragment() {
-//        DashboardFragmentManager fragmentManager = new DashboardFragmentManager(owner);
-//
-//        fragmentManager.change(CoursesFragment.class, ExploreCourseFragment.class);
-//
-////        FragmentActivity activity = owner.getActivity();
-////
-////        if (activity == null)
-////            return;
-////
-////        FragmentManager fragmentManager = activity.getSupportFragmentManager();
-////
-////        Fragment prev = fragmentManager.getPrimaryNavigationFragment();
-////
-////        Fragment fragment = new ExploreCourseFragment();
-////
-////        // open explore course fragment
-////        fragmentManager.beginTransaction()
-////                // insert the fragment by replacing an existing fragment
-////                .replace(R.id.nav_host_fragment, fragment)
-////                // add previous fragment into back stack
-////                .addToBackStack(CoursesFragment.class.getName())
-////                // commit transaction
-////                .commit();
-//    }
-
     @Override
     public int getItemCount() {
         return courses.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tvCourseTitle;
 
         private TextView tvCourseId;
 
         private Button btnAccessCourse;
 
-        private LinearLayout layoutContainer;
+//        private LinearLayout layoutContainer;
 
         public ViewHolder(@NonNull View view) {
             super(view);
@@ -116,7 +92,7 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Vi
             tvCourseTitle = view.findViewById(R.id.tvCourseTitle);
             tvCourseId = view.findViewById(R.id.tvCourseId);
             btnAccessCourse = view.findViewById(R.id.btnCourseAccess);
-            layoutContainer = view.findViewById(R.id.layoutContainer);
+//            layoutContainer = view.findViewById(R.id.layoutContainer);
         }
     }
 }

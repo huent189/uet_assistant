@@ -18,7 +18,5 @@
     <string name="title_calendar">Lịch biểu</string>
     <string name="title_profile">Hồ sơ</string>
     <string name="card_course_desc">Thẻ khóa học</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="desc_average_grade">Điểm số hiện tại của bạn</string>
 </resources>

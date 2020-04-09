@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.ui.view.course;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
@@ -19,10 +20,6 @@ public class CourseClassmateFragment extends Fragment {
 
     private CourseClassmateViewModel mViewModel;
 
-    public static CourseClassmateFragment newInstance() {
-        return new CourseClassmateFragment();
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -32,7 +29,7 @@ public class CourseClassmateFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(CourseClassmateViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(CourseClassmateViewModel.class);
         // TODO: Use the ViewModel
     }
 

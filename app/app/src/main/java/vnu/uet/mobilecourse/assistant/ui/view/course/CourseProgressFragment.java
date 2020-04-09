@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.ui.view.course;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
@@ -58,7 +59,7 @@ public class CourseProgressFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(CourseProgressViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(CourseProgressViewModel.class);
         // TODO: Use the ViewModel
     }
 
