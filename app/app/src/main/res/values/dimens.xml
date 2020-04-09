@@ -26,4 +26,7 @@
 
     <dimen name="tab_selected_radius">20dp</dimen>
     <dimen name="tab_height">36dp</dimen>
+
+    <dimen name="toolbar_size">40dp</dimen>
+    <dimen name="collapsing_toolbar_size">220dp</dimen>
 </resources>

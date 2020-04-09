@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:contentScrim="@color/primary"
-            app:layout_scrollFlags="scroll|snap|enterAlways"
+            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
             app:collapsedTitleTextAppearance="@style/ToolbarTitleText"
             app:expandedTitleTextAppearance="@style/ToolbarTitleText"
             app:expandedTitleMarginBottom="@dimen/sibling_margin_x2"
@@ -30,7 +30,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp">
+                android:layout_height="@dimen/collapsing_toolbar_size">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
                 android:paddingBottom="0dp"
                 android:paddingStart="@dimen/sibling_margin_x3"
                 android:paddingEnd="@dimen/sibling_margin_x3"
-                android:layout_height="40dp" />
+                android:layout_height="@dimen/toolbar_size" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -91,6 +91,6 @@
         android:id="@+id/vpCourseContent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -2,10 +2,9 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:paddingVertical="@dimen/sibling_margin"
+    android:paddingVertical="@dimen/sibling_margin_x2"
     android:paddingHorizontal="@dimen/sibling_margin_x3"
-    android:layout_marginTop="@dimen/sibling_margin"
-    android:background="?attr/selectableItemBackground"
+    android:background="@drawable/list_item_background"
     android:layout_height="wrap_content">
     
     <TextView

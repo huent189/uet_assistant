@@ -1,6 +1,6 @@
 package vnu.uet.mobilecourse.assistant.ui.view.course;
 
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 
@@ -12,28 +12,46 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import vnu.uet.mobilecourse.assistant.ui.adapter.GradeAdapter;
 import vnu.uet.mobilecourse.assistant.ui.viewmodel.CourseGradeViewModel;
 import vnu.uet.mobilecourse.assistant.R;
 
 public class CourseGradeFragment extends Fragment {
 
-    private CourseGradeViewModel mViewModel;
+    private CourseGradeViewModel viewModel;
 
-    public static CourseGradeFragment newInstance() {
-        return new CourseGradeFragment();
-    }
+    private GradeAdapter gradeAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_course_grade, container, false);
+        View root = inflater.inflate(R.layout.fragment_course_grade, container, false);
+
+        viewModel = new ViewModelProvider(this).get(CourseGradeViewModel.class);
+
+
+        initializeGradeListView(root);
+
+        return root;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(CourseGradeViewModel.class);
-        // TODO: Use the ViewModel
-    }
+    private void initializeGradeListView(View root) {
+        List<String> testes = new ArrayList<>();
 
+        for (int i = 1; i < 20; i++) {
+            testes.add("Bài kiểm tra " + i);
+        }
+
+        gradeAdapter = new GradeAdapter(testes, this);
+
+        RecyclerView rvGrades = root.findViewById(R.id.rvGrades);
+
+        rvGrades.setAdapter(gradeAdapter);
+        rvGrades.setLayoutManager(new LinearLayoutManager(this.getContext()));
+    }
 }
