@@ -29,4 +29,6 @@
 
     <dimen name="toolbar_size">40dp</dimen>
     <dimen name="collapsing_toolbar_size">220dp</dimen>
+
+    <dimen name="img_avatar_size">88dp</dimen>
 </resources>

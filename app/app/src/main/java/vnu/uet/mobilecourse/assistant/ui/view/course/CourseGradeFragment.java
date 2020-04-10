@@ -34,7 +34,6 @@ public class CourseGradeFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(CourseGradeViewModel.class);
 
-
         initializeGradeListView(root);
 
         return root;

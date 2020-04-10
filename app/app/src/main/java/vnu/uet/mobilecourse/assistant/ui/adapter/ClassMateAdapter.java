@@ -6,32 +6,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.ui.model.Course;
-import vnu.uet.mobilecourse.assistant.ui.view.course.CoursesFragment;
 
-public class GradeAdapter extends RecyclerView.Adapter<GradeAdapter.ViewHolder> {
-    private static final String TAG = GradeAdapter.class.getSimpleName();
+public class ClassMateAdapter extends RecyclerView.Adapter<ClassMateAdapter.ViewHolder> {
+    private static final String TAG = ClassMateAdapter.class.getSimpleName();
 
-    private List<String> grades;
+    private List<String> classMates;
 
     private Fragment owner;
 
     private NavController navController;
 
-    public GradeAdapter(List<String> grades, Fragment owner) {
-        this.grades = grades;
+    public ClassMateAdapter(List<String> classMates, Fragment owner) {
+        this.classMates = classMates;
         this.owner = owner;
     }
 
@@ -40,7 +38,7 @@ public class GradeAdapter extends RecyclerView.Adapter<GradeAdapter.ViewHolder> 
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = owner.getLayoutInflater();
 
-        View view = layoutInflater.inflate(R.layout.layout_grade_item, parent, false);
+        View view = layoutInflater.inflate(R.layout.layout_classmate_item, parent, false);
 
         ViewHolder holder = new ViewHolder(view);
 
@@ -56,24 +54,33 @@ public class GradeAdapter extends RecyclerView.Adapter<GradeAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.d(TAG, "call onBindViewHolder");
 
-        final String currentGrade = grades.get(position);
+        final String current = classMates.get(position);
 
-        holder.tvGradeTitle.setText(currentGrade);
+        holder.tvClassMateName.setText(current);
     }
-
 
     @Override
     public int getItemCount() {
-        return grades.size();
+        return classMates.size();
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvGradeTitle;
+        private CircleImageView civAvatar;
+
+        private TextView tvClassMateName;
+
+        private TextView tvClassMateId;
+
+        private Button btnChat;
 
         public ViewHolder(@NonNull View view) {
             super(view);
 
-            tvGradeTitle = view.findViewById(R.id.tvGradeTitle);
+            civAvatar = view.findViewById(R.id.civAvatar);
+            tvClassMateName = view.findViewById(R.id.tvClassMateName);
+            tvClassMateId = view.findViewById(R.id.tvClassMateId);
+            btnChat = view.findViewById(R.id.btnChat);
         }
     }
 }

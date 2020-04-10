@@ -8,29 +8,54 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import vnu.uet.mobilecourse.assistant.ui.adapter.ClassMateAdapter;
+import vnu.uet.mobilecourse.assistant.ui.adapter.GradeAdapter;
 import vnu.uet.mobilecourse.assistant.ui.viewmodel.CourseClassmateViewModel;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.ui.viewmodel.CourseGradeViewModel;
 
 public class CourseClassmateFragment extends Fragment {
 
-    private CourseClassmateViewModel mViewModel;
+    private CourseClassmateViewModel viewModel;
+
+    private ClassMateAdapter adapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_course_classmate, container, false);
+        View root = inflater.inflate(R.layout.fragment_course_classmate, container, false);
+
+        viewModel = new ViewModelProvider(this).get(CourseClassmateViewModel.class);
+
+        initializeClassMateListView(root);
+
+        return root;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(CourseClassmateViewModel.class);
-        // TODO: Use the ViewModel
+    private void initializeClassMateListView(View root) {
+        List<String> mates = new ArrayList<>();
+
+        for (int i = 1; i < 20; i++) {
+            mates.add("Bạn số " + i);
+        }
+
+        adapter = new ClassMateAdapter(mates, this);
+
+        RecyclerView rvClassMate = root.findViewById(R.id.rvClassMate);
+
+        rvClassMate.setAdapter(adapter);
+        rvClassMate.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
+
 
 }
