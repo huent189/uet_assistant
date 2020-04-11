@@ -45,11 +45,13 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:paddingTop="@dimen/sibling_margin_x2"
+                android:layout_marginTop="@dimen/sibling_margin_x2"
                 android:paddingBottom="0dp"
                 android:paddingStart="@dimen/sibling_margin_x3"
                 android:paddingEnd="@dimen/sibling_margin_x3"
+                app:layout_collapseMode="pin"
                 android:layout_height="@dimen/toolbar_size" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>

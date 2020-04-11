@@ -2,7 +2,10 @@ package vnu.uet.mobilecourse.assistant.ui.view.course;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
@@ -11,12 +14,12 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.ui.adapter.FragmentPageAdapter;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
-
-import java.util.List;
 
 public class ExploreCourseFragment extends Fragment {
 
@@ -27,12 +30,17 @@ public class ExploreCourseFragment extends Fragment {
     private TabLayout tabLayout;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_explore_course, container, false);
 
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+
+        if (activity == null)
+            return root;
+
+        FragmentManager fragmentManager = activity.getSupportFragmentManager();
 
         Fragment[] pages = new Fragment[] {
                 new CourseProgressFragment(),
@@ -40,7 +48,12 @@ public class ExploreCourseFragment extends Fragment {
                 new CourseClassmateFragment()
         };
 
+        Toolbar myToolbar = root.findViewById(R.id.toolbar);
+        activity.setSupportActionBar(myToolbar);
+        setHasOptionsMenu(true);
+
         pageAdapter = new FragmentPageAdapter(fragmentManager, pages);
+
 
         vpCourseContent = root.findViewById(R.id.vpCourseContent);
         vpCourseContent.setOffscreenPageLimit(pages.length);
@@ -68,7 +81,6 @@ public class ExploreCourseFragment extends Fragment {
 
         return root;
     }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
