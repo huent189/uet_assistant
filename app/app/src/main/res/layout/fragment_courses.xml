@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vnu.uet.mobilecourse.assistant.ui.view.SynchronizedScrollView
-    android:id="@+id/svMyCourses"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent">
+    tools:context=".ui.view.course.CoursesFragment"
+    android:background="@color/background"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <FrameLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/aplThumbnail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/background"
-            tools:context=".ui.view.course.CoursesFragment">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/tvCourseRecently"
@@ -36,109 +45,50 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvCourseRecently" />
 
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/tvInvisibleAllCoursesTitle"
-                    android:layout_width="wrap_content"
-                    android:paddingBottom="@dimen/sibling_margin_x2"
-                    android:paddingEnd="@dimen/sibling_margin_x3"
-                    android:paddingStart="@dimen/sibling_margin_x3"
-                    android:paddingTop="@dimen/sibling_margin_x2"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_text_background"
+                <TextView
+                    style="@style/ToolbarTitleText"
                     android:visibility="invisible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/sibling_margin_x4"
+                    android:paddingBottom="@dimen/sibling_margin"
+                    android:text="@string/title_all_courses"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/vpCourseRecently" />
 
-<!--                <TextView-->
-<!--                    android:id="@+id/tvInvisibleAllCoursesTitle"-->
-<!--                    style="@style/Header1"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:paddingBottom="@dimen/sibling_margin_x2"-->
-<!--                    android:paddingEnd="@dimen/sibling_margin_x3"-->
-<!--                    android:paddingStart="@dimen/sibling_margin_x3"-->
-<!--                    android:paddingTop="@dimen/sibling_margin_x2"-->
-<!--                    android:text="@string/title_all_courses"-->
-<!--                    android:visibility="invisible"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/vpCourseRecently" />-->
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvAllCourses"
-                    android:layout_width="match_parent"
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_marginVertical="@dimen/sibling_margin_x2"
+                android:paddingEnd="@dimen/sibling_margin_x3"
+                android:paddingStart="0dp"
+                app:layout_collapseMode="pin"
+                app:title="@string/title_all_courses"
+                app:titleTextAppearance="@style/ToolbarTitleText"
+                android:layout_gravity="bottom"
+                android:layout_height="@dimen/toolbar_size">
+
+                <TextView
+                    style="@style/ToolbarTitleText"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvInvisibleAllCoursesTitle" />
+                    android:layout_marginStart="@dimen/sibling_margin_x3"
+                    android:gravity="center_vertical"
+                    android:text="@string/title_all_courses" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.appcompat.widget.Toolbar>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clAllCoursesToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/background"
-            android:paddingBottom="@dimen/sibling_margin_x2"
-            android:paddingEnd="@dimen/sibling_margin_x3"
-            android:paddingStart="@dimen/sibling_margin_x3"
-            android:paddingTop="@dimen/sibling_margin_x2">
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-            <TextView
-                android:id="@+id/tvAllCourses"
-                style="@style/Header1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/sibling_margin_x2"
-                android:text="@string/title_all_courses"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/flSearchButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/searchView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/edit_text_background"
-                android:visibility="invisible"
-                app:iconifiedByDefault="false"
-                app:searchIcon="@null"
-                app:closeIcon="@null"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/flSearchButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:queryHint="Search Here" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvAllCourses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-            <FrameLayout
-                android:id="@+id/flSearchButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/tvAllCourses"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tvAllCourses">
-
-                <Button
-                    android:id="@+id/btnSearch"
-                    style="@style/CircleButton"
-                    android:layout_width="@dimen/circle_button_size"
-                    android:layout_height="@dimen/circle_button_size"
-                    android:background="@color/transparent"
-                    android:backgroundTint="@color/background" />
-
-                <ImageView
-                    android:id="@+id/ivSearchIcon"
-                    android:layout_width="@dimen/circle_button_size"
-                    android:layout_height="@dimen/circle_button_size"
-                    android:contentDescription="@string/title_all_courses"
-                    android:scaleX="0.6"
-                    android:scaleY="0.6"
-                    android:tint="@color/white"
-                    android:src="@drawable/ic_search_24dp" />
-            </FrameLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </FrameLayout>
-
-</vnu.uet.mobilecourse.assistant.ui.view.SynchronizedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

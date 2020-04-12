@@ -97,6 +97,12 @@ public class ClassMateAdapter extends RecyclerView.Adapter<ClassMateAdapter.View
             tvClassMateName = view.findViewById(R.id.tvClassMateName);
             tvClassMateId = view.findViewById(R.id.tvClassMateId);
             btnChat = view.findViewById(R.id.btnChat);
+
+            view.setOnClickListener(v ->
+                    navController.navigate(
+                            R.id.action_navigation_explore_course_to_navigation_friend_profile
+                    )
+            );
         }
     }
 

@@ -66,10 +66,4 @@ public class CourseProgressFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(CourseProgressViewModel.class);
         // TODO: Use the ViewModel
     }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-//        menu.clear();
-    }
 }

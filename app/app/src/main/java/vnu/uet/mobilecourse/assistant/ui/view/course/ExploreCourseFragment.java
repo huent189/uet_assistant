@@ -36,30 +36,29 @@ public class ExploreCourseFragment extends Fragment {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_explore_course, container, false);
 
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        initializeToolbar(root);
 
-        if (activity == null)
-            return root;
-
-        initializeToolbar(activity, root);
-
-        initializePageAdapter(activity);
+        initializePageAdapter();
 
         initializeViewPager(root);
 
         return root;
     }
 
-    private void initializeToolbar(AppCompatActivity activity, View root) {
-        toolbar = root.findViewById(R.id.toolbar);
+    private void initializeToolbar(View root) {
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
 
-        activity.setSupportActionBar(toolbar);
+        if (activity != null) {
+            toolbar = root.findViewById(R.id.toolbar);
 
-        setHasOptionsMenu(true);
+            activity.setSupportActionBar(toolbar);
+
+            setHasOptionsMenu(true);
+        }
     }
 
-    private void initializePageAdapter(AppCompatActivity activity) {
-        FragmentManager fragmentManager = activity.getSupportFragmentManager();
+    private void initializePageAdapter() {
+        FragmentManager fragmentManager = getChildFragmentManager();
 
         Fragment[] pages = new Fragment[] {
                 new CourseProgressFragment(),
@@ -104,12 +103,5 @@ public class ExploreCourseFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-        menu.clear();
     }
 }
