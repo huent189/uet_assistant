@@ -17,17 +17,17 @@
             android:background="@color/background"
             tools:context=".ui.view.course.CoursesFragment">
 
-            <TextView
-                android:id="@+id/tvCourseRecently"
-                style="@style/Header1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/sibling_margin_x3"
-                android:layout_marginTop="@dimen/sibling_margin_x2"
-                android:text="@string/title_recently_courses"
-                android:textAlignment="center"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/tvCourseRecently"
+                    style="@style/Header1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/sibling_margin_x3"
+                    android:layout_marginTop="@dimen/sibling_margin_x2"
+                    android:text="@string/title_recently_courses"
+                    android:textAlignment="center"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/vpCourseRecently"

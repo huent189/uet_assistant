@@ -1,6 +1,11 @@
 package vnu.uet.mobilecourse.assistant.ui.view.course;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,16 +15,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.tabs.TabLayout;
+
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.ui.adapter.FragmentPageAdapter;
-
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.google.android.material.tabs.TabLayout;
 
 public class ExploreCourseFragment extends Fragment {
 
@@ -28,6 +27,8 @@ public class ExploreCourseFragment extends Fragment {
     private FragmentPageAdapter pageAdapter;
 
     private TabLayout tabLayout;
+
+    private Toolbar toolbar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,6 +41,24 @@ public class ExploreCourseFragment extends Fragment {
         if (activity == null)
             return root;
 
+        initializeToolbar(activity, root);
+
+        initializePageAdapter(activity);
+
+        initializeViewPager(root);
+
+        return root;
+    }
+
+    private void initializeToolbar(AppCompatActivity activity, View root) {
+        toolbar = root.findViewById(R.id.toolbar);
+
+        activity.setSupportActionBar(toolbar);
+
+        setHasOptionsMenu(true);
+    }
+
+    private void initializePageAdapter(AppCompatActivity activity) {
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
 
         Fragment[] pages = new Fragment[] {
@@ -48,18 +67,17 @@ public class ExploreCourseFragment extends Fragment {
                 new CourseClassmateFragment()
         };
 
-        Toolbar myToolbar = root.findViewById(R.id.toolbar);
-        activity.setSupportActionBar(myToolbar);
-        setHasOptionsMenu(true);
-
         pageAdapter = new FragmentPageAdapter(fragmentManager, pages);
+    }
 
-
+    private void initializeViewPager(View root) {
         vpCourseContent = root.findViewById(R.id.vpCourseContent);
-        vpCourseContent.setOffscreenPageLimit(pages.length);
+
+        vpCourseContent.setOffscreenPageLimit(pageAdapter.getCount());
         vpCourseContent.setAdapter(pageAdapter);
 
         tabLayout = root.findViewById(R.id.tabLayout);
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -76,14 +94,22 @@ public class ExploreCourseFragment extends Fragment {
 
             }
         });
-        vpCourseContent
-                .addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        return root;
+        ViewPager.OnPageChangeListener onPageChangeListener =
+                new TabLayout.TabLayoutOnPageChangeListener(tabLayout);
+
+        vpCourseContent.addOnPageChangeListener(onPageChangeListener);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        menu.clear();
     }
 }

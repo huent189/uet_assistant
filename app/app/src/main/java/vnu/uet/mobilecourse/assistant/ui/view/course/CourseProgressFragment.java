@@ -31,8 +31,10 @@ public class CourseProgressFragment extends Fragment {
 
     private CourseProgressViewModel mViewModel;
 
-    public static CourseProgressFragment newInstance() {
-        return new CourseProgressFragment();
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -68,8 +70,6 @@ public class CourseProgressFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-
-        menu.clear();
+//        menu.clear();
     }
-
 }
