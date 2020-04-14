@@ -25,8 +25,7 @@
             app:collapsedTitleTextAppearance="@style/ToolbarTitleText"
             app:expandedTitleTextAppearance="@style/ToolbarTitleText"
             app:expandedTitleMarginBottom="@dimen/sibling_margin_x2"
-            app:expandedTitleMarginStart="@dimen/sibling_margin_x3"
-            app:title="@string/app_name">
+            app:expandedTitleMarginStart="@dimen/sibling_margin_x3">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -45,14 +44,20 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.Toolbar
+                style="@style/Toolbar"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/sibling_margin_x2"
-                android:paddingBottom="0dp"
-                android:paddingStart="@dimen/sibling_margin_x3"
-                android:paddingEnd="@dimen/sibling_margin_x3"
-                app:layout_collapseMode="pin"
-                android:layout_height="@dimen/toolbar_size" />
+                android:layout_marginTop="@dimen/sibling_margin_x2" >
+
+                <TextView
+                    style="@style/ToolbarTitleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/sibling_margin_x3"
+                    android:gravity="center_vertical"
+                    android:text="@string/app_name" />
+
+            </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -73,17 +78,17 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tiến độ"/>
+                android:text="@string/tab_title_progress"/>
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Điểm"/>
+                android:text="@string/tab_title_grade"/>
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bạn cùng lớp"/>
+                android:text="@string/tab_title_classmates"/>
 
         </com.google.android.material.tabs.TabLayout>
 

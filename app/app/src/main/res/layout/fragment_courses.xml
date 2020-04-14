@@ -60,16 +60,10 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.Toolbar
+                style="@style/Toolbar"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_marginVertical="@dimen/sibling_margin_x2"
-                android:paddingEnd="@dimen/sibling_margin_x3"
-                android:paddingStart="0dp"
-                app:layout_collapseMode="pin"
-                app:title="@string/title_all_courses"
-                app:titleTextAppearance="@style/ToolbarTitleText"
-                android:layout_gravity="bottom"
-                android:layout_height="@dimen/toolbar_size">
+                android:layout_marginVertical="@dimen/sibling_margin_x2">
 
                 <TextView
                     style="@style/ToolbarTitleText"
