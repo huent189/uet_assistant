@@ -65,30 +65,31 @@
             android:id="@+id/tabLayout"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/tab_height"
-            app:tabTextAppearance="@style/Subtitle"
+            android:layout_marginTop="@dimen/sibling_margin_x2"
+            android:background="@color/primary"
             app:tabBackground="@drawable/tab_item"
             app:tabIndicator="@null"
+            android:layout_gravity="center_horizontal"
             app:tabMode="scrollable"
-            android:layout_marginTop="@dimen/sibling_margin_x2"
             app:tabRippleColor="@color/transparent"
-            android:layout_marginStart="@dimen/sibling_margin_x3"
-            app:tabUnboundedRipple="false"
-            android:background="@color/primary">
+            app:tabTextAppearance="@style/Subtitle"
+            app:tabUnboundedRipple="false">
+
+            <com.google.android.material.tabs.TabItem
+                android:paddingHorizontal="@dimen/sibling_margin_x3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_title_progress" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tab_title_progress"/>
+                android:text="@string/tab_title_grade" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tab_title_grade"/>
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tab_title_classmates"/>
+                android:text="@string/tab_title_classmates" />
 
         </com.google.android.material.tabs.TabLayout>
 

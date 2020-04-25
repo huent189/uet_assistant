@@ -8,15 +8,19 @@
     android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:padding="@dimen/sibling_margin_x2"
+        android:paddingVertical="@dimen/sibling_margin"
+        android:paddingStart="@dimen/sibling_margin_x2"
+        android:paddingEnd="@dimen/sibling_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/civAvatar"
+        <ImageView
+            android:id="@+id/ivNotifyIcon"
             android:layout_width="@dimen/img_avatar_size"
             android:layout_height="@dimen/img_avatar_size"
-            android:src="@drawable/avatar"
+            android:src="@drawable/ic_description_32dp"
+            android:tint="@color/nav_item"
+            android:rotation="15"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -25,51 +29,57 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="@dimen/sibling_margin"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnChat"
-            app:layout_constraintStart_toEndOf="@+id/civAvatar"
+            app:layout_constraintEnd_toStartOf="@+id/btnViewNotify"
+            app:layout_constraintStart_toEndOf="@+id/ivNotifyIcon"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tvClassMateName"
+                android:id="@+id/tvNotifyTitle"
                 style="@style/Header2"
-                android:textColor="@color/primary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nguyễn Tùng Lâm" />
+                android:text="Bài kiểm tra 8a"
+                android:textColor="@color/primary" />
 
             <TextView
-                android:id="@+id/tvClassMateId"
-                style="@style/Subtitle"
+                android:id="@+id/tvNotifyDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="17020845" />
+                android:text="Đây là một thông mới được ví dụ" />
+
+            <TextView
+                android:id="@+id/tvNotifyTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10 phút trước"
+                android:textColor="@color/whiteDisable" />
 
         </LinearLayout>
 
         <Button
             style="@style/CircleButton"
-            android:id="@+id/btnChat"
+            android:id="@+id/btnViewNotify"
             android:layout_width="@dimen/circle_button_size"
             android:layout_height="@dimen/circle_button_size"
-            android:background="@drawable/primary_button_background"
+            android:background="@drawable/transparent_button_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:contentDescription="@string/title_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_chat_24dp"
-            android:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/btnChat"
-            app:layout_constraintEnd_toEndOf="@+id/btnChat"
-            app:layout_constraintStart_toStartOf="@+id/btnChat"
-            app:layout_constraintTop_toTopOf="@+id/btnChat" />
-
+            android:contentDescription="@string/title_chat"
+            android:src="@drawable/ic_chevron_right_24dp"
+            android:tint="@color/whiteDisable"
+            app:layout_constraintBottom_toBottomOf="@+id/btnViewNotify"
+            app:layout_constraintEnd_toEndOf="@+id/btnViewNotify"
+            app:layout_constraintStart_toStartOf="@+id/btnViewNotify"
+            app:layout_constraintTop_toTopOf="@+id/btnViewNotify" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

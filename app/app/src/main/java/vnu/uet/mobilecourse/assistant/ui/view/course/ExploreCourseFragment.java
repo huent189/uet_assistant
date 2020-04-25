@@ -100,6 +100,21 @@ public class ExploreCourseFragment extends Fragment {
         vpCourseContent.addOnPageChangeListener(onPageChangeListener);
     }
 
+//    private void animateTab() {
+//        final int newLeftMargin = <some value>;
+//        Animation a = new Animation() {
+//
+//            @Override
+//            protected void applyTransformation(float interpolatedTime, Transformation t) {
+//                LayoutParams params = yourView.getLayoutParams();
+//                params.leftMargin = (int)(newLeftMargin * interpolatedTime);
+//                yourView.setLayoutParams(params);
+//            }
+//        };
+//        a.setDuration(500); // in ms
+//        yourView.startAnimation(a);
+//    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

@@ -30,5 +30,8 @@
     <dimen name="toolbar_size">40dp</dimen>
     <dimen name="collapsing_toolbar_size">220dp</dimen>
 
-    <dimen name="img_avatar_size">88dp</dimen>
+    <dimen name="img_avatar_size">56dp</dimen>
+
+    <dimen name="small_radius">18dp</dimen>
+    <dimen name="small_img_avatar_size">36dp</dimen>
 </resources>

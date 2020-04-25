@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/sibling_margin_x3"
+    android:paddingEnd="88dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civAvatar"
+        android:layout_width="@dimen/small_img_avatar_size"
+        android:layout_height="@dimen/small_img_avatar_size"
+        android:layout_marginEnd="@dimen/sibling_margin"
+        android:layout_gravity="bottom"
+        android:src="@drawable/avatar" />
+
+    <TextView
+        android:id="@+id/tvReceiveMessage"
+        style="@style/ReceiveMessage"
+        android:text="@string/title_chat" />
+
+</LinearLayout>
