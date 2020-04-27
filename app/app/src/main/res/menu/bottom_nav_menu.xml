@@ -21,4 +21,9 @@
         android:icon="@drawable/ic_calendar_24dp"
         android:title="@string/title_calendar" />
 
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_account_circle_28dp"
+        android:title="@string/title_profile" />
+
 </menu>

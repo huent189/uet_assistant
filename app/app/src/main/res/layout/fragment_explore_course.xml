@@ -21,16 +21,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:contentScrim="@color/primary"
-            app:layout_scrollFlags="scroll|snap|enterAlways"
+            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
             app:collapsedTitleTextAppearance="@style/ToolbarTitleText"
             app:expandedTitleTextAppearance="@style/ToolbarTitleText"
             app:expandedTitleMarginBottom="@dimen/sibling_margin_x2"
-            app:expandedTitleMarginStart="@dimen/sibling_margin_x3"
-            app:title="@string/app_name">
+            app:expandedTitleMarginStart="@dimen/sibling_margin_x3">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp">
+                android:layout_height="@dimen/collapsing_toolbar_size">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -45,12 +44,20 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.appcompat.widget.Toolbar
+                style="@style/Toolbar"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:paddingTop="@dimen/sibling_margin_x2"
-                android:paddingBottom="0dp"
-                android:paddingStart="@dimen/sibling_margin_x3"
-                android:paddingEnd="@dimen/sibling_margin_x3"
-                android:layout_height="40dp" />
+                android:layout_marginTop="@dimen/sibling_margin_x2" >
+
+                <TextView
+                    style="@style/ToolbarTitleText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/sibling_margin_x3"
+                    android:gravity="center_vertical"
+                    android:text="@string/app_name" />
+
+            </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -58,30 +65,31 @@
             android:id="@+id/tabLayout"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/tab_height"
-            app:tabTextAppearance="@style/Subtitle"
+            android:layout_marginTop="@dimen/sibling_margin_x2"
+            android:background="@color/primary"
             app:tabBackground="@drawable/tab_item"
             app:tabIndicator="@null"
+            android:layout_gravity="center_horizontal"
             app:tabMode="scrollable"
-            android:layout_marginTop="@dimen/sibling_margin_x2"
             app:tabRippleColor="@color/transparent"
-            android:layout_marginStart="@dimen/sibling_margin_x3"
-            app:tabUnboundedRipple="false"
-            android:background="@color/primary">
+            app:tabTextAppearance="@style/Subtitle"
+            app:tabUnboundedRipple="false">
+
+            <com.google.android.material.tabs.TabItem
+                android:paddingHorizontal="@dimen/sibling_margin_x3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tab_title_progress" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tiến độ"/>
+                android:text="@string/tab_title_grade" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Điểm"/>
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Bạn cùng lớp"/>
+                android:text="@string/tab_title_classmates" />
 
         </com.google.android.material.tabs.TabLayout>
 
@@ -91,6 +99,6 @@
         android:id="@+id/vpCourseContent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

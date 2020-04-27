@@ -13,11 +13,13 @@
     <string name="title_recently_courses">Khóa học mới truy cập</string>
     <string name="title_all_courses">Tất cả khóa học</string>
     <string name="title_my_courses">Khóa học</string>
-    <string name="title_chat">Tin nhắn</string>
+    <string name="title_chat">Trò chuyện</string>
     <string name="title_notifications">Thông báo</string>
     <string name="title_calendar">Lịch biểu</string>
+    <string name="title_profile">Hồ sơ</string>
     <string name="card_course_desc">Thẻ khóa học</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="desc_average_grade">Điểm số hiện tại của bạn</string>
+    <string name="tab_title_progress">Tiến độ</string>
+    <string name="tab_title_grade">Điểm</string>
+    <string name="tab_title_classmates">Bạn cùng lớp</string>
 </resources>

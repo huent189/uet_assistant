@@ -11,7 +11,7 @@
         android:layout_gravity="center_vertical|start"
         android:paddingHorizontal="@dimen/sibling_margin_x2"
         android:tint="@color/primaryDark"
-        android:src="@drawable/ic_description_32dp" />
+        android:src="@drawable/ic_widgets_black_32dp" />
 
     <FrameLayout
         android:paddingVertical="@dimen/sibling_margin_x2"
@@ -20,24 +20,24 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/tvTaskTitle"
+            android:id="@+id/tvGradeTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/sibling_margin_x4"
             android:layout_gravity="center_vertical|start"
             android:textSize="@dimen/header2_size"
-            android:text="Slide 1: What is that about" />
+            android:text="Bài kiểm tra 5a" />
 
-        <ImageView
-            android:id="@+id/ivTaskStatus"
-            android:layout_height="wrap_content"
+        <TextView
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/primary_button_background"
+            android:backgroundTint="@color/primary"
+            android:textSize="@dimen/header2_size"
+            android:paddingHorizontal="@dimen/sibling_margin"
             android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="@dimen/sibling_margin_x3"
-            android:tint="@color/primary"
-            android:scaleX="0.75"
-            android:scaleY="0.75"
-            android:src="@drawable/ic_check_circle_24dp" />
+            android:layout_marginEnd="@dimen/sibling_margin_x2"
+            android:text="8/10" />
 
     </FrameLayout>
 

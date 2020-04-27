@@ -1,10 +1,7 @@
 package vnu.uet.mobilecourse.assistant.ui.model;
 
-import android.os.Parcel;
-
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +16,7 @@ public class WeeklyTasks extends ExpandableGroup {
 
     @Override
     public List<CourseTask> getItems() {
-        return (List<CourseTask>) super.getItems();
+        return super.getItems();
     }
 
     public Date getBegin() {

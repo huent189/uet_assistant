@@ -9,8 +9,7 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:editTextColor">@color/white</item>
         <item name="android:textColorHint">@color/whiteDisable</item>
-
-        <!--        <item name="android:background">@color/background</item>-->
+        <item name="searchViewStyle">@style/SearchViewMy</item>
     </style>
 
     <style name="Button" parent="Widget.AppCompat.Button.Borderless.Colored">
@@ -63,6 +62,21 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <style name="Message" parent="Subtitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/sibling_margin</item>
+    </style>
+
+    <style name="ReceiveMessage" parent="Message">
+        <item name="android:background">@drawable/receive_message_background</item>
+    </style>
+
+    <style name="SendMessage" parent="Message">
+        <item name="android:layout_gravity">end</item>
+        <item name="android:background">@drawable/send_message_background</item>
+    </style>
+
     <style name="EditText" parent="Widget.AppCompat.EditText">
         <item name="android:layout_height">40dp</item>
         <item name="android:textSize">16sp</item>
@@ -79,6 +93,7 @@
         <item name="android:background">@drawable/navbar_background</item>
         <item name="itemIconTint">@color/nav_item</item>
         <item name="itemTextColor">@color/nav_item</item>
+        <item name="labelVisibilityMode">labeled</item>
     </style>
     
     
@@ -91,5 +106,23 @@
         <item name="android:overScrollMode">never</item>
         <item name="android:paddingEnd">@dimen/card_course_end_padding</item>
         <item name="android:paddingStart">@dimen/card_course_start_padding</item>
+    </style>
+
+    <style name="SearchViewMy" parent="Widget.AppCompat.Light.SearchView">
+        <item name="searchHintIcon">@null</item>
+        <item name="queryHint">Tìm kiếm</item>
+        <item name="android:background">@drawable/edit_text_background</item>
+        <item name="closeIcon">@drawable/ic_close_24dp</item>
+    </style>
+
+    <style name="Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="layout_collapseMode">pin</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:layout_height">@dimen/toolbar_size</item>
+        <item name="collapseIcon">@drawable/ic_arrow_back_24dp</item>
+        <item name="android:paddingEnd">@dimen/sibling_margin</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="titleTextAppearance">@style/ToolbarTitleText</item>
+        <item name="contentInsetStart">@dimen/sibling_margin_x3</item>
     </style>
 </resources>

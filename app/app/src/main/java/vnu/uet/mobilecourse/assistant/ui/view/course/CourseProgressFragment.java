@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.ui.view.course;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -28,8 +31,10 @@ public class CourseProgressFragment extends Fragment {
 
     private CourseProgressViewModel mViewModel;
 
-    public static CourseProgressFragment newInstance() {
-        return new CourseProgressFragment();
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -48,7 +53,7 @@ public class CourseProgressFragment extends Fragment {
         List<CourseTask> tasks = Arrays.asList(task1, task2, task3, task4);
         WeeklyTasks weeklyTasks = new WeeklyTasks("Week 1", tasks);
 
-        CourseTaskAdapter adapter = new CourseTaskAdapter(Collections.singletonList(weeklyTasks), this);
+        CourseTaskAdapter adapter = new CourseTaskAdapter(Arrays.asList(weeklyTasks, weeklyTasks), this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -58,8 +63,7 @@ public class CourseProgressFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(CourseProgressViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(CourseProgressViewModel.class);
         // TODO: Use the ViewModel
     }
-
 }

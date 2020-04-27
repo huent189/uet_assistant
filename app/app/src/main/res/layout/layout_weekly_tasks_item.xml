@@ -2,8 +2,9 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:paddingVertical="@dimen/sibling_margin"
-    android:background="@drawable/ripple_highlight"
+    android:paddingVertical="@dimen/sibling_margin_x2"
+    android:paddingHorizontal="@dimen/sibling_margin_x3"
+    android:background="@drawable/list_item_background"
     android:layout_height="wrap_content">
     
     <TextView
@@ -19,6 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|end"
-        android:src="@drawable/ic_keyboard_arrow_down_24dp" />
+        android:src="@drawable/ic_keyboard_arrow_down_24dp"
+        android:contentDescription="expand" />
 
 </FrameLayout>

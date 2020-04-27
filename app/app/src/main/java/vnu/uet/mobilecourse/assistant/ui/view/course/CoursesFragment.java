@@ -1,28 +1,26 @@
 package vnu.uet.mobilecourse.assistant.ui.view.course;
 
-import android.content.Context;
-import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.Group;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -30,7 +28,6 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.ui.adapter.AllCoursesAdapter;
 import vnu.uet.mobilecourse.assistant.ui.adapter.RecentlyCoursesAdapter;
 import vnu.uet.mobilecourse.assistant.ui.model.Course;
-import vnu.uet.mobilecourse.assistant.ui.view.SynchronizedScrollView;
 import vnu.uet.mobilecourse.assistant.ui.viewmodel.CoursesViewModel;
 
 public class CoursesFragment extends Fragment {
@@ -38,6 +35,10 @@ public class CoursesFragment extends Fragment {
     private RecentlyCoursesAdapter recentlyCoursesAdapter;
 
     private CoursesViewModel viewModel;
+
+    private NavController navController;
+
+    private Toolbar toolbar;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -55,32 +56,7 @@ public class CoursesFragment extends Fragment {
             }
         });
 
-        final Button btnSearch = root.findViewById(R.id.btnSearch);
-        final TextView tvAllCourses = root.findViewById(R.id.tvAllCourses);
-        final SearchView searchView = root.findViewById(R.id.searchView);
-        final ImageView ivSearchIcon = root.findViewById(R.id.ivSearchIcon);
-
-        btnSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean isVisible = tvAllCourses.getVisibility() == View.VISIBLE;
-
-                if (isVisible) {
-                    searchView.setVisibility(View.VISIBLE);
-                    searchView.requestFocus();
-//                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
-                    tvAllCourses.setVisibility(View.INVISIBLE);
-                    ivSearchIcon.setImageResource(R.drawable.ic_close_24dp);
-                } else {
-                    tvAllCourses.setVisibility(View.VISIBLE);
-                    searchView.setVisibility(View.INVISIBLE);
-                    ivSearchIcon.setImageResource(R.drawable.ic_search_24dp);
-                }
-            }
-        });
-
-        synchronizedScrollView(root);
+        initializeToolbar(root);
 
         initializeRecentlyCoursesView(root);
 
@@ -89,14 +65,16 @@ public class CoursesFragment extends Fragment {
         return root;
     }
 
-    private void synchronizedScrollView(View root) {
-        SynchronizedScrollView svMyCourses = root.findViewById(R.id.svMyCourses);
+    private void initializeToolbar(View root) {
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
 
-        View tvInvisibleAllCoursesTitle = root.findViewById(R.id.tvInvisibleAllCoursesTitle);
-        svMyCourses.setAnchorView(tvInvisibleAllCoursesTitle);
+        if (activity != null) {
+            toolbar = root.findViewById(R.id.toolbar);
 
-        View clAllCoursesToolbar = root.findViewById(R.id.clAllCoursesToolbar);
-        svMyCourses.setSynchronizedView(clAllCoursesToolbar);
+            activity.setSupportActionBar(toolbar);
+
+            setHasOptionsMenu(true);
+        }
     }
 
     private void initializeRecentlyCoursesView(View root) {
@@ -107,7 +85,7 @@ public class CoursesFragment extends Fragment {
     }
 
     private void initializeAllCoursesView(View root) {
-        List<Course> courses = viewModel.getCourses().getValue();
+        List<Course> courses = new ArrayList<>(viewModel.getCourses().getValue());
 
         courses.addAll(viewModel.getCourses().getValue());
 
@@ -117,5 +95,34 @@ public class CoursesFragment extends Fragment {
 
         allCoursesView.setAdapter(allCoursesAdapter);
         allCoursesView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        menu.clear();
+
+        inflater.inflate(R.menu.course_toolbar_menu, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+//        Drawable background = ContextCompat.getDrawable(getActivity(), R.drawable.edit_text_background);
+//        searchView.setBackground(background);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+//                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 }
