@@ -1,5 +1,6 @@
-package vnu.uet.mobilecourse.assistant.view;
+package vnu.uet.mobilecourse.assistant.view.profile;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
@@ -32,7 +33,7 @@ public class FriendProfileFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(FriendProfileViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(FriendProfileViewModel.class);
         // TODO: Use the ViewModel
     }
 

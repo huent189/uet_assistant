@@ -53,7 +53,7 @@
 
     <fragment
         android:id="@+id/navigation_friend_profile"
-        android:name="vnu.uet.mobilecourse.assistant.view.FriendProfileFragment"
+        android:name="vnu.uet.mobilecourse.assistant.view.profile.FriendProfileFragment"
         android:label="fragment_friend_profile"
         tools:layout="@layout/fragment_friend_profile" />
 

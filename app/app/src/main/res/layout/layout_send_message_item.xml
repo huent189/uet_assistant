@@ -4,11 +4,21 @@
     android:orientation="vertical"
     android:paddingEnd="@dimen/sibling_margin_x3"
     android:paddingStart="88dp"
+    android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/tvSendMessage"
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="6:50 PM"
+        android:layout_gravity="end"
+        android:textColor="@color/whiteDisable"
+        android:textSize="@dimen/small_text_size"/>
+
+    <TextView
+        android:id="@+id/tvMessage"
         style="@style/SendMessage"
         android:text="@string/title_chat" />
 

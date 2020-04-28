@@ -1,24 +1,24 @@
 package vnu.uet.mobilecourse.assistant.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-
-import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.repository.UserRepository;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.repository.UserRepository;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText etStudentId;
 
     private EditText etPassword;
+
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
 
         etStudentId = findViewById(R.id.etStudentId);
         etPassword = findViewById(R.id.etPassword);
+        progressBar = findViewById(R.id.progressBar);
     }
 
     public void login(View view) {
@@ -36,27 +37,28 @@ public class LoginActivity extends AppCompatActivity {
         UserRepository userRepo = new UserRepository();
         StateLiveData<String> res = userRepo.makeLoginRequest(studentId, password);
 
-        res.observe(LoginActivity.this, new Observer<StateModel<String>>() {
-            @Override
-            public void onChanged(StateModel<String> stringStateModel) {
-                switch (stringStateModel.getStatus()) {
-                    case SUCCESS:
-                        Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
+        res.observe(LoginActivity.this, stateModel -> {
+            switch (stateModel.getStatus()) {
+                case SUCCESS:
+                    Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                    navigateToMyCourses();
+                    break;
 
-                        Intent intent = new Intent(LoginActivity.this, MyCoursesActivity.class);
-                        startActivity(intent);
-                        break;
+                case ERROR:
+                    Toast.makeText(LoginActivity.this, "Login Failure", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                    break;
 
-                    case ERROR:
-                        Toast.makeText(LoginActivity.this, "Login Failure", Toast.LENGTH_SHORT).show();
-                        break;
-                }
+                case LOADING:
+                    progressBar.setVisibility(View.VISIBLE);
+                    break;
             }
         });
+    }
 
-//        Intent intent = new Intent(LoginActivity.this, MyCoursesActivity.class);
-//        startActivity(intent);
-
-        System.out.println();
+    private void navigateToMyCourses() {
+        Intent intent = new Intent(LoginActivity.this, MyCoursesActivity.class);
+        startActivity(intent);
     }
 }

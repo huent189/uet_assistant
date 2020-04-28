@@ -6,7 +6,7 @@
     android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.FriendProfileFragment">
+    tools:context=".view.profile.FriendProfileFragment">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/civAvatar"
