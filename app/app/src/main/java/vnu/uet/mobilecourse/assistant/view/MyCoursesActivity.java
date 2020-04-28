@@ -31,7 +31,9 @@ public class MyCoursesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_courses);
+
         navView = findViewById(R.id.nav_view);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
 //        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -41,34 +43,21 @@ public class MyCoursesActivity extends AppCompatActivity {
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-//        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
-//            @Override
-//            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
-//                switch (destination.getId()) {
-//                    case R.id.navigation_chat:
-//                        hideBottomNavigator();
-//                        break;
-//
-//                    default:
-//                        showBottomNavigator();
-//                        break;
-//                }
-//            }
-//        });
-
-
-        getSupportFragmentManager().registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
-            @Override
-            public void onFragmentViewCreated(@NonNull FragmentManager fm, @NonNull Fragment f, @NonNull View v, @Nullable Bundle savedInstanceState) {
-                TransitionManager.beginDelayedTransition((ViewGroup) v, new Slide());
-
-                if (f instanceof ChatFragment) {
+        // hide bottom navigator in chat fragment
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            switch (destination.getId()) {
+                case R.id.navigation_chat:
                     hideBottomNavigator();
-                } else
+                    break;
+
+                default:
                     showBottomNavigator();
+                    break;
             }
-        }, true);
+        });
     }
+
+
 
     private void hideBottomNavigator() {
         navView.setVisibility(View.GONE);

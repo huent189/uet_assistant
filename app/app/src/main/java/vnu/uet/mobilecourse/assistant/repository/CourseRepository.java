@@ -24,15 +24,17 @@ public class CourseRepository {
      * @return singleton instance
      */
     public static CourseRepository getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new CourseRepository();
+            instance.setCourses();
+            instance.setCourses();
+
+        }
 
         return instance;
     }
 
     public MutableLiveData<List<Course>> getCourses() {
-        setCourses();
-
         MutableLiveData<List<Course>> data = new MutableLiveData<>();
         data.setValue(courses);
 

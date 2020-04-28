@@ -47,12 +47,7 @@ public class CoursesFragment extends Fragment {
 
         viewModel.initialize();
 
-        viewModel.getCourses().observe(getViewLifecycleOwner(), new Observer<List<Course>>() {
-            @Override
-            public void onChanged(List<Course> courses) {
-                recentlyCoursesAdapter.notifyDataSetChanged();
-            }
-        });
+        viewModel.getCourses().observe(getViewLifecycleOwner(), courses -> recentlyCoursesAdapter.notifyDataSetChanged());
 
         initializeToolbar(root);
 
@@ -83,9 +78,7 @@ public class CoursesFragment extends Fragment {
     }
 
     private void initializeAllCoursesView(View root) {
-        List<Course> courses = new ArrayList<>(viewModel.getCourses().getValue());
-
-        courses.addAll(viewModel.getCourses().getValue());
+        List<Course> courses = viewModel.getCourses().getValue();
 
         AllCoursesAdapter allCoursesAdapter = new AllCoursesAdapter(courses, this);
 
