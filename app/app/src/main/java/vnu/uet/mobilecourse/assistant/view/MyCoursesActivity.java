@@ -1,11 +1,15 @@
 package vnu.uet.mobilecourse.assistant.view;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
@@ -15,11 +19,13 @@ public class MyCoursesActivity extends AppCompatActivity {
 
     private NavController navController;
 
+    private BottomNavigationView navView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_courses);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
 //        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -29,44 +35,28 @@ public class MyCoursesActivity extends AppCompatActivity {
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-//        final FragmentActivity activity = this;
-//        navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-////                FragmentManager fragmentManager = getSupportFragmentManager();
-////
-////                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-////
-////                Fragment fragment = new NotificationsFragment();
-////
-////                // open explore course fragment
-////                fragmentManager.beginTransaction()
-////                        // insert the fragment by replacing an existing fragment
-////                        .replace(R.id.nav_host_fragment, fragment)
-////                        // add previous fragment into back stack
-////                        // commit transaction
-////                        .commit();
-//
-//                DashboardFragmentManager fragmentManager = new DashboardFragmentManager(activity);
-//
-//                switch (item.getItemId()) {
-//                    case R.id.navigation_courses:
-//                        fragmentManager.change(CoursesFragment.class);
-//                        break;
-//                    case R.id.navigation_notifications:
-//                        fragmentManager.change(NotificationsFragment.class);
-//                        break;
-//                    case R.id.navigation_chat:
-//                        fragmentManager.change(ChatFragment.class);
-//                        break;
-//                    case R.id.navigation_calendar:
-//                        fragmentManager.change(CalendarFragment.class);
-//                        break;
-//                }
-//
-//                return true;
-//            }
-//        });
+        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+            @Override
+            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
+                switch (destination.getId()) {
+                    case R.id.navigation_chat:
+                        hideBottomNavigator();
+                        break;
+
+                    default:
+                        showBottomNavigator();
+                        break;
+                }
+            }
+        });
+    }
+
+    private void hideBottomNavigator() {
+        navView.setVisibility(View.GONE);
+    }
+
+    private void showBottomNavigator() {
+        navView.setVisibility(View.VISIBLE);
     }
 
     @Override

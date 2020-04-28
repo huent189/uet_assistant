@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.view.chat;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.ClassMateAdapter;
 import vnu.uet.mobilecourse.assistant.adapter.MessageAdapter;
+import vnu.uet.mobilecourse.assistant.view.MyCoursesActivity;
 import vnu.uet.mobilecourse.assistant.viewmodel.ChatViewModel;
 
 import android.view.LayoutInflater;
@@ -33,6 +35,12 @@ public class ChatFragment extends Fragment {
         chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_chat, container, false);
+
+//        FragmentActivity activity = getActivity();
+//
+//        if (activity instanceof MyCoursesActivity) {
+//            ((MyCoursesActivity) activity).getNavView().setVisibility(View.GONE);
+//        }
 
         initializeListView(root);
 
