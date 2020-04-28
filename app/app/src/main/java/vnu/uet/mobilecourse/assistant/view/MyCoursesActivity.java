@@ -60,14 +60,14 @@ public class MyCoursesActivity extends AppCompatActivity {
         getSupportFragmentManager().registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
             @Override
             public void onFragmentViewCreated(@NonNull FragmentManager fm, @NonNull Fragment f, @NonNull View v, @Nullable Bundle savedInstanceState) {
-                TransitionManager.beginDelayedTransition((ViewGroup) v.getRootView(), new Slide());
+                TransitionManager.beginDelayedTransition((ViewGroup) v, new Slide());
 
-                if (f instanceof ChatFragment)
+                if (f instanceof ChatFragment) {
                     hideBottomNavigator();
-                else
+                } else
                     showBottomNavigator();
             }
-        }, false);
+        }, true);
     }
 
     private void hideBottomNavigator() {
