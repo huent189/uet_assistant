@@ -2,7 +2,7 @@
 <androidx.recyclerview.widget.RecyclerView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.view.course.CourseProgressFragment"
+    tools:context=".view.course.CourseProgressFragment"
     android:id="@+id/rvTasks"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />

@@ -10,9 +10,9 @@
         android:supportsRtl="true"
         android:windowSoftInputMode="adjustPan"
         android:theme="@style/DarkTheme">
-        <activity android:name=".ui.view.MyCoursesActivity" android:label="@string/title_activity_my_courses" />
-        <activity android:name=".ui.view.LoginActivity" android:label="@string/login"/>
-        <activity android:name=".ui.view.MainActivity">
+        <activity android:name=".view.MyCoursesActivity" android:label="@string/title_activity_my_courses" />
+        <activity android:name=".view.LoginActivity" android:label="@string/login"/>
+        <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

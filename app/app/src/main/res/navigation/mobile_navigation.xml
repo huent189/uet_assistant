@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_courses"
-        android:name="vnu.uet.mobilecourse.assistant.ui.view.course.CoursesFragment"
+        android:name="vnu.uet.mobilecourse.assistant.view.course.CoursesFragment"
         android:label="@string/title_my_courses"
         tools:layout="@layout/fragment_courses" >
         <action
@@ -26,24 +26,24 @@
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="vnu.uet.mobilecourse.assistant.ui.view.notification.NotificationsFragment"
+        android:name="vnu.uet.mobilecourse.assistant.view.notification.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
 
     <fragment
         android:id="@+id/navigation_chat"
-        android:name="vnu.uet.mobilecourse.assistant.ui.view.chat.ChatFragment"
+        android:name="vnu.uet.mobilecourse.assistant.view.chat.ChatFragment"
         android:label="@string/title_chat"
         tools:layout="@layout/fragment_chat" />
 
     <fragment
         android:id="@+id/navigation_calendar"
-        android:name="vnu.uet.mobilecourse.assistant.ui.view.calendar.CalendarFragment"
+        android:name="vnu.uet.mobilecourse.assistant.view.calendar.CalendarFragment"
         android:label="@string/title_calendar"
         tools:layout="@layout/fragment_calendar" />
     <fragment
         android:id="@+id/navigation_explore_course"
-        android:name="vnu.uet.mobilecourse.assistant.ui.view.course.ExploreCourseFragment"
+        android:name="vnu.uet.mobilecourse.assistant.view.course.ExploreCourseFragment"
         android:label="fragment_explore_course"
         tools:layout="@layout/fragment_explore_course" >
         <action
@@ -53,7 +53,7 @@
 
     <fragment
         android:id="@+id/navigation_friend_profile"
-        android:name="vnu.uet.mobilecourse.assistant.FriendProfileFragment"
+        android:name="vnu.uet.mobilecourse.assistant.view.FriendProfileFragment"
         android:label="fragment_friend_profile"
         tools:layout="@layout/fragment_friend_profile" />
 
