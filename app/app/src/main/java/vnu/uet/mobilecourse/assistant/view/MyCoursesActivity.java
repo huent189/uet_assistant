@@ -1,19 +1,25 @@
 package vnu.uet.mobilecourse.assistant.view;
 
 import android.os.Bundle;
+import android.transition.Slide;
+import android.transition.TransitionManager;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.view.chat.ChatFragment;
 
 public class MyCoursesActivity extends AppCompatActivity {
 
@@ -35,20 +41,33 @@ public class MyCoursesActivity extends AppCompatActivity {
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
-            @Override
-            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
-                switch (destination.getId()) {
-                    case R.id.navigation_chat:
-                        hideBottomNavigator();
-                        break;
+//        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+//            @Override
+//            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
+//                switch (destination.getId()) {
+//                    case R.id.navigation_chat:
+//                        hideBottomNavigator();
+//                        break;
+//
+//                    default:
+//                        showBottomNavigator();
+//                        break;
+//                }
+//            }
+//        });
 
-                    default:
-                        showBottomNavigator();
-                        break;
-                }
+
+        getSupportFragmentManager().registerFragmentLifecycleCallbacks(new FragmentManager.FragmentLifecycleCallbacks() {
+            @Override
+            public void onFragmentViewCreated(@NonNull FragmentManager fm, @NonNull Fragment f, @NonNull View v, @Nullable Bundle savedInstanceState) {
+                TransitionManager.beginDelayedTransition((ViewGroup) v.getRootView(), new Slide());
+
+                if (f instanceof ChatFragment)
+                    hideBottomNavigator();
+                else
+                    showBottomNavigator();
             }
-        });
+        }, false);
     }
 
     private void hideBottomNavigator() {
