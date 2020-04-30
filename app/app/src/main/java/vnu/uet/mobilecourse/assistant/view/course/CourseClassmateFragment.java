@@ -71,8 +71,8 @@ public class CourseClassmateFragment extends Fragment {
 
         SearchView searchView = (SearchView) searchItem.getActionView();
 
-        Drawable background = ContextCompat.getDrawable(getActivity(), R.drawable.edit_text_background);
-        searchView.setBackground(background);
+//        Drawable background = ContextCompat.getDrawable(getActivity(), R.drawable.edit_text_background);
+//        searchView.setBackground(background);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

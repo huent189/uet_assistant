@@ -20,17 +20,9 @@
 
         <androidx.appcompat.widget.Toolbar
             style="@style/Toolbar"
-            android:layout_marginVertical="@dimen/sibling_margin_x2"
             android:id="@+id/toolbar"
-            android:layout_width="match_parent">
-
-            <TextView
-                style="@style/ToolbarTitleText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/sibling_margin_x3"
-                android:gravity="center_vertical"
-                android:text="@string/title_notifications" />
+            android:layout_width="match_parent"
+            app:title="@string/title_notifications">
 
         </androidx.appcompat.widget.Toolbar>
 

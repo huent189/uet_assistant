@@ -4,7 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,13 +27,27 @@ public class CalendarFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
         View root = inflater.inflate(R.layout.fragment_calendar, container, false);
-        final TextView textView = root.findViewById(R.id.text_calendar);
-        calendarViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+
+        TextView tvDate = root.findViewById(R.id.tvDate);
+
+        CalendarView calendarView = root.findViewById(R.id.calendarView);
+
+        updateDate(tvDate, calendarView);
+
+        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                updateDate(tvDate, view);
             }
         });
+
         return root;
+    }
+
+    private void updateDate(TextView tvDate, CalendarView calendarView) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String selectedDate = sdf.format(new Date(calendarView.getDate()));
+        selectedDate = "Ngày " + selectedDate;
+        tvDate.setText(selectedDate);
     }
 }

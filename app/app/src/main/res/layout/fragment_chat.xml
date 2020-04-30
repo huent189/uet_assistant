@@ -23,17 +23,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             app:title="@string/title_chat"
-            app:menu="@menu/chat_toolbar_menu"
-            android:layout_marginVertical="@dimen/sibling_margin_x2" />
+            app:menu="@menu/chat_toolbar_menu" />
 
     </com.google.android.material.appbar.AppBarLayout>
-
-
-<!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/rvChat"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -44,10 +36,8 @@
             android:id="@+id/rvChat"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:clipToPadding="false"
-            android:paddingVertical="@dimen/sibling_margin"
-            android:layout_marginBottom="@dimen/sibling_margin"
-            app:layout_constraintBottom_toTopOf="@+id/etMessage"
+            android:paddingBottom="53dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -65,6 +55,8 @@
             android:drawableTint="@color/primary"
             android:hint="@string/title_chat"
             android:ems="10"
+            android:maxLines="5"
+            android:scrollbars="vertical"
             android:gravity="start|center_vertical"
             android:inputType="textMultiLine"
             app:layout_constraintBottom_toBottomOf="parent"

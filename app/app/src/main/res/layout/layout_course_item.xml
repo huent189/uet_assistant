@@ -2,26 +2,38 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/border_left_background"
-    android:layout_marginStart="@dimen/sibling_margin_x3"
-    android:layout_marginEnd="@dimen/sibling_margin_x3"
-    android:layout_marginBottom="@dimen/sibling_margin_x2"
-    android:paddingStart="@dimen/sibling_margin"
-    android:paddingEnd="0dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/list_item_background"
+    android:paddingHorizontal="@dimen/sibling_margin_x2"
+    android:paddingVertical="@dimen/sibling_margin_x2"
     android:id="@+id/layoutContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnCourseAccess"
+            style="@style/CircleButton"
+            android:layout_width="@dimen/circle_button_size"
+            android:layout_height="@dimen/circle_button_size"
+            android:background="@drawable/accent_button_background"
+            android:backgroundTint="@color/accent"
+            android:foreground="@drawable/ic_play_arrow_16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvCourseTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:text="Công nghệ phần mềm"
             android:textSize="@dimen/header2_size"
-            app:layout_constraintEnd_toStartOf="@+id/btnCourseAccess"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tvCourseId"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,25 +41,11 @@
             android:id="@+id/tvCourseId"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/tvCourseTitle"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginTop="2dp"
             android:text="INT3110 2"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tvCourseTitle"
             app:layout_constraintTop_toBottomOf="@+id/tvCourseTitle" />
-
-        <Button
-            android:id="@+id/btnCourseAccess"
-            style="@style/Button"
-            android:layout_width="@dimen/circle_button_size"
-            android:layout_height="@dimen/circle_button_size"
-            android:scaleX="0.9"
-            android:scaleY="0.9"
-            android:foreground="@drawable/ic_play_arrow_16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

@@ -24,63 +24,41 @@
         app:layout_constraintStart_toStartOf="@+id/glVertical"
         app:srcCompat="@drawable/background_light" />
 
-    <LinearLayout
-        android:id="@+id/linearStudentIdLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/transparent"
-        android:orientation="horizontal"
+    <EditText
+        android:id="@+id/etStudentId"
+        style="@style/EditText"
+        android:layout_width="0dp"
+        android:layout_marginEnd="@dimen/sibling_margin_x6"
+        android:layout_marginStart="@dimen/sibling_margin_x6"
+        android:autofillHints=""
+        android:drawableEnd="@drawable/ic_account_circle_28dp"
+        android:drawablePadding="@dimen/sibling_margin"
+        android:drawableTint="@color/primaryDark"
+        android:hint="@string/student_id"
+        android:inputType="number"
+        android:paddingEnd="@dimen/sibling_margin"
+        android:paddingStart="@dimen/sibling_margin_x2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/sibling_margin"
-            android:contentDescription="@string/login"
-            android:tint="@color/primaryDark"
-            android:background="@color/transparent"
-            app:srcCompat="@drawable/ic_account_circle_28dp" />
-
-        <EditText
-            android:id="@+id/etStudentId"
-            style="@style/EditText"
-            android:layout_width="@dimen/login_input_field_width"
-            android:autofillHints=""
-            android:hint="@string/student_id"
-            android:inputType="number" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearPasswordLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <EditText
+        android:id="@+id/etPassword"
+        style="@style/EditText"
+        android:layout_width="0dp"
         android:layout_marginTop="@dimen/sibling_margin_x2"
-        android:background="@color/transparent"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearStudentIdLayout">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/sibling_margin"
-            android:background="@color/transparent"
-            android:contentDescription="@string/login"
-            android:tint="@color/primaryDark"
-            app:srcCompat="@drawable/ic_lock_28dp" />
-
-        <EditText
-            android:id="@+id/etPassword"
-            style="@style/EditText"
-            android:layout_width="@dimen/login_input_field_width"
-            android:autofillHints=""
-            android:hint="@string/password"
-            android:inputType="textPassword" />
-    </LinearLayout>
+        android:autofillHints=""
+        android:drawableEnd="@drawable/ic_lock_28dp"
+        android:drawablePadding="@dimen/sibling_margin"
+        android:drawableTint="@color/primaryDark"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        android:paddingEnd="@dimen/sibling_margin"
+        android:paddingStart="@dimen/sibling_margin_x2"
+        app:layout_constraintEnd_toEndOf="@+id/etStudentId"
+        app:layout_constraintStart_toStartOf="@+id/etStudentId"
+        app:layout_constraintTop_toBottomOf="@+id/etStudentId" />
 
     <Button
         android:id="@+id/btnLogin"
@@ -89,9 +67,9 @@
         android:layout_marginTop="@dimen/sibling_margin_x4"
         android:text="@string/login"
         android:onClick="login"
-        app:layout_constraintEnd_toEndOf="@+id/linearPasswordLayout"
-        app:layout_constraintStart_toStartOf="@+id/linearPasswordLayout"
-        app:layout_constraintTop_toBottomOf="@+id/linearPasswordLayout"
+        app:layout_constraintEnd_toEndOf="@+id/etPassword"
+        app:layout_constraintStart_toStartOf="@+id/etPassword"
+        app:layout_constraintTop_toBottomOf="@+id/etPassword"
         tools:ignore="OnClick" />
 
     <TextView
@@ -100,9 +78,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/welcome"
-        app:layout_constraintBottom_toTopOf="@+id/linearStudentIdLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/etStudentId"
+        app:layout_constraintStart_toStartOf="@+id/etStudentId"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.48" />
 
@@ -115,7 +92,7 @@
         android:text="@string/login_guideline"
         android:textAlignment="center"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tvLoginTitle"
         app:layout_constraintTop_toBottomOf="@+id/tvLoginTitle" />
 
     <androidx.constraintlayout.widget.Guideline

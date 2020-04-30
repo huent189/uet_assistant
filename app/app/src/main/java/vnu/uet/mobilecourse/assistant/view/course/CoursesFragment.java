@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +100,11 @@ public class CoursesFragment extends Fragment {
         MenuItem searchItem = menu.findItem(R.id.action_search);
 
         SearchView searchView = (SearchView) searchItem.getActionView();
+//        LinearLayout searchEditFrame = searchView.findViewById(R.id.search_edit_frame); // Get the Linear Layout
+//        // Get the associated LayoutParams and set leftMargin
+//        float scale = getResources().getDisplayMetrics().density;
+//        int dpAsPixels = (int) (16*scale + 0.5f);
+//        searchView.setPadding(0,0,0,0);
 
 //        Drawable background = ContextCompat.getDrawable(getActivity(), R.drawable.edit_text_background);
 //        searchView.setBackground(background);

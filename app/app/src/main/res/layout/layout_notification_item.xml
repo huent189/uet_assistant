@@ -49,12 +49,15 @@
                 android:id="@+id/tvNotifyDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:text="Đây là một thông mới được ví dụ" />
 
             <TextView
                 android:id="@+id/tvNotifyTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/small_text_size"
+                android:layout_marginTop="2dp"
                 android:text="10 phút trước"
                 android:textColor="@color/whiteDisable" />
 

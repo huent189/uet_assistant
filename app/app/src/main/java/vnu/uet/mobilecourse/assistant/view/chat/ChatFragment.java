@@ -16,9 +16,11 @@ import vnu.uet.mobilecourse.assistant.adapter.MessageAdapter;
 import vnu.uet.mobilecourse.assistant.view.MyCoursesActivity;
 import vnu.uet.mobilecourse.assistant.viewmodel.ChatViewModel;
 
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,11 +38,8 @@ public class ChatFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_chat, container, false);
 
-//        FragmentActivity activity = getActivity();
-//
-//        if (activity instanceof MyCoursesActivity) {
-//            ((MyCoursesActivity) activity).getNavView().setVisibility(View.GONE);
-//        }
+        EditText etMessage= root.findViewById(R.id.etMessage);
+        etMessage.setMovementMethod(new ScrollingMovementMethod());
 
         initializeListView(root);
 
@@ -55,8 +54,13 @@ public class ChatFragment extends Fragment {
         adapter = new MessageAdapter(messages, this);
 
         RecyclerView rvChat = root.findViewById(R.id.rvChat);
+        rvChat.setHasFixedSize(true);
 
         rvChat.setAdapter(adapter);
-        rvChat.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
+        linearLayoutManager.setStackFromEnd(true);
+
+        rvChat.setLayoutManager(linearLayoutManager);
     }
 }

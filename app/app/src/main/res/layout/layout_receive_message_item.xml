@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:paddingStart="@dimen/sibling_margin_x3"
+    android:paddingStart="@dimen/sibling_margin_x2"
     android:paddingEnd="88dp"
     android:background="@color/background"
     android:layout_width="match_parent"
