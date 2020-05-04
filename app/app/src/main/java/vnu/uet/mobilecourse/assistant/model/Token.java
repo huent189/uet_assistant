@@ -8,32 +8,30 @@ public class Token {
     private static final String preferenceName = "UET_ASSITANT";
     private static SharedPreferences preferences;
     private static String token;
-    public static void init(Context context){
+    public static void initPreferences(){
         if(preferences == null){
-            preferences = context.getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
+            preferences = MyApplication.getInstance().getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
         }
     }
 
     public static String getToken() {
         //TODO: intergation test
         if(token == null){
-            preferences = MyApplication.getInstance().getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
+            initPreferences();
             token = preferences.getString("TOKEN", null);
         }
-
         return token;
     }
 
     public static void setToken(String token) {
         Token.token = token;
         //TODO: intergation test
-        if (preferences == null){
-            preferences = MyApplication.getInstance().getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
-            preferences.edit().putString("TOKEN", token).apply();
-        }
+        initPreferences();
+        preferences.edit().putString("TOKEN", token).apply();
     }
-    // for testing only
     public static void clearToken(){
         token = null;
+        initPreferences();
+        preferences.edit().remove("TOKEN").apply();
     }
 }

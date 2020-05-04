@@ -1,12 +1,10 @@
 package vnu.uet.mobilecourse.assistant.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-import vnu.uet.mobilecourse.assistant.R;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import vnu.uet.mobilecourse.assistant.model.Token;
+import androidx.appcompat.app.AppCompatActivity;
+import vnu.uet.mobilecourse.assistant.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,7 +12,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Token.init(getApplicationContext());
     }
 
     public void accessCourses(View view) {
