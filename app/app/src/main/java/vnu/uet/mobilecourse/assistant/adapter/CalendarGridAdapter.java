@@ -51,8 +51,8 @@ public class CalendarGridAdapter extends ArrayAdapter {
         if (!isSameMonthAndYear(currentCalendar, dateCalendar)) {
             //TODO: disable cell
         } else if (currentCalendar.getTime().equals(dateOfMonth)) {
-            ImageView ivSelectedCircle = convertView.findViewById(R.id.ivSelectedCircle);
-            ivSelectedCircle.setVisibility(View.VISIBLE);
+            ImageView ivCurrentDate = convertView.findViewById(R.id.ivCurrentDate);
+            ivCurrentDate.setVisibility(View.VISIBLE);
         }
 
         TextView tvDayOfMonth = convertView.findViewById(R.id.tvDayOfMonth);

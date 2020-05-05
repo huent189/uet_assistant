@@ -16,8 +16,20 @@
             android:id="@+id/ivSelectedCircle"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:visibility="invisible"
             android:src="@drawable/calendar_selected_item"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/tvDayOfMonth"
+            app:layout_constraintEnd_toEndOf="@+id/tvDayOfMonth"
+            app:layout_constraintStart_toStartOf="@+id/tvDayOfMonth"
+            app:layout_constraintTop_toTopOf="@+id/tvDayOfMonth" />
+
+        <ImageView
+            android:id="@+id/ivCurrentDate"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/calendar_selected_item"
+            android:tint="@color/primary"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/tvDayOfMonth"
             app:layout_constraintEnd_toEndOf="@+id/tvDayOfMonth"
             app:layout_constraintStart_toStartOf="@+id/tvDayOfMonth"
