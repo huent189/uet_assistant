@@ -24,54 +24,62 @@
             android:layout_height="wrap_content"
             android:paddingBottom="?attr/actionBarSize">
 
-            <CalendarView
-                android:id="@+id/calendarView"
+            <vnu.uet.mobilecourse.assistant.view.calendar.CustomCalendarView
+                android:id="@+id/calendar_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:dateTextAppearance="@style/Subtitle"
-                android:background="@color/backgroundLight"
-                android:layout_marginStart="0dp"
-                android:weekDayTextAppearance="@style/Subtitle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
-            <TextView
-                android:id="@+id/tvTitle"
-                style="@style/ToolbarTitleText"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@drawable/list_item_background"
-                android:gravity="center_vertical"
-                android:paddingEnd="0dp"
-                android:paddingStart="@dimen/sibling_margin_x2"
-                android:text="@string/title_calendar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+<!--            <CalendarView-->
+<!--                android:id="@+id/calendarView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:dateTextAppearance="@style/Subtitle"-->
+<!--                android:background="@color/backgroundLight"-->
+<!--                android:layout_marginStart="0dp"-->
+<!--                android:weekDayTextAppearance="@style/Subtitle"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/tvTitle" />-->
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                        <TextView
+                            android:id="@+id/tvTitle"
+                            style="@style/ToolbarTitleText"
+                            android:layout_width="match_parent"
+                            android:layout_height="?attr/actionBarSize"
+                            android:background="@drawable/list_item_background"
+                            android:gravity="center_vertical"
+                            android:paddingEnd="0dp"
+                            android:paddingStart="@dimen/sibling_margin_x2"
+                            android:text="@string/title_calendar"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.Toolbar
-            style="@style/Toolbar"
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            app:title="@string/title_all_courses"
-            app:menu="@menu/chat_toolbar_menu">
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/tvDate"
-                style="@style/Header2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="Ngày 01/01/2020" />
+                    <androidx.appcompat.widget.Toolbar
+                        style="@style/Toolbar"
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        app:title="@string/title_all_courses"
+                        app:menu="@menu/chat_toolbar_menu">
 
-        </androidx.appcompat.widget.Toolbar>
+                        <TextView
+                            android:id="@+id/tvDate"
+                            style="@style/Header2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="Ngày 01/01/2020" />
 
-    </com.google.android.material.appbar.CollapsingToolbarLayout>
+                    </androidx.appcompat.widget.Toolbar>
 
-    </com.google.android.material.appbar.AppBarLayout>
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+                </com.google.android.material.appbar.AppBarLayout>
 
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>

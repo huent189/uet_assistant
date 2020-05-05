@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CalendarView;
 import android.widget.TextView;
 
@@ -21,6 +22,8 @@ public class CalendarFragment extends Fragment {
 
     private CalendarViewModel calendarViewModel;
 
+    private CustomCalendarView calendarView;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
@@ -28,24 +31,31 @@ public class CalendarFragment extends Fragment {
 
         TextView tvDate = root.findViewById(R.id.tvDate);
 
-        CalendarView calendarView = root.findViewById(R.id.calendarView);
+        calendarView = root.findViewById(R.id.calendar_view);
 
-        initializeDate(tvDate, calendarView);
-
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        calendarView.setOnDateClickListener(new CustomCalendarView.OnDateClickListener() {
             @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                String selectedDate = String.format("Ngày %02d/%02d/%d", dayOfMonth, month, year);
-                tvDate.setText(selectedDate);
+            public void onItemClick(AdapterView<?> parent, View view, Date date, long id) {
+                updateDate(tvDate, date);
             }
         });
+
+//        initializeDate(tvDate, calendarView);
+//
+//        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+//            @Override
+//            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+//                String selectedDate = String.format("Ngày %02d/%02d/%d", dayOfMonth, month, year);
+//                tvDate.setText(selectedDate);
+//            }
+//        });
 
         return root;
     }
 
-    private void initializeDate(TextView tvDate, CalendarView calendarView) {
+    private void updateDate(TextView tvDate, Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String selectedDate = sdf.format(new Date(calendarView.getDate()));
+        String selectedDate = sdf.format(date);
         selectedDate = "Ngày " + selectedDate;
         tvDate.setText(selectedDate);
     }

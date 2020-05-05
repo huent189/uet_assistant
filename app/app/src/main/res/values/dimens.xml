@@ -35,4 +35,6 @@
     <dimen name="small_radius">18dp</dimen>
     <dimen name="small_img_avatar_size">36dp</dimen>
     <dimen name="small_text_size">12sp</dimen>
+
+    <dimen name="calendar_cell_height">56dp</dimen>
 </resources>
