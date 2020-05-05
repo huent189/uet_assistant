@@ -1,5 +1,18 @@
 package vnu.uet.mobilecourse.assistant.repository;
 
+import android.content.Intent;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,9 +33,12 @@ public class UserRepository {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 LoginResponse loginResponse = response.body();
+                // hard code login firebase
                 if(loginResponse.isSuccess()){
                     Token.setToken(loginResponse.getPrivateToken());
-                    liveLoginResponse.postSuccess("Login successfully\n"+ loginResponse.toString());
+//                    liveLoginResponse.postSuccess("Login successfully\n"+ loginResponse.toString());
+                    hardCodeFirebaseLogin(studentId+"@vnu.edu.vn", "abc123", liveLoginResponse);
+
                 } else {
                     liveLoginResponse.postError(new InvalidLoginException(loginResponse.getErrorCode()));
                 }
@@ -34,5 +50,25 @@ public class UserRepository {
             }
         });
         return liveLoginResponse;
+    }
+
+    private void hardCodeFirebaseLogin(String email, String password, StateLiveData<String> liveLoginResponse){
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        final int[] a = {0};
+        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> loginFirebase) {
+                if (loginFirebase.isSuccessful()){
+                    liveLoginResponse.postSuccess("Login successfully\n");
+                } else {
+                    liveLoginResponse.postError(loginFirebase.getException());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                liveLoginResponse.postError(e);
+            }
+        });
     }
 }
