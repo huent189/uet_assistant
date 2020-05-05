@@ -2,6 +2,19 @@ package vnu.uet.mobilecourse.assistant.repository;
 
 import android.util.Log;
 import com.google.gson.JsonObject;
+import android.content.Intent;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
 import retrofit2.Call;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
@@ -23,6 +36,7 @@ public class UserRepository {
                 SharedPreferencesManager.setString(SharedPreferencesManager.TOKEN, response.getToken());
                 SharedPreferencesManager.setString(SharedPreferencesManager.REGISTER_EMAIL, studentId + "@vnu.edu.vn");
                 liveLoginResponse.postSuccess("Login successfully\n");
+                hardCodeFirebaseLogin(studentId+"@vnu.edu.vn", "abc123", liveLoginResponse);
             }
             @Override
             public void onError(Exception e) {
@@ -30,5 +44,25 @@ public class UserRepository {
             }
         });
         return liveLoginResponse;
+    }
+
+    private void hardCodeFirebaseLogin(String email, String password, StateLiveData<String> liveLoginResponse){
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        final int[] a = {0};
+        mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> loginFirebase) {
+                if (loginFirebase.isSuccessful()){
+                    liveLoginResponse.postSuccess("Login successfully\n");
+                } else {
+                    liveLoginResponse.postError(loginFirebase.getException());
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                liveLoginResponse.postError(e);
+            }
+        });
     }
 }

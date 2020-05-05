@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "997944628692",
+    "firebase_url": "https://uet-assistant-d048c.firebaseio.com",
+    "project_id": "uet-assistant-d048c",
+    "storage_bucket": "uet-assistant-d048c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997944628692:android:a0669af31ffe7bc6367241",
+        "android_client_info": {
+          "package_name": "vnu.uet.mobilecourse.assistant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "997944628692-f5vui59ecjuracef72i7ommh0ik8h2fj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "vnu.uet.mobilecourse.assistant",
+            "certificate_hash": "701a0235578ad2026847d200e447de976bf5921a"
+          }
+        },
+        {
+          "client_id": "997944628692-vs87g81jf3fprkk8auihdf9rhsb1m8dt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyjjCdpQGXQ0e4bU0y4N8l4tTGsTuQ1ds"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "997944628692-vs87g81jf3fprkk8auihdf9rhsb1m8dt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
