@@ -2,7 +2,7 @@ package vnu.uet.mobilecourse.assistant.network.response;
 
 import com.google.gson.annotations.SerializedName;
 
-public class LoginResponse extends CoursesResponse {
+public class LoginResponse{
     @SerializedName("privatetoken")
     private String privateToken;
     @SerializedName("token")

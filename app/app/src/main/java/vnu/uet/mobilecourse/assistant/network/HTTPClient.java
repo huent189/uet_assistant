@@ -3,7 +3,7 @@ package vnu.uet.mobilecourse.assistant.network;
 import okhttp3.*;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import vnu.uet.mobilecourse.assistant.model.Token;
+import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 
 import java.io.IOException;
 
@@ -18,7 +18,8 @@ public class HTTPClient {
                 public Response intercept(Chain chain) throws IOException {
                     Request original = chain.request();
                     HttpUrl url = original.url().newBuilder().addQueryParameter("service", "moodle_mobile_app")
-                                    .addQueryParameter("wstoken", Token.getToken()).build();
+                                    .addQueryParameter("wstoken", SharedPreferencesManager.getValue(SharedPreferencesManager.TOKEN))
+                                    .build();
                     Request request = original.newBuilder().url(url).build();
                     return chain.proceed(request);
                 }

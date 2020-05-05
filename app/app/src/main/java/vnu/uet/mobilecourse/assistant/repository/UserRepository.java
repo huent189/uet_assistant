@@ -1,40 +1,32 @@
 package vnu.uet.mobilecourse.assistant.repository;
 
 import android.util.Log;
+import com.google.gson.JsonObject;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import vnu.uet.mobilecourse.assistant.exception.InvalidLoginException;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
-import vnu.uet.mobilecourse.assistant.model.Token;
+import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.UserRequest;
+import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
 import vnu.uet.mobilecourse.assistant.network.response.LoginResponse;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 
 public class UserRepository {
     public StateLiveData<String> makeLoginRequest(String studentId, String password){
-        Token.clearToken();
+        SharedPreferencesManager.clearAll();
         final StateLiveData<String> liveLoginResponse = new StateLiveData<>();
         UserRequest userRequest = HTTPClient.getCoursesClient().create(UserRequest.class);
-        Call<LoginResponse> call = userRequest.login(studentId, password);
+        Call<JsonObject> call = userRequest.login(studentId, password);
         Log.d("LOGIN", "param: " + studentId + " " + password);
-        call.enqueue(new Callback<LoginResponse>() {
+        call.enqueue(new CoursesResponseCallback<LoginResponse>(LoginResponse.class) {
             @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                LoginResponse loginResponse = response.body();
-                if(loginResponse.isSuccess()){
-                    Token.setToken(loginResponse.getPrivateToken());
-                    liveLoginResponse.postSuccess("Login successfully\n"+ loginResponse.toString());
-                } else {
-                    liveLoginResponse.postError(new InvalidLoginException(loginResponse.getErrorCode()));
-                    Log.d("LOGIN", "error: " + loginResponse.getErrorCode());
-                }
+            public void onSucess(LoginResponse response) {
+                SharedPreferencesManager.setString(SharedPreferencesManager.TOKEN, response.getToken());
+                SharedPreferencesManager.setString(SharedPreferencesManager.REGISTER_EMAIL, studentId + "@vnu.edu.vn");
+                liveLoginResponse.postSuccess("Login successfully\n");
             }
-
             @Override
-            public void onFailure(Call<LoginResponse> call, Throwable throwable) {
-                liveLoginResponse.postError(new Exception(throwable.getMessage()));
-                Log.d("LOGIN", "error: " + throwable.getMessage());
+            public void onError(Exception e) {
+                liveLoginResponse.postError(e);
             }
         });
         return liveLoginResponse;
