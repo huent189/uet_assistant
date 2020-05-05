@@ -11,9 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import vnu.uet.mobilecourse.assistant.R;
@@ -32,19 +30,20 @@ public class CalendarFragment extends Fragment {
 
         CalendarView calendarView = root.findViewById(R.id.calendarView);
 
-        updateDate(tvDate, calendarView);
+        initializeDate(tvDate, calendarView);
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                updateDate(tvDate, view);
+                String selectedDate = String.format("Ngày %02d/%02d/%d", dayOfMonth, month, year);
+                tvDate.setText(selectedDate);
             }
         });
 
         return root;
     }
 
-    private void updateDate(TextView tvDate, CalendarView calendarView) {
+    private void initializeDate(TextView tvDate, CalendarView calendarView) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String selectedDate = sdf.format(new Date(calendarView.getDate()));
         selectedDate = "Ngày " + selectedDate;

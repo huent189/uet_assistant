@@ -24,6 +24,18 @@
             android:layout_height="wrap_content"
             android:paddingBottom="?attr/actionBarSize">
 
+            <CalendarView
+                android:id="@+id/calendarView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:dateTextAppearance="@style/Subtitle"
+                android:background="@color/backgroundLight"
+                android:layout_marginStart="0dp"
+                android:weekDayTextAppearance="@style/Subtitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
             <TextView
                 android:id="@+id/tvTitle"
                 style="@style/ToolbarTitleText"
@@ -36,16 +48,6 @@
                 android:text="@string/title_calendar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <CalendarView
-                android:id="@+id/calendarView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:dateTextAppearance="@style/Subtitle"
-                android:weekDayTextAppearance="@color/primary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
