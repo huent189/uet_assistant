@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.CalendarView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -16,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
 
 public class CalendarFragment extends Fragment {
@@ -33,9 +32,9 @@ public class CalendarFragment extends Fragment {
 
         calendarView = root.findViewById(R.id.calendar_view);
 
-        calendarView.setOnDateClickListener(new CustomCalendarView.OnDateClickListener() {
+        calendarView.setOnDateChangeListener(new CustomCalendarView.OnDateChangeListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, Date date, long id) {
+            public void onDateChange(Date date) {
                 updateDate(tvDate, date);
             }
         });
@@ -54,9 +53,7 @@ public class CalendarFragment extends Fragment {
     }
 
     private void updateDate(TextView tvDate, Date date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        String selectedDate = sdf.format(date);
-        selectedDate = "Ngày " + selectedDate;
+        String selectedDate = DateTimeUtils.DATE_FORMAT.format(date);
         tvDate.setText(selectedDate);
     }
 }

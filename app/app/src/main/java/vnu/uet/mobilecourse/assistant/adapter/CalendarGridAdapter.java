@@ -15,7 +15,9 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 
 public class CalendarGridAdapter extends ArrayAdapter {
 
@@ -25,10 +27,13 @@ public class CalendarGridAdapter extends ArrayAdapter {
 
     private LayoutInflater inflater;
 
-    public CalendarGridAdapter(@NonNull Context context, List<Date> dates, Calendar currentCalendar) {
+    private int defaultSelectedId;
+
+    public CalendarGridAdapter(@NonNull Context context, List<Date> dates, Calendar currentCalendar, int defaultSelectedId) {
         super(context, R.layout.layout_calendar_cell);
 
         this.currentCalendar = currentCalendar;
+        this.defaultSelectedId = defaultSelectedId;
         this.dates = dates;
 
         inflater = LayoutInflater.from(context);
@@ -38,36 +43,38 @@ public class CalendarGridAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         Date dateOfMonth = dates.get(position);
+
         Calendar dateCalendar = Calendar.getInstance();
         dateCalendar.setTime(dateOfMonth);
+
+        Date currentDate = Calendar.getInstance().getTime();
 
         int dayOfMonth = dateCalendar.get(Calendar.DAY_OF_MONTH);
 
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.layout_calendar_cell, parent, false);
-
-        }
-
-        if (!isSameMonthAndYear(currentCalendar, dateCalendar)) {
-            //TODO: disable cell
-        } else if (currentCalendar.getTime().equals(dateOfMonth)) {
-            ImageView ivCurrentDate = convertView.findViewById(R.id.ivCurrentDate);
-            ivCurrentDate.setVisibility(View.VISIBLE);
         }
 
         TextView tvDayOfMonth = convertView.findViewById(R.id.tvDayOfMonth);
         tvDayOfMonth.setText(String.valueOf(dayOfMonth));
 
+        if (position == defaultSelectedId) {
+            ImageView ivSelectedCircle = convertView.findViewById(R.id.ivSelectedCircle);
+            ivSelectedCircle.setVisibility(View.VISIBLE);
+        }
+
+        if (!DateTimeUtils.isSameMonthAndYear(currentCalendar, dateCalendar)) {
+            //TODO: disable cell
+            Context context = getContext();
+            int color = ContextCompat.getColor(context, R.color.whiteDisable);
+            tvDayOfMonth.setTextColor(color);
+
+        } else if (DateTimeUtils.isSameDate(currentDate, dateOfMonth)) {
+            ImageView ivCurrentDate = convertView.findViewById(R.id.ivCurrentDate);
+            ivCurrentDate.setVisibility(View.VISIBLE);
+        }
+
         return convertView;
-    }
-
-    private boolean isSameMonthAndYear(Calendar current, Calendar target) {
-        int targetMonth = target.get(Calendar.MONTH) + 1;
-        int currentMonth = current.get(Calendar.MONTH) + 1;
-        int targetYear = target.get(Calendar.YEAR);
-        int currentYear = current.get(Calendar.YEAR);
-
-        return targetMonth == currentMonth && targetYear == currentYear;
     }
 
     @Override
