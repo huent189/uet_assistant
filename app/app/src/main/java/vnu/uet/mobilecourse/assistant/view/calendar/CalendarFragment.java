@@ -7,13 +7,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.adapter.AllCoursesAdapter;
+import vnu.uet.mobilecourse.assistant.adapter.TodoAdapter;
+import vnu.uet.mobilecourse.assistant.model.Course;
+import vnu.uet.mobilecourse.assistant.model.DailyTodoList;
+import vnu.uet.mobilecourse.assistant.model.Todo;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
 
@@ -39,6 +48,24 @@ public class CalendarFragment extends Fragment {
             }
         });
 
+        DailyTodoList todoList = new DailyTodoList(Calendar.getInstance().getTime());
+
+        Todo todo = new Todo();
+        todo.setTitle("Helo sf 1");
+        todo.setDeadline(Calendar.getInstance().getTime());
+
+        todoList.offer(todo);
+
+        Todo todo2 = new Todo();
+        todo2.setTitle("Helo sf2");
+        todo2.setDeadline(Calendar.getInstance().getTime());
+        todoList.offer(todo2);
+
+        TodoAdapter todoAdapter = new TodoAdapter(todoList, this);
+
+        RecyclerView rvDailyTodoList = root.findViewById(R.id.rvDailyTodoList);
+        rvDailyTodoList.setAdapter(todoAdapter);
+        rvDailyTodoList.setLayoutManager(new LinearLayoutManager(this.getContext()));
 //        initializeDate(tvDate, calendarView);
 //
 //        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {

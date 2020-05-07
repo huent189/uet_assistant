@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,23 +22,22 @@ import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 
 public class CustomCalendarView extends LinearLayout {
 
-    private ImageButton ibtnPrevious, ibtnNext;
-
     private TextView tvCurrentMonth;
 
     private CalendarDatesGridView gvDates;
 
-    private static final int MAX_CALENDAR_DAYS = 42;
+    private static final int MAX_CALENDAR_DAYS_BOUNDARY = 42;
+    private static final int MIN_CALENDAR_DAYS_BOUNDARY = 35;
 
     private Calendar calendar = Calendar.getInstance();
+
+    private Date selectedDate = calendar.getTime();
 
     private Context context;
 
     private List<Date> dates = new ArrayList<>();
 
-    private List<Todo> todos = new ArrayList<>();
-
-    private int prevSelectedIndex = -1;
+//    private List<Todo> todos = new ArrayList<>();
 
     private OnDateChangeListener onDateChangeListener;
 
@@ -53,20 +51,6 @@ public class CustomCalendarView extends LinearLayout {
         this.context = context;
 
         initializeLayout();
-
-        ibtnPrevious.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateToNextMonth();
-            }
-        });
-
-        ibtnNext.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navigateToPrevMonth();
-            }
-        });
     }
 
     private void navigateToNextMonth() {
@@ -82,32 +66,24 @@ public class CustomCalendarView extends LinearLayout {
     public void setOnDateChangeListener(OnDateChangeListener listener) {
         onDateChangeListener = listener;
 
-        gvDates.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                updateSelectedDate(position);
-            }
-        });
+        gvDates.setOnItemClickListener((parent, view, position, id) -> updateSelectedDate(position));
 
-        Date currentDate = calendar.getTime();
-        prevSelectedIndex = dates.indexOf(currentDate);
-        onDateChangeListener.onDateChange(currentDate);
+        onDateChangeListener.onDateChange(selectedDate);
     }
 
     private void updateSelectedDate(int position) {
         Date date = dates.get(position);
 
-        if (prevSelectedIndex > 0) {
-            View unselectedItem = gvDates.getChildAt(prevSelectedIndex);
-            updateItemView(unselectedItem, ItemState.UNSELECTED);
-        }
+        int prevSelectedIndex = dates.indexOf(selectedDate);
+        View unselectedItem = gvDates.getChildAt(prevSelectedIndex);
+        updateItemView(unselectedItem, ItemState.UNSELECTED);
 
         View selectedItem = gvDates.getChildAt(position);
         updateItemView(selectedItem, ItemState.SELECTED);
 
         onDateChangeListener.onDateChange(date);
 
-        prevSelectedIndex = position;
+        selectedDate = date;
 
         if (!DateTimeUtils.isSameMonthAndYear(date, calendar.getTime())) {
             int delta = date.compareTo(calendar.getTime());
@@ -145,19 +121,51 @@ public class CustomCalendarView extends LinearLayout {
         if (inflater != null) {
             View view = inflater.inflate(R.layout.layout_calendar, this);
 
-            ibtnNext = view.findViewById(R.id.ibtnNext);
-            ibtnPrevious = view.findViewById(R.id.ibtnPrevious);
             tvCurrentMonth = view.findViewById(R.id.tvCurrentMonth);
-            gvDates = view.findViewById(R.id.gvDates);
 
+            ImageButton ibtnNext = view.findViewById(R.id.ibtnNext);
+            ibtnNext.setOnClickListener(v -> {
+                // calculate next selected date
+                Calendar nextMonthCalendar = (Calendar) calendar.clone();
+                nextMonthCalendar.setTime(selectedDate);
+                nextMonthCalendar.add(Calendar.MONTH, 1);
+                selectedDate = nextMonthCalendar.getTime();
+
+                navigateToNextMonth();
+            });
+
+            ImageButton ibtnPrevious = view.findViewById(R.id.ibtnPrevious);
+            ibtnPrevious.setOnClickListener(v -> {
+                // calculate previous selected date
+                Calendar nextMonthCalendar = (Calendar) calendar.clone();
+                nextMonthCalendar.setTime(selectedDate);
+                nextMonthCalendar.add(Calendar.MONTH, -1);
+                selectedDate = nextMonthCalendar.getTime();
+
+                navigateToPrevMonth();
+            });
+
+            gvDates = view.findViewById(R.id.gvDates);
             gvDates.setOnSwipeListener(new CalendarDatesGridView.OnSwipeListener() {
                 @Override
                 public void onSwipeLeft() {
+                    // calculate next selected date
+                    Calendar nextMonthCalendar = (Calendar) calendar.clone();
+                    nextMonthCalendar.setTime(selectedDate);
+                    nextMonthCalendar.add(Calendar.MONTH, 1);
+                    selectedDate = nextMonthCalendar.getTime();
+
                     navigateToNextMonth();
                 }
 
                 @Override
                 public void onSwipeRight() {
+                    // calculate previous selected date
+                    Calendar nextMonthCalendar = (Calendar) calendar.clone();
+                    nextMonthCalendar.setTime(selectedDate);
+                    nextMonthCalendar.add(Calendar.MONTH, -1);
+                    selectedDate = nextMonthCalendar.getTime();
+
                     navigateToPrevMonth();
                 }
             });
@@ -168,7 +176,8 @@ public class CustomCalendarView extends LinearLayout {
 
     private void setupCalendar() {
         // display selected month title
-        String currentMonth = DateTimeUtils.MONTH_FORMAT.format(calendar.getTime());
+        Date currentDate = calendar.getTime();
+        String currentMonth = DateTimeUtils.MONTH_FORMAT.format(currentDate);
         tvCurrentMonth.setText(currentMonth);
 
         // setup calendar with selected month
@@ -183,24 +192,27 @@ public class CustomCalendarView extends LinearLayout {
         dates.clear();
 
         // append date into date list
-        while (dates.size() < MAX_CALENDAR_DAYS) {
+        while (dates.size() < MAX_CALENDAR_DAYS_BOUNDARY) {
             dates.add(monthCalendar.getTime());
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
-        // default selected date in calendar
-        // especially needed in case change between month in calendar
-        int defaultSelectedIdx = prevSelectedIndex;
+        // remove unnecessary date in calendar
+        Date boundaryDate = dates.get(MIN_CALENDAR_DAYS_BOUNDARY);
+        if (!DateTimeUtils.isSameMonthAndYear(currentDate, boundaryDate)) {
+            for (int i = 0; i < 7; i++) {
+                dates.remove(MIN_CALENDAR_DAYS_BOUNDARY);
+            }
+        }
 
         // create adapter
-        CalendarGridAdapter gridAdapter = new CalendarGridAdapter(context, dates, calendar, defaultSelectedIdx);
+        CalendarGridAdapter gridAdapter = new CalendarGridAdapter(context, dates, calendar, selectedDate);
         gvDates.setAdapter(gridAdapter);
 
         // in case change between month in calendar
         // re-render daily TodoList
         if (onDateChangeListener != null) {
-            Date defaultSelectedDate = dates.get(defaultSelectedIdx);
-            onDateChangeListener.onDateChange(defaultSelectedDate);
+            onDateChangeListener.onDateChange(selectedDate);
         }
     }
 

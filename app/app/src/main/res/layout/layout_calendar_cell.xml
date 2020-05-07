@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/background"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:padding="@dimen/sibling_margin"
+    android:orientation="vertical"
     android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -14,8 +14,8 @@
 
         <ImageView
             android:id="@+id/ivSelectedCircle"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="@dimen/calendar_selected_circle_size"
+            android:layout_height="@dimen/calendar_selected_circle_size"
             android:src="@drawable/calendar_selected_item"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/tvDayOfMonth"
@@ -25,8 +25,8 @@
 
         <ImageView
             android:id="@+id/ivCurrentDate"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="@dimen/calendar_selected_circle_size"
+            android:layout_height="@dimen/calendar_selected_circle_size"
             android:src="@drawable/calendar_selected_item"
             android:tint="@color/primary"
             android:visibility="invisible"
@@ -40,12 +40,36 @@
             style="@style/Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="20"
             android:layout_gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </FrameLayout>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/calendar_small_margin_x2"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivHaveTodo"
+            android:layout_width="@dimen/calendar_dot_size"
+            android:layout_height="@dimen/calendar_dot_size"
+            android:src="@drawable/calendar_selected_item"
+            android:visibility="invisible"
+            android:layout_gravity="center_vertical"
+            android:tint="@color/accent" />
+
+<!--        <ImageView-->
+<!--            android:layout_marginStart="@dimen/calendar_small_margin"-->
+<!--            android:layout_width="@dimen/calendar_dot_size"-->
+<!--            android:layout_height="@dimen/calendar_dot_size"-->
+<!--            android:scaleX="1.25"-->
+<!--            android:scaleY="1.25"-->
+<!--            android:src="@drawable/ic_add_circle_24dp" />-->
+
+    </LinearLayout>
 
 </LinearLayout>

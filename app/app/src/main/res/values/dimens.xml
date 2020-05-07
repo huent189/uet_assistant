@@ -37,4 +37,8 @@
     <dimen name="small_text_size">12sp</dimen>
 
     <dimen name="calendar_cell_height">56dp</dimen>
+    <dimen name="calendar_dot_size">6dp</dimen>
+    <dimen name="calendar_selected_circle_size">28dp</dimen>
+    <dimen name="calendar_small_margin">2dp</dimen>
+    <dimen name="calendar_small_margin_x2">4dp</dimen>
 </resources>

@@ -1,20 +1,32 @@
 package vnu.uet.mobilecourse.assistant.model;
 
+import java.util.Date;
+
 public class Todo {
-    private String name;
+    private String title;
 
     private String todoList;
 
-    private String time;
+    private String description;
 
-    private String date, month, year;
+    private Date deadline;
 
-    public String getName() {
-        return name;
+    private Status status = Status.DOING;
+
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getTodoList() {
@@ -25,35 +37,24 @@ public class Todo {
         this.todoList = todoList;
     }
 
-    public String getTime() {
-        return time;
+    public Date getDeadline() {
+        return deadline;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setDeadline(Date deadline) {
+        this.deadline = deadline;
     }
 
-    public String getDate() {
-        return date;
+    public Status getStatus() {
+        return status;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
-    public String getMonth() {
-        return month;
-    }
-
-    public void setMonth(String month) {
-        this.month = month;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
+    public enum Status {
+        DOING,
+        DONE
     }
 }

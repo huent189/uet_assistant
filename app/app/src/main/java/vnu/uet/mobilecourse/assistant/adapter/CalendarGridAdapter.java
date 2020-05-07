@@ -1,7 +1,6 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +26,13 @@ public class CalendarGridAdapter extends ArrayAdapter {
 
     private LayoutInflater inflater;
 
-    private int defaultSelectedId;
+    private Date defaultSelectedDate;
 
-    public CalendarGridAdapter(@NonNull Context context, List<Date> dates, Calendar currentCalendar, int defaultSelectedId) {
+    public CalendarGridAdapter(@NonNull Context context, List<Date> dates, Calendar currentCalendar, Date defaultSelectedDate) {
         super(context, R.layout.layout_calendar_cell);
 
         this.currentCalendar = currentCalendar;
-        this.defaultSelectedId = defaultSelectedId;
+        this.defaultSelectedDate = defaultSelectedDate;
         this.dates = dates;
 
         inflater = LayoutInflater.from(context);
@@ -58,11 +57,6 @@ public class CalendarGridAdapter extends ArrayAdapter {
         TextView tvDayOfMonth = convertView.findViewById(R.id.tvDayOfMonth);
         tvDayOfMonth.setText(String.valueOf(dayOfMonth));
 
-        if (position == defaultSelectedId) {
-            ImageView ivSelectedCircle = convertView.findViewById(R.id.ivSelectedCircle);
-            ivSelectedCircle.setVisibility(View.VISIBLE);
-        }
-
         if (!DateTimeUtils.isSameMonthAndYear(currentCalendar, dateCalendar)) {
             //TODO: disable cell
             Context context = getContext();
@@ -72,6 +66,11 @@ public class CalendarGridAdapter extends ArrayAdapter {
         } else if (DateTimeUtils.isSameDate(currentDate, dateOfMonth)) {
             ImageView ivCurrentDate = convertView.findViewById(R.id.ivCurrentDate);
             ivCurrentDate.setVisibility(View.VISIBLE);
+
+        } else if (DateTimeUtils.isSameDate(defaultSelectedDate, dateOfMonth)) {
+            ImageView ivSelectedCircle = convertView.findViewById(R.id.ivSelectedCircle);
+            ivSelectedCircle.setVisibility(View.VISIBLE);
+
         }
 
         return convertView;
@@ -84,7 +83,10 @@ public class CalendarGridAdapter extends ArrayAdapter {
 
     @Override
     public int getPosition(@Nullable Object item) {
-        return dates.indexOf(item);
+        if (item instanceof Date)
+            return dates.indexOf(item);
+
+        return -1;
     }
 
     @Nullable
