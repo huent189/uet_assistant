@@ -15,11 +15,13 @@ import vnu.uet.mobilecourse.assistant.network.request.UserRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
 import vnu.uet.mobilecourse.assistant.network.response.LoginResponse;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class UserRepository {
     public StateLiveData<String> makeLoginRequest(String studentId, String password){
-        SharedPreferencesManager.clearAll();
-        final StateLiveData<String> liveLoginResponse = new StateLiveData<>();
+        clearSession();
+        final StateLiveData<String> liveLoginResponse = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
         UserRequest userRequest = HTTPClient.getCoursesClient().create(UserRequest.class);
         Call<JsonObject> call = userRequest.login(studentId, password);
         Log.d("LOGIN", "param: " + studentId + " " + password);
@@ -57,5 +59,9 @@ public class UserRepository {
                 liveLoginResponse.postError(e);
             }
         });
+    }
+    private void clearSession(){
+        SharedPreferencesManager.clearAll();
+        FirebaseAuth.getInstance().signOut();
     }
 }
