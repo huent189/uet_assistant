@@ -44,13 +44,13 @@ public interface ITodoRepository {
      * Delete an exist todo_
      * @param id of todo_
      */
-    void deleteTodo(String id);
+    Todo deleteTodo(String id);
 
     /**
      * Delete an exist TodoList and its todo_s
      * @param id of todoList
      */
-    void deleteTodoList(String id);
+    TodoList deleteTodoList(String id);
 
     /**
      * Modify an exist todo_
