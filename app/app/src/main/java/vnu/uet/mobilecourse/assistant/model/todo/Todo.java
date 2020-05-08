@@ -1,11 +1,13 @@
-package vnu.uet.mobilecourse.assistant.model;
+package vnu.uet.mobilecourse.assistant.model.todo;
 
 import java.util.Date;
 
 public class Todo {
+    private String id;
+
     private String title;
 
-    private String todoList;
+    private String todoListId;
 
     private String description;
 
@@ -29,12 +31,12 @@ public class Todo {
         this.description = description;
     }
 
-    public String getTodoList() {
-        return todoList;
+    public String getTodoListId() {
+        return todoListId;
     }
 
-    public void setTodoList(String todoList) {
-        this.todoList = todoList;
+    public void setTodoListId(String todoListId) {
+        this.todoListId = todoListId;
     }
 
     public Date getDeadline() {
@@ -43,6 +45,14 @@ public class Todo {
 
     public void setDeadline(Date deadline) {
         this.deadline = deadline;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Status getStatus() {

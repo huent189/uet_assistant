@@ -11,11 +11,14 @@ import android.widget.TextView;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
+import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 
 public class CalendarGridAdapter extends ArrayAdapter {
@@ -71,6 +74,17 @@ public class CalendarGridAdapter extends ArrayAdapter {
             ImageView ivSelectedCircle = convertView.findViewById(R.id.ivSelectedCircle);
             ivSelectedCircle.setVisibility(View.VISIBLE);
 
+        }
+
+        String dateString = DateTimeUtils.DATE_FORMAT.format(dateOfMonth);
+        Map<String, DailyTodoList> dailyLists = TodoRepository.getInstance().getDailyLists();
+        if (dailyLists.containsKey(dateString)) {
+            DailyTodoList currentDailyList = dailyLists.get(dateString);
+
+            if (currentDailyList != null && !currentDailyList.isEmpty()) {
+                ImageView ivHaveTodo = convertView.findViewById(R.id.ivHaveTodo);
+                ivHaveTodo.setVisibility(View.VISIBLE);
+            }
         }
 
         return convertView;
