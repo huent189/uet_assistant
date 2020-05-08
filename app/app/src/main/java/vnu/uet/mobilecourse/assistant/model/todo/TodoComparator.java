@@ -1,6 +1,8 @@
-package vnu.uet.mobilecourse.assistant.model;
+package vnu.uet.mobilecourse.assistant.model.todo;
 
 import java.util.Comparator;
+
+import vnu.uet.mobilecourse.assistant.model.todo.Todo;
 
 public class TodoComparator implements Comparator<Todo> {
     @Override

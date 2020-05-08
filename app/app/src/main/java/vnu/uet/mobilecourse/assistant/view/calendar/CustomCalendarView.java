@@ -17,7 +17,6 @@ import java.util.List;
 import androidx.annotation.Nullable;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.CalendarGridAdapter;
-import vnu.uet.mobilecourse.assistant.model.Todo;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 
 public class CustomCalendarView extends LinearLayout {
@@ -229,5 +228,9 @@ public class CustomCalendarView extends LinearLayout {
     private enum ItemState {
         SELECTED,
         UNSELECTED
+    }
+
+    public Date getSelectedDate() {
+        return selectedDate;
     }
 }

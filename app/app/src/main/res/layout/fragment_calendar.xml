@@ -52,7 +52,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 app:title="@string/title_all_courses"
-                app:menu="@menu/chat_toolbar_menu">
+                app:menu="@menu/todo_toolbar_menu">
 
                 <TextView
                     android:id="@+id/tvDate"
