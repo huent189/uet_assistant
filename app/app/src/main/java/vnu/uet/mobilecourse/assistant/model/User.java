@@ -1,48 +1,46 @@
 package vnu.uet.mobilecourse.assistant.model;
 
-import android.content.SharedPreferences;
+import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 
 public class User {
-    public User() {
-    }
-    private SharedPreferences preferences;
-    private String studentNumber;
-    private String password;
-    private String privateToken;
+    private static User user;
     private String token;
+    private String userId;
+    private String email;
+    public static User getInstance(){
+        if(user == null){
+            user = new User();
+            user.token = SharedPreferencesManager.getValue(SharedPreferencesManager.TOKEN);
+            user.email = SharedPreferencesManager.getValue(SharedPreferencesManager.REGISTER_EMAIL);
+            user.userId = SharedPreferencesManager.getValue(SharedPreferencesManager.USER_ID);
+        }
+        return user;
+    }
+
     public String getToken() {
         return token;
     }
 
     public void setToken(String token) {
         this.token = token;
+        SharedPreferencesManager.setString(SharedPreferencesManager.TOKEN, token);
     }
 
-    public String getPrivateToken() {
-        if(privateToken == null){
-            preferences.getString("TOKEN", "");
-        }
-        return privateToken;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setPrivateToken(String privateToken) {
-        this.privateToken = privateToken;
-        preferences.edit().putString("TOKEN", privateToken);
+    public void setUserId(String userId) {
+        this.userId = userId;
+        SharedPreferencesManager.setString(SharedPreferencesManager.USER_ID, userId);
     }
 
-    public String getStudentNumber() {
-        return studentNumber;
+    public String getEmail() {
+        return email;
     }
 
-    public void setStudentNumber(String studentNumber) {
-        this.studentNumber = studentNumber;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEmail(String email) {
+        this.email = email;
+        SharedPreferencesManager.setString(SharedPreferencesManager.REGISTER_EMAIL, email);
     }
 }

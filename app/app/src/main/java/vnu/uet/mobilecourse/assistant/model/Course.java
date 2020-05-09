@@ -1,16 +1,31 @@
 package vnu.uet.mobilecourse.assistant.model;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+import com.google.gson.annotations.SerializedName;
+
+@Entity
 public class Course {
-
+    @PrimaryKey
+    @NonNull
+    private int id;
+    @Ignore
     private int thumbnail;
-
+    @SerializedName("displayname")
     private String title;
-
-    private String id = "INT3100 2";
+    @SerializedName("idnumber")
+    private String code = "INT3100 2";
 
     public Course(int thumbnail, String title) {
         this.thumbnail = thumbnail;
         this.title = title;
+    }
+
+    public Course(String title, String code) {
+        this.title = title;
+        this.code = code;
     }
 
     public int getThumbnail() {
@@ -29,11 +44,27 @@ public class Course {
         this.title = title;
     }
 
-    public String getId() {
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "title='" + title + '\'' +
+                ", code='" + code + '\'' +
+                '}';
     }
 }
