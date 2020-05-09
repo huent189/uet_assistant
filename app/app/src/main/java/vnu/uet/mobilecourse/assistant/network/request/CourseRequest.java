@@ -6,8 +6,8 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 
-public interface UserRequest {
+public interface CourseRequest {
     @FormUrlEncoded
-    @POST("login/token.php")
-    Call<JsonObject> login(@Field("username") String username, @Field("password") String password);
+    @POST("webservice/rest/server.php?moodlewsrestformat=json&wsfunction=core_enrol_get_users_courses")
+    Call<JsonObject> getMyCoures(@Field("userid") String userId);
 }

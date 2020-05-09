@@ -1,52 +1,41 @@
 package vnu.uet.mobilecourse.assistant.repository;
 
-import android.content.Intent;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-
+import com.google.gson.JsonObject;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import vnu.uet.mobilecourse.assistant.exception.InvalidLoginException;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
-import vnu.uet.mobilecourse.assistant.model.Token;
+import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.UserRequest;
+import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
 import vnu.uet.mobilecourse.assistant.network.response.LoginResponse;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class UserRepository {
-    private UserRequest userRequest;
     public StateLiveData<String> makeLoginRequest(String studentId, String password){
-        final StateLiveData<String> liveLoginResponse = new StateLiveData<>();
-        userRequest = HTTPClient.getCoursesClient().create(UserRequest.class);
-        Call<LoginResponse> call = userRequest.login(studentId, password);
-        call.enqueue(new Callback<LoginResponse>() {
+        clearSession();
+        final StateLiveData<String> liveLoginResponse = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
+        UserRequest userRequest = HTTPClient.getCoursesClient().create(UserRequest.class);
+        Call<JsonObject> call = userRequest.login(studentId, password);
+        Log.d("LOGIN", "param: " + studentId + " " + password);
+        call.enqueue(new CoursesResponseCallback<LoginResponse>(LoginResponse.class) {
             @Override
-            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
-                LoginResponse loginResponse = response.body();
-                // hard code login firebase
-                if(loginResponse.isSuccess()){
-                    Token.setToken(loginResponse.getPrivateToken());
-//                    liveLoginResponse.postSuccess("Login successfully\n"+ loginResponse.toString());
-                    hardCodeFirebaseLogin(studentId+"@vnu.edu.vn", "abc123", liveLoginResponse);
-
-                } else {
-                    liveLoginResponse.postError(new InvalidLoginException(loginResponse.getErrorCode()));
-                }
+            public void onSucess(LoginResponse response) {
+                SharedPreferencesManager.setString(SharedPreferencesManager.TOKEN, response.getToken());
+                SharedPreferencesManager.setString(SharedPreferencesManager.REGISTER_EMAIL, studentId + "@vnu.edu.vn");
+                liveLoginResponse.postSuccess("Login successfully\n");
+                hardCodeFirebaseLogin(studentId+"@vnu.edu.vn", "abc123", liveLoginResponse);
             }
-
             @Override
-            public void onFailure(Call<LoginResponse> call, Throwable throwable) {
-                liveLoginResponse.postError(new Exception(throwable.getMessage()));
+            public void onError(Exception e) {
+                liveLoginResponse.postError(e);
             }
         });
         return liveLoginResponse;
@@ -70,5 +59,9 @@ public class UserRepository {
                 liveLoginResponse.postError(e);
             }
         });
+    }
+    private void clearSession(){
+        SharedPreferencesManager.clearAll();
+        FirebaseAuth.getInstance().signOut();
     }
 }
