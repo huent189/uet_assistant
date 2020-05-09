@@ -72,45 +72,6 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
         return courses.size();
     }
 
-//    @Override
-//    public int getCount() {
-//        return courses.size();
-//    }
-//
-//    @Override
-//    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-//        return view.equals(object);
-//    }
-//
-//    @NonNull
-//    @Override
-//    public Object instantiateItem(@NonNull ViewGroup container, int position) {
-//        Course course = courses.get(position);
-//
-//        layoutInflater = owner.getLayoutInflater();
-//
-//        View view = layoutInflater.inflate(R.layout.card_course, container, false);
-//
-//        ImageView ivThumbnail = view.findViewById(R.id.ivCourseThumbnail);
-//        ivThumbnail.setImageResource(course.getThumbnail());
-//
-//        TextView tvTitle = view.findViewById(R.id.tvCourseTitle);
-//        tvTitle.setText(course.getTitle());
-//
-//        CardView cvCourseContainer = view.findViewById(R.id.cvCourseContainer);
-//        int cardColor = getBackgroundColor(course.getThumbnail());
-//        cvCourseContainer.setCardBackgroundColor(cardColor);
-//
-//        container.addView(view, 0);
-//
-//        return view;
-//    }
-//
-//    @Override
-//    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-//        container.removeView((View) object);
-//    }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView ivCourseThumbnail;
 

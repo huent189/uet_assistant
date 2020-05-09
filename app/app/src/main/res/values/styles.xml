@@ -10,6 +10,7 @@
         <item name="android:editTextColor">@color/white</item>
         <item name="android:textColorHint">@color/whiteDisable</item>
         <item name="searchViewStyle">@style/SearchViewMy</item>
+        <item name="android:timePickerStyle">@style/TimePicker</item>
     </style>
 
     <style name="Button" parent="Widget.AppCompat.Button.Borderless.Colored">
@@ -75,6 +76,19 @@
     <style name="SendMessage" parent="Message">
         <item name="android:layout_gravity">end</item>
         <item name="android:background">@drawable/send_message_background</item>
+    </style>
+
+    <style name="TimePicker" parent="android:Widget.Material.Light.TimePicker">
+        <item name="android:timePickerMode">clock</item>
+        <item name="dialogCornerRadius">@dimen/small_radius</item>
+        <item name="android:descendantFocusability">blocksDescendants</item>
+        <item name="android:background">@color/background</item>
+        <item name="buttonBarButtonStyle">@style/Button</item>
+        <item name="android:headerBackground">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/backgroundLight</item>
+        <item name="android:numbersBackgroundColor">@color/background</item>
+        <item name="android:numbersInnerTextColor">@color/whiteDisable</item>
+        <item name="android:numbersTextColor">@color/white</item>
     </style>
 
     <style name="EditText" parent="Widget.AppCompat.EditText">

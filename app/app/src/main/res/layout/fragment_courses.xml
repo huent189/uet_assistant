@@ -38,13 +38,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-<!--                <androidx.viewpager.widget.ViewPager-->
-<!--                    android:id="@+id/vpCourseRecently"-->
-<!--                    style="@style/CardCourse"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/tvCourseRecently" />-->
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvCourseRecently"
                     android:layout_width="match_parent"

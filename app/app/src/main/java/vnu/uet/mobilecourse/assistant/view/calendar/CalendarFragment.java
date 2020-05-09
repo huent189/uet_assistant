@@ -1,5 +1,7 @@
 package vnu.uet.mobilecourse.assistant.view.calendar;
 
+import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -7,8 +9,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.Random;
@@ -129,6 +134,21 @@ public class CalendarFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Calendar calendar = Calendar.getInstance();
+
+        int HOUR = calendar.get(Calendar.HOUR);
+        int MINUTE = calendar.get(Calendar.MINUTE);
+
+        TimePickerDialog dialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+            }
+        }, HOUR, MINUTE, true);
+
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Thoát", dialog);
+        dialog.show();
+
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_create:

@@ -46,7 +46,7 @@
             android:id="@+id/etMessage"
             style="@style/EditText"
             android:layout_height="wrap_content"
-            android:paddingVertical="@dimen/sibling_margin"
+            android:paddingVertical="10dp"
             android:layout_width="0dp"
             android:layout_marginStart="@dimen/sibling_margin_x3"
             android:layout_marginEnd="@dimen/sibling_margin"
@@ -66,7 +66,7 @@
         <Button
             android:id="@+id/button"
             style="@style/CircleButton"
-            android:layout_width="37dp"
+            android:layout_width="40dp"
             android:layout_height="0dp"
             android:layout_marginEnd="@dimen/sibling_margin_x3"
             app:layout_constraintBottom_toBottomOf="@+id/etMessage"
