@@ -34,14 +34,13 @@ public class UserRepository {
             public void onSucess(LoginResponse response) {
                 User.getInstance().setToken(response.getToken());
                 User.getInstance().setEmail(studentId + "@vnu.edu.vn");
-                liveLoginResponse.postSuccess("Login successfully\n");
-                hardCodeFirebaseLogin(studentId+"@vnu.edu.vn", "abc123", liveLoginResponse);
                 userRequest.getUserId().enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                         JsonElement userId = response.body().get("userid");
                         if(userId != null){
                             User.getInstance().setUserId(userId.getAsString());
+                            liveLoginResponse.postSuccess("Login successfully\n");
                         }
                     }
                     @Override
@@ -49,6 +48,8 @@ public class UserRepository {
                         liveLoginResponse.postError(new Exception(throwable));
                     }
                 });
+                hardCodeFirebaseLogin(studentId+"@vnu.edu.vn", "abc123", liveLoginResponse);
+
             }
             @Override
             public void onError(Call<JsonElement> call, Exception e) {
