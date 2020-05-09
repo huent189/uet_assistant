@@ -16,12 +16,7 @@ public class Course {
     @SerializedName("displayname")
     private String title;
     @SerializedName("idnumber")
-    private String code = "INT3100 2";
-
-    public Course(int thumbnail, String title) {
-        this.thumbnail = thumbnail;
-        this.title = title;
-    }
+    private String code;
 
     public Course(String title, String code) {
         this.title = title;

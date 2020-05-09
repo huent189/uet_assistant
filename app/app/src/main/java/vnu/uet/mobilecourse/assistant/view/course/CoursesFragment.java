@@ -51,13 +51,44 @@ public class CoursesFragment extends Fragment {
 
         viewModel.initialize();
 
-        viewModel.getCourses().observe(getViewLifecycleOwner(), courses -> recentlyCoursesAdapter.notifyDataSetChanged());
+        ShimmerRecyclerView shimmerRvCourseRecently = root.findViewById(R.id.shimmerRvCourseRecently);
+        shimmerRvCourseRecently.showShimmerAdapter();
+
+
+        CoursesFragment fragment = this;
+
+
+//        ViewPager recentlyCoursesView = root.findViewById(R.id.vpCourseRecently);
+//        recentlyCoursesView.setAdapter(recentlyCoursesAdapter);
+
+        RecyclerView rvCourseRecently = root.findViewById(R.id.rvCourseRecently);
+        rvCourseRecently.setAdapter(recentlyCoursesAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        rvCourseRecently.setLayoutManager(layoutManager);
+
+        viewModel.getCourses().observe(getViewLifecycleOwner(), new Observer<List<Course>>() {
+            @Override
+            public void onChanged(List<Course> courses) {
+                if (courses == null) {
+                    shimmerRvCourseRecently.showShimmerAdapter();
+                    rvCourseRecently.setVisibility(View.INVISIBLE);
+                    recentlyCoursesAdapter = new RecentlyCoursesAdapter(new ArrayList<Course>(), fragment);
+                } else {
+                    shimmerRvCourseRecently.hideShimmerAdapter();
+                    rvCourseRecently.setVisibility(View.VISIBLE);
+                    recentlyCoursesAdapter = new RecentlyCoursesAdapter(courses, fragment);
+                    rvCourseRecently.setAdapter(recentlyCoursesAdapter);
+                    recentlyCoursesAdapter.notifyDataSetChanged();
+                }
+
+            }
+        });
 
         initializeToolbar(root);
 
-        initializeRecentlyCoursesView(root);
+//        initializeRecentlyCoursesView(root);
 
-        initializeAllCoursesView(root);
+//        initializeAllCoursesView(root);
 
         return root;
     }
@@ -75,9 +106,6 @@ public class CoursesFragment extends Fragment {
     }
 
     private void initializeRecentlyCoursesView(View root) {
-        ShimmerRecyclerView shimmerRvCourseRecently = root.findViewById(R.id.shimmerRvCourseRecently);
-        shimmerRvCourseRecently.showShimmerAdapter();
-
         recentlyCoursesAdapter = new RecentlyCoursesAdapter(viewModel.getCourses().getValue(), this);
 
 //        ViewPager recentlyCoursesView = root.findViewById(R.id.vpCourseRecently);

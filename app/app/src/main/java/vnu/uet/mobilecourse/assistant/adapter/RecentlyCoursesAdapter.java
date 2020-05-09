@@ -64,7 +64,7 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
         final Course course = courses.get(position);
 
         holder.tvCourseTitle.setText(course.getTitle());
-        holder.tvCourseId.setText(course.getId());
+        holder.tvCourseId.setText(course.getCode());
     }
 
     @Override
