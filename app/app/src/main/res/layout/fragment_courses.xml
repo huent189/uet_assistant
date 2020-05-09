@@ -38,11 +38,52 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+<!--                <com.facebook.shimmer.ShimmerFrameLayout-->
+<!--                    android:id="@+id/shimmerRvCourseRecently"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:paddingHorizontal="@dimen/sibling_margin"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/tvCourseRecently">-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <include layout="@layout/shimmer_card_course" />-->
+
+<!--                        <include layout="@layout/shimmer_card_course" />-->
+
+<!--                        <include layout="@layout/shimmer_card_course" />-->
+
+<!--                    </LinearLayout>-->
+
+<!--                </com.facebook.shimmer.ShimmerFrameLayout>-->
+
+                <com.cooltechworks.views.shimmer.ShimmerRecyclerView
+                    android:id="@+id/shimmerRvCourseRecently"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="@dimen/sibling_margin"
+                    app:shimmer_demo_child_count="3"
+                    app:shimmer_demo_layout="@layout/shimmer_card_course"
+                    app:shimmer_demo_layout_manager_type="linear_horizontal"
+                    app:shimmer_demo_angle="20"
+                    app:shimmer_demo_shimmer_color="@color/background"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvCourseRecently" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvCourseRecently"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:visibility="invisible"
                     android:paddingHorizontal="@dimen/sibling_margin"
                     android:clipToPadding="false"
                     app:layout_constraintEnd_toEndOf="parent"

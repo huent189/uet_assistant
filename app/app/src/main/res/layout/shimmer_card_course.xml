@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/sibling_margin">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvCourseContainer"
+        android:layout_width="@dimen/card_course_width"
+        android:layout_height="@dimen/card_course_height"
+        app:cardBackgroundColor="@color/backgroundLight"
+        app:cardCornerRadius="@dimen/view_radius">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/card_course_height">
+
+            <ImageView
+                android:layout_width="340dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/sibling_margin"
+                android:src="@drawable/ic_image_56dp"
+                android:tint="@color/background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvCourseId" />
+
+            <TextView
+                android:id="@+id/tvCourseTitle"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/sibling_margin_x3"
+                android:layout_marginTop="@dimen/sibling_margin_x3"
+                android:background="@color/background"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvCourseId"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sibling_margin"
+                android:background="@color/background"
+                app:layout_constraintStart_toStartOf="@+id/tvCourseTitle"
+                app:layout_constraintTop_toBottomOf="@+id/tvCourseTitle" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

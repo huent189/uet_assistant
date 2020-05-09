@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
+import com.facebook.shimmer.ShimmerFrameLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +75,9 @@ public class CoursesFragment extends Fragment {
     }
 
     private void initializeRecentlyCoursesView(View root) {
+        ShimmerRecyclerView shimmerRvCourseRecently = root.findViewById(R.id.shimmerRvCourseRecently);
+        shimmerRvCourseRecently.showShimmerAdapter();
+
         recentlyCoursesAdapter = new RecentlyCoursesAdapter(viewModel.getCourses().getValue(), this);
 
 //        ViewPager recentlyCoursesView = root.findViewById(R.id.vpCourseRecently);
