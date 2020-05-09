@@ -57,7 +57,7 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Vi
         final Course currentCourse = courses.get(position);
 
         holder.tvCourseTitle.setText(currentCourse.getTitle());
-        holder.tvCourseId.setText(currentCourse.getId());
+        holder.tvCourseId.setText(currentCourse.getCode());
 
         holder.btnAccessCourse.setOnClickListener(new View.OnClickListener() {
             @Override

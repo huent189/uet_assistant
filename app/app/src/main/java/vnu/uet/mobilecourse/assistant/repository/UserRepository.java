@@ -7,9 +7,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.UserRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
@@ -23,18 +27,31 @@ public class UserRepository {
         clearSession();
         final StateLiveData<String> liveLoginResponse = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
         UserRequest userRequest = HTTPClient.getCoursesClient().create(UserRequest.class);
-        Call<JsonObject> call = userRequest.login(studentId, password);
+        Call<JsonElement> call = userRequest.login(studentId, password);
         Log.d("LOGIN", "param: " + studentId + " " + password);
         call.enqueue(new CoursesResponseCallback<LoginResponse>(LoginResponse.class) {
             @Override
             public void onSucess(LoginResponse response) {
-                SharedPreferencesManager.setString(SharedPreferencesManager.TOKEN, response.getToken());
-                SharedPreferencesManager.setString(SharedPreferencesManager.REGISTER_EMAIL, studentId + "@vnu.edu.vn");
+                User.getInstance().setToken(response.getToken());
+                User.getInstance().setEmail(studentId + "@vnu.edu.vn");
                 liveLoginResponse.postSuccess("Login successfully\n");
                 hardCodeFirebaseLogin(studentId+"@vnu.edu.vn", "abc123", liveLoginResponse);
+                userRequest.getUserId().enqueue(new Callback<JsonObject>() {
+                    @Override
+                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        JsonElement userId = response.body().get("userid");
+                        if(userId != null){
+                            User.getInstance().setUserId(userId.getAsString());
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                        liveLoginResponse.postError(new Exception(throwable));
+                    }
+                });
             }
             @Override
-            public void onError(Exception e) {
+            public void onError(Call<JsonElement> call, Exception e) {
                 liveLoginResponse.postError(e);
             }
         });
