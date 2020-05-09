@@ -74,8 +74,14 @@ public class CoursesFragment extends Fragment {
     private void initializeRecentlyCoursesView(View root) {
         recentlyCoursesAdapter = new RecentlyCoursesAdapter(viewModel.getCourses().getValue(), this);
 
-        ViewPager recentlyCoursesView = root.findViewById(R.id.vpCourseRecently);
-        recentlyCoursesView.setAdapter(recentlyCoursesAdapter);
+//        ViewPager recentlyCoursesView = root.findViewById(R.id.vpCourseRecently);
+//        recentlyCoursesView.setAdapter(recentlyCoursesAdapter);
+
+        RecyclerView rvCourseRecently = root.findViewById(R.id.rvCourseRecently);
+        rvCourseRecently.setAdapter(recentlyCoursesAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        rvCourseRecently.setLayoutManager(layoutManager);
+
     }
 
     private void initializeAllCoursesView(View root) {
