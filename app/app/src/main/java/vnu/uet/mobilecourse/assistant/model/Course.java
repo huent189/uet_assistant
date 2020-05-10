@@ -17,7 +17,8 @@ public class Course {
     private String title;
     @SerializedName("idnumber")
     private String code;
-
+    @SerializedName("lastaccess")
+    private long lastAccessTime;
     public Course(String title, String code) {
         this.title = title;
         this.code = code;
@@ -53,6 +54,14 @@ public class Course {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public long getLastAccessTime() {
+        return lastAccessTime;
+    }
+
+    public void setLastAccessTime(long lastAccessTime) {
+        this.lastAccessTime = lastAccessTime;
     }
 
     @Override
