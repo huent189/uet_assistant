@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.viewmodel;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
@@ -35,10 +36,11 @@ public class CoursesViewModel extends ViewModel {
     }
 
     public LiveData<List<Course>> getRecentlyCourses() {
-        MutableLiveData<List<Course>> liveData = new MutableLiveData<>();
+        MediatorLiveData<List<Course>> liveData = new MediatorLiveData<>();
 
-        if (view != null) {
-            courses.observe(view.getViewLifecycleOwner(), courses -> {
+        liveData.addSource(courses, new Observer<List<Course>>() {
+            @Override
+            public void onChanged(List<Course> courses) {
                 if (courses == null) {
                     liveData.postValue(null);
                     return;
@@ -47,22 +49,55 @@ public class CoursesViewModel extends ViewModel {
                 List<Course> recentlyCourses = courses
                         .stream()
                         .sorted((course1, course2) -> {
-                            Date lassAccessTime1 = course1.getLastAccessTime();
-                            Date lassAccessTime2 = course2.getLastAccessTime();
+                            long lastAccessTime1 = course1.getLastAccessTime();
+                            long lastAccessTime2 = course2.getLastAccessTime();
 
-                            int comparision = 1;//lassAccessTime1.compareTo(lassAccessTime2);
+                            int comparision = Long.compare(lastAccessTime1, lastAccessTime2);
 
                             // reverse from newest to oldest
                             comparision *= -1;
 
                             return comparision;
                         })
-                        .collect(Collectors.toList())
-                        .subList(0, MAX_RECENTLY_INDEX);
+                        .collect(Collectors.toList());
+
+
+                if (recentlyCourses.size() > MAX_RECENTLY_INDEX)
+                    recentlyCourses = recentlyCourses.subList(0, MAX_RECENTLY_INDEX);
 
                 liveData.postValue(recentlyCourses);
-            });
-        }
+            }
+        });
+
+//        if (view != null) {
+//            courses.observe(view.getViewLifecycleOwner(), courses -> {
+//                if (courses == null) {
+//                    liveData.postValue(null);
+//                    return;
+//                }
+//
+//                List<Course> recentlyCourses = courses
+//                        .stream()
+//                        .sorted((course1, course2) -> {
+//                            long lastAccessTime1 = course1.getLastAccessTime();
+//                            long lastAccessTime2 = course2.getLastAccessTime();
+//
+//                            int comparision = Long.compare(lastAccessTime1, lastAccessTime2);
+//
+//                            // reverse from newest to oldest
+//                            comparision *= -1;
+//
+//                            return comparision;
+//                        })
+//                        .collect(Collectors.toList());
+//
+//
+//                if (recentlyCourses.size() > MAX_RECENTLY_INDEX)
+//                    recentlyCourses = recentlyCourses.subList(0, MAX_RECENTLY_INDEX);
+//
+//                liveData.postValue(recentlyCourses);
+//            });
+//        }
 
         return liveData;
     }

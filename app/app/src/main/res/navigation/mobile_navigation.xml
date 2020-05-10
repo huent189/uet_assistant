@@ -40,7 +40,11 @@
         android:id="@+id/navigation_calendar"
         android:name="vnu.uet.mobilecourse.assistant.view.calendar.CalendarFragment"
         android:label="@string/title_calendar"
-        tools:layout="@layout/fragment_calendar" />
+        tools:layout="@layout/fragment_calendar" >
+        <action
+            android:id="@+id/action_navigation_calendar_to_addTodoFragment"
+            app:destination="@id/navigation_add_todo" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_explore_course"
         android:name="vnu.uet.mobilecourse.assistant.view.course.ExploreCourseFragment"
@@ -56,5 +60,11 @@
         android:name="vnu.uet.mobilecourse.assistant.view.profile.FriendProfileFragment"
         android:label="fragment_friend_profile"
         tools:layout="@layout/fragment_friend_profile" />
+
+    <fragment
+        android:id="@+id/navigation_add_todo"
+        android:name="vnu.uet.mobilecourse.assistant.AddTodoFragment"
+        android:label="fragment_add_todo"
+        tools:layout="@layout/fragment_add_todo" />
 
 </navigation>

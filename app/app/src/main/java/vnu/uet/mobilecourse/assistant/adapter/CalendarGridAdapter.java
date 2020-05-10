@@ -16,6 +16,9 @@ import java.util.Map;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
 import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
@@ -77,15 +80,31 @@ public class CalendarGridAdapter extends ArrayAdapter {
         }
 
         String dateString = DateTimeUtils.DATE_FORMAT.format(dateOfMonth);
-        Map<String, DailyTodoList> dailyLists = TodoRepository.getInstance().getDailyLists();
-        if (dailyLists.containsKey(dateString)) {
-            DailyTodoList currentDailyList = dailyLists.get(dateString);
 
-            if (currentDailyList != null && !currentDailyList.isEmpty()) {
-                ImageView ivHaveTodo = convertView.findViewById(R.id.ivHaveTodo);
-                ivHaveTodo.setVisibility(View.VISIBLE);
+        LiveData<DailyTodoList> dailyList = TodoRepository.getInstance().getTodoListByDate(dateOfMonth);
+
+        MediatorLiveData<DailyTodoList> trackLiveData = new MediatorLiveData<>();
+
+        View finalConvertView = convertView;
+
+        trackLiveData.addSource(dailyList, new Observer<DailyTodoList>() {
+            @Override
+            public void onChanged(DailyTodoList todos) {
+                if (todos != null && !todos.isEmpty()) {
+                    ImageView ivHaveTodo = finalConvertView.findViewById(R.id.ivHaveTodo);
+                    ivHaveTodo.setVisibility(View.VISIBLE);
+                }
             }
-        }
+        });
+
+//        if (dailyLists.containsKey(dateString)) {
+//            DailyTodoList currentDailyList = dailyLists.get(dateString);
+//
+//            if (currentDailyList != null && !currentDailyList.isEmpty()) {
+//                ImageView ivHaveTodo = convertView.findViewById(R.id.ivHaveTodo);
+//                ivHaveTodo.setVisibility(View.VISIBLE);
+//            }
+//        }
 
         return convertView;
     }

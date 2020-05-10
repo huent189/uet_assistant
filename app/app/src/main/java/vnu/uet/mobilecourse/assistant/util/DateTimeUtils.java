@@ -9,10 +9,13 @@ public class DateTimeUtils {
     public static final SimpleDateFormat DATE_FORMAT =
             new SimpleDateFormat("'Ngày' dd/MM/yyyy", Locale.ROOT);
 
+    public static final SimpleDateFormat SHORT_DATE_FORMAT =
+            new SimpleDateFormat("dd/MM/yyyy", Locale.ROOT);
+
     public static final SimpleDateFormat MONTH_FORMAT =
             new SimpleDateFormat("'Tháng' MM, yyyy", Locale.ROOT);
 
-    public static final SimpleDateFormat TIME_FORMAT =
+    public static final SimpleDateFormat DATE_TIME_FORMAT =
             new SimpleDateFormat("dd/MM/yy hh:mm", Locale.ROOT);
 
     public static boolean isSameMonthAndYear(Calendar current, Calendar target) {

@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.view.calendar;
 
+import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -23,8 +24,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
@@ -45,6 +50,8 @@ public class CalendarFragment extends Fragment {
 
     private TodoAdapter todoAdapter;
 
+    private NavController navController;
+
     private RecyclerView rvDailyTodoList;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -55,6 +62,11 @@ public class CalendarFragment extends Fragment {
         //        todoAdapter = new TodoAdapter(todoList, this);
 
         initializeToolbar(root);
+
+        Activity activity = getActivity();
+
+        if (activity != null)
+            navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
 
         rvDailyTodoList = root.findViewById(R.id.rvDailyTodoList);
 //        rvDailyTodoList.setAdapter(todoAdapter);
@@ -113,17 +125,26 @@ public class CalendarFragment extends Fragment {
         String selectedDate = DateTimeUtils.DATE_FORMAT.format(date);
         tvDate.setText(selectedDate);
 
-        Map<String, DailyTodoList> dailyLists = TodoRepository.getInstance().getDailyLists();
-        DailyTodoList currentDailyList = dailyLists.get(selectedDate);
+        LiveData<DailyTodoList> dailyList = TodoRepository.getInstance().getTodoListByDate(date);
 
-        if (currentDailyList == null) {
-            currentDailyList = new DailyTodoList(date);
-        }
+        CalendarFragment fragment = this;
 
-        dailyLists.put(selectedDate, currentDailyList);
+        dailyList.observe(getViewLifecycleOwner(), new Observer<DailyTodoList>() {
+            @Override
+            public void onChanged(DailyTodoList dailyTodoList) {
+                todoAdapter = new TodoAdapter(dailyTodoList, fragment);
+                rvDailyTodoList.setAdapter(todoAdapter);
+            }
+        });
 
-        todoAdapter = new TodoAdapter(currentDailyList, this);
-        rvDailyTodoList.setAdapter(todoAdapter);
+//        if (currentDailyList == null) {
+//            currentDailyList = new DailyTodoList(date);
+//        }
+//
+//        dailyLists.put(selectedDate, currentDailyList);
+//
+//        todoAdapter = new TodoAdapter(currentDailyList, this);
+//        rvDailyTodoList.setAdapter(todoAdapter);
     }
 
     @Override
@@ -134,44 +155,50 @@ public class CalendarFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Calendar calendar = Calendar.getInstance();
-
-        int HOUR = calendar.get(Calendar.HOUR);
-        int MINUTE = calendar.get(Calendar.MINUTE);
-
-        TimePickerDialog dialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-            }
-        }, HOUR, MINUTE, true);
-
-        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Thoát", dialog);
-        dialog.show();
+//        Calendar calendar = Calendar.getInstance();
+//
+//        int HOUR = calendar.get(Calendar.HOUR);
+//        int MINUTE = calendar.get(Calendar.MINUTE);
+//
+//        TimePickerDialog dialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+//            @Override
+//            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+//
+//            }
+//        }, HOUR, MINUTE, true);
+//
+//        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Thoát", dialog);
+//        dialog.show();
 
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_create:
-                Date currentDate = calendarView.getSelectedDate();
-                String dateString = DateTimeUtils.DATE_FORMAT.format(currentDate);
+                Date date = calendarView.getSelectedDate();
+                String currentDate = DateTimeUtils.SHORT_DATE_FORMAT.format(date);
+                Bundle bundle = new Bundle();
+                bundle.putString("currentDate", currentDate);
 
-                DailyTodoList dailyTodoList = TodoRepository.getInstance()
-                        .getDailyLists()
-                        .get(dateString);
-
-                if (dailyTodoList == null)
-                    dailyTodoList = new DailyTodoList(currentDate);
-
-                Todo todo = new Todo();
-                todo.setTitle("Todo " + new Random().nextInt(50));
-                todo.setDeadline(currentDate);
-
-                dailyTodoList.offer(todo);
-
-                TodoRepository.getInstance().getDailyLists().put(dateString, dailyTodoList);
-
-                todoAdapter = new TodoAdapter(dailyTodoList, this);
-                rvDailyTodoList.setAdapter(todoAdapter);
+                navController.navigate(R.id.action_navigation_calendar_to_addTodoFragment, bundle);
+//                Date currentDate = calendarView.getSelectedDate();
+//                String dateString = DateTimeUtils.DATE_FORMAT.format(currentDate);
+//
+//                DailyTodoList dailyTodoList = TodoRepository.getInstance()
+//                        .getDailyLists()
+//                        .get(dateString);
+//
+//                if (dailyTodoList == null)
+//                    dailyTodoList = new DailyTodoList(currentDate);
+//
+//                Todo todo = new Todo();
+//                todo.setTitle("Todo " + new Random().nextInt(50));
+//                todo.setDeadline(currentDate);
+//
+//                dailyTodoList.offer(todo);
+//
+//                TodoRepository.getInstance().getDailyLists().put(dateString, dailyTodoList);
+//
+//                todoAdapter = new TodoAdapter(dailyTodoList, this);
+//                rvDailyTodoList.setAdapter(todoAdapter);
         }
 
         return super.onOptionsItemSelected(item);
