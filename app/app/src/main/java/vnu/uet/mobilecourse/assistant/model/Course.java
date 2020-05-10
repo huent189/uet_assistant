@@ -6,17 +6,25 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 @Entity
 public class Course {
     @PrimaryKey
     @NonNull
     private int id;
-    @Ignore
-    private int thumbnail;
+
     @SerializedName("displayname")
     private String title;
+
     @SerializedName("idnumber")
     private String code;
+
+    @Ignore
+    private Date lastAccessTime;
+
+    @Ignore
+    private int thumbnail;
 
     public Course(String title, String code) {
         this.title = title;
@@ -53,6 +61,14 @@ public class Course {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Date getLastAccessTime() {
+        return lastAccessTime;
+    }
+
+    public void setLastAccessTime(Date accessTime) {
+        this.lastAccessTime = accessTime;
     }
 
     @Override

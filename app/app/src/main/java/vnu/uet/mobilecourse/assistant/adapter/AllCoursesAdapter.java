@@ -92,15 +92,12 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Vi
 
         private Button btnAccessCourse;
 
-//        private LinearLayout layoutContainer;
-
         public ViewHolder(@NonNull View view) {
             super(view);
 
             tvCourseTitle = view.findViewById(R.id.tvCourseTitle);
             tvCourseId = view.findViewById(R.id.tvCourseId);
             btnAccessCourse = view.findViewById(R.id.btnCourseAccess);
-//            layoutContainer = view.findViewById(R.id.layoutContainer);
         }
     }
 }

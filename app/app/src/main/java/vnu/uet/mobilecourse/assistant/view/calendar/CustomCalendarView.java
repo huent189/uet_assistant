@@ -42,6 +42,10 @@ public class CustomCalendarView extends LinearLayout {
 
     public CustomCalendarView(Context context) {
         super(context);
+
+        this.context = context;
+
+        initializeLayout();
     }
 
     public CustomCalendarView(Context context, @Nullable AttributeSet attrs) {
@@ -112,6 +116,8 @@ public class CustomCalendarView extends LinearLayout {
         super(context, attrs, defStyleAttr);
 
         this.context = context;
+
+        initializeLayout();
     }
 
     private void initializeLayout() {

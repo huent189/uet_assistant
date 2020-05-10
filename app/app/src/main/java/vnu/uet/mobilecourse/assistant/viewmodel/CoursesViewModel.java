@@ -9,6 +9,7 @@ import vnu.uet.mobilecourse.assistant.repository.CourseRepository;
 import vnu.uet.mobilecourse.assistant.view.course.CoursesFragment;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,30 +35,32 @@ public class CoursesViewModel extends ViewModel {
     }
 
     public LiveData<List<Course>> getRecentlyCourses() {
-        MutableLiveData<List<Course>> liveData = new MutableLiveData<List<Course>>();
+        MutableLiveData<List<Course>> liveData = new MutableLiveData<>();
 
         if (view != null) {
-            courses.observe(view.getViewLifecycleOwner(), new Observer<List<Course>>() {
-                @Override
-                public void onChanged(List<Course> courses) {
-                    if (courses == null) {
-                        liveData.postValue(null);
-                        return;
-                    }
-
-                    List<Course> recentlyCourses = courses
-                            .stream()
-                            .sorted(new Comparator<Course>() {
-                                @Override
-                                public int compare(Course o1, Course o2) {
-                                    return o1.getCode().compareTo(o2.getCode());
-                                }
-                            })
-                            .collect(Collectors.toList())
-                            .subList(0, MAX_RECENTLY_INDEX);
-
-                    liveData.postValue(recentlyCourses);
+            courses.observe(view.getViewLifecycleOwner(), courses -> {
+                if (courses == null) {
+                    liveData.postValue(null);
+                    return;
                 }
+
+                List<Course> recentlyCourses = courses
+                        .stream()
+                        .sorted((course1, course2) -> {
+                            Date lassAccessTime1 = course1.getLastAccessTime();
+                            Date lassAccessTime2 = course2.getLastAccessTime();
+
+                            int comparision = 1;//lassAccessTime1.compareTo(lassAccessTime2);
+
+                            // reverse from newest to oldest
+                            comparision *= -1;
+
+                            return comparision;
+                        })
+                        .collect(Collectors.toList())
+                        .subList(0, MAX_RECENTLY_INDEX);
+
+                liveData.postValue(recentlyCourses);
             });
         }
 

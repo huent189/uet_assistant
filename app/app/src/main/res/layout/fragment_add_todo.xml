@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".AddTodoFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/aplThumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        app:elevation="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            style="@style/Toolbar"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            app:title="Thêm công việc">
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:paddingHorizontal="@dimen/sibling_margin_x2"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <EditText
+            android:id="@+id/editText"
+            style="@style/EditText"
+            android:layout_width="0dp"
+            android:layout_marginBottom="@dimen/sibling_margin_x4"
+            android:hint="Tên công việc"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editText2"
+            style="@style/EditText"
+            android:layout_width="0dp"
+            android:layout_marginTop="@dimen/sibling_margin_x2"
+            android:hint="Chọn nhóm công việc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText" />
+
+        <EditText
+            android:id="@+id/tvDescription"
+            style="@style/EditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sibling_margin_x2"
+            android:hint="Mô tả"
+            android:inputType="textMultiLine"
+            android:gravity="top"
+            android:minHeight="100dp"
+            android:paddingVertical="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText2" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sibling_margin_x2"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDescription">
+
+            <EditText
+                android:id="@+id/editText4"
+                style="@style/EditText"
+                android:layout_width="0dp"
+                android:layout_marginEnd="@dimen/sibling_margin_x2"
+                android:layout_weight="1"
+                android:backgroundTint="@color/primaryDark"
+                android:hint="Chọn ngày" />
+
+            <EditText
+                android:id="@+id/editText3"
+                style="@style/EditText"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/primaryDark"
+                android:hint="Chọn giờ" />
+
+        </LinearLayout>
+
+        <Button
+            style="@style/Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Lưu công việc"
+            android:layout_marginTop="@dimen/sibling_margin_x4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
