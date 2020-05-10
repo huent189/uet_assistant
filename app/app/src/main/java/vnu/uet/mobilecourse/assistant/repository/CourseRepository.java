@@ -8,6 +8,7 @@ import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
+import vnu.uet.mobilecourse.assistant.util.StringUtils;
 
 import java.util.List;
 
@@ -17,7 +18,6 @@ public class CourseRepository {
      */
     private static CourseRepository instance;
     private CoursesDAO dao;
-    private LiveData<List<Course>> myCourses;
     /**
      * Data set
      */
@@ -29,13 +29,16 @@ public class CourseRepository {
         if (instance == null) {
             instance = new CourseRepository();
             instance.dao = CoursesDatabase.getDatabase().coursesDAO();
-            instance.myCourses = instance.dao.getMyCourses();
         }
 
         return instance;
     }
 
     public LiveData<List<Course>> getCourses() {
+        updateMyCourses();
+        return dao.getMyCourses();
+    }
+    public void updateMyCourses(){
         CourseRequest request = HTTPClient.getCoursesClient().create(CourseRequest.class);
         request.getMyCoures(User.getInstance().getUserId())
                 .enqueue(new CoursesResponseCallback<Course[]>(Course[].class) {
@@ -45,12 +48,12 @@ public class CourseRepository {
                             @Override
                             public void run() {
                                 for (Course entity:response) {
+                                    entity.setTitle(StringUtils.courseTitleFormat(entity.getTitle()));
                                     dao.insert(entity);
                                 }
                             }
                         });
                     }
                 });
-        return myCourses;
     }
 }

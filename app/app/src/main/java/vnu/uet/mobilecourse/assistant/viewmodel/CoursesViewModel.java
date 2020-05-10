@@ -53,8 +53,8 @@ public class CoursesViewModel extends ViewModel {
                                     return o1.getCode().compareTo(o2.getCode());
                                 }
                             })
-                            .collect(Collectors.toList())
-                            .subList(0, MAX_RECENTLY_INDEX);
+                            .collect(Collectors.toList());
+//                            .subList(0, MAX_RECENTLY_INDEX);
 
                     liveData.postValue(recentlyCourses);
                 }
