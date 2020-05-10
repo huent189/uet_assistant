@@ -6,47 +6,49 @@
     android:background="@drawable/list_item_background"
     android:paddingHorizontal="@dimen/sibling_margin_x2"
     android:paddingVertical="@dimen/sibling_margin_x2"
-    android:id="@+id/layoutContainer"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/btnCourseAccess"
-            style="@style/CircleButton"
-            android:layout_width="@dimen/circle_button_size"
-            android:layout_height="@dimen/circle_button_size"
-            android:background="@drawable/accent_button_background"
-            android:backgroundTint="@color/accent"
-            android:foreground="@drawable/ic_play_arrow_16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <TextView
             android:id="@+id/tvCourseTitle"
-            android:layout_width="0dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/sibling_margin"
             android:textSize="@dimen/header2_size"
-            android:textStyle="bold"
+            android:background="@color/backgroundLight"
             app:layout_constraintBottom_toTopOf="@+id/tvCourseId"
-            app:layout_constraintEnd_toStartOf="@+id/btnCourseAccess"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvCourseId"
-            android:layout_width="0dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="@string/course_code_error"
+            android:layout_marginTop="4dp"
+            android:background="@color/backgroundLight"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/tvCourseTitle"
             app:layout_constraintStart_toStartOf="@+id/tvCourseTitle"
             app:layout_constraintTop_toBottomOf="@+id/tvCourseTitle" />
+    </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:gravity="end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/btnCourseAccess"
+            android:layout_width="@dimen/circle_button_size"
+            android:layout_height="@dimen/circle_button_size"
+            android:gravity="end"
+            android:background="@color/backgroundLight"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
 </LinearLayout>
