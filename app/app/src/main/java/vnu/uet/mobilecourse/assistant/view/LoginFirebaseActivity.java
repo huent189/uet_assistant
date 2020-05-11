@@ -5,11 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.repository.FirebaseAuthenticationService;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 
 
 public class LoginFirebaseActivity extends AppCompatActivity {
@@ -19,7 +15,7 @@ public class LoginFirebaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_login);
+        setContentView(R.layout.activity_login_firebase);
         TextView MyDebugText = findViewById(R.id.DebugText);
 
     }
