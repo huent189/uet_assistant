@@ -48,6 +48,14 @@ public class ExploreCourseFragment extends Fragment {
         if (activity != null) {
             toolbar = root.findViewById(R.id.toolbar);
 
+            assert getArguments() != null;
+            String courseTitle = getArguments().getString("courseTitle");
+
+            assert courseTitle != null;
+            courseTitle = courseTitle.replaceAll("\\(.+\\)", "");
+
+            toolbar.setTitle(courseTitle);
+
             activity.setSupportActionBar(toolbar);
 
             setHasOptionsMenu(true);

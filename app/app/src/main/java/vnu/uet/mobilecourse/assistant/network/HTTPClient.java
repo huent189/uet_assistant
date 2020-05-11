@@ -1,9 +1,10 @@
 package vnu.uet.mobilecourse.assistant.network;
 
+import android.util.Log;
 import okhttp3.*;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import vnu.uet.mobilecourse.assistant.model.Token;
+import vnu.uet.mobilecourse.assistant.model.User;
 
 import java.io.IOException;
 
@@ -17,8 +18,10 @@ public class HTTPClient {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
                     Request original = chain.request();
-                    HttpUrl url = original.url().newBuilder().addQueryParameter("service", "moodle_mobile_app")
-                                    .addQueryParameter("wstoken", Token.getToken()).build();
+                    Log.d("COURSES", "intercept: " + User.getInstance().getToken());
+                    HttpUrl url = original.url().newBuilder().addQueryParameter("moodlewsrestformat", "json")
+                                    .addQueryParameter("wstoken", User.getInstance().getToken())
+                                    .build();
                     Request request = original.newBuilder().url(url).build();
                     return chain.proceed(request);
                 }

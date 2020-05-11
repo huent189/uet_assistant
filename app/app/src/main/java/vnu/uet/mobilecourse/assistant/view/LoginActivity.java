@@ -20,6 +20,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
 
+    private boolean loginSuccess = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,9 +42,12 @@ public class LoginActivity extends AppCompatActivity {
         res.observe(LoginActivity.this, stateModel -> {
             switch (stateModel.getStatus()) {
                 case SUCCESS:
-                    Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.INVISIBLE);
-                    navigateToMyCourses();
+                    if (!loginSuccess) {
+                        loginSuccess = true;
+                        Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.INVISIBLE);
+                        navigateToMyCourses();
+                    }
                     break;
 
                 case ERROR:

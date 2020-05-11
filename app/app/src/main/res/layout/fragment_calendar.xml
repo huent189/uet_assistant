@@ -14,62 +14,63 @@
         android:layout_height="wrap_content"
         android:background="@color/background">
 
-    <com.google.android.material.appbar.CollapsingToolbarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="?attr/actionBarSize">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
-            <TextView
-                android:id="@+id/tvTitle"
-                style="@style/ToolbarTitleText"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@drawable/list_item_background"
-                android:gravity="center_vertical"
-                android:paddingEnd="0dp"
-                android:paddingStart="@dimen/sibling_margin_x2"
-                android:text="@string/title_calendar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <CalendarView
-                android:id="@+id/calendarView"
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:dateTextAppearance="@style/Subtitle"
-                android:weekDayTextAppearance="@color/primary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+                android:paddingBottom="?attr/actionBarSize">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <vnu.uet.mobilecourse.assistant.view.calendar.CustomCalendarView
+                    android:id="@+id/calendar_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
-        <androidx.appcompat.widget.Toolbar
-            style="@style/Toolbar"
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            app:title="@string/title_all_courses"
-            app:menu="@menu/chat_toolbar_menu">
+                <TextView
+                    android:id="@+id/tvTitle"
+                    style="@style/ToolbarTitleText"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="@drawable/list_item_background"
+                    android:gravity="center_vertical"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="@dimen/sibling_margin_x2"
+                    android:text="@string/title_calendar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tvDate"
-                style="@style/Header2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:text="Ngày 01/01/2020" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.appcompat.widget.Toolbar>
+            <androidx.appcompat.widget.Toolbar
+                style="@style/Toolbar"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                app:title="@string/title_all_courses"
+                app:menu="@menu/todo_toolbar_menu">
 
-    </com.google.android.material.appbar.CollapsingToolbarLayout>
+                <TextView
+                    android:id="@+id/tvDate"
+                    style="@style/Header2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical" />
+
+            </androidx.appcompat.widget.Toolbar>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvDailyTodoList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

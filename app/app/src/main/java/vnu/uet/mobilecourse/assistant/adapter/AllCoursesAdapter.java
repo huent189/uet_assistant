@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,13 +57,20 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Vi
 
         final Course currentCourse = courses.get(position);
 
-        holder.tvCourseTitle.setText(currentCourse.getTitle());
-        holder.tvCourseId.setText(currentCourse.getId());
+        String courseTitle = currentCourse.getTitle();
+        String courseCode = currentCourse.getCode();
+
+        holder.tvCourseTitle.setText(courseTitle);
+        holder.tvCourseId.setText(courseCode);
 
         holder.btnAccessCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                navController.navigate(R.id.action_navigation_courses_to_navigation_explore_course);
+                Bundle bundle = new Bundle();
+                bundle.putString("courseTitle", courseTitle);
+                bundle.putString("courseCode", courseCode);
+
+                navController.navigate(R.id.action_navigation_courses_to_navigation_explore_course, bundle);
 
                 String message = "onClick" + currentCourse.getTitle();
                 Log.d(TAG, message);

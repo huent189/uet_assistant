@@ -22,4 +22,12 @@
     <string name="tab_title_progress">Tiến độ</string>
     <string name="tab_title_grade">Điểm</string>
     <string name="tab_title_classmates">Bạn cùng lớp</string>
+    <string name="calendar_sunday_title">C.Nhật</string>
+    <string name="calendar_monday_title">T.Hai</string>
+    <string name="calendar_tuesday_title">T.Ba</string>
+    <string name="calendar_wednesday_title">T.Tư</string>
+    <string name="calendar_thursday_title">T.Năm</string>
+    <string name="calendar_friday_title">T.Sáu</string>
+    <string name="calendar_saturday_title">T.Bảy</string>
+    <string name="course_code_error">Không tìm thấy mã môn học</string>
 </resources>

@@ -1,24 +1,26 @@
 package vnu.uet.mobilecourse.assistant.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import androidx.lifecycle.MutableLiveData;
-import vnu.uet.mobilecourse.assistant.R;
+import androidx.lifecycle.LiveData;
+import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
+import vnu.uet.mobilecourse.assistant.database.DAO.CoursesDAO;
 import vnu.uet.mobilecourse.assistant.model.Course;
+import vnu.uet.mobilecourse.assistant.model.User;
+import vnu.uet.mobilecourse.assistant.network.HTTPClient;
+import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
+import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
+import vnu.uet.mobilecourse.assistant.util.StringUtils;
+
+import java.util.List;
 
 public class CourseRepository {
     /**
      * Singleton instance
      */
     private static CourseRepository instance;
-
+    private CoursesDAO dao;
     /**
      * Data set
      */
-    private List<Course> courses = new ArrayList<>();
-
-
     /**
      * Get singleton instance
      * @return singleton instance
@@ -26,26 +28,32 @@ public class CourseRepository {
     public static CourseRepository getInstance() {
         if (instance == null) {
             instance = new CourseRepository();
-            instance.setCourses();
-            instance.setCourses();
-
+            instance.dao = CoursesDatabase.getDatabase().coursesDAO();
         }
 
         return instance;
     }
 
-    public MutableLiveData<List<Course>> getCourses() {
-        MutableLiveData<List<Course>> data = new MutableLiveData<>();
-        data.setValue(courses);
-
-        return data;
+    public LiveData<List<Course>> getCourses() {
+        updateMyCourses();
+        return dao.getMyCourses();
     }
-
-    private void setCourses() {
-        courses.add(new Course(R.drawable.isometric_course_thumbnail, "Công nghệ phần mềm"));
-        courses.add(new Course(R.drawable.isometric_math_course_background, "Phát triển ứng dụng di động"));
-        courses.add(new Course(R.drawable.isometric_course_thumbnail, "Quản lý dự án phần mềm"));
-        courses.add(new Course(R.drawable.isometric_math_course_background, "Nguyên lý hệ điều hành"));
-        courses.add(new Course(R.drawable.isometric_course_thumbnail, "Cầu lông"));
+    public void updateMyCourses(){
+        CourseRequest request = HTTPClient.getCoursesClient().create(CourseRequest.class);
+        request.getMyCoures(User.getInstance().getUserId())
+                .enqueue(new CoursesResponseCallback<Course[]>(Course[].class) {
+                    @Override
+                    public void onSucess(Course[] response) {
+                        CoursesDatabase.databaseWriteExecutor.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (Course entity:response) {
+                                    entity.setTitle(StringUtils.courseTitleFormat(entity.getTitle()));
+                                    dao.insert(entity);
+                                }
+                            }
+                        });
+                    }
+                });
     }
 }

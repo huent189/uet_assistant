@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <EditText
+        style="@style/EditText"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="@dimen/sibling_margin_x2"
+        android:layout_marginBottom="@dimen/sibling_margin_x2"
+        android:hint="Tên công việc"/>
+
+    <EditText
+        style="@style/EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/sibling_margin_x2"
+        android:hint="Mô tả"
+        android:paddingVertical="10dp"
+        android:maxLines="5"
+        android:scrollbars="vertical"
+        android:inputType="textMultiLine"/>
+
+<!--    <TimePicker-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+
+
+
+</LinearLayout>

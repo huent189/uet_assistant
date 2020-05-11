@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
+import com.facebook.shimmer.ShimmerFrameLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,35 +34,77 @@ import vnu.uet.mobilecourse.assistant.viewmodel.CoursesViewModel;
 
 public class CoursesFragment extends Fragment {
 
-    private RecentlyCoursesAdapter recentlyCoursesAdapter;
-
     private CoursesViewModel viewModel;
 
     private NavController navController;
 
-    private Toolbar toolbar;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+        CoursesFragment currentFragment = this;
+
         View root = inflater.inflate(R.layout.fragment_courses, container, false);
 
-        viewModel = new ViewModelProvider(this).get(CoursesViewModel.class);
-
+        viewModel = new ViewModelProvider(currentFragment).get(CoursesViewModel.class);
+        viewModel.setView(currentFragment);
         viewModel.initialize();
 
-        viewModel.getCourses().observe(getViewLifecycleOwner(), courses -> recentlyCoursesAdapter.notifyDataSetChanged());
+        ShimmerFrameLayout shimmerRvCourseRecently = root.findViewById(R.id.shimmerRvCourseRecently);
+        shimmerRvCourseRecently.startShimmerAnimation();
 
-        initializeToolbar(root);
+        ShimmerFrameLayout shimmerRvAllCourses = root.findViewById(R.id.shimmerRvAllCourses);
+        shimmerRvAllCourses.startShimmerAnimation();
 
-        initializeRecentlyCoursesView(root);
+        RecyclerView rvCourseRecently = initializeRecentlyCoursesView(root);
 
-        initializeAllCoursesView(root);
+        RecyclerView rvAllCourses = initializeAllCoursesView(root);
+
+        viewModel.getRecentlyCourses().observe(getViewLifecycleOwner(), new Observer<List<Course>>() {
+            @Override
+            public void onChanged(List<Course> courses) {
+                if (courses == null) {
+                    shimmerRvCourseRecently.startShimmerAnimation();
+                    rvCourseRecently.setVisibility(View.INVISIBLE);
+
+                } else {
+                    if (rvCourseRecently.getVisibility() == View.INVISIBLE) {
+                        shimmerRvCourseRecently.setVisibility(View.INVISIBLE);
+                        rvCourseRecently.setVisibility(View.VISIBLE);
+                    }
+
+                    RecentlyCoursesAdapter recentlyCoursesAdapter = new RecentlyCoursesAdapter(courses, currentFragment);
+                    rvCourseRecently.setAdapter(recentlyCoursesAdapter);
+                }
+            }
+        });
+
+        viewModel.getCourses().observe(getViewLifecycleOwner(), new Observer<List<Course>>() {
+            @Override
+            public void onChanged(List<Course> courses) {
+                if (courses == null) {
+                    shimmerRvAllCourses.startShimmerAnimation();
+                    rvAllCourses.setVisibility(View.INVISIBLE);
+
+                } else {
+                    if (rvAllCourses.getVisibility() == View.INVISIBLE) {
+                        shimmerRvAllCourses.setVisibility(View.INVISIBLE);
+                        rvAllCourses.setVisibility(View.VISIBLE);
+                    }
+
+                    AllCoursesAdapter allCoursesAdapter = new AllCoursesAdapter(courses, currentFragment);
+                    rvAllCourses.setAdapter(allCoursesAdapter);
+                }
+            }
+        });
+
+        Toolbar toolbar = initializeToolbar(root);
 
         return root;
     }
 
-    private void initializeToolbar(View root) {
+    private Toolbar initializeToolbar(View root) {
+        Toolbar toolbar = null;
+
         AppCompatActivity activity = (AppCompatActivity) getActivity();
 
         if (activity != null) {
@@ -69,24 +114,31 @@ public class CoursesFragment extends Fragment {
 
             setHasOptionsMenu(true);
         }
+
+        return toolbar;
     }
 
-    private void initializeRecentlyCoursesView(View root) {
-        recentlyCoursesAdapter = new RecentlyCoursesAdapter(viewModel.getCourses().getValue(), this);
+    private RecyclerView initializeRecentlyCoursesView(View root) {
+        RecyclerView rvCourseRecently = root.findViewById(R.id.rvCourseRecently);
 
-        ViewPager recentlyCoursesView = root.findViewById(R.id.vpCourseRecently);
-        recentlyCoursesView.setAdapter(recentlyCoursesAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(
+                getContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false);
+
+        rvCourseRecently.setLayoutManager(layoutManager);
+
+        return rvCourseRecently;
     }
 
-    private void initializeAllCoursesView(View root) {
-        List<Course> courses = viewModel.getCourses().getValue();
+    private RecyclerView initializeAllCoursesView(View root) {
+        RecyclerView rvAllCourses = root.findViewById(R.id.rvAllCourses);
 
-        AllCoursesAdapter allCoursesAdapter = new AllCoursesAdapter(courses, this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
 
-        RecyclerView allCoursesView = root.findViewById(R.id.rvAllCourses);
+        rvAllCourses.setLayoutManager(layoutManager);
 
-        allCoursesView.setAdapter(allCoursesAdapter);
-        allCoursesView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        return rvAllCourses;
     }
 
     @Override
@@ -100,14 +152,6 @@ public class CoursesFragment extends Fragment {
         MenuItem searchItem = menu.findItem(R.id.action_search);
 
         SearchView searchView = (SearchView) searchItem.getActionView();
-//        LinearLayout searchEditFrame = searchView.findViewById(R.id.search_edit_frame); // Get the Linear Layout
-//        // Get the associated LayoutParams and set leftMargin
-//        float scale = getResources().getDisplayMetrics().density;
-//        int dpAsPixels = (int) (16*scale + 0.5f);
-//        searchView.setPadding(0,0,0,0);
-
-//        Drawable background = ContextCompat.getDrawable(getActivity(), R.drawable.edit_text_background);
-//        searchView.setBackground(background);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

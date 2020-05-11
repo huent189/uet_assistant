@@ -12,7 +12,8 @@
     <dimen name="sibling_margin_x6">48dp</dimen>
     <dimen name="login_input_field_width">240dp</dimen>
     <dimen name="button_height">40dp</dimen>
-    <dimen name="card_course_height">340dp</dimen>
+    <dimen name="card_course_height">360dp</dimen>
+    <dimen name="card_course_width">300dp</dimen>
 
     <dimen name="title_size">30sp</dimen>
     <dimen name="subtitle_size">15sp</dimen>
@@ -35,4 +36,10 @@
     <dimen name="small_radius">18dp</dimen>
     <dimen name="small_img_avatar_size">36dp</dimen>
     <dimen name="small_text_size">12sp</dimen>
+
+    <dimen name="calendar_cell_height">56dp</dimen>
+    <dimen name="calendar_dot_size">6dp</dimen>
+    <dimen name="calendar_selected_circle_size">28dp</dimen>
+    <dimen name="calendar_small_margin">2dp</dimen>
+    <dimen name="calendar_small_margin_x2">4dp</dimen>
 </resources>

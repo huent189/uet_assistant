@@ -30,10 +30,11 @@
             android:id="@+id/tvCourseTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Công nghệ phần mềm"
+            android:layout_marginEnd="@dimen/sibling_margin"
             android:textSize="@dimen/header2_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tvCourseId"
+            app:layout_constraintEnd_toStartOf="@+id/btnCourseAccess"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,9 +42,9 @@
             android:id="@+id/tvCourseId"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="INT3110 2"
+            android:text="@string/course_code_error"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tvCourseTitle"
             app:layout_constraintStart_toStartOf="@+id/tvCourseTitle"
             app:layout_constraintTop_toBottomOf="@+id/tvCourseTitle" />
 

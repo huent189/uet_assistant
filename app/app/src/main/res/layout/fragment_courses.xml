@@ -25,7 +25,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="?attr/actionBarSize">
+                android:paddingBottom="72dp">
 
                 <TextView
                     android:id="@+id/tvCourseRecently"
@@ -38,9 +38,54 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <androidx.viewpager.widget.ViewPager
-                    android:id="@+id/vpCourseRecently"
-                    style="@style/CardCourse"
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerRvCourseRecently"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingHorizontal="@dimen/sibling_margin"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvCourseRecently">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <include layout="@layout/shimmer_card_course" />
+
+                        <include layout="@layout/shimmer_card_course" />
+
+                        <include layout="@layout/shimmer_card_course" />
+
+                    </LinearLayout>
+
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+<!--                <com.cooltechworks.views.shimmer.ShimmerRecyclerView-->
+<!--                    android:id="@+id/shimmerRvCourseRecently"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:paddingHorizontal="@dimen/sibling_margin"-->
+<!--                    app:shimmer_demo_child_count="3"-->
+<!--                    app:shimmer_demo_layout="@layout/shimmer_card_course"-->
+<!--                    app:shimmer_demo_layout_manager_type="linear_horizontal"-->
+<!--                    app:shimmer_demo_angle="20"-->
+<!--                    app:shimmer_demo_shimmer_color="@color/background"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/tvCourseRecently" />-->
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvCourseRecently"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="invisible"
+                    android:paddingHorizontal="@dimen/sibling_margin"
+                    android:clipToPadding="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvCourseRecently" />
@@ -66,10 +111,48 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+<!--    <com.cooltechworks.views.shimmer.ShimmerRecyclerView-->
+<!--        android:id="@+id/shimmerRvAllCourses"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:shimmer_demo_child_count="5"-->
+<!--        app:shimmer_demo_layout="@layout/shimmer_course_item"-->
+<!--        app:shimmer_demo_layout_manager_type="linear_vertical"-->
+<!--        app:shimmer_demo_angle="20"-->
+<!--        app:shimmer_demo_shimmer_color="@color/background"-->
+<!--        app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerRvAllCourses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/shimmer_course_item" />
+
+            <include layout="@layout/shimmer_course_item" />
+
+            <include layout="@layout/shimmer_course_item" />
+
+            <include layout="@layout/shimmer_course_item" />
+
+            <include layout="@layout/shimmer_course_item" />
+
+
+        </LinearLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvAllCourses"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="invisible"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
