@@ -43,8 +43,7 @@ public class FirebaseAuthenticationService {
     }
 
 
-    public StateLiveData<String> sendLinkLoginToMail(String email) {
-        StateLiveData<String> validationState = new StateLiveData<>();
+    public StateLiveData<String> sendLinkLoginToMail(String email, StateLiveData<String> validationState) {
         mAuth.sendSignInLinkToEmail(email, actionCodeSettings)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

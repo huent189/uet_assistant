@@ -6,7 +6,6 @@ import vnu.uet.mobilecourse.assistant.view.MyApplication;
 
 public class SharedPreferencesManager {
     private static SharedPreferences preferences;
-    public static final String TEMP_EMAIL_ID = "TEMP_EMAIl_ID";
     public static final String USER_ID = "USER_ID";
     public static final String TOKEN = "TOKEN";
     public static final String REGISTER_EMAIL = "REGISTER_EMAIL";

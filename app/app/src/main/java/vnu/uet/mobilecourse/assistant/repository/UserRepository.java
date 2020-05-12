@@ -40,15 +40,16 @@ public class UserRepository {
                         JsonElement userId = response.body().get("userid");
                         if(userId != null){
                             User.getInstance().setUserId(userId.getAsString());
-                            liveLoginResponse.postSuccess("Login successfully\n");
+                            new FirebaseAuthenticationService().sendLinkLoginToMail(User.getInstance().getEmail(), liveLoginResponse);
                         }
+
                     }
                     @Override
                     public void onFailure(Call<JsonObject> call, Throwable throwable) {
                         liveLoginResponse.postError(new Exception(throwable));
                     }
                 });
-                hardCodeFirebaseLogin(studentId+"@vnu.edu.vn", "abc123", liveLoginResponse);
+//                hardCodeFirebaseLogin(studentId+"@vnu.edu.vn", "abc123", liveLoginResponse);
 
             }
             @Override
@@ -78,6 +79,7 @@ public class UserRepository {
             }
         });
     }
+
     private void clearSession(){
         SharedPreferencesManager.clearAll();
         FirebaseAuth.getInstance().signOut();
