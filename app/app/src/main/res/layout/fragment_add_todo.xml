@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools"
-    tools:context=".AddTodoFragment">
+    tools:context=".view.calendar.AddTodoFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -79,44 +79,24 @@
                     android:id="@+id/btnExpand"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/transparent"
+                    android:background="@drawable/transparent_button_background"
                     android:src="@drawable/ic_keyboard_arrow_down_24dp"
                     app:layout_constraintBottom_toBottomOf="@+id/tvTodoListTitle"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tvTodoListTitle" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvAllTodoLists"
+                <RadioGroup
+                    style="@style/RadioGroup"
+                    android:layout_marginTop="@dimen/sibling_margin"
+                    android:id="@+id/rgTodoList"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTodoListTitle" />
-
+                    app:layout_constraintTop_toBottomOf="@+id/tvTodoListTitle"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
-
-        <Spinner
-            android:id="@+id/spTodoListTitle"
-            android:layout_marginTop="@dimen/sibling_margin_x2"
-            android:background="@drawable/edit_text_background"
-            android:paddingHorizontal="@dimen/sibling_margin_x2"
-            android:visibility="invisible"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etTodoTitle" />
-
-<!--        <EditText-->
-<!--            android:id="@+id/etTodoListTitle"-->
-<!--            style="@style/EditText"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_marginTop="@dimen/sibling_margin_x2"-->
-<!--            android:hint="Chọn nhóm công việc"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/etTodoTitle" />-->
 
         <EditText
             android:id="@+id/etDescription"
@@ -143,18 +123,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/etDescription">
 
-            <EditText
-                android:id="@+id/etDate"
-                style="@style/EditText"
+            <Button
+                style="@style/Button"
+                android:id="@+id/btnDate"
+                android:textSize="16sp"
+                android:textAlignment="viewStart"
                 android:layout_width="0dp"
-                android:layout_marginEnd="@dimen/sibling_margin_x2"
+                android:layout_height="40dp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/primaryDark"
+                android:layout_marginEnd="@dimen/sibling_margin_x2"
+                android:background="@drawable/primary_button_background"
                 android:drawableTint="@color/background"
                 android:paddingStart="@dimen/sibling_margin_x2"
                 android:paddingEnd="@dimen/sibling_margin"
                 android:drawableEnd="@drawable/ic_calendar_24dp"
-                android:hint="Chọn ngày" />
+                android:hint="Chọn ngày"/>
 
             <Button
                 style="@style/Button"

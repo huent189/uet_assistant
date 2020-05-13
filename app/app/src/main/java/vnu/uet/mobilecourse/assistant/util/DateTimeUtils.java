@@ -10,7 +10,7 @@ public class DateTimeUtils {
             new SimpleDateFormat("'Ngày' dd/MM/yyyy", Locale.ROOT);
 
     public static final SimpleDateFormat SHORT_DATE_FORMAT =
-            new SimpleDateFormat("dd/MM/yyyy", Locale.ROOT);
+            new SimpleDateFormat("dd/MM/yy", Locale.ROOT);
 
     public static final SimpleDateFormat MONTH_FORMAT =
             new SimpleDateFormat("'Tháng' MM, yyyy", Locale.ROOT);

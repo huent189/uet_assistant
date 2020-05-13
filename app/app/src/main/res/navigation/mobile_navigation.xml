@@ -63,8 +63,18 @@
 
     <fragment
         android:id="@+id/navigation_add_todo"
-        android:name="vnu.uet.mobilecourse.assistant.AddTodoFragment"
+        android:name="vnu.uet.mobilecourse.assistant.view.calendar.AddTodoFragment"
         android:label="fragment_add_todo"
-        tools:layout="@layout/fragment_add_todo" />
+        tools:layout="@layout/fragment_add_todo" >
+        <action
+            android:id="@+id/action_navigation_add_todo_to_navigation_add_todo_list"
+            app:destination="@id/navigation_add_todo_list" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_add_todo_list"
+        android:name="vnu.uet.mobilecourse.assistant.view.calendar.AddTodoListFragment"
+        android:label="fragment_add_todo_list"
+        tools:layout="@layout/fragment_add_todo_list" />
 
 </navigation>
