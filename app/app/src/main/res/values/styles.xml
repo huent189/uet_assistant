@@ -11,6 +11,27 @@
         <item name="android:textColorHint">@color/whiteDisable</item>
         <item name="searchViewStyle">@style/SearchViewMy</item>
         <item name="android:timePickerStyle">@style/TimePicker</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem</item>
+        <item name="radioButtonStyle">@style/RadioButton</item>
+    </style>
+
+    <style name="RadioGroup">
+        <item name="radioButtonStyle">@style/RadioButton</item>
+        <item name="android:radioButtonStyle">@style/RadioButton</item>
+    </style>
+
+    <style name="RadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="buttonTint">@color/primary</item>
+    </style>
+
+    <style name="SpinnerItem">
+        <item name="android:background">@color/backgroundLight</item>
+    </style>
+    <style name="SpinnerDropDownItem">
+        <item name="android:background">@color/backgroundLight</item>
     </style>
 
     <style name="Button" parent="Widget.AppCompat.Button.Borderless.Colored">
@@ -103,6 +124,7 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+
     <style name="BottomNavigation">
         <item name="android:background">@drawable/navbar_background</item>
         <item name="itemIconTint">@color/nav_item</item>
@@ -137,6 +159,7 @@
         <item name="android:paddingEnd">@dimen/sibling_margin</item>
         <item name="android:paddingStart">0dp</item>
         <item name="titleTextAppearance">@style/ToolbarTitleText</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
     </style>
 
 </resources>

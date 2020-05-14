@@ -41,6 +41,11 @@ public interface ITodoRepository {
     void addTodo(Todo todo);
 
     /**
+     * Add a new todoList
+     */
+    void addTodoList(TodoList todoList);
+
+    /**
      * Delete an exist todo_
      * @param id of todo_
      */

@@ -51,9 +51,6 @@ public class ExploreCourseFragment extends Fragment {
             assert getArguments() != null;
             String courseTitle = getArguments().getString("courseTitle");
 
-            assert courseTitle != null;
-            courseTitle = courseTitle.replaceAll("\\(.+\\)", "");
-
             toolbar.setTitle(courseTitle);
 
             activity.setSupportActionBar(toolbar);

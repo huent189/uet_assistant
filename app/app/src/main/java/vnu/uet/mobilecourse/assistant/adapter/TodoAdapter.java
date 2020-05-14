@@ -56,7 +56,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
         final Todo todo = todoList.get(position);
 
         holder.tvTodoTitle.setText(todo.getTitle());
-        holder.tvDeadline.setText(DateTimeUtils.TIME_FORMAT.format(todo.getDeadline()));
+        holder.tvDeadline.setText(DateTimeUtils.DATE_TIME_FORMAT.format(todo.getDeadline()));
         holder.cbDone.setActivated(todo.getStatus() == Todo.Status.DONE);
     }
 
