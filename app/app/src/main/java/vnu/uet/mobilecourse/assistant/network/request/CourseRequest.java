@@ -10,4 +10,7 @@ public interface CourseRequest {
     @FormUrlEncoded
     @POST("webservice/rest/server.php?wsfunction=core_enrol_get_users_courses")
     Call<JsonElement> getMyCoures(@Field("userid") String userId);
+    @FormUrlEncoded
+    @POST("webservice/rest/server.php?wsfunction=core_course_get_contents")
+    Call<JsonElement> getCourseContent(@Field("courseid") String courseId);
 }

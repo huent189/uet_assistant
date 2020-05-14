@@ -67,8 +67,10 @@ public class Course {
     @Override
     public String toString() {
         return "Course{" +
-                "title='" + title + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
                 ", code='" + code + '\'' +
+                ", lastAccessTime=" + lastAccessTime +
                 '}';
     }
 }
