@@ -9,6 +9,8 @@ public class Todo {
 
     private String todoListId;
 
+    private String todoListTitle;
+
     private String description;
 
     private Date deadline;
@@ -37,6 +39,14 @@ public class Todo {
 
     public void setTodoListId(String todoListId) {
         this.todoListId = todoListId;
+    }
+
+    public void setTodoListTitle(String todoListTitle) {
+        this.todoListTitle = todoListTitle;
+    }
+
+    public String getTodoListTitle() {
+        return todoListTitle;
     }
 
     public Date getDeadline() {
