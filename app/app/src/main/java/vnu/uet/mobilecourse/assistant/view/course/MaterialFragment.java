@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -50,30 +49,34 @@ public class MaterialFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args != null && toolbar != null) {
+            // get material from bundle arguments
             Material material = args.getParcelable("material");
 
             if (material != null) {
                 String title = material.getTitle();
+
+                // setup toolbar title
                 toolbar.setTitle(title);
 
+                // change status text view if task hasn't complete
                 if (material.getCompletion() != 1) {
                     tvStatus.setText(R.string.material_status_uncomplete);
-                    tvStatus.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_unchecked_circle_24dp, 0);
+                    tvStatus.setCompoundDrawablesWithIntrinsicBounds(0, 0,
+                            R.drawable.ic_unchecked_circle_24dp, 0);
                 }
 
+                // get attachment
                 String attachment = material.getFileName();
                 if (attachment != null && !attachment.isEmpty()) {
                     tvAttachment.setText(material.getFileName());
-                    tvAttachment.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            String fileUrl = material.getFileUrl();
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(fileUrl));
-                            getContext().startActivity(intent);
-                        }
+                    tvAttachment.setOnClickListener(v -> {
+                        String fileUrl = material.getFileUrl();
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(fileUrl));
+                        activity.startActivity(intent);
                     });
                 }
 
+                // setup html content description
                 String html = material.getDescription();
                 if (html != null) {
                     SpannableStringBuilder strBuilder = mViewModel.convertHtml(html);
@@ -103,7 +106,7 @@ public class MaterialFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(MaterialViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(MaterialViewModel.class);
         // TODO: Use the ViewModel
     }
 
