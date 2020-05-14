@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.course.MaterialFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary"
+        app:elevation="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            style="@style/Toolbar"
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            app:navigationIcon="@drawable/ic_arrow_back_24dp"
+            app:title="Tài liệu">
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/sibling_margin_x2"
+            android:paddingBottom="@dimen/sibling_margin_x4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/header2_size"
+                android:textColor="@color/primary"
+                android:drawableTint="@color/primary"
+                android:drawableEnd="@drawable/ic_check_circle_24dp"
+                android:drawablePadding="@dimen/sibling_margin"
+                android:layout_marginTop="@dimen/sibling_margin_x3"
+                android:text="@string/material_status_complete" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/header2_size"
+                android:textColor="@color/primary"
+                android:layout_marginTop="@dimen/sibling_margin_x4"
+                android:layout_marginBottom="@dimen/sibling_margin_x2"
+                android:text="@string/material_description_title" />
+
+            <TextView
+                style="@style/Subtitle"
+                android:id="@+id/tvHtml"
+                android:text="Không có mô tả."
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/header2_size"
+                android:textColor="@color/primary"
+                android:layout_marginTop="@dimen/sibling_margin_x4"
+                android:layout_marginBottom="@dimen/sibling_margin_x2"
+                android:text="@string/material_attachment_title" />
+
+            <LinearLayout
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tint="@color/accent"
+                    android:rotation="30"
+                    android:layout_marginEnd="@dimen/sibling_margin"
+                    android:src="@drawable/ic_attach_file_18dp"/>
+
+                <TextView
+                    android:id="@+id/tvAttachment"
+                    style="@style/Subtitle"
+                    android:textStyle="bold"
+                    android:textColor="@color/accent"
+                    android:text="Không có tệp đính kèm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

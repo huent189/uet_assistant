@@ -40,6 +40,7 @@ public class CourseRepository {
         updateMyCourses();
         return dao.getMyCourses();
     }
+
     public void updateMyCourses(){
         CourseRequest request = HTTPClient.getInstance().request(CourseRequest.class);
         request.getMyCoures(User.getInstance().getUserId())
@@ -71,6 +72,7 @@ public class CourseRepository {
                     }
                 });
     }
+
     public LiveData<List<CourseContent>> getContent(int courseId){
         updateCourseContent(courseId);
         return dao.getCourseContent(courseId);

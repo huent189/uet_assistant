@@ -20,10 +20,6 @@ public class FriendProfileFragment extends Fragment {
 
     private FriendProfileViewModel mViewModel;
 
-    public static FriendProfileFragment newInstance() {
-        return new FriendProfileFragment();
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {

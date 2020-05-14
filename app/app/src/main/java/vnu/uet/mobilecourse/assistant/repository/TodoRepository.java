@@ -77,6 +77,7 @@ public class TodoRepository implements ITodoRepository {
         assert todoLists != null;
         for (TodoList todoList : todoLists) {
             if (todo.getTodoListId().equals(todoList.getId())) {
+                todo.setTodoListTitle(todoList.getTitle());
                 todoList.add(todo);
                 break;
             }

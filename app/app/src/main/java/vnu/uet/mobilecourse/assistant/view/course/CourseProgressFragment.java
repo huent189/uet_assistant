@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.view.course;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -17,9 +18,11 @@ import android.view.ViewGroup;
 import java.util.Arrays;
 import java.util.List;
 
+import vnu.uet.mobilecourse.assistant.model.CourseContent;
+import vnu.uet.mobilecourse.assistant.repository.CourseRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.CourseProgressViewModel;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.adapter.CourseTaskAdapter;
+import vnu.uet.mobilecourse.assistant.adapter.CourseContentAdapter;
 import vnu.uet.mobilecourse.assistant.model.CourseTask;
 import vnu.uet.mobilecourse.assistant.model.WeeklyTasks;
 
@@ -40,18 +43,23 @@ public class CourseProgressFragment extends Fragment {
 
         RecyclerView recyclerView = root.findViewById(R.id.rvTasks);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-
-        //instantiate your adapter with the list of genres
-        CourseTask task1 = new CourseTask("Slide xxx", "xxx", 22);
-        CourseTask task2 = new CourseTask("Slide xxx", "xxx", 22);
-        CourseTask task3 = new CourseTask("Slide xxx", "xxx", 22);
-        CourseTask task4 = new CourseTask("Slide xxx", "xxx", 22);
-        List<CourseTask> tasks = Arrays.asList(task1, task2, task3, task4);
-        WeeklyTasks weeklyTasks = new WeeklyTasks("Week 1", tasks);
-
-        CourseTaskAdapter adapter = new CourseTaskAdapter(Arrays.asList(weeklyTasks, weeklyTasks), this);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+
+        Bundle args = getArguments();
+
+        if (args != null) {
+            int courseId = args.getInt("courseId");
+
+            Fragment thisFragment = this;
+
+            CourseRepository.getInstance().getContent(courseId).observe(getViewLifecycleOwner(), new Observer<List<CourseContent>>() {
+                @Override
+                public void onChanged(List<CourseContent> contents) {
+                    CourseContentAdapter adapter = new CourseContentAdapter(contents, thisFragment);
+                    recyclerView.setAdapter(adapter);
+                }
+            });
+        }
 
         return root;
     }

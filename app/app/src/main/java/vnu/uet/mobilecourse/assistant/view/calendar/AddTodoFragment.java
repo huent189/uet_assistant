@@ -1,5 +1,7 @@
 package vnu.uet.mobilecourse.assistant.view.calendar;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -107,17 +111,57 @@ public class AddTodoFragment extends Fragment {
 
         btnDate = root.findViewById(R.id.btnDate);
         Bundle args = getArguments();
+
+        Calendar calendar = Calendar.getInstance();
+
         if (args != null) {
             String currentDate = args.getString("currentDate");
             btnDate.setText(currentDate);
-        }
-        btnDate.setOnClickListener(v -> {
 
+            if (currentDate != null) {
+                try {
+                    Date date = DateTimeUtils.SHORT_DATE_FORMAT.parse(currentDate);
+
+                    if (date != null)
+                        calendar.setTime(date);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        Locale.setDefault(new Locale("vi", "VN"));
+
+        btnDate.setOnClickListener(v -> {
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog dialog = new DatePickerDialog(getActivity(),
+                    new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+                }
+            }, year, month, dayOfMonth);
+
+//            DatePickerDialog dialog = new DatePickerDialog(
+//                    getContext(),
+//                    new DatePickerDialog.OnDateSetListener() {
+//                        @Override
+//                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//
+//                        }
+//                    }, year, month, dayOfMonth);
+
+            dialog.setButton(DialogInterface.BUTTON_NEGATIVE, CANCEL_BUTTON_TITLE, dialog);
+            dialog.show();
         });
 
         btnTime = root.findViewById(R.id.btnTime);
         btnTime.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
+//            Calendar temp = Calendar.getInstance();
 
             int HOUR = calendar.get(Calendar.HOUR);
             int MINUTE = calendar.get(Calendar.MINUTE);

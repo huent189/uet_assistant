@@ -9,6 +9,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 import androidx.appcompat.app.AppCompatActivity;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.repository.UserRepository;
@@ -57,8 +59,8 @@ public class LoginActivity extends AppCompatActivity {
                 case SUCCESS:
                     if (!loginSuccess) {
                         loginSuccess = true;
-//                        Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-//                        navigateToMyCourses();
+                        Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
+                        navigateToMyCourses();
 
                         tvLoadingTitle.setVisibility(View.INVISIBLE);
                         progressBar.setVisibility(View.INVISIBLE);
