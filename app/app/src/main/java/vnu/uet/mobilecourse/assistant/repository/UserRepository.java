@@ -86,7 +86,7 @@ public class UserRepository {
         FirebaseAuth.getInstance().signOut();
     }
 
-    public StateLiveData<String> isLoggecIn(){
+    public StateLiveData<String> isLoggedIn(){
         final StateLiveData<String> loginState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
         if(User.getInstance().getToken() == null){
             loginState.postError(new Exception("require login"));
