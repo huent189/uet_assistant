@@ -91,4 +91,8 @@ public class FirebaseAuthenticationService {
         return loginState;
     }
 
+    public boolean isFirebaseLoggedIn (){
+        return FirebaseAuth.getInstance().getCurrentUser() == null ? false : true;
+    }
+
 }
