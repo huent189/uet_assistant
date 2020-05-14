@@ -90,14 +90,15 @@ public class UserRepository {
         final StateLiveData<String> loginState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
         if (User.getInstance().getToken() == null) {
             loginState.postError(new Exception("require login"));
+            return loginState;
         }
         HTTPClient.getInstance().request(UserRequest.class).getUserId().enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.body().get("errorcode") == null) {
-                    loginState.postError(new InvalidLoginException());
-                } else {
                     loginState.postSuccess("login successfully");
+                } else {
+                    loginState.postError(new InvalidLoginException());
                 }
             }
 
