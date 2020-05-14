@@ -86,15 +86,15 @@ public class UserRepository {
         FirebaseAuth.getInstance().signOut();
     }
 
-    public StateLiveData<String> isLoggedIn(){
+    public StateLiveData<String> isLoggedIn() {
         final StateLiveData<String> loginState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
-        if(User.getInstance().getToken() == null){
+        if (User.getInstance().getToken() == null) {
             loginState.postError(new Exception("require login"));
         }
         HTTPClient.getInstance().request(UserRequest.class).getUserId().enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if(response.body().get("errorcode") == null){
+                if (response.body().get("errorcode") == null) {
                     loginState.postError(new InvalidLoginException());
                 } else {
                     loginState.postSuccess("login successfully");
@@ -107,6 +107,7 @@ public class UserRepository {
             }
         });
         return loginState;
+    }
     public StateLiveData<String> resendVerificationMail() {
         final StateLiveData<String> liveLoginResponse = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
 
