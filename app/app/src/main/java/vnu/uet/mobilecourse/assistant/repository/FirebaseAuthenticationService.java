@@ -50,8 +50,8 @@ public class FirebaseAuthenticationService {
                     public void onComplete(@NonNull Task<Void> sendEmail) {
                         Log.d(TAG, "onComplete: ");
                         if (sendEmail.isSuccessful()) {
-                            // TODO: sent succecss
-                            validationState.postLoading();
+                            // TODO: sent success
+                            validationState.postSuccess("Login Firebase Success");
                         } else {
                             // TODO sent fail
                             validationState.postError(sendEmail.getException());

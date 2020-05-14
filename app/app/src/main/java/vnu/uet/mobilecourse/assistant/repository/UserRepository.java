@@ -84,4 +84,12 @@ public class UserRepository {
         SharedPreferencesManager.clearAll();
         FirebaseAuth.getInstance().signOut();
     }
+
+    public StateLiveData<String> resendVerificationMail() {
+        final StateLiveData<String> liveLoginResponse = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
+
+        new FirebaseAuthenticationService().sendLinkLoginToMail(User.getInstance().getEmail(), liveLoginResponse);
+
+        return liveLoginResponse;
+    }
 }
