@@ -6,8 +6,8 @@ import com.google.gson.GsonBuilder;
 import okhttp3.*;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import vnu.uet.mobilecourse.assistant.model.CourseContent;
 import vnu.uet.mobilecourse.assistant.model.User;
-import vnu.uet.mobilecourse.assistant.model.WeeklyMaterial;
 import vnu.uet.mobilecourse.assistant.network.deserializer.CourseContentDeserializer;
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class HTTPClient {
                     }
                 }).build();
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(WeeklyMaterial[].class, new CourseContentDeserializer());
+        gsonBuilder.registerTypeAdapter(CourseContent[].class, new CourseContentDeserializer());
         gson = gsonBuilder.create();
         coursesClient = new retrofit2.Retrofit.Builder()
                 .client(okHttpClient)
