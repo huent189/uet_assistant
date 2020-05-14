@@ -13,6 +13,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
+import vnu.uet.mobilecourse.assistant.exception.InvalidLoginException;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.UserRequest;
@@ -26,7 +27,7 @@ public class UserRepository {
     public StateLiveData<String> makeLoginRequest(String studentId, String password){
         clearSession();
         final StateLiveData<String> liveLoginResponse = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
-        UserRequest userRequest = HTTPClient.getCoursesClient().create(UserRequest.class);
+        UserRequest userRequest = HTTPClient.getInstance().request(UserRequest.class);
         Call<JsonElement> call = userRequest.login(studentId, password);
         Log.d("LOGIN", "param: " + studentId + " " + password);
         call.enqueue(new CoursesResponseCallback<LoginResponse>(LoginResponse.class) {
@@ -83,5 +84,28 @@ public class UserRepository {
     private void clearSession(){
         SharedPreferencesManager.clearAll();
         FirebaseAuth.getInstance().signOut();
+    }
+
+    public StateLiveData<String> isLoggecIn(){
+        final StateLiveData<String> loginState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
+        if(User.getInstance().getToken() == null){
+            loginState.postError(new Exception("require login"));
+        }
+        HTTPClient.getInstance().request(UserRequest.class).getUserId().enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if(response.body().get("errorcode") == null){
+                    loginState.postError(new InvalidLoginException());
+                } else {
+                    loginState.postSuccess("login successfully");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable throwable) {
+                loginState.postError(new Exception(throwable));
+            }
+        });
+        return loginState;
     }
 }
