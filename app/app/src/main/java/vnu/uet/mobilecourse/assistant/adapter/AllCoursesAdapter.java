@@ -67,6 +67,7 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Vi
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
+                bundle.putInt("courseId", currentCourse.getId());
                 bundle.putString("courseTitle", courseTitle);
                 bundle.putString("courseCode", courseCode);
 
