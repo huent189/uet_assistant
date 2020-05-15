@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
@@ -36,6 +38,10 @@ public class ExploreCourseFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_explore_course, container, false);
+
+        // restore expandable toolbar state
+        CoordinatorLayout coordinatorLayout = root.findViewById(R.id.coordinator_layout);
+        ViewCompat.requestApplyInsets(coordinatorLayout);
 
         Bundle args = getArguments();
 

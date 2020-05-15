@@ -21,6 +21,12 @@ public class CourseProgressFragment extends Fragment {
 
     private CourseProgressViewModel mViewModel;
 
+    private int prevTopItemPosition;
+
+    private LinearLayoutManager layoutManager;
+
+    private CourseContentAdapter adapter;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,11 +36,14 @@ public class CourseProgressFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        mViewModel = new ViewModelProvider(this).get(CourseProgressViewModel.class);
+
         View root = inflater.inflate(R.layout.fragment_course_progress, container, false);
 
         // find rvMaterials
         RecyclerView rvMaterials = root.findViewById(R.id.rvMaterials);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager = new LinearLayoutManager(getContext());
         rvMaterials.setLayoutManager(layoutManager);
 
         // find shimmer layout & start shimmer animation
@@ -45,7 +54,6 @@ public class CourseProgressFragment extends Fragment {
         Bundle args = getArguments();
 
         if (args != null) {
-
             // get course id from bundle
             int courseId = args.getInt("courseId");
 
@@ -57,18 +65,24 @@ public class CourseProgressFragment extends Fragment {
                 if (contents == null || contents.isEmpty()) {
                     rvMaterials.setVisibility(View.INVISIBLE);
                     shimmerRvTasks.setVisibility(View.VISIBLE);
-                    shimmerRvTasks.startShimmerAnimation();
-
                 }
 
                 // contents loaded completely
                 // then hide shimmer layout
                 // setup recycle view adapter & show rvMaterials
                 else {
-                    shimmerRvTasks.stopShimmerAnimation();
                     rvMaterials.setVisibility(View.VISIBLE);
-                    CourseContentAdapter adapter = new CourseContentAdapter(contents, thisFragment);
+                    shimmerRvTasks.setVisibility(View.GONE);
+
+                    // update new adapter with newest data
+                    adapter = new CourseContentAdapter(contents, thisFragment);
                     rvMaterials.setAdapter(adapter);
+
+                    // restore expandable state
+                    adapter.onRestoreInstanceState(args);
+
+                    // restore scroll position
+                    layoutManager.scrollToPosition(prevTopItemPosition);
                 }
             });
         }
@@ -77,8 +91,16 @@ public class CourseProgressFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(CourseProgressViewModel.class);
+    public void onPause() {
+        super.onPause();
+
+        // save expandable state
+        Bundle savedInstanceState = getArguments();
+        if (savedInstanceState != null)
+            adapter.onSaveInstanceState(savedInstanceState);
+
+        prevTopItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition();
     }
+
+
 }
