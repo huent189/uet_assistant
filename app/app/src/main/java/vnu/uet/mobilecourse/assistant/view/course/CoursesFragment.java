@@ -19,6 +19,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -38,12 +40,21 @@ public class CoursesFragment extends Fragment {
 
     private NavController navController;
 
+    private int prevTopAllItemPosition, prevTopRecentlyItemPosition;
+
+    private LinearLayoutManager allLayoutManager, recentlyLayoutManager;
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         CoursesFragment currentFragment = this;
 
         View root = inflater.inflate(R.layout.fragment_courses, container, false);
+
+        // restore expandable toolbar state
+        CoordinatorLayout coordinatorLayout = root.findViewById(R.id.coordinator_layout);
+        ViewCompat.requestApplyInsets(coordinatorLayout);
 
         viewModel = new ViewModelProvider(currentFragment).get(CoursesViewModel.class);
         viewModel.setView(currentFragment);
@@ -74,6 +85,9 @@ public class CoursesFragment extends Fragment {
 
                     RecentlyCoursesAdapter recentlyCoursesAdapter = new RecentlyCoursesAdapter(courses, currentFragment);
                     rvCourseRecently.setAdapter(recentlyCoursesAdapter);
+
+                    // restore scroll position
+                    recentlyLayoutManager.scrollToPosition(prevTopRecentlyItemPosition);
                 }
             }
         });
@@ -93,6 +107,9 @@ public class CoursesFragment extends Fragment {
 
                     AllCoursesAdapter allCoursesAdapter = new AllCoursesAdapter(courses, currentFragment);
                     rvAllCourses.setAdapter(allCoursesAdapter);
+
+                    // restore scroll position
+                    allLayoutManager.scrollToPosition(prevTopAllItemPosition);
                 }
             }
         });
@@ -121,12 +138,12 @@ public class CoursesFragment extends Fragment {
     private RecyclerView initializeRecentlyCoursesView(View root) {
         RecyclerView rvCourseRecently = root.findViewById(R.id.rvCourseRecently);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(
+        recentlyLayoutManager = new LinearLayoutManager(
                 getContext(),
                 LinearLayoutManager.HORIZONTAL,
                 false);
 
-        rvCourseRecently.setLayoutManager(layoutManager);
+        rvCourseRecently.setLayoutManager(recentlyLayoutManager);
 
         return rvCourseRecently;
     }
@@ -134,11 +151,19 @@ public class CoursesFragment extends Fragment {
     private RecyclerView initializeAllCoursesView(View root) {
         RecyclerView rvAllCourses = root.findViewById(R.id.rvAllCourses);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
+        allLayoutManager = new LinearLayoutManager(this.getContext());
 
-        rvAllCourses.setLayoutManager(layoutManager);
+        rvAllCourses.setLayoutManager(allLayoutManager);
 
         return rvAllCourses;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        prevTopRecentlyItemPosition = recentlyLayoutManager.findFirstCompletelyVisibleItemPosition();
+        prevTopAllItemPosition = allLayoutManager.findFirstCompletelyVisibleItemPosition();
     }
 
     @Override

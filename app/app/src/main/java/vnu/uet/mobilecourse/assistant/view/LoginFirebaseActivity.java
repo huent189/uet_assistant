@@ -33,37 +33,48 @@ public class LoginFirebaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_firebase);
 
-        String deepLink = getIntent().getDataString();
-
         layoutVerifySuccess = findViewById(R.id.layoutVerifySuccess);
         layoutVerifyFail = findViewById(R.id.layoutVerifyFail);
         layoutVerifying = findViewById(R.id.layoutVerifying);
 
-        StateLiveData<String> loginFirebase = new FirebaseAuthenticationService()
-                .signInWithEmailLink(
-                        SharedPreferencesManager
-                                .getValue(SharedPreferencesManager.REGISTER_EMAIL)
-                        , deepLink
-                );
+        String deepLink = getIntent().getDataString();
 
-        loginFirebase.observe(this, loginState -> {
-            switch (loginState.getStatus()) {
-                case SUCCESS:
-                    layoutVerifySuccess.setVisibility(View.VISIBLE);
-                    layoutVerifyFail.setVisibility(View.GONE);
-                    layoutVerifying.setVisibility(View.GONE);
+        // Case: login course but not login fb
+        if (deepLink == null)
+            showErrorLayout();
+        else {
+            StateLiveData<String> loginFirebase = new FirebaseAuthenticationService()
+                    .signInWithEmailLink(
+                            SharedPreferencesManager
+                                    .getValue(SharedPreferencesManager.REGISTER_EMAIL)
+                            , deepLink
+                    );
 
-                    navigateToMyCourses();
-                    break;
+            loginFirebase.observe(this, loginState -> {
+                switch (loginState.getStatus()) {
+                    case SUCCESS:
+                        showSuccessLayout();
+                        navigateToMyCourses();
+                        break;
 
-                case ERROR:
-                    layoutVerifySuccess.setVisibility(View.GONE);
-                    layoutVerifyFail.setVisibility(View.VISIBLE);
-                    layoutVerifying.setVisibility(View.GONE);
+                    case ERROR:
+                        showErrorLayout();
+                        break;
+                }
+            });
+        }
+    }
 
-                    break;
-            }
-        });
+    private void showSuccessLayout() {
+        layoutVerifySuccess.setVisibility(View.VISIBLE);
+        layoutVerifyFail.setVisibility(View.GONE);
+        layoutVerifying.setVisibility(View.GONE);
+    }
+
+    private void showErrorLayout() {
+        layoutVerifySuccess.setVisibility(View.GONE);
+        layoutVerifyFail.setVisibility(View.VISIBLE);
+        layoutVerifying.setVisibility(View.GONE);
     }
 
     private void navigateToMyCourses() {

@@ -14,6 +14,7 @@ import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -49,6 +50,9 @@ public class CourseContentAdapter extends
             navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
     }
 
+    public void setContents(List<CourseContent> contents) {
+        this.contents = contents;
+    }
 
     @Override
     public WeeklyMaterialViewHolder onCreateGroupViewHolder(ViewGroup parent, int viewType) {
