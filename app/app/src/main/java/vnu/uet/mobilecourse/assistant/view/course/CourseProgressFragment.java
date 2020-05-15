@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Arrays;
 import java.util.List;
 
 import vnu.uet.mobilecourse.assistant.model.CourseContent;
@@ -23,8 +22,6 @@ import vnu.uet.mobilecourse.assistant.repository.CourseRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.CourseProgressViewModel;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.CourseContentAdapter;
-import vnu.uet.mobilecourse.assistant.model.CourseTask;
-import vnu.uet.mobilecourse.assistant.model.WeeklyTasks;
 
 public class CourseProgressFragment extends Fragment {
 
