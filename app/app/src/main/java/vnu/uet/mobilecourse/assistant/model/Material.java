@@ -25,7 +25,6 @@ public class Material implements Parcelable {
     private String type;
     @SerializedName("description")
     private String description;
-    @SerializedName("completion")
     private int completion;
     private String fileName;
     private String fileUrl;

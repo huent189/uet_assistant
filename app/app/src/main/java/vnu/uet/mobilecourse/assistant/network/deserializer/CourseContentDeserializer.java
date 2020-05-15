@@ -28,6 +28,10 @@ public class CourseContentDeserializer implements JsonDeserializer<CourseContent
                     child.setFileName(firstContent.get("filename").getAsString());
                     child.setFileUrl(firstContent.get("fileurl").getAsString());
                 }
+                JsonElement completion = materialElement.getAsJsonObject().get("completiondata");
+                if(completion != null){
+                    child.setCompletion(completion.getAsJsonObject().get("state").getAsInt());
+                }
                 materials.addLast(child);
             }
             response[i++] = new CourseContent(weeklyMaterial, materials);
