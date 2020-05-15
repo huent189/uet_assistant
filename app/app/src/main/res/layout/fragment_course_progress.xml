@@ -1,8 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".view.course.CourseProgressFragment"
-    android:id="@+id/rvTasks"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="wrap_content"
+    tools:context=".view.course.CourseProgressFragment">
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerRvTasks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/shimmer_weekly_material_item" />
+            <include layout="@layout/shimmer_weekly_material_item" />
+            <include layout="@layout/shimmer_weekly_material_item" />
+            <include layout="@layout/shimmer_weekly_material_item" />
+            <include layout="@layout/shimmer_weekly_material_item" />
+            <include layout="@layout/shimmer_weekly_material_item" />
+            <include layout="@layout/shimmer_weekly_material_item" />
+            <include layout="@layout/shimmer_weekly_material_item" />
+            <include layout="@layout/shimmer_weekly_material_item" />
+            <include layout="@layout/shimmer_weekly_material_item" />
+            <include layout="@layout/shimmer_weekly_material_item" />
+
+        </LinearLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMaterials"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</FrameLayout>

@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.repository.FirebaseAuthenticationService;
 import vnu.uet.mobilecourse.assistant.repository.UserRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
@@ -23,7 +24,14 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(StateModel<String> stateModel) {
                 switch (stateModel.getStatus()) {
                     case SUCCESS:
-                        navigateToActivity(MyCoursesActivity.class);
+                        boolean isFirebaseLoggedIn = new FirebaseAuthenticationService()
+                                .isFirebaseLoggedIn();
+
+                        if (isFirebaseLoggedIn)
+                            navigateToActivity(MyCoursesActivity.class);
+                        else
+                            navigateToActivity(LoginFirebaseActivity.class);
+
                         break;
 
                     case ERROR:
