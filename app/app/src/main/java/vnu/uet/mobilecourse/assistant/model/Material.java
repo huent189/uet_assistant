@@ -113,7 +113,9 @@ public class Material implements Parcelable {
     }
 
     public void setFileName(String fileName) {
-        this.fileName = fileName;
+        if (!type.equals("page")){
+            this.fileName = fileName;
+        }
     }
 
     public String getFileUrl() {
@@ -121,7 +123,12 @@ public class Material implements Parcelable {
     }
 
     public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
+        if(type.equals("resource")){
+            this.fileUrl = fileUrl + "&token=" + User.getInstance().getToken();
+        }
+        else if (!type.equals("page")){
+            this.fileUrl = fileUrl;
+        }
     }
 
     public long getLastModified() {
