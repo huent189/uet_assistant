@@ -6,6 +6,8 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,7 +133,8 @@ public class AddTodoFragment extends Fragment {
             }
         }
 
-        Locale.setDefault(new Locale("vi", "VN"));
+        Locale locale = new Locale("vi", "VN");
+        Locale.setDefault(locale);
 
         btnDate.setOnClickListener(v -> {
             int year = calendar.get(Calendar.YEAR);
@@ -156,7 +159,11 @@ public class AddTodoFragment extends Fragment {
 //                    }, year, month, dayOfMonth);
 
             dialog.setButton(DialogInterface.BUTTON_NEGATIVE, CANCEL_BUTTON_TITLE, dialog);
+
+//            SetHeaderMonthDay(dialog, locale);
+
             dialog.show();
+
         });
 
         btnTime = root.findViewById(R.id.btnTime);
@@ -301,6 +308,8 @@ public class AddTodoFragment extends Fragment {
                          */
                         @Override
                         public void onTransitionEnd(@NonNull Transition transition) {
+                            // change expand state in shared view model to false
+                            mViewModel.isCardExpand().postValue(false);
                             rgTodoList.setVisibility(View.GONE);
                         }
 
@@ -323,9 +332,6 @@ public class AddTodoFragment extends Fragment {
                     // apply created animation
                     TransitionManager.beginDelayedTransition(cvTodoListPicker, transition);
                     rgTodoList.setVisibility(View.INVISIBLE);
-
-                    // change expand state in shared view model to false
-                    mViewModel.isCardExpand().postValue(false);
 
                 } else if (currentVisibility == View.GONE) {
                     // apply expand animation

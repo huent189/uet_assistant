@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
@@ -14,7 +13,6 @@ import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -25,7 +23,6 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.CourseContent;
 import vnu.uet.mobilecourse.assistant.model.ExpandableCourseContent;
 import vnu.uet.mobilecourse.assistant.model.Material;
-import vnu.uet.mobilecourse.assistant.repository.CourseRepository;
 
 public class CourseContentAdapter extends
         ExpandableRecyclerViewAdapter<CourseContentAdapter.WeeklyMaterialViewHolder, CourseContentAdapter.MaterialViewHolder> {
@@ -56,7 +53,7 @@ public class CourseContentAdapter extends
 
     @Override
     public WeeklyMaterialViewHolder onCreateGroupViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.layout_weekly_material_item, parent, false);
+        View view = inflater.inflate(R.layout.layout_expandable_parent_item, parent, false);
         return new WeeklyMaterialViewHolder(view);
     }
 
@@ -95,7 +92,7 @@ public class CourseContentAdapter extends
         public WeeklyMaterialViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            tvWeeklyTitle = itemView.findViewById(R.id.tvWeeklyTitle);
+            tvWeeklyTitle = itemView.findViewById(R.id.tvTitle);
             ivExpandArrow = itemView.findViewById(R.id.ivExpandArrow);
         }
 

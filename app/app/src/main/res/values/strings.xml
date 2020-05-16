@@ -22,13 +22,25 @@
     <string name="tab_title_progress">Tiến độ</string>
     <string name="tab_title_grade">Điểm</string>
     <string name="tab_title_classmates">Bạn cùng lớp</string>
-    <string name="calendar_sunday_title">C.Nhật</string>
-    <string name="calendar_monday_title">T.Hai</string>
-    <string name="calendar_tuesday_title">T.Ba</string>
-    <string name="calendar_wednesday_title">T.Tư</string>
-    <string name="calendar_thursday_title">T.Năm</string>
-    <string name="calendar_friday_title">T.Sáu</string>
-    <string name="calendar_saturday_title">T.Bảy</string>
+
+    <string name="calendar_sunday_title">C.N</string>
+    <string name="calendar_monday_title">Th.2</string>
+    <string name="calendar_tuesday_title">Th.3</string>
+    <string name="calendar_wednesday_title">Th.4</string>
+    <string name="calendar_thursday_title">Th.5</string>
+    <string name="calendar_friday_title">Th.6</string>
+    <string name="calendar_saturday_title">Th.7</string>
+
+    <string-array name="dayOfWeek">
+        <item>C.N</item>
+        <item>Th.2</item>
+        <item>Th.3</item>
+        <item>Th.4</item>
+        <item>Th.5</item>
+        <item>Th.6</item>
+        <item>Th.7</item>
+    </string-array>
+
     <string name="course_code_error">Không tìm thấy mã môn học</string>
     <string name="login_guideline_check_account">Kiểm tra thông tin tài khoản</string>
     <string name="login_guideline_verify_mail">Bạn vui lòng kiểm tra hòm thư điện tử uetmail để xác thực tài khoản.</string>
@@ -40,5 +52,7 @@
     <string name="material_attachment_title">Tệp đính kèm</string>
     <string name="material_status_complete">Hoàn thành</string>
     <string name="material_status_uncomplete">Chưa hoàn thành</string>
+
+    <string name="title_todo_lists">Danh sách công việc</string>
 
 </resources>

@@ -1,8 +1,11 @@
 package vnu.uet.mobilecourse.assistant.model.todo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
-public class Todo {
+public class Todo implements Parcelable {
     private String id;
 
     private String title;
@@ -16,6 +19,30 @@ public class Todo {
     private Date deadline;
 
     private Status status = Status.DOING;
+
+    public Todo() {
+
+    }
+
+    public Todo(Parcel in) {
+        id = in.readString();
+        title = in.readString();
+        todoListId = in.readString();
+        todoListTitle = in.readString();
+        description = in.readString();
+    }
+
+    public static final Creator<Todo> CREATOR = new Creator<Todo>() {
+        @Override
+        public Todo createFromParcel(Parcel in) {
+            return new Todo(in);
+        }
+
+        @Override
+        public Todo[] newArray(int size) {
+            return new Todo[size];
+        }
+    };
 
     public String getTitle() {
         return title;
@@ -71,6 +98,20 @@ public class Todo {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(title);
+        dest.writeString(todoListId);
+        dest.writeString(todoListTitle);
+        dest.writeString(description);
     }
 
     public enum Status {

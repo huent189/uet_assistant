@@ -59,7 +59,6 @@
         android:background="@color/background">
 
         <TextView
-            style="@style/Subtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/calendar_sunday_title"
