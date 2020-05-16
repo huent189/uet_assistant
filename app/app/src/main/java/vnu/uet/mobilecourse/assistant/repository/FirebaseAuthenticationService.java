@@ -19,8 +19,6 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 
 public class FirebaseAuthenticationService {
 
-    private static final String TAG = "FBMailAuthentication";
-
     private FirebaseAuth mAuth;
     private ActionCodeSettings actionCodeSettings;
 
@@ -48,7 +46,6 @@ public class FirebaseAuthenticationService {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> sendEmail) {
-                        Log.d(TAG, "onComplete: ");
                         if (sendEmail.isSuccessful()) {
                             // TODO: sent success
                             validationState.postSuccess("Login Firebase Success");
@@ -91,7 +88,7 @@ public class FirebaseAuthenticationService {
         return loginState;
     }
 
-    public boolean isFirebaseLoggedIn (){
+    public static boolean isFirebaseLoggedIn (){
         return FirebaseAuth.getInstance().getCurrentUser() == null ? false : true;
     }
 
