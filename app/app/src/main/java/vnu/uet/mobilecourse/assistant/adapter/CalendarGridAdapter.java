@@ -11,11 +11,12 @@ import android.widget.TextView;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
 import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
@@ -31,14 +32,24 @@ public class CalendarGridAdapter extends ArrayAdapter {
 
     private Date defaultSelectedDate;
 
-    public CalendarGridAdapter(@NonNull Context context, List<Date> dates, Calendar currentCalendar, Date defaultSelectedDate) {
+    private boolean isShowTodo;
+
+    private LifecycleOwner lifecycleOwner;
+
+    public CalendarGridAdapter(@NonNull Context context, List<Date> dates, Calendar currentCalendar,
+                               Date defaultSelectedDate, boolean isShowTodo) {
         super(context, R.layout.layout_calendar_cell);
 
         this.currentCalendar = currentCalendar;
         this.defaultSelectedDate = defaultSelectedDate;
         this.dates = dates;
+        this.isShowTodo = isShowTodo;
 
         inflater = LayoutInflater.from(context);
+    }
+
+    public void setLifecycleOwner(LifecycleOwner lifecycleOwner) {
+        this.lifecycleOwner = lifecycleOwner;
     }
 
     @NonNull
@@ -76,15 +87,21 @@ public class CalendarGridAdapter extends ArrayAdapter {
 
         }
 
-        String dateString = DateTimeUtils.DATE_FORMAT.format(dateOfMonth);
-        Map<String, DailyTodoList> dailyLists = TodoRepository.getInstance().getDailyLists();
-        if (dailyLists.containsKey(dateString)) {
-            DailyTodoList currentDailyList = dailyLists.get(dateString);
+        ImageView ivHaveTodo = convertView.findViewById(R.id.ivHaveTodo);
 
-            if (currentDailyList != null && !currentDailyList.isEmpty()) {
-                ImageView ivHaveTodo = convertView.findViewById(R.id.ivHaveTodo);
-                ivHaveTodo.setVisibility(View.VISIBLE);
+        if (isShowTodo) {
+            LiveData<DailyTodoList> dailyList = TodoRepository.getInstance().getTodoListByDate(dateOfMonth);
+
+            if (lifecycleOwner != null) {
+                dailyList.observe(lifecycleOwner, dailyTodoList -> {
+                    if (dailyTodoList != null && !dailyTodoList.isEmpty()) {
+                        ivHaveTodo.setVisibility(View.VISIBLE);
+                    }
+                });
             }
+
+        } else {
+            ivHaveTodo.setVisibility(View.GONE);
         }
 
         return convertView;

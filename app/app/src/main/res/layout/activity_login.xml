@@ -118,6 +118,20 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="655dp" />
 
+    <TextView
+        style="@style/Subtitle"
+        android:id="@+id/tvLoadingTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/sibling_margin_x6"
+        android:textAlignment="center"
+        android:visibility="invisible"
+        android:text="@string/login_guideline_check_account"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
@@ -127,6 +141,19 @@
         android:layout_marginTop="@dimen/sibling_margin_x4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLoadingTitle" />
+
+    <TextView
+        style="@style/Subtitle"
+        android:id="@+id/tvVerifyMailTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/sibling_margin_x6"
+        android:visibility="invisible"
+        android:text="@string/login_guideline_verify_mail"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

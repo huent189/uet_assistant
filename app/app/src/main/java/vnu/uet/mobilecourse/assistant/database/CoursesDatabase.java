@@ -4,7 +4,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import vnu.uet.mobilecourse.assistant.database.DAO.CoursesDAO;
-import vnu.uet.mobilecourse.assistant.model.Assignment;
+import vnu.uet.mobilecourse.assistant.model.Grade;
 import vnu.uet.mobilecourse.assistant.model.Course;
 import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.WeeklyMaterial;
@@ -13,7 +13,7 @@ import vnu.uet.mobilecourse.assistant.view.MyApplication;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Course.class, Assignment.class, WeeklyMaterial.class, Material.class}, version = 1, exportSchema = false)
+@Database(entities = {Course.class, Grade.class, WeeklyMaterial.class, Material.class}, version = 1, exportSchema = false)
 public abstract class CoursesDatabase extends RoomDatabase {
     private static volatile CoursesDatabase instance;
     private static final int NUMBER_OF_THREADS = 4;

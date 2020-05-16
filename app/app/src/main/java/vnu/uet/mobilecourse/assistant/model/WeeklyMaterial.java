@@ -1,21 +1,23 @@
 package vnu.uet.mobilecourse.assistant.model;
 
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverters;
-import vnu.uet.mobilecourse.assistant.util.TimestampConverter;
+import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
+import static androidx.room.ForeignKey.CASCADE;
 
-@Entity
+@Entity(foreignKeys = @ForeignKey(entity = Course.class, parentColumns = "id",
+                                childColumns = "courseId", onDelete = CASCADE),
+        indices = {@Index("courseId")})
 public class WeeklyMaterial {
     @PrimaryKey
+    @SerializedName("id")
     private int id;
+    @SerializedName("name")
     private String title;
-    @TypeConverters({TimestampConverter.class})
-    private Date from;
-    @TypeConverters({TimestampConverter.class})
-    private Date to;
+    private int courseId;
 
     public int getId() {
         return id;
@@ -33,19 +35,20 @@ public class WeeklyMaterial {
         this.title = title;
     }
 
-    public Date getFrom() {
-        return from;
+    public int getCourseId() {
+        return courseId;
     }
 
-    public void setFrom(Date from) {
-        this.from = from;
+    public void setCourseId(int courseId) {
+        this.courseId = courseId;
     }
 
-    public Date getTo() {
-        return to;
-    }
-
-    public void setTo(Date to) {
-        this.to = to;
+    @Override
+    public String toString() {
+        return "WeeklyMaterial{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", courseId=" + courseId +
+                '}';
     }
 }

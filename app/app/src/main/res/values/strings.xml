@@ -30,4 +30,15 @@
     <string name="calendar_friday_title">T.Sáu</string>
     <string name="calendar_saturday_title">T.Bảy</string>
     <string name="course_code_error">Không tìm thấy mã môn học</string>
+    <string name="login_guideline_check_account">Kiểm tra thông tin tài khoản</string>
+    <string name="login_guideline_verify_mail">Bạn vui lòng kiểm tra hòm thư điện tử uetmail để xác thực tài khoản.</string>
+    <string name="login_guideline_verify_success">Xác thực tài khoản thành công.\nĐang truy cập khóa học...</string>
+    <string name="login_guideline_expired_code">Mã xác nhận đã hết hạn!</string>
+    <string name="login_guideline_retry_send_mail">Gửi lại mã xác nhận</string>
+    <string name="login_guideline_verifying">Đang xác thực tài khoản...</string>
+    <string name="material_description_title">Mô tả tài liệu</string>
+    <string name="material_attachment_title">Tệp đính kèm</string>
+    <string name="material_status_complete">Hoàn thành</string>
+    <string name="material_status_uncomplete">Chưa hoàn thành</string>
+
 </resources>

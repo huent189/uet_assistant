@@ -1,12 +1,12 @@
 package vnu.uet.mobilecourse.assistant.network.response;
 
 import android.util.Log;
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vnu.uet.mobilecourse.assistant.exception.InvalidLoginException;
+import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 
 import java.lang.reflect.Type;
 
@@ -26,7 +26,7 @@ public abstract class CoursesResponseCallback<T> implements Callback<JsonElement
             flag = (error == null);
         }
         if(flag){
-            T successReponse = new Gson().fromJson(response.body(), typeParameterClass);
+            T successReponse = HTTPClient.getInstance().getGson().fromJson(response.body(), typeParameterClass);
             Log.d("COURSES", "onResponse: " + call.request().url());
             onSucess(successReponse);
         } else {

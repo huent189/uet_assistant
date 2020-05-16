@@ -68,6 +68,12 @@ public class MyCoursesActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     public void onBackPressed() {
         navController.navigateUp();
 //        FragmentManager fragmentManager = getSupportFragmentManager();

@@ -23,6 +23,10 @@ public class ExploreCourseFragment extends Fragment {
 
     private FragmentPageAdapter pageAdapter;
 
+    private String courseTitle;
+
+    private int courseId;
+
     private TabLayout tabLayout;
 
     private Toolbar toolbar;
@@ -32,6 +36,13 @@ public class ExploreCourseFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_explore_course, container, false);
+
+        Bundle args = getArguments();
+
+        if (args != null) {
+            courseTitle = args.getString("courseTitle");
+            courseId = args.getInt("courseId");
+        }
 
         initializeToolbar(root);
 
@@ -47,12 +58,6 @@ public class ExploreCourseFragment extends Fragment {
 
         if (activity != null) {
             toolbar = root.findViewById(R.id.toolbar);
-
-            assert getArguments() != null;
-            String courseTitle = getArguments().getString("courseTitle");
-
-            assert courseTitle != null;
-            courseTitle = courseTitle.replaceAll("\\(.+\\)", "");
 
             toolbar.setTitle(courseTitle);
 
@@ -70,6 +75,11 @@ public class ExploreCourseFragment extends Fragment {
                 new CourseGradeFragment(),
                 new CourseClassmateFragment()
         };
+
+        for (Fragment page : pages) {
+            Bundle bundle = getArguments();
+            page.setArguments(bundle);
+        }
 
         pageAdapter = new FragmentPageAdapter(fragmentManager, pages);
     }

@@ -67,6 +67,7 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Vi
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
+                bundle.putInt("courseId", currentCourse.getId());
                 bundle.putString("courseTitle", courseTitle);
                 bundle.putString("courseCode", courseCode);
 
@@ -92,15 +93,12 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Vi
 
         private Button btnAccessCourse;
 
-//        private LinearLayout layoutContainer;
-
         public ViewHolder(@NonNull View view) {
             super(view);
 
             tvCourseTitle = view.findViewById(R.id.tvCourseTitle);
             tvCourseId = view.findViewById(R.id.tvCourseId);
             btnAccessCourse = view.findViewById(R.id.btnCourseAccess);
-//            layoutContainer = view.findViewById(R.id.layoutContainer);
         }
     }
 }
