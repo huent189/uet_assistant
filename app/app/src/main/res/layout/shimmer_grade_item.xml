@@ -8,12 +8,11 @@
 
     <ImageView
         android:id="@+id/ivThumbnail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_gravity="center_vertical|start"
-        android:paddingHorizontal="@dimen/sibling_margin_x2"
-        android:tint="@color/primaryDark"
-        android:src="@drawable/ic_assignment_32dp" />
+        android:layout_marginHorizontal="@dimen/sibling_margin_x2"
+        android:background="@color/backgroundLight" />
 
         <TextView
             android:id="@+id/tvTitle"
@@ -21,21 +20,20 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="@dimen/sibling_margin_x3"
-            android:paddingVertical="@dimen/sibling_margin_x2"
+            android:layout_marginVertical="@dimen/sibling_margin_x2"
             android:layout_gravity="center_vertical|start"
-            android:textSize="@dimen/header2_size"
-            android:text="Bài kiểm tra 5a" />
+            android:background="@color/backgroundLight"
+            android:textSize="@dimen/header2_size"/>
 
         <TextView
             android:id="@+id/tvGrade"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:background="@drawable/primary_button_background"
-            android:backgroundTint="@color/primary"
+            android:backgroundTint="@color/backgroundLight"
             android:textSize="@dimen/header2_size"
             android:paddingHorizontal="@dimen/sibling_margin"
             android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="@dimen/sibling_margin_x2"
-            android:text="8/10" />
+            android:layout_marginEnd="@dimen/sibling_margin_x2" />
 
 </LinearLayout>
