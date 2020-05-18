@@ -30,6 +30,10 @@ public class TodoListDocument {
         return todos.contains(todo);
     }
 
+    public void clear() {
+        todos.clear();
+    }
+
     public void add(TodoDocument todo) {
         todos.add(todo);
     }

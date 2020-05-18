@@ -2,11 +2,13 @@ package vnu.uet.mobilecourse.assistant.repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoDocument;
 import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
 import vnu.uet.mobilecourse.assistant.repository.FirebaseRepo.TodoListsLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 
@@ -18,9 +20,7 @@ public interface ITodoRepository {
      * @param date selected date on calendar
      * @return list of todo_ on specific date
      */
-    StateMediatorLiveData<DailyTodoList> getDailyTodoList(Date date);
-
-    StateLiveData<List<TodoDocument>> getAllTodos();
+    IStateLiveData<DailyTodoList> getDailyTodoList(Date date);
 
 //    /**
 //     * Use in Calendar Fragment, when touch on two specific date
@@ -30,54 +30,53 @@ public interface ITodoRepository {
 //     * @param to date higher boundary
 //     * @return list of todo_ between selected dates
 //     */
-//    StateLiveData<AbstractTodoList> getTodoListByRange(Date from, Date to);
+//    IStateLiveData<AbstractTodoList> getTodoListByRange(Date from, Date to);
 
     /**
      * Retrieve all student's todoLists in FireStore database
      * @return all student's todoLists
      */
-    StateMediatorLiveData<List<TodoListDocument>> getAllTodoLists();
-//    LiveData<List<TodoList>> getAllTodoLists_old();
+    IStateLiveData<List<TodoListDocument>> getAllTodoLists();
+
+    /**
+     * Retrieve all student's todos in FireStore database
+     * @return all student's todos
+     */
+    IStateLiveData<List<TodoDocument>> getAllTodos();
 
     /**
      * Add a new todo_
      */
-    StateLiveData<TodoDocument> addTodo(TodoDocument todo);
-//    void addTodo(Todo todo);
+    IStateLiveData<TodoDocument> addTodo(TodoDocument todo);
 
     /**
      * Add a new todoList
      */
-    StateLiveData<TodoListDocument> addTodoList(TodoListDocument todoList);
-//    void addTodoList(TodoList todoList);
+    IStateLiveData<TodoListDocument> addTodoList(TodoListDocument todoList);
 
     /**
      * Delete an exist todo_
      * @param id of todo_
      */
-    StateLiveData<TodoDocument> deleteTodo(String id);
-//    Todo deleteTodo(String id);
+    IStateLiveData<String> deleteTodo(String id);
 
     /**
      * Delete an exist TodoList and its todo_s
      * @param id of todoList
      */
-    StateLiveData<TodoListDocument> deleteTodoList(String id);
-//    TodoList deleteTodoList(String id);
+    IStateLiveData<String> deleteTodoList(String id);
 
     /**
      * Modify an exist todo_
      * @param id of todo_
-     * @param newTodo contains modified data
+     * @param changes contains modified data
      */
-    StateLiveData<TodoDocument> modifyTodo(String id, TodoDocument newTodo);
-//    void modifyTodo(String id, Todo newTodo);
+    IStateLiveData<String> modifyTodo(String id, Map<String, Object> changes);
 
     /**
      * Modify an exist todoList
      * @param id of todoList
-     * @param newList contains modified data (not its todo_s)
+     * @param changes contains modified data (not its todo_s)
      */
-    StateLiveData<TodoListDocument> modifyTodo(String id, TodoListDocument newList);
-//    void modifyTodoList(String id, TodoList newList);
+    IStateLiveData<String> modifyTodoList(String id, Map<String, Object> changes);
 }

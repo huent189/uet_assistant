@@ -11,6 +11,7 @@ import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
 import vnu.uet.mobilecourse.assistant.model.todo.Todo;
 import vnu.uet.mobilecourse.assistant.model.todo.TodoList;
 import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
@@ -31,15 +32,15 @@ public class CalendarSharedViewModel extends ViewModel {
 
     private TodoRepository todoRepo = TodoRepository.getInstance();
 
-    public StateLiveData<List<TodoListDocument>> getShallowTodoLists() {
+    public IStateLiveData<List<TodoListDocument>> getShallowTodoLists() {
         return todoRepo.getShallowTodoLists();
     }
 
-    public StateLiveData<TodoDocument> addTodo(TodoDocument todo) {
+    public IStateLiveData<TodoDocument> addTodo(TodoDocument todo) {
         return todoRepo.addTodo(todo);
     }
 
-    public StateLiveData<TodoListDocument> addTodoList(TodoListDocument todoList) {
+    public IStateLiveData<TodoListDocument> addTodoList(TodoListDocument todoList) {
         return todoRepo.addTodoList(todoList);
     }
 

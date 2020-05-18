@@ -1,24 +1,30 @@
 package vnu.uet.mobilecourse.assistant.viewmodel.state;
 
-import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MediatorLiveData;
 
-public class StateMediatorLiveData<T> extends MediatorLiveData<StateModel<T>> {
+public class StateMediatorLiveData<T> extends MediatorLiveData<StateModel<T>> implements IStateLiveData<T> {
 
     public StateMediatorLiveData() {
+
     }
 
     public StateMediatorLiveData(StateModel<T> value) {
         postValue(value);
     }
 
-    public void postLoading(){
-        setValue(new StateModel<T>(StateStatus.LOADING));
+    @Override
+    public void postLoading() {
+        setValue(new StateModel<>(StateStatus.LOADING));
     }
-    public void postSuccess(T data){
-        setValue(new StateModel<T>(StateStatus.SUCCESS, data));
+
+    @Override
+    public void postSuccess(@NonNull T data) {
+        setValue(new StateModel<>(StateStatus.SUCCESS, data));
     }
-    public void postError(Exception e){
-        setValue(new StateModel<T>(StateStatus.ERROR, e));
+
+    @Override
+    public void postError(@NonNull Exception e) {
+        setValue(new StateModel<>(StateStatus.ERROR, e));
     }
 }

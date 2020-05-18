@@ -11,6 +11,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,7 @@ import javax.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
+import vnu.uet.mobilecourse.assistant.database.DAO.TodoDAO;
 import vnu.uet.mobilecourse.assistant.model.FirebaseModel.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoDocument;
 import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
@@ -26,6 +28,7 @@ import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
 import vnu.uet.mobilecourse.assistant.repository.FirebaseRepo.TodoListsLiveData;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
@@ -42,6 +45,8 @@ public class TodoRepository implements ITodoRepository {
 
     private StateLiveData<List<TodoDocument>> todoLiveData;
 
+    private TodoDAO todoDAO;
+
     public TodoRepository() {
         StateModel<List<TodoListDocument>> listLoadingState = new StateModel<>(StateStatus.LOADING);
         todoListLiveData = new StateLiveData<>(listLoadingState);
@@ -51,36 +56,40 @@ public class TodoRepository implements ITodoRepository {
 
         ownerId = User.getInstance().getStudentId();
 
+        todoDAO = new TodoDAO();
+
+        todoLiveData = todoDAO.readAll();
+
         listenToTodoLists();
-        listenToTodos();
+//        listenToTodos();
     }
 
-    private void listenToTodos() {
-        FirebaseFirestore.getInstance()
-                .collection(FirebaseCollectionName.TODO)
-                .whereEqualTo("ownerId", ownerId)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.e(TAG, "Listen to todo list failed.");
-                            todoLiveData.postError(e);
-
-                        } else if (snapshots == null) {
-                            Log.d(TAG, "Listening to todo list.");
-                            todoLiveData.postLoading();
-
-                        } else {
-                            List<TodoDocument> todos = snapshots.getDocuments().stream()
-                                    .map(snapshot -> snapshot.toObject(TodoDocument.class))
-                                    .filter(Objects::nonNull)
-                                    .collect(Collectors.toList());
-
-                            todoLiveData.postSuccess(todos);
-                        }
-                    }
-                });
-    }
+//    private void listenToTodos() {
+//        FirebaseFirestore.getInstance()
+//                .collection(FirebaseCollectionName.TODO)
+//                .whereEqualTo("ownerId", ownerId)
+//                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+//                        if (e != null) {
+//                            Log.e(TAG, "Listen to todo list failed.");
+//                            todoLiveData.postError(e);
+//
+//                        } else if (snapshots == null) {
+//                            Log.d(TAG, "Listening to todo list.");
+//                            todoLiveData.postLoading();
+//
+//                        } else {
+//                            List<TodoDocument> todos = snapshots.getDocuments().stream()
+//                                    .map(snapshot -> snapshot.toObject(TodoDocument.class))
+//                                    .filter(Objects::nonNull)
+//                                    .collect(Collectors.toList());
+//
+//                            todoLiveData.postSuccess(todos);
+//                        }
+//                    }
+//                });
+//    }
 
     private void listenToTodoLists() {
         FirebaseFirestore.getInstance()
@@ -126,12 +135,7 @@ public class TodoRepository implements ITodoRepository {
     public StateMediatorLiveData<DailyTodoList> getDailyTodoList(Date date) {
         // initialize state live data with loading state
         StateModel<DailyTodoList> loadingState = new StateModel<>(StateStatus.LOADING);
-//        StateLiveData<DailyTodoList> response = new StateLiveData<>(loadingState);
-//
-//        MediatorLiveData<> filterLiveData = new MediatorLiveData<>();
-
         StateMediatorLiveData<DailyTodoList> response = new StateMediatorLiveData<>(loadingState);
-
 
         response.addSource(todoLiveData, new Observer<StateModel<List<TodoDocument>>>() {
             @Override
@@ -152,9 +156,11 @@ public class TodoRepository implements ITodoRepository {
 
                         List<TodoDocument> todoByDay = todos.stream()
                                 .filter(todo -> {
-                                    long timestamp = (long) todo.getDeadline() * 1000;
-                                    Date deadline = new Date(timestamp);
-                                    return DateTimeUtils.isSameDate(date, deadline);
+                                    Date deadline = DateTimeUtils.fromSecond(todo.getDeadline());
+                                    boolean isSameDate = DateTimeUtils.isSameDate(date, deadline);
+//                                    boolean isDone = todo.getStatus().equals(TodoDocument.DONE);
+
+                                    return isSameDate;
                                 })
                                 .collect(Collectors.toList());
 
@@ -168,46 +174,48 @@ public class TodoRepository implements ITodoRepository {
         return response;
     }
 
-    public StateLiveData<List<TodoListDocument>> getShallowTodoLists() {
+    public IStateLiveData<List<TodoListDocument>> getShallowTodoLists() {
         return todoListLiveData;
     }
 
     @Override
-    public StateMediatorLiveData<List<TodoListDocument>> getAllTodoLists() {
+    public IStateLiveData<List<TodoListDocument>> getAllTodoLists() {
         return new TodoListsLiveData(todoListLiveData, todoLiveData);
     }
 
     @Override
-    public StateLiveData<TodoDocument> addTodo(TodoDocument todo) {
-        StateModel<TodoDocument> loadingState = new StateModel<>(StateStatus.LOADING);
-        StateLiveData<TodoDocument> response = new StateLiveData<>(loadingState);
+    public IStateLiveData<TodoDocument> addTodo(TodoDocument todo) {
+        return todoDAO.add(todo);
 
-        String todoId = todo.getTodoId();
-
-        FirebaseFirestore.getInstance()
-                .collection(FirebaseCollectionName.TODO)
-                .document(todoId)
-                .set(todo)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        response.postSuccess(todo);
-                        Log.d(TAG, "Add a new todo list: " + todo.getTitle());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        response.postError(e);
-                        Log.e(TAG, "Failed to add todo list: " + todo.getTitle());
-                    }
-                });
-
-        return response;
+//        StateModel<TodoDocument> loadingState = new StateModel<>(StateStatus.LOADING);
+//        StateLiveData<TodoDocument> response = new StateLiveData<>(loadingState);
+//
+//        String todoId = todo.getTodoId();
+//
+//        FirebaseFirestore.getInstance()
+//                .collection(FirebaseCollectionName.TODO)
+//                .document(todoId)
+//                .set(todo)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        response.postSuccess(todo);
+//                        Log.d(TAG, "Add a new todo list: " + todo.getTitle());
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        response.postError(e);
+//                        Log.e(TAG, "Failed to add todo list: " + todo.getTitle());
+//                    }
+//                });
+//
+//        return response;
     }
 
     @Override
-    public StateLiveData<TodoListDocument> addTodoList(TodoListDocument todoList) {
+    public IStateLiveData<TodoListDocument> addTodoList(TodoListDocument todoList) {
         StateModel<TodoListDocument> loadingState = new StateModel<>(StateStatus.LOADING);
         StateLiveData<TodoListDocument> response = new StateLiveData<>(loadingState);
 
@@ -236,22 +244,22 @@ public class TodoRepository implements ITodoRepository {
     }
 
     @Override
-    public StateLiveData<TodoDocument> deleteTodo(String id) {
+    public IStateLiveData<String> deleteTodo(String id) {
+        return todoDAO.delete(id);
+    }
+
+    @Override
+    public IStateLiveData<String> deleteTodoList(String id) {
         return null;
     }
 
     @Override
-    public StateLiveData<TodoListDocument> deleteTodoList(String id) {
-        return null;
+    public IStateLiveData<String> modifyTodo(String id, Map<String, Object> changes) {
+        return todoDAO.update(id, changes);
     }
 
     @Override
-    public StateLiveData<TodoDocument> modifyTodo(String id, TodoDocument newTodo) {
-        return null;
-    }
-
-    @Override
-    public StateLiveData<TodoListDocument> modifyTodo(String id, TodoListDocument newList) {
+    public IStateLiveData<String> modifyTodoList(String id, Map<String, Object> changes) {
         return null;
     }
 }

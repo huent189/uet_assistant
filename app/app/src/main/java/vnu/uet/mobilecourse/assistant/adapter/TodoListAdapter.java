@@ -1,10 +1,13 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
+import android.text.SpannableString;
+import android.text.style.StrikethroughSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +16,7 @@ import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -25,6 +29,7 @@ import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
 import vnu.uet.mobilecourse.assistant.model.todo.ExpandableTodoList;
 import vnu.uet.mobilecourse.assistant.model.todo.Todo;
 import vnu.uet.mobilecourse.assistant.model.todo.TodoList;
+import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 
 public class TodoListAdapter extends
@@ -123,17 +128,38 @@ public class TodoListAdapter extends
         }
 
         public void bind(TodoDocument todo) {
-            tvTodoTitle.setText(todo.getTitle());
+            String title = todo.getTitle();
+            tvTodoTitle.setText(title);
+
+            cbDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        todo.setStatus(TodoDocument.DONE);
+//                        TodoRepository.getInstance().modifyTodo(todo.getTodoId(), todo);
+
+                    } else {
+                        todo.setStatus(TodoDocument.DOING);
+
+                    }
+                }
+            });
 
             String status = todo.getStatus();
 
             if (status != null && status.equals(TodoDocument.DONE)) {
+                // strike through todoTitle
+                SpannableString text = new SpannableString(title);
+                text.setSpan(new StrikethroughSpan(), 0, title.length() - 1, 0);
+                tvTodoTitle.setText(text);
                 cbDone.setActivated(true);
+
             } else {
                 cbDone.setActivated(false);
             }
 
-            tvDeadline.setText(DateTimeUtils.DATE_TIME_FORMAT.format(todo.getDeadline()));
+            Date deadline = DateTimeUtils.fromSecond(todo.getDeadline());
+            tvDeadline.setText(DateTimeUtils.DATE_TIME_FORMAT.format(deadline));
         }
     }
 }

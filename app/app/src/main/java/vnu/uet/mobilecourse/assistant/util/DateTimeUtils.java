@@ -18,6 +18,10 @@ public class DateTimeUtils {
     public static final SimpleDateFormat DATE_TIME_FORMAT =
             new SimpleDateFormat("dd/MM/yy hh:mm", Locale.ROOT);
 
+    public static Date fromSecond(long second) {
+        return new Date(second * 1000);
+    }
+
     public static boolean isSameMonthAndYear(Calendar current, Calendar target) {
         int targetMonth = target.get(Calendar.MONTH) + 1;
         int currentMonth = current.get(Calendar.MONTH) + 1;
