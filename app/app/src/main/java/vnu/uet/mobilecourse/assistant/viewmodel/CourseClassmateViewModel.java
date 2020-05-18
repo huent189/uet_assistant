@@ -24,7 +24,6 @@ public class CourseClassmateViewModel extends ViewModel {
         classMates.setValue(mates);
     }
 
-
     public LiveData<List<String>> getClassMates() {
         return classMates;
     }

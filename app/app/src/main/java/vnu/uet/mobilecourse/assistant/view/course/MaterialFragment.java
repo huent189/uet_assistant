@@ -109,5 +109,4 @@ public class MaterialFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(MaterialViewModel.class);
         // TODO: Use the ViewModel
     }
-
 }

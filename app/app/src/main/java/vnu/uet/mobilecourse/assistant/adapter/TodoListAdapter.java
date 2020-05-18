@@ -134,9 +134,10 @@ public class TodoListAdapter extends
             cbDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    // TODO: update on firebase
+
                     if (isChecked) {
                         todo.setStatus(TodoDocument.DONE);
-//                        TodoRepository.getInstance().modifyTodo(todo.getTodoId(), todo);
 
                     } else {
                         todo.setStatus(TodoDocument.DOING);

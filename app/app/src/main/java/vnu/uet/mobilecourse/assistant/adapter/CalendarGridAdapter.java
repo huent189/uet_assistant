@@ -77,7 +77,7 @@ public class CalendarGridAdapter extends ArrayAdapter {
         tvDayOfMonth.setText(String.valueOf(dayOfMonth));
 
         if (!DateTimeUtils.isSameMonthAndYear(currentCalendar, dateCalendar)) {
-            //TODO: disable cell
+            // disable cell
             Context context = getContext();
             int color = ContextCompat.getColor(context, R.color.whiteDisable);
             tvDayOfMonth.setTextColor(color);

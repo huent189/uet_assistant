@@ -61,35 +61,7 @@ public class TodoRepository implements ITodoRepository {
         todoLiveData = todoDAO.readAll();
 
         listenToTodoLists();
-//        listenToTodos();
     }
-
-//    private void listenToTodos() {
-//        FirebaseFirestore.getInstance()
-//                .collection(FirebaseCollectionName.TODO)
-//                .whereEqualTo("ownerId", ownerId)
-//                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
-//                        if (e != null) {
-//                            Log.e(TAG, "Listen to todo list failed.");
-//                            todoLiveData.postError(e);
-//
-//                        } else if (snapshots == null) {
-//                            Log.d(TAG, "Listening to todo list.");
-//                            todoLiveData.postLoading();
-//
-//                        } else {
-//                            List<TodoDocument> todos = snapshots.getDocuments().stream()
-//                                    .map(snapshot -> snapshot.toObject(TodoDocument.class))
-//                                    .filter(Objects::nonNull)
-//                                    .collect(Collectors.toList());
-//
-//                            todoLiveData.postSuccess(todos);
-//                        }
-//                    }
-//                });
-//    }
 
     private void listenToTodoLists() {
         FirebaseFirestore.getInstance()
@@ -157,10 +129,7 @@ public class TodoRepository implements ITodoRepository {
                         List<TodoDocument> todoByDay = todos.stream()
                                 .filter(todo -> {
                                     Date deadline = DateTimeUtils.fromSecond(todo.getDeadline());
-                                    boolean isSameDate = DateTimeUtils.isSameDate(date, deadline);
-//                                    boolean isDone = todo.getStatus().equals(TodoDocument.DONE);
-
-                                    return isSameDate;
+                                    return DateTimeUtils.isSameDate(date, deadline);
                                 })
                                 .collect(Collectors.toList());
 
@@ -186,32 +155,6 @@ public class TodoRepository implements ITodoRepository {
     @Override
     public IStateLiveData<TodoDocument> addTodo(TodoDocument todo) {
         return todoDAO.add(todo);
-
-//        StateModel<TodoDocument> loadingState = new StateModel<>(StateStatus.LOADING);
-//        StateLiveData<TodoDocument> response = new StateLiveData<>(loadingState);
-//
-//        String todoId = todo.getTodoId();
-//
-//        FirebaseFirestore.getInstance()
-//                .collection(FirebaseCollectionName.TODO)
-//                .document(todoId)
-//                .set(todo)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        response.postSuccess(todo);
-//                        Log.d(TAG, "Add a new todo list: " + todo.getTitle());
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        response.postError(e);
-//                        Log.e(TAG, "Failed to add todo list: " + todo.getTitle());
-//                    }
-//                });
-//
-//        return response;
     }
 
     @Override
