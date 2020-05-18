@@ -17,6 +17,9 @@ public class CourseGradeDeserializer implements JsonDeserializer<Grade[]> {
             int courseId = raw.getAsJsonObject().get("courseid").getAsInt();
             for (Grade g: grades ) {
                 g.setCourseId(courseId);
+                if(g.getGradedDate() == 0){
+                    g.setUserGrade(-1.0);
+                }
             }
         }
 

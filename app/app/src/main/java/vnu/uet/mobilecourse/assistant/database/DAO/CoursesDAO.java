@@ -31,7 +31,7 @@ public abstract class CoursesDAO {
     public abstract LiveData<List<CourseContent>> getCourseContent(int course_id);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertGrade(Grade... grades);
-    @Query("select * from Grade where courseId = :courseId and type != \"course\"")
+    @Query("select * from Grade where courseId = :courseId and type != \"course\" order by gradedDate DESC")
     public abstract LiveData<List<Grade>> getGrades(int courseId);
     @Query("select * from Grade where courseId = :courseId and type == \"course\"")
     public abstract LiveData<Grade> getTotalGrade(int courseId);
