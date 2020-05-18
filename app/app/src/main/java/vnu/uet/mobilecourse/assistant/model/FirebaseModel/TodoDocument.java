@@ -10,8 +10,8 @@ public class TodoDocument implements Parcelable {
     private String todoId;
     private String title;
     private String description;
-    private int deadline;
-    private String status;
+    private long deadline;
+    private String status = DOING;
 
     public TodoDocument() {
 
@@ -79,7 +79,7 @@ public class TodoDocument implements Parcelable {
         this.description = description;
     }
 
-    public int getDeadline() {
+    public long getDeadline() {
         return deadline;
     }
 
@@ -110,7 +110,7 @@ public class TodoDocument implements Parcelable {
         dest.writeString(todoId);
         dest.writeString(title);
         dest.writeString(description);
-        dest.writeInt(deadline);
+        dest.writeLong(deadline);
         dest.writeString(status);
     }
 }

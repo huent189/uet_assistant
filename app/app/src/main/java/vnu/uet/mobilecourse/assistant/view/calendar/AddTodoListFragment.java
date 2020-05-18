@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.view.calendar;
 
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -16,12 +17,14 @@ import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.todo.TodoList;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarSharedViewModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.util.Util;
 
@@ -65,14 +68,25 @@ public class AddTodoListFragment extends Fragment {
                 String id = Util.autoId();
                 todoList.setTodoListId(id);
 
-                String ownerId = User.getInstance().getUserId();
+                String ownerId = User.getInstance().getStudentId();
                 todoList.setOwnerId(ownerId);
 
-                mViewModel.getTodoListTitle().postValue(todoList.getTitle());
+                mViewModel.addTodoList(todoList).observe(getViewLifecycleOwner(), new Observer<StateModel<TodoListDocument>>() {
+                    @Override
+                    public void onChanged(StateModel<TodoListDocument> stateModel) {
+                        switch (stateModel.getStatus()) {
+                            case SUCCESS:
+                                mViewModel.getTodoListTitle().postValue(todoList.getTitle());
+                                navController.navigateUp();
+                                break;
 
-                mViewModel.addTodoList(todoList);
+                            case ERROR:
+                                Toast.makeText(getContext(), "Tạo danh sách không thành công", Toast.LENGTH_LONG).show();
+                                break;
+                        }
+                    }
+                });
 
-                navController.navigateUp();
             }
         });
 

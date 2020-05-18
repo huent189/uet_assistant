@@ -8,6 +8,7 @@ import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
 import vnu.uet.mobilecourse.assistant.repository.FirebaseRepo.TodoListsLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 
 public interface ITodoRepository {
     /**
@@ -17,7 +18,7 @@ public interface ITodoRepository {
      * @param date selected date on calendar
      * @return list of todo_ on specific date
      */
-    StateLiveData<DailyTodoList> getDailyTodoList(Date date);
+    StateMediatorLiveData<DailyTodoList> getDailyTodoList(Date date);
 
     StateLiveData<List<TodoDocument>> getAllTodos();
 
@@ -35,7 +36,7 @@ public interface ITodoRepository {
      * Retrieve all student's todoLists in FireStore database
      * @return all student's todoLists
      */
-    StateLiveData<List<TodoListDocument>> getAllTodoLists();
+    StateMediatorLiveData<List<TodoListDocument>> getAllTodoLists();
 //    LiveData<List<TodoList>> getAllTodoLists_old();
 
     /**

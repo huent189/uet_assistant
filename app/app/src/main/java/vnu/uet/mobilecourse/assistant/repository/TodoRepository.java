@@ -27,6 +27,7 @@ import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
 import vnu.uet.mobilecourse.assistant.repository.FirebaseRepo.TodoListsLiveData;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
@@ -48,7 +49,7 @@ public class TodoRepository implements ITodoRepository {
         StateModel<List<TodoDocument>> todoLoadingState = new StateModel<>(StateStatus.LOADING);
         todoLiveData = new StateLiveData<>(todoLoadingState);
 
-        ownerId = User.getInstance().getUserId();
+        ownerId = User.getInstance().getStudentId();
 
         listenToTodoLists();
         listenToTodos();
@@ -122,14 +123,17 @@ public class TodoRepository implements ITodoRepository {
     }
 
     @Override
-    public StateLiveData<DailyTodoList> getDailyTodoList(Date date) {
+    public StateMediatorLiveData<DailyTodoList> getDailyTodoList(Date date) {
         // initialize state live data with loading state
         StateModel<DailyTodoList> loadingState = new StateModel<>(StateStatus.LOADING);
-        StateLiveData<DailyTodoList> response = new StateLiveData<>(loadingState);
+//        StateLiveData<DailyTodoList> response = new StateLiveData<>(loadingState);
+//
+//        MediatorLiveData<> filterLiveData = new MediatorLiveData<>();
 
-        MediatorLiveData<DailyTodoList> filterLiveData = new MediatorLiveData<>();
+        StateMediatorLiveData<DailyTodoList> response = new StateMediatorLiveData<>(loadingState);
 
-        filterLiveData.addSource(todoLiveData, new Observer<StateModel<List<TodoDocument>>>() {
+
+        response.addSource(todoLiveData, new Observer<StateModel<List<TodoDocument>>>() {
             @Override
             public void onChanged(StateModel<List<TodoDocument>> stateModel) {
                 switch (stateModel.getStatus()) {
@@ -148,7 +152,8 @@ public class TodoRepository implements ITodoRepository {
 
                         List<TodoDocument> todoByDay = todos.stream()
                                 .filter(todo -> {
-                                    Date deadline = new Date(todo.getDeadline() * 1000);
+                                    long timestamp = (long) todo.getDeadline() * 1000;
+                                    Date deadline = new Date(timestamp);
                                     return DateTimeUtils.isSameDate(date, deadline);
                                 })
                                 .collect(Collectors.toList());
@@ -168,7 +173,7 @@ public class TodoRepository implements ITodoRepository {
     }
 
     @Override
-    public StateLiveData<List<TodoListDocument>> getAllTodoLists() {
+    public StateMediatorLiveData<List<TodoListDocument>> getAllTodoLists() {
         return new TodoListsLiveData(todoListLiveData, todoLiveData);
     }
 

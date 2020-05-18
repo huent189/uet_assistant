@@ -104,20 +104,24 @@ public class CalendarFragment extends Fragment {
         tvDate.setText(selectedDate);
 
         if (activity instanceof AppCompatActivity && toolbar != null) {
-//            toolbar.setTitle(selectedDate);
             collapsingToolbarLayout.setTitle(selectedDate);
         }
 
-//        LiveData<DailyTodoList> dailyList = TodoRepository.getInstance().getTodoListByDate(date);
-
         CalendarFragment fragment = this;
 
-//        dailyList.observe(getViewLifecycleOwner(), dailyTodoList -> {
-//            todoAdapter = new TodoAdapter(dailyTodoList, fragment);
-//            rvDailyTodoList.setAdapter(todoAdapter);
-//
-//            calendarView.notifyTodoSetChanged(getViewLifecycleOwner());
-//        });
+        calendarViewModel.getDailyTodoList(date).observe(getViewLifecycleOwner(), stateModel -> {
+            switch (stateModel.getStatus()) {
+                case SUCCESS:
+                    DailyTodoList dailyTodoList = stateModel.getData();
+
+                    todoAdapter = new TodoAdapter(dailyTodoList, fragment);
+                    rvDailyTodoList.setAdapter(todoAdapter);
+
+                    calendarView.notifyTodoSetChanged(getViewLifecycleOwner());
+
+                    break;
+            }
+        });
     }
 
     @Override

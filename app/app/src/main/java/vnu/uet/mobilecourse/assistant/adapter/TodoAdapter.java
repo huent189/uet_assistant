@@ -61,7 +61,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
         holder.tvDeadline.setText(DateTimeUtils.DATE_TIME_FORMAT.format(todo.getDeadline()));
 
         String todoListTitle = TodoRepository.getInstance()
-                .getAllTodoLists()
+                .getShallowTodoLists()
                 .getValue().getData()
                 .stream()
                 .filter(todoList -> todoList.getTodoListId().equals(todo.getTodoListId()))
@@ -71,7 +71,9 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
 
         holder.tvCategory.setText(todoListTitle);
 
-        holder.cbDone.setActivated(todo.getStatus().equals(TodoDocument.DONE));
+        String status = todo.getStatus();
+        if (status != null && status.equals(TodoDocument.DONE))
+            holder.cbDone.setActivated(true);
     }
 
 

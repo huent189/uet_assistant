@@ -31,45 +31,16 @@ public class CalendarSharedViewModel extends ViewModel {
 
     private TodoRepository todoRepo = TodoRepository.getInstance();
 
-    public StateLiveData<List<TodoListDocument>> getAllTodoLists() {
-        return todoRepo.getAllTodoLists();
+    public StateLiveData<List<TodoListDocument>> getShallowTodoLists() {
+        return todoRepo.getShallowTodoLists();
     }
 
-    public StateLiveData<TodoListDocument> findTodoListById(String id) {
-        StateMediatorLiveData<TodoListDocument> liveData = new StateMediatorLiveData<>(new StateModel<>(StateStatus.LOADING));
-
-        liveData.getMediatorListener().addSource(todoRepo.getAllTodoLists(), new Observer<StateModel<List<TodoListDocument>>>() {
-            @Override
-            public void onChanged(StateModel<List<TodoListDocument>> stateModel) {
-                switch (stateModel.getStatus()) {
-                    case LOADING:
-                        liveData.postLoading();
-                        break;
-
-                    case ERROR:
-                        liveData.postError(stateModel.getError());
-                        break;
-
-                    case SUCCESS:
-                        TodoListDocument todoList = stateModel.getData().stream()
-                                .filter(todo -> todo.getTodoListId().equals(id))
-                                .findFirst()
-                                .orElse(null);
-
-                        liveData.postSuccess(todoList);
-                }
-            }
-        });
-
-        return liveData;
+    public StateLiveData<TodoDocument> addTodo(TodoDocument todo) {
+        return todoRepo.addTodo(todo);
     }
 
-    public void addTodo(TodoDocument todo) {
-        todoRepo.addTodo(todo);
-    }
-
-    public void addTodoList(TodoListDocument todoList) {
-        todoRepo.addTodoList(todoList);
+    public StateLiveData<TodoListDocument> addTodoList(TodoListDocument todoList) {
+        return todoRepo.addTodoList(todoList);
     }
 
     public MutableLiveData<Boolean> isCardExpand() {

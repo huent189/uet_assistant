@@ -5,6 +5,8 @@ import com.google.firebase.firestore.Exclude;
 import java.util.ArrayList;
 import java.util.List;
 
+import vnu.uet.mobilecourse.assistant.model.todo.Todo;
+
 public class TodoListDocument {
     private String ownerId;
     private String todoListId;
@@ -22,6 +24,10 @@ public class TodoListDocument {
     @Exclude
     public List<TodoDocument> getTodos() {
         return todos;
+    }
+
+    public boolean contains(TodoDocument todo) {
+        return todos.contains(todo);
     }
 
     public void add(TodoDocument todo) {

@@ -125,7 +125,9 @@ public class TodoListAdapter extends
         public void bind(TodoDocument todo) {
             tvTodoTitle.setText(todo.getTitle());
 
-            if (todo.getStatus().equals(TodoDocument.DONE)) {
+            String status = todo.getStatus();
+
+            if (status != null && status.equals(TodoDocument.DONE)) {
                 cbDone.setActivated(true);
             } else {
                 cbDone.setActivated(false);

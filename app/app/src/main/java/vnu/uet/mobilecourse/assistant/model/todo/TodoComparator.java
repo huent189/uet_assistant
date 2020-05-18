@@ -10,6 +10,6 @@ import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 public class TodoComparator implements Comparator<TodoDocument> {
     @Override
     public int compare(TodoDocument o1, TodoDocument o2) {
-        return Integer.compare(o1.getDeadline(), o2.getDeadline());
+        return Long.compare(o1.getDeadline(), o2.getDeadline());
     }
 }

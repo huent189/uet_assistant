@@ -23,6 +23,7 @@ import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
 import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
@@ -94,7 +95,7 @@ public class CalendarGridAdapter extends ArrayAdapter {
         ImageView ivHaveTodo = convertView.findViewById(R.id.ivHaveTodo);
 
         if (isShowTodo) {
-            StateLiveData<DailyTodoList> dailyList = TodoRepository.getInstance().getDailyTodoList(dateOfMonth);
+            StateMediatorLiveData<DailyTodoList> dailyList = TodoRepository.getInstance().getDailyTodoList(dateOfMonth);
 
             if (lifecycleOwner != null) {
                 dailyList.observe(lifecycleOwner, new Observer<StateModel<DailyTodoList>>() {

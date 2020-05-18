@@ -9,10 +9,11 @@ import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoDocument;
 import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
-public class TodoListsLiveData extends StateLiveData<List<TodoListDocument>> {
+public class TodoListsLiveData extends StateMediatorLiveData<List<TodoListDocument>> {
 
     private List<TodoListDocument> shallowTodoLists;
 
@@ -27,31 +28,31 @@ public class TodoListsLiveData extends StateLiveData<List<TodoListDocument>> {
         super(new StateModel<>(StateStatus.LOADING));
 
         this.shallowTodoLists = new ArrayList<>();
-        StateModel<List<TodoListDocument>> listStateModel = shallowTodoLists.getValue();
-        if (listStateModel != null) {
-            if (listStateModel.getStatus() == StateStatus.SUCCESS) {
-                listSuccess = true;
-                updateShallowTodoLists(listStateModel.getData());
-            }
-        }
+//        StateModel<List<TodoListDocument>> listStateModel = shallowTodoLists.getValue();
+//        if (listStateModel != null) {
+//            if (listStateModel.getStatus() == StateStatus.SUCCESS) {
+//                listSuccess = true;
+//                updateShallowTodoLists(listStateModel.getData());
+//            }
+//        }
 
         this.todos = new ArrayList<>();
-        StateModel<List<TodoDocument>> todoStateModel = todos.getValue();
-        if (todoStateModel != null) {
-            if (todoStateModel.getStatus() == StateStatus.SUCCESS) {
-                todoSuccess = true;
-                updateTodos(todoStateModel.getData());
-            }
-        }
+//        StateModel<List<TodoDocument>> todoStateModel = todos.getValue();
+//        if (todoStateModel != null) {
+//            if (todoStateModel.getStatus() == StateStatus.SUCCESS) {
+//                todoSuccess = true;
+//                updateTodos(todoStateModel.getData());
+//            }
+//        }
+//
+//        if (listSuccess && todoSuccess) {
+//            List<TodoListDocument> value = combineData();
+//            postSuccess(value);
+//        }
+//
+//        MediatorLiveData<List<TodoListDocument>> mergedLiveData = new MediatorLiveData<>();
 
-        if (listSuccess && todoSuccess) {
-            List<TodoListDocument> value = combineData();
-            postSuccess(value);
-        }
-
-        MediatorLiveData<List<TodoListDocument>> mergedLiveData = new MediatorLiveData<>();
-
-        mergedLiveData.addSource(shallowTodoLists, new Observer<StateModel<List<TodoListDocument>>>() {
+        addSource(shallowTodoLists, new Observer<StateModel<List<TodoListDocument>>>() {
             @Override
             public void onChanged(StateModel<List<TodoListDocument>> stateModel) {
                 switch (stateModel.getStatus()) {
@@ -81,7 +82,7 @@ public class TodoListsLiveData extends StateLiveData<List<TodoListDocument>> {
             }
         });
 
-        mergedLiveData.addSource(todos, new Observer<StateModel<List<TodoDocument>>>() {
+        addSource(todos, new Observer<StateModel<List<TodoDocument>>>() {
             @Override
             public void onChanged(StateModel<List<TodoDocument>> stateModel) {
                 switch (stateModel.getStatus()) {
@@ -112,7 +113,7 @@ public class TodoListsLiveData extends StateLiveData<List<TodoListDocument>> {
         });
     }
 
-    private void updateShallowTodoLists(List<TodoListDocument> newList) {
+    public void updateShallowTodoLists(List<TodoListDocument> newList) {
         if (newList == null)
             return;
 
@@ -120,7 +121,7 @@ public class TodoListsLiveData extends StateLiveData<List<TodoListDocument>> {
         shallowTodoLists.addAll(newList);
     }
 
-    private void updateTodos(List<TodoDocument> newList) {
+    public void updateTodos(List<TodoDocument> newList) {
         if (newList == null)
             return;
 
@@ -128,7 +129,7 @@ public class TodoListsLiveData extends StateLiveData<List<TodoListDocument>> {
         todos.addAll(newList);
     }
 
-    private List<TodoListDocument> combineData() {
+    public List<TodoListDocument> combineData() {
         List<TodoListDocument> result = new ArrayList<>(shallowTodoLists);
 
         todos.forEach(todo -> {
@@ -136,7 +137,8 @@ public class TodoListsLiveData extends StateLiveData<List<TodoListDocument>> {
 
             result.forEach(todoList -> {
                 if (todoList.getTodoListId().equals(todoListId)) {
-                    todoList.add(todo);
+                    if (!todoList.contains(todo))
+                        todoList.add(todo);
                 }
             });
         });
