@@ -17,10 +17,15 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
 import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class CalendarGridAdapter extends ArrayAdapter {
 
@@ -90,12 +95,19 @@ public class CalendarGridAdapter extends ArrayAdapter {
         ImageView ivHaveTodo = convertView.findViewById(R.id.ivHaveTodo);
 
         if (isShowTodo) {
-            LiveData<DailyTodoList> dailyList = TodoRepository.getInstance().getTodoListByDate(dateOfMonth);
+            StateMediatorLiveData<DailyTodoList> dailyList = TodoRepository.getInstance().getDailyTodoList(dateOfMonth);
 
             if (lifecycleOwner != null) {
-                dailyList.observe(lifecycleOwner, dailyTodoList -> {
-                    if (dailyTodoList != null && !dailyTodoList.isEmpty()) {
-                        ivHaveTodo.setVisibility(View.VISIBLE);
+                dailyList.observe(lifecycleOwner, new Observer<StateModel<DailyTodoList>>() {
+                    @Override
+                    public void onChanged(StateModel<DailyTodoList> stateModel) {
+                        if (stateModel.getStatus() == StateStatus.SUCCESS) {
+                            DailyTodoList dailyTodoList = stateModel.getData();
+
+                            if (dailyTodoList != null && !dailyTodoList.isEmpty()) {
+                                ivHaveTodo.setVisibility(View.VISIBLE);
+                            }
+                        }
                     }
                 });
             }

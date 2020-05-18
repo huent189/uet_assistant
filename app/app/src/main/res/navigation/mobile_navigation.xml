@@ -44,6 +44,9 @@
         <action
             android:id="@+id/action_navigation_calendar_to_addTodoFragment"
             app:destination="@id/navigation_add_todo" />
+        <action
+            android:id="@+id/action_navigation_calendar_to_navigation_todo_lists"
+            app:destination="@id/navigation_todo_lists" />
     </fragment>
     <fragment
         android:id="@+id/navigation_explore_course"
@@ -85,5 +88,15 @@
         android:name="vnu.uet.mobilecourse.assistant.view.course.MaterialFragment"
         android:label="fragment_material"
         tools:layout="@layout/fragment_material" />
+
+    <fragment
+        android:id="@+id/navigation_todo_lists"
+        android:name="vnu.uet.mobilecourse.assistant.view.calendar.TodoListsFragment"
+        android:label="fragment_todo_lists"
+        tools:layout="@layout/fragment_todo_lists" >
+        <action
+            android:id="@+id/action_navigation_todo_lists_to_navigation_calendar"
+            app:destination="@id/navigation_calendar" />
+    </fragment>
 
 </navigation>

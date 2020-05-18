@@ -2,33 +2,32 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/list_item_background"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <ImageView
+        android:id="@+id/ivThumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|start"
         android:paddingHorizontal="@dimen/sibling_margin_x2"
         android:tint="@color/primaryDark"
-        android:src="@drawable/ic_widgets_black_32dp" />
-
-    <FrameLayout
-        android:paddingVertical="@dimen/sibling_margin_x2"
-        android:layout_gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:src="@drawable/ic_assignment_32dp" />
 
         <TextView
-            android:id="@+id/tvGradeTitle"
-            android:layout_width="match_parent"
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/sibling_margin_x4"
+            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/sibling_margin_x3"
+            android:paddingVertical="@dimen/sibling_margin_x2"
             android:layout_gravity="center_vertical|start"
             android:textSize="@dimen/header2_size"
             android:text="Bài kiểm tra 5a" />
 
         <TextView
+            android:id="@+id/tvGrade"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/primary_button_background"
@@ -38,7 +37,5 @@
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="@dimen/sibling_margin_x2"
             android:text="8/10" />
-
-    </FrameLayout>
 
 </LinearLayout>

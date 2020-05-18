@@ -12,7 +12,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerTvGradeProgress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Title"
+                        android:layout_width="140dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/sibling_margin_x4"
+                        android:background="@drawable/primary_button_background"
+                        android:backgroundTint="@color/backgroundLight"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingHorizontal="@dimen/sibling_margin_x2" />
+
+                </LinearLayout>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+            <TextView
             android:id="@+id/tvGradeProgress"
             style="@style/Title"
             android:layout_width="wrap_content"
@@ -22,10 +51,12 @@
             android:backgroundTint="@color/primary"
             android:layout_gravity="center_horizontal"
             android:paddingHorizontal="@dimen/sibling_margin_x2"
-            android:text="86 / 100"
+            android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/textView"
@@ -39,7 +70,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvGradeProgress" />
 
-        <androidx.recyclerview.widget.RecyclerView
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerRvGrades"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/shimmer_grade_item" />
+                    <include layout="@layout/shimmer_grade_item" />
+                    <include layout="@layout/shimmer_grade_item" />
+                    <include layout="@layout/shimmer_grade_item" />
+                    <include layout="@layout/shimmer_grade_item" />
+                    <include layout="@layout/shimmer_grade_item" />
+
+                </LinearLayout>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvGrades"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,6 +103,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        </FrameLayout>
 
     </LinearLayout>
 

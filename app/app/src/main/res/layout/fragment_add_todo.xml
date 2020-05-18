@@ -84,14 +84,22 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tvTodoListTitle" />
 
-                <RadioGroup
-                    style="@style/RadioGroup"
-                    android:layout_marginTop="@dimen/sibling_margin"
-                    android:id="@+id/rgTodoList"
-                    android:visibility="gone"
+                <vnu.uet.mobilecourse.assistant.view.MaxHeightNestedScrollView
+                    android:id="@+id/svRgTodoListContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTodoListTitle"/>
+                    app:maxHeight="100dp"
+                    android:layout_marginTop="@dimen/sibling_margin"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTodoListTitle">
+
+                    <RadioGroup
+                        style="@style/RadioGroup"
+                        android:id="@+id/rgTodoList"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </vnu.uet.mobilecourse.assistant.view.MaxHeightNestedScrollView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

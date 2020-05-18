@@ -4,10 +4,17 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoDocument;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
 import vnu.uet.mobilecourse.assistant.model.todo.Todo;
 import vnu.uet.mobilecourse.assistant.model.todo.TodoList;
 import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class CalendarSharedViewModel extends ViewModel {
     private MutableLiveData<String> todoListTitle = new MutableLiveData<>();
@@ -24,29 +31,16 @@ public class CalendarSharedViewModel extends ViewModel {
 
     private TodoRepository todoRepo = TodoRepository.getInstance();
 
-    public LiveData<List<TodoList>> getAllTodoLists() {
-        return todoRepo.getAllTodoLists();
+    public StateLiveData<List<TodoListDocument>> getShallowTodoLists() {
+        return todoRepo.getShallowTodoLists();
     }
 
-    public TodoList findTodoListById(int id) {
-        List<TodoList> todoLists = getAllTodoLists().getValue();
-
-        if (todoLists != null) {
-            for (TodoList list : todoLists) {
-                if (list.getId().equals(String.valueOf(id)))
-                    return list;
-            }
-        }
-
-        return null;
+    public StateLiveData<TodoDocument> addTodo(TodoDocument todo) {
+        return todoRepo.addTodo(todo);
     }
 
-    public void addTodo(Todo todo) {
-        todoRepo.addTodo(todo);
-    }
-
-    public void addTodoList(TodoList todoList) {
-        todoRepo.addTodoList(todoList);
+    public StateLiveData<TodoListDocument> addTodoList(TodoListDocument todoList) {
+        return todoRepo.addTodoList(todoList);
     }
 
     public MutableLiveData<Boolean> isCardExpand() {
