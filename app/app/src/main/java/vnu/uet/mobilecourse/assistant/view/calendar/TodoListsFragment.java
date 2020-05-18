@@ -6,7 +6,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.TodoListAdapter;
-import vnu.uet.mobilecourse.assistant.model.todo.Todo;
 import vnu.uet.mobilecourse.assistant.model.todo.TodoList;
 import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.TodoListsViewModel;
@@ -62,13 +60,13 @@ public class TodoListsFragment extends Fragment {
 
         Fragment thisFragment = this;
 
-        TodoRepository.getInstance().getAllTodoLists().observe(getViewLifecycleOwner(), new Observer<List<TodoList>>() {
-            @Override
-            public void onChanged(List<TodoList> todoLists) {
-                TodoListAdapter adapter = new TodoListAdapter(todoLists, thisFragment);
-                rvTodoLists.setAdapter(adapter);
-            }
-        });
+//        TodoRepository.getInstance().getAllTodoLists_old().observe(getViewLifecycleOwner(), new Observer<List<TodoList>>() {
+//            @Override
+//            public void onChanged(List<TodoList> todoLists) {
+//                TodoListAdapter adapter = new TodoListAdapter(todoLists, thisFragment);
+//                rvTodoLists.setAdapter(adapter);
+//            }
+//        });
 
         return root;
     }

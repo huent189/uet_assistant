@@ -14,8 +14,10 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoDocument;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
 import vnu.uet.mobilecourse.assistant.model.todo.Todo;
+import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 
 public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
@@ -53,12 +55,23 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.d(TAG, "call onBindViewHolder");
 
-        final Todo todo = todoList.get(position);
+        final TodoDocument todo = todoList.get(position);
 
         holder.tvTodoTitle.setText(todo.getTitle());
         holder.tvDeadline.setText(DateTimeUtils.DATE_TIME_FORMAT.format(todo.getDeadline()));
-        holder.tvCategory.setText(todo.getTodoListTitle());
-        holder.cbDone.setActivated(todo.getStatus() == Todo.Status.DONE);
+
+        String todoListTitle = TodoRepository.getInstance()
+                .getAllTodoLists()
+                .getValue().getData()
+                .stream()
+                .filter(todoList -> todoList.getTodoListId().equals(todo.getTodoListId()))
+                .findFirst()
+                .orElse(null)
+                .getTitle();
+
+        holder.tvCategory.setText(todoListTitle);
+
+        holder.cbDone.setActivated(todo.getStatus().equals(TodoDocument.DONE));
     }
 
 

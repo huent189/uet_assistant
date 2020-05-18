@@ -20,6 +20,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.util.Util;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -34,6 +36,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -41,10 +44,15 @@ import androidx.transition.AutoTransition;
 import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoDocument;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.todo.Todo;
 import vnu.uet.mobilecourse.assistant.model.todo.TodoList;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarSharedViewModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class AddTodoFragment extends Fragment {
 
@@ -89,16 +97,37 @@ public class AddTodoFragment extends Fragment {
 
         tvTodoListTitle = root.findViewById(R.id.tvTodoListTitle);
 
-        mViewModel.getAllTodoLists().observe(
-                getViewLifecycleOwner(),
-                todoLists -> generateRadioGroup(inflater, todoLists)
+        mViewModel.getAllTodoLists().observe(getViewLifecycleOwner(), new Observer<StateModel<List<TodoListDocument>>>() {
+                    @Override
+                    public void onChanged(StateModel<List<TodoListDocument>> stateModel) {
+                        switch (stateModel.getStatus()) {
+                            case LOADING:
+                            case ERROR:
+                                break;
+
+                            case SUCCESS:
+                                generateRadioGroup(inflater, stateModel.getData());
+                                break;
+                        }
+                    }
+                }
         );
 
         rgTodoList.setOnCheckedChangeListener((group, checkedId) -> {
-            TodoList selected = mViewModel.findTodoListById(checkedId);
+            mViewModel.getAllTodoLists().observe(getViewLifecycleOwner(), new Observer<StateModel<List<TodoListDocument>>>() {
+                @Override
+                public void onChanged(StateModel<List<TodoListDocument>> stateModel) {
+                    if (stateModel.getStatus() == StateStatus.SUCCESS) {
+                        if (checkedId < stateModel.getData().size()) {
 
-            if (selected != null)
-                tvTodoListTitle.setText(selected.getTitle());
+                            TodoListDocument selected = stateModel.getData().get(checkedId);
+
+                            if (selected != null)
+                                tvTodoListTitle.setText(selected.getTitle());
+                        }
+                    }
+                }
+            });
         });
 
         View.OnClickListener onExpandListener = generateOnExpandAnimation();
@@ -208,7 +237,7 @@ public class AddTodoFragment extends Fragment {
                 Context context = getContext();
 
                 try {
-                    Todo todo = generateTodo();
+                    TodoDocument todo = generateTodo();
                     mViewModel.addTodo(todo);
 
                     Toast.makeText(context,"Tạo thành công", Toast.LENGTH_SHORT).show();
@@ -224,7 +253,7 @@ public class AddTodoFragment extends Fragment {
         return root;
     }
 
-    private void generateRadioGroup(LayoutInflater inflater, List<TodoList> todoLists) {
+    private void generateRadioGroup(LayoutInflater inflater, List<TodoListDocument> todoLists) {
         // delete all exist radio button
         rgTodoList.removeAllViews();
 
@@ -237,7 +266,9 @@ public class AddTodoFragment extends Fragment {
 
             radioButton.setText(title);
 
-            radioButton.setId(Integer.parseInt(todoList.getId()));
+            int id = todoLists.indexOf(todoList);
+
+            radioButton.setId(id);
 
             if (title.equals(mViewModel.getTodoListTitle().getValue()))
                 radioButton.setChecked(true);
@@ -265,8 +296,14 @@ public class AddTodoFragment extends Fragment {
         rgTodoList.addView(radioButton);
     }
 
-    private Todo generateTodo() throws ParseException {
-        Todo todo = new Todo();
+    private TodoDocument generateTodo() throws ParseException {
+        TodoDocument todo = new TodoDocument();
+
+        String id = Util.autoId();
+        todo.setTodoId(id);
+
+        String ownerId = User.getInstance().getUserId();
+        todo.setOwnerId(ownerId);
 
         String title = etTodoTitle.getText().toString();
         todo.setTitle(title);
@@ -279,7 +316,10 @@ public class AddTodoFragment extends Fragment {
 
         String date = btnDate.getText().toString();
         String time = btnTime.getText().toString();
-        Date deadline = DateTimeUtils.DATE_TIME_FORMAT.parse(date + " " + time);
+
+        Date deadlineDate = DateTimeUtils.DATE_TIME_FORMAT.parse(date + " " + time);
+        assert deadlineDate != null;
+        int deadline = (int) (deadlineDate.getTime() / 1000);
         todo.setDeadline(deadline);
 
         return todo;

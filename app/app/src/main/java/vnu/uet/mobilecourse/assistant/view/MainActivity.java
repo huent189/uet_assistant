@@ -3,6 +3,7 @@ package vnu.uet.mobilecourse.assistant.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.R;
@@ -24,8 +25,7 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(StateModel<String> stateModel) {
                 switch (stateModel.getStatus()) {
                     case SUCCESS:
-                        boolean isFirebaseLoggedIn = new FirebaseAuthenticationService()
-                                .isFirebaseLoggedIn();
+                        boolean isFirebaseLoggedIn = FirebaseAuthenticationService.isFirebaseLoggedIn();
 
                         if (isFirebaseLoggedIn)
                             navigateToActivity(MyCoursesActivity.class);

@@ -1,11 +1,32 @@
 package vnu.uet.mobilecourse.assistant.model.FirebaseModel;
 
-public class ToDoListDocument {
+import com.google.firebase.firestore.Exclude;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class TodoListDocument {
     private String ownerId;
     private String todoListId;
     private String title;
     private String description;
-    private String progress;
+    private float progress;
+
+    @Exclude
+    private List<TodoDocument> todos = new ArrayList<>();
+
+    public void setTodos(List<TodoDocument> todos) {
+        this.todos = todos;
+    }
+
+    @Exclude
+    public List<TodoDocument> getTodos() {
+        return todos;
+    }
+
+    public void add(TodoDocument todo) {
+        todos.add(todo);
+    }
 
     public String getOwnerId() {
         return ownerId;
@@ -39,11 +60,11 @@ public class ToDoListDocument {
         this.description = description;
     }
 
-    public String getProgress() {
+    public float getProgress() {
         return progress;
     }
 
-    public void setProgress(String progress) {
+    public void setProgress(float progress) {
         this.progress = progress;
     }
 }

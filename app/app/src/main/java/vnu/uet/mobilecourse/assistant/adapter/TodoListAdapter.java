@@ -20,6 +20,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoDocument;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
 import vnu.uet.mobilecourse.assistant.model.todo.ExpandableTodoList;
 import vnu.uet.mobilecourse.assistant.model.todo.Todo;
 import vnu.uet.mobilecourse.assistant.model.todo.TodoList;
@@ -30,13 +32,13 @@ public class TodoListAdapter extends
 
     private Fragment owner;
 
-    private List<TodoList> todoLists;
+    private List<TodoListDocument> todoLists;
 
     private LayoutInflater inflater;
 
     private NavController navController;
 
-    public TodoListAdapter(List<TodoList> todoLists, Fragment owner) {
+    public TodoListAdapter(List<TodoListDocument> todoLists, Fragment owner) {
         super(ExpandableTodoList.convert(todoLists));
 
         this.owner = owner;
@@ -66,7 +68,7 @@ public class TodoListAdapter extends
 
         if (group instanceof ExpandableTodoList) {
             ExpandableTodoList content = (ExpandableTodoList) group;
-            final Todo todo = content.getItems().get(childIndex);
+            final TodoDocument todo = content.getItems().get(childIndex);
             holder.bind(todo);
         }
     }
@@ -120,10 +122,10 @@ public class TodoListAdapter extends
             tvCategory.setVisibility(View.GONE);
         }
 
-        public void bind(Todo todo) {
+        public void bind(TodoDocument todo) {
             tvTodoTitle.setText(todo.getTitle());
 
-            if (todo.getStatus() == Todo.Status.DONE) {
+            if (todo.getStatus().equals(TodoDocument.DONE)) {
                 cbDone.setActivated(true);
             } else {
                 cbDone.setActivated(false);

@@ -108,16 +108,16 @@ public class CalendarFragment extends Fragment {
             collapsingToolbarLayout.setTitle(selectedDate);
         }
 
-        LiveData<DailyTodoList> dailyList = TodoRepository.getInstance().getTodoListByDate(date);
+//        LiveData<DailyTodoList> dailyList = TodoRepository.getInstance().getTodoListByDate(date);
 
         CalendarFragment fragment = this;
 
-        dailyList.observe(getViewLifecycleOwner(), dailyTodoList -> {
-            todoAdapter = new TodoAdapter(dailyTodoList, fragment);
-            rvDailyTodoList.setAdapter(todoAdapter);
-
-            calendarView.notifyTodoSetChanged(getViewLifecycleOwner());
-        });
+//        dailyList.observe(getViewLifecycleOwner(), dailyTodoList -> {
+//            todoAdapter = new TodoAdapter(dailyTodoList, fragment);
+//            rvDailyTodoList.setAdapter(todoAdapter);
+//
+//            calendarView.notifyTodoSetChanged(getViewLifecycleOwner());
+//        });
     }
 
     @Override
