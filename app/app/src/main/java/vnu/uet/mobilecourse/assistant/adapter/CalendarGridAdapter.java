@@ -76,20 +76,21 @@ public class CalendarGridAdapter extends ArrayAdapter {
         TextView tvDayOfMonth = convertView.findViewById(R.id.tvDayOfMonth);
         tvDayOfMonth.setText(String.valueOf(dayOfMonth));
 
+        Context context = getContext();
+
         if (!DateTimeUtils.isSameMonthAndYear(currentCalendar, dateCalendar)) {
             // disable cell
-            Context context = getContext();
             int color = ContextCompat.getColor(context, R.color.whiteDisable);
             tvDayOfMonth.setTextColor(color);
 
-        } else if (DateTimeUtils.isSameDate(currentDate, dateOfMonth)) {
-            ImageView ivCurrentDate = convertView.findViewById(R.id.ivCurrentDate);
-            ivCurrentDate.setVisibility(View.VISIBLE);
+        }
 
-        } else if (DateTimeUtils.isSameDate(defaultSelectedDate, dateOfMonth)) {
+        if (DateTimeUtils.isSameDate(defaultSelectedDate, dateOfMonth)) {
             ImageView ivSelectedCircle = convertView.findViewById(R.id.ivSelectedCircle);
             ivSelectedCircle.setVisibility(View.VISIBLE);
-
+        } else if (DateTimeUtils.isSameDate(currentDate, dateOfMonth)) {
+            int color = ContextCompat.getColor(context, R.color.primary);
+            tvDayOfMonth.setTextColor(color);
         }
 
         ImageView ivHaveTodo = convertView.findViewById(R.id.ivHaveTodo);

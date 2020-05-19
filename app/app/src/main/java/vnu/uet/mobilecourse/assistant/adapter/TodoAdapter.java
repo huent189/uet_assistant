@@ -29,7 +29,7 @@ import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
-public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
+public class TodoAdapter extends RecyclerView.Adapter<TodoViewHolder> {
     private static final String TAG = TodoAdapter.class.getSimpleName();
 
     private DailyTodoList todoList;
@@ -45,12 +45,12 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TodoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = owner.getLayoutInflater();
 
         View view = layoutInflater.inflate(R.layout.layout_todo_item, parent, false);
 
-        ViewHolder holder = new ViewHolder(view);
+        TodoViewHolder holder = new TodoViewHolder(view);
 
         Activity activity = owner.getActivity();
 
@@ -61,81 +61,17 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TodoViewHolder holder, int position) {
         Log.d(TAG, "call onBindViewHolder");
 
         final TodoDocument todo = todoList.get(position);
 
-        String title = todo.getTitle();
-        SpannableString text = new SpannableString(title);
-        holder.tvTodoTitle.setText(text);
-
-        Date deadline = DateTimeUtils.fromSecond(todo.getDeadline());
-        holder.tvDeadline.setText(DateTimeUtils.DATE_TIME_FORMAT.format(deadline));
-
-        TodoRepository.getInstance().getShallowTodoLists()
-                .observe(owner.getViewLifecycleOwner(), new Observer<StateModel<List<TodoListDocument>>>() {
-                    @Override
-                    public void onChanged(StateModel<List<TodoListDocument>> stateModel) {
-                        String todoListTitle = "Đang tải";
-
-                        switch (stateModel.getStatus()) {
-                            case SUCCESS:
-                                TodoListDocument todoList = stateModel.getData().stream()
-                                        .filter(list -> list.getTodoListId().equals(todo.getTodoListId()))
-                                        .findFirst()
-                                        .orElse(null);
-
-                                if (todoList != null)
-                                    todoListTitle = todoList.getTitle();
-
-                                holder.tvCategory.setText(todoListTitle);
-                        }
-                    }
-                });
-
-        StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
-
-        holder.cbDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    text.setSpan(strikethroughSpan, 0, title.length() - 1, 0);
-                    holder.tvTodoTitle.setText(text);
-                    todo.setStatus(TodoDocument.DONE);
-
-                } else {
-                    text.removeSpan(strikethroughSpan);
-                    holder.tvTodoTitle.setText(text);
-                    todo.setStatus(TodoDocument.DOING);
-                }
-            }
-        });
-
-        String status = todo.getStatus();
-        if (status != null && status.equals(TodoDocument.DONE))
-            holder.cbDone.setActivated(true);
+        holder.bind(todo, true, owner.getViewLifecycleOwner());
     }
 
 
     @Override
     public int getItemCount() {
         return todoList.size();
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvTodoTitle;
-        private TextView tvCategory;
-        private TextView tvDeadline;
-        private CheckBox cbDone;
-
-        public ViewHolder(@NonNull View view) {
-            super(view);
-
-            tvTodoTitle = view.findViewById(R.id.tvTodoTitle);
-            tvCategory = view.findViewById(R.id.tvCategory);
-            tvDeadline = view.findViewById(R.id.tvDeadline);
-            cbDone = view.findViewById(R.id.cbDone);
-        }
     }
 }

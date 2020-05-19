@@ -5,6 +5,7 @@ import com.google.firebase.firestore.Exclude;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import vnu.uet.mobilecourse.assistant.model.todo.Todo;
 
 public class TodoListDocument {
@@ -12,7 +13,7 @@ public class TodoListDocument {
     private String todoListId;
     private String title;
     private String description;
-    private float progress;
+    private int progress;
 
     @Exclude
     private List<TodoDocument> todos = new ArrayList<>();
@@ -70,11 +71,24 @@ public class TodoListDocument {
         this.description = description;
     }
 
-    public float getProgress() {
+    public int getProgress() {
         return progress;
     }
 
-    public void setProgress(float progress) {
+    public void setProgress(int progress) {
         this.progress = progress;
+    }
+
+    @NonNull
+    @Override
+    public TodoListDocument clone() {
+        TodoListDocument todoList = new TodoListDocument();
+        todoList.setOwnerId(ownerId);
+        todoList.setTodoListId(todoListId);
+        todoList.setDescription(description);
+        todoList.setTitle(title);
+        todoList.setProgress(progress);
+
+        return todoList;
     }
 }

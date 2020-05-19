@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.repository.FirebaseRepo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MediatorLiveData;
@@ -130,14 +131,14 @@ public class TodoListsLiveData extends StateMediatorLiveData<List<TodoListDocume
     }
 
     public List<TodoListDocument> combineData() {
-        List<TodoListDocument> result = new ArrayList<>(shallowTodoLists);
+        List<TodoListDocument> result = shallowTodoLists.stream()
+                .map(TodoListDocument::clone)
+                .collect(Collectors.toList());
 
         todos.forEach(todo -> {
             String todoListId = todo.getTodoListId();
 
             result.forEach(todoList -> {
-                todoList.clear();
-
                 if (todoList.getTodoListId().equals(todoListId)) {
                     if (!todoList.contains(todo))
                         todoList.add(todo);

@@ -33,7 +33,7 @@ import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 
 public class TodoListAdapter extends
-        ExpandableRecyclerViewAdapter<TodoListAdapter.TodoListViewHolder, TodoListAdapter.TodoViewHolder> {
+        ExpandableRecyclerViewAdapter<TodoListAdapter.TodoListViewHolder, TodoViewHolder> {
 
     private Fragment owner;
 
@@ -74,7 +74,7 @@ public class TodoListAdapter extends
         if (group instanceof ExpandableTodoList) {
             ExpandableTodoList content = (ExpandableTodoList) group;
             final TodoDocument todo = content.getItems().get(childIndex);
-            holder.bind(todo);
+            holder.bind(todo, false, owner.getViewLifecycleOwner());
         }
     }
 
@@ -102,65 +102,6 @@ public class TodoListAdapter extends
 
         public void bind(ExpandableTodoList content) {
             tvTitle.setText(content.getTitle());
-        }
-    }
-
-
-    public class TodoViewHolder extends ChildViewHolder {
-        private ImageView ivAlarm;
-
-        private TextView tvDeadline;
-
-        private TextView tvTodoTitle;
-
-        private CheckBox cbDone;
-
-        public TodoViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            tvTodoTitle = itemView.findViewById(R.id.tvTodoTitle);
-            ivAlarm = itemView.findViewById(R.id.ivAlarm);
-            tvDeadline = itemView.findViewById(R.id.tvDeadline);
-            cbDone = itemView.findViewById(R.id.cbDone);
-
-            TextView tvCategory = itemView.findViewById(R.id.tvCategory);
-            tvCategory.setVisibility(View.GONE);
-        }
-
-        public void bind(TodoDocument todo) {
-            String title = todo.getTitle();
-            tvTodoTitle.setText(title);
-
-            cbDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    // TODO: update on firebase
-
-                    if (isChecked) {
-                        todo.setStatus(TodoDocument.DONE);
-
-                    } else {
-                        todo.setStatus(TodoDocument.DOING);
-
-                    }
-                }
-            });
-
-            String status = todo.getStatus();
-
-            if (status != null && status.equals(TodoDocument.DONE)) {
-                // strike through todoTitle
-                SpannableString text = new SpannableString(title);
-                text.setSpan(new StrikethroughSpan(), 0, title.length() - 1, 0);
-                tvTodoTitle.setText(text);
-                cbDone.setActivated(true);
-
-            } else {
-                cbDone.setActivated(false);
-            }
-
-            Date deadline = DateTimeUtils.fromSecond(todo.getDeadline());
-            tvDeadline.setText(DateTimeUtils.DATE_TIME_FORMAT.format(deadline));
         }
     }
 }

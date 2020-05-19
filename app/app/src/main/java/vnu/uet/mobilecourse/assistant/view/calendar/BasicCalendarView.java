@@ -84,7 +84,9 @@ public class BasicCalendarView extends LinearLayout {
     public final void setOnDateChangeListener(CustomCalendarView.OnDateChangeListener listener) {
         onDateChangeListener = listener;
 
-        gvDates.setOnItemClickListener((parent, view, position, id) -> updateSelectedDate(position));
+        gvDates.setOnItemClickListener((parent, view, position, id) -> {
+            updateSelectedDate(position);
+        });
 
         onDateChangeListener.onDateChange(selectedDate);
     }
@@ -92,16 +94,16 @@ public class BasicCalendarView extends LinearLayout {
     private void updateSelectedDate(int position) {
         Date date = dates.get(position);
 
-        int prevSelectedIndex = dates.indexOf(selectedDate);
-        View unselectedItem = gvDates.getChildAt(prevSelectedIndex);
-        updateItemView(unselectedItem, ItemState.UNSELECTED);
-
-        View selectedItem = gvDates.getChildAt(position);
-        updateItemView(selectedItem, ItemState.SELECTED);
-
-        onDateChangeListener.onDateChange(date);
+//        int prevSelectedIndex = dates.indexOf(selectedDate);
+//        View unselectedItem = gvDates.getChildAt(prevSelectedIndex);
+//        updateItemView(unselectedItem, ItemState.UNSELECTED);
+//
+//        View selectedItem = gvDates.getChildAt(position);
+//        updateItemView(selectedItem, ItemState.SELECTED);
 
         selectedDate = date;
+
+        onDateChangeListener.onDateChange(date);
 
         if (!DateTimeUtils.isSameMonthAndYear(date, calendar.getTime())) {
             int delta = date.compareTo(calendar.getTime());
@@ -113,19 +115,20 @@ public class BasicCalendarView extends LinearLayout {
         }
     }
 
-    private void updateItemView(View itemView, ItemState state) {
-        ImageView ivSelectedCircle = itemView.findViewById(R.id.ivSelectedCircle);
-
-        switch (state) {
-            case SELECTED:
-                ivSelectedCircle.setVisibility(View.VISIBLE);
-                break;
-
-            case UNSELECTED:
-                ivSelectedCircle.setVisibility(View.INVISIBLE);
-                break;
-        }
-    }
+//    @Deprecated
+//    private void updateItemView(View itemView, ItemState state) {
+//        ImageView ivSelectedCircle = itemView.findViewById(R.id.ivSelectedCircle);
+//
+//        switch (state) {
+//            case SELECTED:
+//                ivSelectedCircle.setVisibility(View.VISIBLE);
+//                break;
+//
+//            case UNSELECTED:
+//                ivSelectedCircle.setVisibility(View.INVISIBLE);
+//                break;
+//        }
+//    }
 
     private void initializeLayout() {
         prepareLayout();
