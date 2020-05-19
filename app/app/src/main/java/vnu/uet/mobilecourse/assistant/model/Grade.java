@@ -1,9 +1,6 @@
 package vnu.uet.mobilecourse.assistant.model;
 
-import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.PrimaryKey;
+import androidx.room.*;
 import com.google.gson.annotations.SerializedName;
 
 import static androidx.room.ForeignKey.CASCADE;
@@ -28,6 +25,17 @@ public class Grade {
     private int materialId;
     @SerializedName("gradedategraded")
     private long gradedDate;
+    @Ignore
+    @SerializedName("itemtype")
+    private String parentType;
+
+    public String getParentType() {
+        return parentType;
+    }
+
+    public void setParentType(String parentType) {
+        this.parentType = parentType;
+    }
 
     public long getGradedDate() {
         return gradedDate;
