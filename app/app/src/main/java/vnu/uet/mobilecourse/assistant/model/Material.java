@@ -25,7 +25,6 @@ public class Material implements Parcelable {
     private String type;
     @SerializedName("description")
     private String description;
-    @SerializedName("completion")
     private int completion;
     private String fileName;
     private String fileUrl;
@@ -122,7 +121,12 @@ public class Material implements Parcelable {
     }
 
     public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
+        if(!type.equals("url")){
+            this.fileUrl = fileUrl + "&token=" + User.getInstance().getToken();
+        }
+        else {
+            this.fileUrl = fileUrl;
+        }
     }
 
     public long getLastModified() {

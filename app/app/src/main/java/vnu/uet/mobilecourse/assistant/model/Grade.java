@@ -22,8 +22,21 @@ public class Grade {
     private double userGrade;
     @SerializedName("grademax")
     private double maxGrade;
-    @SerializedName("itemtype")
+    @SerializedName("itemmodule")
     private String type;
+    @SerializedName("cmid")
+    private int materialId;
+    @SerializedName("gradedategraded")
+    private long gradedDate;
+
+    public long getGradedDate() {
+        return gradedDate;
+    }
+
+    public void setGradedDate(long gradedDate) {
+        this.gradedDate = gradedDate;
+    }
+
     public int getId() {
         return id;
     }
@@ -72,6 +85,14 @@ public class Grade {
         this.type = type;
     }
 
+    public int getMaterialId() {
+        return materialId;
+    }
+
+    public void setMaterialId(int materialId) {
+        this.materialId = materialId;
+    }
+
     @Override
     public String toString() {
         return "Grade{" +
@@ -81,6 +102,8 @@ public class Grade {
                 ", userGrade=" + userGrade +
                 ", maxGrade=" + maxGrade +
                 ", type='" + type + '\'' +
+                ", materialId=" + materialId +
+                ", gradedDate=" + gradedDate +
                 '}';
     }
 }
