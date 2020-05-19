@@ -21,7 +21,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.CourseContent;
-import vnu.uet.mobilecourse.assistant.model.ExpandableCourseContent;
+import vnu.uet.mobilecourse.assistant.viewmodel.expandable.ExpandableCourseContent;
 import vnu.uet.mobilecourse.assistant.model.Material;
 
 public class CourseContentAdapter extends

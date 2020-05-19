@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.model.todo;
+package vnu.uet.mobilecourse.assistant.viewmodel.expandable;
 
 import android.os.Parcel;
 

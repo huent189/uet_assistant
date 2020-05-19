@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.model;
+package vnu.uet.mobilecourse.assistant.viewmodel.expandable;
 
 import android.os.Parcel;
 
@@ -7,8 +7,8 @@ import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import androidx.room.Embedded;
-import androidx.room.Relation;
+import vnu.uet.mobilecourse.assistant.model.CourseContent;
+import vnu.uet.mobilecourse.assistant.model.Material;
 
 public class ExpandableCourseContent extends ExpandableGroup<Material> {
     public ExpandableCourseContent(String title, List<Material> items) {

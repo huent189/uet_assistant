@@ -20,7 +20,7 @@ import androidx.navigation.Navigation;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.FirebaseModel.Todo;
 import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoList;
-import vnu.uet.mobilecourse.assistant.model.todo.ExpandableTodoList;
+import vnu.uet.mobilecourse.assistant.viewmodel.expandable.ExpandableTodoList;
 
 public class TodoListAdapter extends
         ExpandableRecyclerViewAdapter<TodoListAdapter.TodoListViewHolder, TodoViewHolder> {
