@@ -151,8 +151,14 @@ public class AddTodoFragment extends Fragment {
                 try {
                     Date date = DateTimeUtils.SHORT_DATE_FORMAT.parse(currentDate);
 
-                    if (date != null)
-                        calendar.setTime(date);
+                    if (date != null) {
+                        Calendar prev = Calendar.getInstance();
+                        prev.setTime(date);
+
+                        calendar.set(Calendar.YEAR, prev.get(Calendar.YEAR));
+                        calendar.set(Calendar.MONTH, prev.get(Calendar.MONTH));
+                        calendar.set(Calendar.DAY_OF_MONTH, prev.get(Calendar.DAY_OF_MONTH));
+                    }
 
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -203,10 +209,14 @@ public class AddTodoFragment extends Fragment {
             TimePickerDialog dialog = new TimePickerDialog(
                     getContext(),
                     (view, hourOfDay, minute) -> {
-                        String selectedTime = String.format(Locale.ROOT, "%02d:%02d", hourOfDay, minute);
+                        Calendar selected = Calendar.getInstance();
+                        selected.set(Calendar.HOUR, hourOfDay);
+                        selected.set(Calendar.MINUTE, minute);
+
+                        String selectedTime = DateTimeUtils.TIME_12H_FORMAT.format(selected.getTime());
                         btnTime.setText(selectedTime);
                     },
-                    HOUR, MINUTE, true
+                    HOUR, MINUTE, false
             );
 
             dialog.setButton(DialogInterface.BUTTON_NEGATIVE, CANCEL_BUTTON_TITLE, dialog);
