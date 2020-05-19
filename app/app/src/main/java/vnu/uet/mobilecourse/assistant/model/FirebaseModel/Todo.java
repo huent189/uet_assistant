@@ -4,7 +4,7 @@ package vnu.uet.mobilecourse.assistant.model.FirebaseModel;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class TodoDocument implements Parcelable {
+public class Todo implements Parcelable {
     private String ownerId;
     private String todoListId;
     private String todoId;
@@ -13,11 +13,11 @@ public class TodoDocument implements Parcelable {
     private long deadline;
     private String status = DOING;
 
-    public TodoDocument() {
+    public Todo() {
 
     }
 
-    public TodoDocument(Parcel in) {
+    public Todo(Parcel in) {
         ownerId = in.readString();
         todoListId = in.readString();
         todoId = in.readString();
@@ -27,15 +27,15 @@ public class TodoDocument implements Parcelable {
         status = in.readString();
     }
 
-    public static final Creator<TodoDocument> CREATOR = new Creator<TodoDocument>() {
+    public static final Creator<Todo> CREATOR = new Creator<Todo>() {
         @Override
-        public TodoDocument createFromParcel(Parcel in) {
-            return new TodoDocument(in);
+        public Todo createFromParcel(Parcel in) {
+            return new Todo(in);
         }
 
         @Override
-        public TodoDocument[] newArray(int size) {
-            return new TodoDocument[size];
+        public Todo[] newArray(int size) {
+            return new Todo[size];
         }
     };
 

@@ -3,21 +3,21 @@ package vnu.uet.mobilecourse.assistant.model.todo;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoDocument;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.Todo;
 
-public abstract class AbstractTodoList extends PriorityQueue<TodoDocument> {
+public abstract class AbstractTodoList extends PriorityQueue<Todo> {
 
     public AbstractTodoList() {
         super(new TodoComparator());
     }
 
-    public TodoDocument get(int index) {
+    public Todo get(int index) {
         if (index < 0 || index >= size())
         throw new ArrayIndexOutOfBoundsException();
 
-        Iterator<TodoDocument> iterator = iterator();
+        Iterator<Todo> iterator = iterator();
 
-        TodoDocument result = null;
+        Todo result = null;
 
         for (int i = 0; i <= index; i++) {
             result = iterator.next();

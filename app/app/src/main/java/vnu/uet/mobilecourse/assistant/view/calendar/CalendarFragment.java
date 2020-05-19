@@ -19,16 +19,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.adapter.TodoAdapter;
+import vnu.uet.mobilecourse.assistant.adapter.DailyEventAdapter;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
-import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
 
@@ -40,7 +38,7 @@ public class CalendarFragment extends Fragment {
 
     private TextView tvDate;
 
-    private TodoAdapter todoAdapter;
+    private DailyEventAdapter dailyEventAdapter;
 
     private NavController navController;
 
@@ -114,8 +112,8 @@ public class CalendarFragment extends Fragment {
                 case SUCCESS:
                     DailyTodoList dailyTodoList = stateModel.getData();
 
-                    todoAdapter = new TodoAdapter(dailyTodoList, fragment);
-                    rvDailyTodoList.setAdapter(todoAdapter);
+                    dailyEventAdapter = new DailyEventAdapter(dailyTodoList, fragment);
+                    rvDailyTodoList.setAdapter(dailyEventAdapter);
 
                     calendarView.notifyTodoSetChanged(getViewLifecycleOwner());
 

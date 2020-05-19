@@ -17,8 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.TodoListAdapter;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
-import vnu.uet.mobilecourse.assistant.model.todo.TodoList;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoList;
 import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.TodoListsViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
@@ -62,12 +61,12 @@ public class TodoListsFragment extends Fragment {
 
         Fragment thisFragment = this;
 
-        TodoRepository.getInstance().getAllTodoLists().observe(getViewLifecycleOwner(), new Observer<StateModel<List<TodoListDocument>>>() {
+        TodoRepository.getInstance().getAllTodoLists().observe(getViewLifecycleOwner(), new Observer<StateModel<List<TodoList>>>() {
             @Override
-            public void onChanged(StateModel<List<TodoListDocument>> stateModel) {
+            public void onChanged(StateModel<List<TodoList>> stateModel) {
                 switch (stateModel.getStatus()) {
                     case SUCCESS:
-                        List<TodoListDocument> todoLists = stateModel.getData();
+                        List<TodoList> todoLists = stateModel.getData();
                         TodoListAdapter adapter = new TodoListAdapter(todoLists, thisFragment);
                         rvTodoLists.setAdapter(adapter);
                         break;

@@ -4,7 +4,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,9 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoList;
 import vnu.uet.mobilecourse.assistant.model.User;
-import vnu.uet.mobilecourse.assistant.model.todo.TodoList;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarSharedViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
@@ -27,10 +25,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.util.Util;
-
-import java.util.Random;
-
-import static android.app.Activity.RESULT_OK;
 
 public class AddTodoListFragment extends Fragment {
 
@@ -58,7 +52,7 @@ public class AddTodoListFragment extends Fragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TodoListDocument todoList = new TodoListDocument();
+                TodoList todoList = new TodoList();
 
                 String title = etTitle.getText().toString();
                 String desc = etDescription.getText().toString();
@@ -71,9 +65,9 @@ public class AddTodoListFragment extends Fragment {
                 String ownerId = User.getInstance().getStudentId();
                 todoList.setOwnerId(ownerId);
 
-                mViewModel.addTodoList(todoList).observe(getViewLifecycleOwner(), new Observer<StateModel<TodoListDocument>>() {
+                mViewModel.addTodoList(todoList).observe(getViewLifecycleOwner(), new Observer<StateModel<TodoList>>() {
                     @Override
-                    public void onChanged(StateModel<TodoListDocument> stateModel) {
+                    public void onChanged(StateModel<TodoList> stateModel) {
                         switch (stateModel.getStatus()) {
                             case SUCCESS:
                                 mViewModel.getTodoListTitle().postValue(todoList.getTitle());

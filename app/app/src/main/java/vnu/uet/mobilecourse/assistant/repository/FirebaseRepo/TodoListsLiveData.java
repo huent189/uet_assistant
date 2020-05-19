@@ -5,27 +5,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoDocument;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.Todo;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoList;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
-public class TodoListsLiveData extends StateMediatorLiveData<List<TodoListDocument>> {
+public class TodoListsLiveData extends StateMediatorLiveData<List<TodoList>> {
 
-    private List<TodoListDocument> shallowTodoLists;
+    private List<TodoList> shallowTodoLists;
 
-    private List<TodoDocument> todos;
+    private List<Todo> todos;
 
     private boolean listSuccess;
 
     private boolean todoSuccess;
 
-    public TodoListsLiveData(@NonNull StateLiveData<List<TodoListDocument>> shallowTodoLists,
-                             @NonNull StateLiveData<List<TodoDocument>> todos) {
+    public TodoListsLiveData(@NonNull StateLiveData<List<TodoList>> shallowTodoLists,
+                             @NonNull StateLiveData<List<Todo>> todos) {
         super(new StateModel<>(StateStatus.LOADING));
 
         this.shallowTodoLists = new ArrayList<>();
@@ -53,9 +52,9 @@ public class TodoListsLiveData extends StateMediatorLiveData<List<TodoListDocume
 //
 //        MediatorLiveData<List<TodoListDocument>> mergedLiveData = new MediatorLiveData<>();
 
-        addSource(shallowTodoLists, new Observer<StateModel<List<TodoListDocument>>>() {
+        addSource(shallowTodoLists, new Observer<StateModel<List<TodoList>>>() {
             @Override
-            public void onChanged(StateModel<List<TodoListDocument>> stateModel) {
+            public void onChanged(StateModel<List<TodoList>> stateModel) {
                 switch (stateModel.getStatus()) {
                     case LOADING:
                         listSuccess = false;
@@ -70,11 +69,11 @@ public class TodoListsLiveData extends StateMediatorLiveData<List<TodoListDocume
                     case SUCCESS:
                         listSuccess = true;
 
-                        List<TodoListDocument> todoLists = stateModel.getData();
+                        List<TodoList> todoLists = stateModel.getData();
                         updateShallowTodoLists(todoLists);
 
                         if (listSuccess && todoSuccess) {
-                            List<TodoListDocument> value = combineData();
+                            List<TodoList> value = combineData();
                             postSuccess(value);
                         }
 
@@ -83,9 +82,9 @@ public class TodoListsLiveData extends StateMediatorLiveData<List<TodoListDocume
             }
         });
 
-        addSource(todos, new Observer<StateModel<List<TodoDocument>>>() {
+        addSource(todos, new Observer<StateModel<List<Todo>>>() {
             @Override
-            public void onChanged(StateModel<List<TodoDocument>> stateModel) {
+            public void onChanged(StateModel<List<Todo>> stateModel) {
                 switch (stateModel.getStatus()) {
                     case LOADING:
                         todoSuccess = false;
@@ -100,11 +99,11 @@ public class TodoListsLiveData extends StateMediatorLiveData<List<TodoListDocume
                     case SUCCESS:
                         todoSuccess = true;
 
-                        List<TodoDocument> todos = stateModel.getData();
+                        List<Todo> todos = stateModel.getData();
                         updateTodos(todos);
 
                         if (todoSuccess && listSuccess) {
-                            List<TodoListDocument> value = combineData();
+                            List<TodoList> value = combineData();
                             postSuccess(value);
                         }
 
@@ -114,7 +113,7 @@ public class TodoListsLiveData extends StateMediatorLiveData<List<TodoListDocume
         });
     }
 
-    public void updateShallowTodoLists(List<TodoListDocument> newList) {
+    public void updateShallowTodoLists(List<TodoList> newList) {
         if (newList == null)
             return;
 
@@ -122,7 +121,7 @@ public class TodoListsLiveData extends StateMediatorLiveData<List<TodoListDocume
         shallowTodoLists.addAll(newList);
     }
 
-    public void updateTodos(List<TodoDocument> newList) {
+    public void updateTodos(List<Todo> newList) {
         if (newList == null)
             return;
 
@@ -130,9 +129,9 @@ public class TodoListsLiveData extends StateMediatorLiveData<List<TodoListDocume
         todos.addAll(newList);
     }
 
-    public List<TodoListDocument> combineData() {
-        List<TodoListDocument> result = shallowTodoLists.stream()
-                .map(TodoListDocument::clone)
+    public List<TodoList> combineData() {
+        List<TodoList> result = shallowTodoLists.stream()
+                .map(TodoList::clone)
                 .collect(Collectors.toList());
 
         todos.forEach(todo -> {

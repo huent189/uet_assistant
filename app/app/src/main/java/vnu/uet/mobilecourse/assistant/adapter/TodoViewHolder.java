@@ -17,8 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoDocument;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.Todo;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoList;
 import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
@@ -44,7 +44,7 @@ public class TodoViewHolder extends ChildViewHolder {
         tvCategory = itemView.findViewById(R.id.tvCategory);
     }
 
-    public void bind(TodoDocument todo, boolean showList, LifecycleOwner lifecycleOwner) {
+    public void bind(Todo todo, boolean showList, LifecycleOwner lifecycleOwner) {
         String title = todo.getTitle();
         SpannableString text = new SpannableString(title);
         tvTodoTitle.setText(text);
@@ -53,14 +53,14 @@ public class TodoViewHolder extends ChildViewHolder {
         tvDeadline.setText(DateTimeUtils.DATE_TIME_FORMAT.format(deadline));
 
         TodoRepository.getInstance().getShallowTodoLists()
-                .observe(lifecycleOwner, new Observer<StateModel<List<TodoListDocument>>>() {
+                .observe(lifecycleOwner, new Observer<StateModel<List<TodoList>>>() {
                     @Override
-                    public void onChanged(StateModel<List<TodoListDocument>> stateModel) {
+                    public void onChanged(StateModel<List<TodoList>> stateModel) {
                         String todoListTitle = "Đang tải";
 
                         switch (stateModel.getStatus()) {
                             case SUCCESS:
-                                TodoListDocument todoList = stateModel.getData().stream()
+                                TodoList todoList = stateModel.getData().stream()
                                         .filter(list -> list.getTodoListId().equals(todo.getTodoListId()))
                                         .findFirst()
                                         .orElse(null);
@@ -81,18 +81,18 @@ public class TodoViewHolder extends ChildViewHolder {
                 if (isChecked) {
                     text.setSpan(strikethroughSpan, 0, title.length() - 1, 0);
                     tvTodoTitle.setText(text);
-                    todo.setStatus(TodoDocument.DONE);
+                    todo.setStatus(Todo.DONE);
 
                 } else {
                     text.removeSpan(strikethroughSpan);
                     tvTodoTitle.setText(text);
-                    todo.setStatus(TodoDocument.DOING);
+                    todo.setStatus(Todo.DOING);
                 }
             }
         });
 
         String status = todo.getStatus();
-        if (status != null && status.equals(TodoDocument.DONE))
+        if (status != null && status.equals(Todo.DONE))
             cbDone.setActivated(true);
 
         tvCategory.setVisibility(showList ? View.VISIBLE : View.GONE);

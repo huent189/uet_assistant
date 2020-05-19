@@ -1,22 +1,16 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
-import android.text.SpannableString;
-import android.text.style.StrikethroughSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
-import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 
-import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -24,26 +18,22 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoDocument;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.Todo;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoList;
 import vnu.uet.mobilecourse.assistant.model.todo.ExpandableTodoList;
-import vnu.uet.mobilecourse.assistant.model.todo.Todo;
-import vnu.uet.mobilecourse.assistant.model.todo.TodoList;
-import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
-import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 
 public class TodoListAdapter extends
         ExpandableRecyclerViewAdapter<TodoListAdapter.TodoListViewHolder, TodoViewHolder> {
 
     private Fragment owner;
 
-    private List<TodoListDocument> todoLists;
+    private List<TodoList> todoLists;
 
     private LayoutInflater inflater;
 
     private NavController navController;
 
-    public TodoListAdapter(List<TodoListDocument> todoLists, Fragment owner) {
+    public TodoListAdapter(List<TodoList> todoLists, Fragment owner) {
         super(ExpandableTodoList.convert(todoLists));
 
         this.owner = owner;
@@ -73,7 +63,7 @@ public class TodoListAdapter extends
 
         if (group instanceof ExpandableTodoList) {
             ExpandableTodoList content = (ExpandableTodoList) group;
-            final TodoDocument todo = content.getItems().get(childIndex);
+            final Todo todo = content.getItems().get(childIndex);
             holder.bind(todo, false, owner.getViewLifecycleOwner());
         }
     }

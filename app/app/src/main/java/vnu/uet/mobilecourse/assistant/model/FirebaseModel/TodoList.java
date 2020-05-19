@@ -6,9 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import vnu.uet.mobilecourse.assistant.model.todo.Todo;
 
-public class TodoListDocument {
+public class TodoList {
     private String ownerId;
     private String todoListId;
     private String title;
@@ -16,18 +15,18 @@ public class TodoListDocument {
     private int progress;
 
     @Exclude
-    private List<TodoDocument> todos = new ArrayList<>();
+    private List<Todo> todos = new ArrayList<>();
 
-    public void setTodos(List<TodoDocument> todos) {
+    public void setTodos(List<Todo> todos) {
         this.todos = todos;
     }
 
     @Exclude
-    public List<TodoDocument> getTodos() {
+    public List<Todo> getTodos() {
         return todos;
     }
 
-    public boolean contains(TodoDocument todo) {
+    public boolean contains(Todo todo) {
         return todos.contains(todo);
     }
 
@@ -35,7 +34,7 @@ public class TodoListDocument {
         todos.clear();
     }
 
-    public void add(TodoDocument todo) {
+    public void add(Todo todo) {
         todos.add(todo);
     }
 
@@ -81,8 +80,8 @@ public class TodoListDocument {
 
     @NonNull
     @Override
-    public TodoListDocument clone() {
-        TodoListDocument todoList = new TodoListDocument();
+    public TodoList clone() {
+        TodoList todoList = new TodoList();
         todoList.setOwnerId(ownerId);
         todoList.setTodoListId(todoListId);
         todoList.setDescription(description);

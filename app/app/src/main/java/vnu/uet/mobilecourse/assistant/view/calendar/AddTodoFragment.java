@@ -39,14 +39,13 @@ import androidx.transition.AutoTransition;
 import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoDocument;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.Todo;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoList;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.view.MaxHeightNestedScrollView;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarSharedViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class AddTodoFragment extends Fragment {
 
@@ -96,9 +95,9 @@ public class AddTodoFragment extends Fragment {
 
         tvTodoListTitle = root.findViewById(R.id.tvTodoListTitle);
 
-        mViewModel.getShallowTodoLists().observe(getViewLifecycleOwner(), new Observer<StateModel<List<TodoListDocument>>>() {
+        mViewModel.getShallowTodoLists().observe(getViewLifecycleOwner(), new Observer<StateModel<List<TodoList>>>() {
                     @Override
-                    public void onChanged(StateModel<List<TodoListDocument>> stateModel) {
+                    public void onChanged(StateModel<List<TodoList>> stateModel) {
                         switch (stateModel.getStatus()) {
                             case LOADING:
                             case ERROR:
@@ -242,10 +241,10 @@ public class AddTodoFragment extends Fragment {
 
     private void save() {
         try {
-            TodoDocument todo = generateTodo();
-            mViewModel.addTodo(todo).observe(getViewLifecycleOwner(), new Observer<StateModel<TodoDocument>>() {
+            Todo todo = generateTodo();
+            mViewModel.addTodo(todo).observe(getViewLifecycleOwner(), new Observer<StateModel<Todo>>() {
                 @Override
-                public void onChanged(StateModel<TodoDocument> stateModel) {
+                public void onChanged(StateModel<Todo> stateModel) {
                     switch (stateModel.getStatus()) {
                         case ERROR:
                             showFailureToast(stateModel.getError());
@@ -267,7 +266,7 @@ public class AddTodoFragment extends Fragment {
         Toast.makeText(getContext(), "Tạo thất bại: " + e.getMessage(), Toast.LENGTH_LONG).show();
     }
 
-    private void generateRadioGroup(LayoutInflater inflater, List<TodoListDocument> todoLists) {
+    private void generateRadioGroup(LayoutInflater inflater, List<TodoList> todoLists) {
         // delete all exist radio button
         rgTodoList.removeAllViews();
 
@@ -311,8 +310,8 @@ public class AddTodoFragment extends Fragment {
         rgTodoList.addView(radioButton);
     }
 
-    private TodoDocument generateTodo() throws ParseException {
-        TodoDocument todo = new TodoDocument();
+    private Todo generateTodo() throws ParseException {
+        Todo todo = new Todo();
 
         String id = Util.autoId();
         todo.setTodoId(id);

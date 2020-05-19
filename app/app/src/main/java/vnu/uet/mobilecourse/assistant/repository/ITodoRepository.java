@@ -4,13 +4,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoDocument;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoListDocument;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.Todo;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoList;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
-import vnu.uet.mobilecourse.assistant.repository.FirebaseRepo.TodoListsLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 
 public interface ITodoRepository {
     /**
@@ -36,23 +33,23 @@ public interface ITodoRepository {
      * Retrieve all student's todoLists in FireStore database
      * @return all student's todoLists
      */
-    IStateLiveData<List<TodoListDocument>> getAllTodoLists();
+    IStateLiveData<List<TodoList>> getAllTodoLists();
 
     /**
      * Retrieve all student's todos in FireStore database
      * @return all student's todos
      */
-    IStateLiveData<List<TodoDocument>> getAllTodos();
+    IStateLiveData<List<Todo>> getAllTodos();
 
     /**
      * Add a new todo_
      */
-    IStateLiveData<TodoDocument> addTodo(TodoDocument todo);
+    IStateLiveData<Todo> addTodo(Todo todo);
 
     /**
      * Add a new todoList
      */
-    IStateLiveData<TodoListDocument> addTodoList(TodoListDocument todoList);
+    IStateLiveData<TodoList> addTodoList(TodoList todoList);
 
     /**
      * Delete an exist todo_
