@@ -84,7 +84,7 @@ public class TodoListsFragment extends Fragment {
             Toolbar toolbar = root.findViewById(R.id.toolbar);
 
             ((AppCompatActivity) activity).setSupportActionBar(toolbar);
-            ((AppCompatActivity) activity).getSupportActionBar().setDisplayShowTitleEnabled(true);
+//            ((AppCompatActivity) activity).getSupportActionBar().setDisplayShowTitleEnabled(true);
 
             setHasOptionsMenu(true);
         }

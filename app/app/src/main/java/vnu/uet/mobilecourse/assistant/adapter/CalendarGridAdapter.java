@@ -16,51 +16,41 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
 import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class CalendarGridAdapter extends ArrayAdapter {
 
-    private List<Date> dates;
-
-    private Calendar currentCalendar;
-
-    private LayoutInflater inflater;
-
-    private Date defaultSelectedDate;
-
-    private boolean isShowTodo;
-
-    private LifecycleOwner lifecycleOwner;
+    private List<Date> mDates;
+    private Calendar mCalendar;
+    private LayoutInflater mInflater;
+    private Date mDefaultDate;
+    private boolean mShowTodo;
+    private LifecycleOwner mLifecycleOwner;
 
     public CalendarGridAdapter(@NonNull Context context, List<Date> dates, Calendar currentCalendar,
                                Date defaultSelectedDate, boolean isShowTodo) {
+
         super(context, R.layout.layout_calendar_cell);
 
-        this.currentCalendar = currentCalendar;
-        this.defaultSelectedDate = defaultSelectedDate;
-        this.dates = dates;
-        this.isShowTodo = isShowTodo;
-
-        inflater = LayoutInflater.from(context);
+        mCalendar = currentCalendar;
+        mDefaultDate = defaultSelectedDate;
+        mDates = dates;
+        mShowTodo = isShowTodo;
+        mInflater = LayoutInflater.from(context);
     }
 
     public void setLifecycleOwner(LifecycleOwner lifecycleOwner) {
-        this.lifecycleOwner = lifecycleOwner;
+        mLifecycleOwner = lifecycleOwner;
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Date dateOfMonth = dates.get(position);
+        Date dateOfMonth = mDates.get(position);
 
         Calendar dateCalendar = Calendar.getInstance();
         dateCalendar.setTime(dateOfMonth);
@@ -70,7 +60,8 @@ public class CalendarGridAdapter extends ArrayAdapter {
         int dayOfMonth = dateCalendar.get(Calendar.DAY_OF_MONTH);
 
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.layout_calendar_cell, parent, false);
+            convertView = mInflater
+                    .inflate(R.layout.layout_calendar_cell, parent, false);
         }
 
         TextView tvDayOfMonth = convertView.findViewById(R.id.tvDayOfMonth);
@@ -78,30 +69,31 @@ public class CalendarGridAdapter extends ArrayAdapter {
 
         Context context = getContext();
 
-        if (!DateTimeUtils.isSameMonthAndYear(currentCalendar, dateCalendar)) {
+        if (!DateTimeUtils.isSameMonthAndYear(mCalendar, dateCalendar)) {
             // disable cell
             int color = ContextCompat.getColor(context, R.color.whiteDisable);
             tvDayOfMonth.setTextColor(color);
-
         }
 
-        if (DateTimeUtils.isSameDate(defaultSelectedDate, dateOfMonth)) {
+        // show primary circle to highlight selected date
+        if (DateTimeUtils.isSameDate(mDefaultDate, dateOfMonth)) {
             ImageView ivSelectedCircle = convertView.findViewById(R.id.ivSelectedCircle);
             ivSelectedCircle.setVisibility(View.VISIBLE);
-        } else if (DateTimeUtils.isSameDate(currentDate, dateOfMonth)) {
+
+        }
+        // set text color to primary if match current date
+        else if (DateTimeUtils.isSameDate(currentDate, dateOfMonth)) {
             int color = ContextCompat.getColor(context, R.color.primary);
             tvDayOfMonth.setTextColor(color);
         }
 
+        // notify if date have event
         ImageView ivHaveTodo = convertView.findViewById(R.id.ivHaveTodo);
 
-        if (isShowTodo) {
-            StateMediatorLiveData<DailyTodoList> dailyList = TodoRepository.getInstance().getDailyTodoList(dateOfMonth);
-
-            if (lifecycleOwner != null) {
-                dailyList.observe(lifecycleOwner, new Observer<StateModel<DailyTodoList>>() {
-                    @Override
-                    public void onChanged(StateModel<DailyTodoList> stateModel) {
+        if (mShowTodo && mLifecycleOwner != null) {
+            TodoRepository.getInstance()
+                    .getDailyTodoList(dateOfMonth)
+                    .observe(mLifecycleOwner, stateModel -> {
                         if (stateModel.getStatus() == StateStatus.SUCCESS) {
                             DailyTodoList dailyTodoList = stateModel.getData();
 
@@ -109,12 +101,9 @@ public class CalendarGridAdapter extends ArrayAdapter {
                                 ivHaveTodo.setVisibility(View.VISIBLE);
                             }
                         }
-                    }
-                });
-            }
-
+                    });
         } else {
-            ivHaveTodo.setVisibility(View.GONE);
+            ivHaveTodo.setVisibility(View.INVISIBLE);
         }
 
         return convertView;
@@ -122,13 +111,14 @@ public class CalendarGridAdapter extends ArrayAdapter {
 
     @Override
     public int getCount() {
-        return dates.size();
+        return mDates.size();
     }
 
     @Override
     public int getPosition(@Nullable Object item) {
-        if (item instanceof Date)
-            return dates.indexOf(item);
+        if (item instanceof Date) {
+            return mDates.indexOf(item);
+        }
 
         return -1;
     }
@@ -136,6 +126,6 @@ public class CalendarGridAdapter extends ArrayAdapter {
     @Nullable
     @Override
     public Object getItem(int position) {
-        return dates.get(position);
+        return mDates.get(position);
     }
 }

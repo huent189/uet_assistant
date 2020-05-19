@@ -72,4 +72,8 @@ public class DailyEventAdapter extends RecyclerView.Adapter<TodoViewHolder> {
     public int getItemCount() {
         return todoList.size();
     }
+
+    public DailyTodoList getTodoList() {
+        return todoList;
+    }
 }

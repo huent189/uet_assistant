@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Date;
 
@@ -22,12 +23,15 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.DailyEventAdapter;
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.Todo;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
 
 public class CalendarFragment extends Fragment {
@@ -84,6 +88,8 @@ public class CalendarFragment extends Fragment {
             }
         });
 
+        enableSwipeToDeleteAndUndo();
+
         return root;
     }
 
@@ -136,6 +142,40 @@ public class CalendarFragment extends Fragment {
         bundle.putString("currentDate", currentDate);
 
         navController.navigate(R.id.action_navigation_calendar_to_addTodoFragment, bundle);
+    }
+
+    private void enableSwipeToDeleteAndUndo() {
+        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(getContext()) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+
+
+                final int position = viewHolder.getAdapterPosition();
+                final Todo item = dailyEventAdapter.getTodoList().get(position);
+
+                calendarViewModel.deleteTodo(item.getId());
+//                dailyEventAdapter.getTodoList(position);
+
+
+//                Snackbar snackbar = Snackbar
+//                        .make(coordinatorLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
+//                snackbar.setAction("UNDO", new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//
+//                        mAdapter.restoreItem(item, position);
+//                        recyclerView.scrollToPosition(position);
+//                    }
+//                });
+//
+//                snackbar.setActionTextColor(Color.YELLOW);
+//                snackbar.show();
+
+            }
+        };
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(rvDailyTodoList);
     }
 
     @Override

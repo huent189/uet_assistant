@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.view;
+package vnu.uet.mobilecourse.assistant.view.component;
 
 import android.content.Context;
 import android.content.res.TypedArray;

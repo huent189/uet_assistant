@@ -2,13 +2,10 @@ package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -20,85 +17,73 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.Course;
 import vnu.uet.mobilecourse.assistant.view.course.CoursesFragment;
 
-public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.ViewHolder> {
-    private static final String TAG = AllCoursesAdapter.class.getSimpleName();
+public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.CourseViewHolder> {
 
-    private List<Course> courses;
-
-    private CoursesFragment owner;
-
-    private NavController navController;
+    private List<Course> mCourses;
+    private CoursesFragment mOwner;
+    private NavController mNavController;
 
     public AllCoursesAdapter(List<Course> courses, CoursesFragment owner) {
-        this.courses = courses;
-        this.owner = owner;
+        this.mCourses = courses;
+        this.mOwner = owner;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = owner.getLayoutInflater();
+    public CourseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = mOwner.getLayoutInflater()
+                .inflate(R.layout.layout_course_item, parent, false);
 
-        View view = layoutInflater.inflate(R.layout.layout_course_item, parent, false);
+        Activity activity = mOwner.getActivity();
 
-        ViewHolder holder = new ViewHolder(view);
+        if (activity != null) {
+            mNavController = Navigation
+                    .findNavController(activity, R.id.nav_host_fragment);
+        }
 
-        Activity activity = owner.getActivity();
-
-        if (activity != null)
-            navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
-
-        return holder;
+        return new CourseViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Log.d(TAG, "call onBindViewHolder");
-
-        final Course currentCourse = courses.get(position);
-
-        String courseTitle = currentCourse.getTitle();
-        String courseCode = currentCourse.getCode();
-
-        holder.tvCourseTitle.setText(courseTitle);
-        holder.tvCourseId.setText(courseCode);
-
-        holder.btnAccessCourse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putInt("courseId", currentCourse.getId());
-                bundle.putString("courseTitle", courseTitle);
-                bundle.putString("courseCode", courseCode);
-
-                navController.navigate(R.id.action_navigation_courses_to_navigation_explore_course, bundle);
-
-                String message = "onClick" + currentCourse.getTitle();
-                Log.d(TAG, message);
-                Toast.makeText(owner.getContext(), message, Toast.LENGTH_SHORT).show();
-
-            }
-        });
+    public void onBindViewHolder(@NonNull CourseViewHolder holder, int position) {
+        final Course currentCourse = mCourses.get(position);
+        holder.bind(currentCourse, mNavController);
     }
 
     @Override
     public int getItemCount() {
-        return courses.size();
+        return mCourses.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvCourseTitle;
+    static class CourseViewHolder extends RecyclerView.ViewHolder {
+        private TextView mTvCourseTitle;
+        private TextView mTvCourseId;
+        private Button mBtnAccessCourse;
 
-        private TextView tvCourseId;
-
-        private Button btnAccessCourse;
-
-        public ViewHolder(@NonNull View view) {
+        CourseViewHolder(@NonNull View view) {
             super(view);
 
-            tvCourseTitle = view.findViewById(R.id.tvCourseTitle);
-            tvCourseId = view.findViewById(R.id.tvCourseId);
-            btnAccessCourse = view.findViewById(R.id.btnCourseAccess);
+            mTvCourseTitle = view.findViewById(R.id.tvCourseTitle);
+            mTvCourseId = view.findViewById(R.id.tvCourseId);
+            mBtnAccessCourse = view.findViewById(R.id.btnCourseAccess);
+        }
+
+        void bind(Course course, NavController navController) {
+            String courseTitle = course.getTitle();
+            String courseCode = course.getCode();
+
+            mTvCourseTitle.setText(courseTitle);
+            mTvCourseId.setText(courseCode);
+
+            mBtnAccessCourse.setOnClickListener(view -> {
+                Bundle bundle = new Bundle();
+                bundle.putInt("courseId", course.getId());
+                bundle.putString("courseTitle", courseTitle);
+                bundle.putString("courseCode", courseCode);
+
+                navController
+                        .navigate(R.id.action_navigation_courses_to_navigation_explore_course, bundle);
+            });
         }
     }
 }

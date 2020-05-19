@@ -43,7 +43,7 @@ import vnu.uet.mobilecourse.assistant.model.FirebaseModel.Todo;
 import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoList;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
-import vnu.uet.mobilecourse.assistant.view.MaxHeightNestedScrollView;
+import vnu.uet.mobilecourse.assistant.view.component.MaxHeightNestedScrollView;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarSharedViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
