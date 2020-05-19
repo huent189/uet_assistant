@@ -14,17 +14,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.FirebaseModel.Todo;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
+import vnu.uet.mobilecourse.assistant.view.calendar.CalendarFragment;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
 public class DailyEventAdapter extends RecyclerView.Adapter<TodoViewHolder> {
     private static final String TAG = DailyEventAdapter.class.getSimpleName();
 
     private DailyTodoList todoList;
 
-    private Fragment owner;
+    private CalendarFragment owner;
 
     private NavController navController;
 
-    public DailyEventAdapter(DailyTodoList todoList, Fragment owner) {
+    public DailyEventAdapter(DailyTodoList todoList, CalendarFragment owner) {
         this.todoList = todoList;
         this.owner = owner;
     }
@@ -36,7 +38,17 @@ public class DailyEventAdapter extends RecyclerView.Adapter<TodoViewHolder> {
 
         View view = layoutInflater.inflate(R.layout.layout_todo_item, parent, false);
 
-        TodoViewHolder holder = new TodoViewHolder(view);
+        TodoViewHolder holder = new TodoViewHolder(view) {
+            @Override
+            protected IStateLiveData<String> onMarkAsDone(Todo todo) {
+                return owner.getViewModel().markTodoAsDone(todo.getId());
+            }
+
+            @Override
+            protected IStateLiveData<String> onMarkAsDoing(Todo todo) {
+                return owner.getViewModel().markTodoAsDoing(todo.getId());
+            }
+        };
 
         Activity activity = owner.getActivity();
 

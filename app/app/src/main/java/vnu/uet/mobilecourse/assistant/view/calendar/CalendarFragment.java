@@ -52,9 +52,10 @@ public class CalendarFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
         activity = getActivity();
 
-        calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
+        calendarViewModel = new ViewModelProvider(activity).get(CalendarViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_calendar, container, false);
 
@@ -145,5 +146,9 @@ public class CalendarFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public CalendarViewModel getViewModel() {
+        return calendarViewModel;
     }
 }

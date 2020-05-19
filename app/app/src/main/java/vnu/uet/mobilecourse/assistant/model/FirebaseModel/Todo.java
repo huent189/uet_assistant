@@ -4,40 +4,18 @@ package vnu.uet.mobilecourse.assistant.model.FirebaseModel;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Todo implements Parcelable {
+public class Todo implements Parcelable, IFirebaseModel {
     private String ownerId;
     private String todoListId;
-    private String todoId;
+    private String id;
     private String title;
     private String description;
     private long deadline;
-    private String status = DOING;
+    private boolean completed;
 
     public Todo() {
 
     }
-
-    public Todo(Parcel in) {
-        ownerId = in.readString();
-        todoListId = in.readString();
-        todoId = in.readString();
-        title = in.readString();
-        description = in.readString();
-        deadline = in.readInt();
-        status = in.readString();
-    }
-
-    public static final Creator<Todo> CREATOR = new Creator<Todo>() {
-        @Override
-        public Todo createFromParcel(Parcel in) {
-            return new Todo(in);
-        }
-
-        @Override
-        public Todo[] newArray(int size) {
-            return new Todo[size];
-        }
-    };
 
     public String getOwnerId() {
         return ownerId;
@@ -55,12 +33,12 @@ public class Todo implements Parcelable {
         this.todoListId = todoListId;
     }
 
-    public String getTodoId() {
-        return todoId;
+    public String getId() {
+        return id;
     }
 
-    public void setTodoId(String todoId) {
-        this.todoId = todoId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -87,16 +65,13 @@ public class Todo implements Parcelable {
         this.deadline = deadline;
     }
 
-    public String getStatus() {
-        return status;
+    public boolean isCompleted() {
+        return completed;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
-
-    public static final String DONE = "done";
-    public static final String DOING = "doing";
 
     @Override
     public int describeContents() {
@@ -107,10 +82,32 @@ public class Todo implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(ownerId);
         dest.writeString(todoListId);
-        dest.writeString(todoId);
+        dest.writeString(id);
         dest.writeString(title);
         dest.writeString(description);
         dest.writeLong(deadline);
-        dest.writeString(status);
+        dest.writeInt(completed ? 1 : 0);
     }
+
+    public Todo(Parcel in) {
+        ownerId = in.readString();
+        todoListId = in.readString();
+        id = in.readString();
+        title = in.readString();
+        description = in.readString();
+        deadline = in.readInt();
+        completed = in.readInt() == 1;
+    }
+
+    public static final Creator<Todo> CREATOR = new Creator<Todo>() {
+        @Override
+        public Todo createFromParcel(Parcel in) {
+            return new Todo(in);
+        }
+
+        @Override
+        public Todo[] newArray(int size) {
+            return new Todo[size];
+        }
+    };
 }

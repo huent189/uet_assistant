@@ -19,7 +19,7 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.TodoListAdapter;
 import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoList;
 import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
-import vnu.uet.mobilecourse.assistant.viewmodel.TodoListsViewModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 import android.view.LayoutInflater;
@@ -33,7 +33,7 @@ import java.util.List;
 
 public class TodoListsFragment extends Fragment {
 
-    private TodoListsViewModel mViewModel;
+    private CalendarViewModel viewModel;
 
     private FragmentActivity activity;
 
@@ -45,7 +45,8 @@ public class TodoListsFragment extends Fragment {
 
         activity = getActivity();
 
-        mViewModel = new ViewModelProvider(this).get(TodoListsViewModel.class);
+        assert activity != null;
+        viewModel = new ViewModelProvider(activity).get(CalendarViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_todo_lists, container, false);
 
@@ -59,7 +60,7 @@ public class TodoListsFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         rvTodoLists.setLayoutManager(layoutManager);
 
-        Fragment thisFragment = this;
+        TodoListsFragment thisFragment = this;
 
         TodoRepository.getInstance().getAllTodoLists().observe(getViewLifecycleOwner(), new Observer<StateModel<List<TodoList>>>() {
             @Override
@@ -103,5 +104,9 @@ public class TodoListsFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public CalendarViewModel getViewModel() {
+        return viewModel;
     }
 }

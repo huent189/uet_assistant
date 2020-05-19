@@ -7,12 +7,12 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 
-public class TodoList {
+public class TodoList implements IFirebaseModel {
     private String ownerId;
-    private String todoListId;
+    private String id;
     private String title;
     private String description;
-    private int progress;
+//    private int progress;
 
     @Exclude
     private List<Todo> todos = new ArrayList<>();
@@ -46,12 +46,13 @@ public class TodoList {
         this.ownerId = ownerId;
     }
 
-    public String getTodoListId() {
-        return todoListId;
+    @Override
+    public String getId() {
+        return id;
     }
 
-    public void setTodoListId(String todoListId) {
-        this.todoListId = todoListId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -70,23 +71,27 @@ public class TodoList {
         this.description = description;
     }
 
-    public int getProgress() {
-        return progress;
+    public float getProgress() {
+        int size = todos.size();
+
+        long complete = todos.stream().filter(Todo::isCompleted).count();
+
+        return (float) complete / (float) size;
     }
 
-    public void setProgress(int progress) {
-        this.progress = progress;
-    }
+//    public void setProgress(int progress) {
+//        this.progress = progress;
+//    }
 
     @NonNull
     @Override
     public TodoList clone() {
         TodoList todoList = new TodoList();
         todoList.setOwnerId(ownerId);
-        todoList.setTodoListId(todoListId);
+        todoList.setId(id);
         todoList.setDescription(description);
         todoList.setTitle(title);
-        todoList.setProgress(progress);
+//        todoList.setProgress(progress);
 
         return todoList;
     }

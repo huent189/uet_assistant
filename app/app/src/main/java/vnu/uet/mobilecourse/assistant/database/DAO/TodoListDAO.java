@@ -14,9 +14,4 @@ public class TodoListDAO extends FirebaseDAO<TodoList> {
     protected TodoList fromSnapshot(DocumentSnapshot snapshot) {
         return snapshot.toObject(TodoList.class);
     }
-
-    @Override
-    protected boolean filterById(String id, TodoList document) {
-        return document.getTodoListId().equals(id);
-    }
 }

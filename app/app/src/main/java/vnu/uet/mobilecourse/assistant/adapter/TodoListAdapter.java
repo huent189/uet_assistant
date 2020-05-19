@@ -20,12 +20,14 @@ import androidx.navigation.Navigation;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.FirebaseModel.Todo;
 import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoList;
+import vnu.uet.mobilecourse.assistant.view.calendar.TodoListsFragment;
 import vnu.uet.mobilecourse.assistant.viewmodel.expandable.ExpandableTodoList;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
 public class TodoListAdapter extends
         ExpandableRecyclerViewAdapter<TodoListAdapter.TodoListViewHolder, TodoViewHolder> {
 
-    private Fragment owner;
+    private TodoListsFragment owner;
 
     private List<TodoList> todoLists;
 
@@ -33,7 +35,7 @@ public class TodoListAdapter extends
 
     private NavController navController;
 
-    public TodoListAdapter(List<TodoList> todoLists, Fragment owner) {
+    public TodoListAdapter(List<TodoList> todoLists, TodoListsFragment owner) {
         super(ExpandableTodoList.convert(todoLists));
 
         this.owner = owner;
@@ -54,7 +56,17 @@ public class TodoListAdapter extends
     @Override
     public TodoViewHolder onCreateChildViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.layout_todo_item, parent, false);
-        return new TodoViewHolder(view);
+        return new TodoViewHolder(view) {
+            @Override
+            protected IStateLiveData<String> onMarkAsDone(Todo todo) {
+                return owner.getViewModel().markTodoAsDone(todo.getId());
+            }
+
+            @Override
+            protected IStateLiveData<String> onMarkAsDoing(Todo todo) {
+                return owner.getViewModel().markTodoAsDoing(todo.getId());
+            }
+        };
     }
 
     @Override

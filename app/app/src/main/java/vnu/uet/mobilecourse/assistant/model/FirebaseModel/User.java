@@ -1,6 +1,6 @@
 package vnu.uet.mobilecourse.assistant.model.FirebaseModel;
 
-public class UserDocument {
+public class User {
     private String studentId;
     private String name;
     private String uetClass;

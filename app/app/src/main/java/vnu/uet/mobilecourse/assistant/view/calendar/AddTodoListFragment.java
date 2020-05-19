@@ -60,7 +60,7 @@ public class AddTodoListFragment extends Fragment {
                 todoList.setDescription(desc);
 
                 String id = Util.autoId();
-                todoList.setTodoListId(id);
+                todoList.setId(id);
 
                 String ownerId = User.getInstance().getStudentId();
                 todoList.setOwnerId(ownerId);

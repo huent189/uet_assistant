@@ -100,12 +100,12 @@ public class TodoRepository implements ITodoRepository {
 
     @Override
     public IStateLiveData<Todo> addTodo(Todo todo) {
-        return todoDAO.add(todo.getTodoId(), todo);
+        return todoDAO.add(todo.getId(), todo);
     }
 
     @Override
     public IStateLiveData<TodoList> addTodoList(TodoList todoList) {
-        return todoListDAO.add(todoList.getTodoListId(), todoList);
+        return todoListDAO.add(todoList.getId(), todoList);
     }
 
     @Override

@@ -314,7 +314,7 @@ public class AddTodoFragment extends Fragment {
         Todo todo = new Todo();
 
         String id = Util.autoId();
-        todo.setTodoId(id);
+        todo.setId(id);
 
         String ownerId = User.getInstance().getStudentId();
         todo.setOwnerId(ownerId);
@@ -336,7 +336,7 @@ public class AddTodoFragment extends Fragment {
         String todoListId = mViewModel.getShallowTodoLists()
                 .getValue().getData()
                 .get(rgTodoList.getCheckedRadioButtonId())
-                .getTodoListId();
+                .getId();
 
         todo.setTodoListId(todoListId);
 

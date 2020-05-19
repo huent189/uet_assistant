@@ -1,17 +1,18 @@
 package vnu.uet.mobilecourse.assistant.model.FirebaseModel;
 
-public class NotifyDocument_UserSubCol {
-    private String notiId;
+public class Notification_UserSubCol implements IFirebaseModel {
+    private String id;
     private String category;
     private String title;
     private String description;
 
-    public String getNotiId() {
-        return notiId;
+    @Override
+    public String getId() {
+        return id;
     }
 
-    public void setNotiId(String notiId) {
-        this.notiId = notiId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getCategory() {

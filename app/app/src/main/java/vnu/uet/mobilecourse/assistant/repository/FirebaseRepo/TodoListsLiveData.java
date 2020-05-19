@@ -138,7 +138,7 @@ public class TodoListsLiveData extends StateMediatorLiveData<List<TodoList>> {
             String todoListId = todo.getTodoListId();
 
             result.forEach(todoList -> {
-                if (todoList.getTodoListId().equals(todoListId)) {
+                if (todoList.getId().equals(todoListId)) {
                     if (!todoList.contains(todo))
                         todoList.add(todo);
                 }

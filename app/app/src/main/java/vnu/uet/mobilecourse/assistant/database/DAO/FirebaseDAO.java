@@ -10,13 +10,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import vnu.uet.mobilecourse.assistant.model.FirebaseModel.IFirebaseModel;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
-public abstract class FirebaseDAO<T> implements IFirebaseDAO<T> {
+public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebaseDAO<T> {
     private static final String TAG = FirebaseDAO.class.getSimpleName();
 
     private static final String OWNER_ID = User.getInstance().getStudentId();
@@ -30,8 +31,6 @@ public abstract class FirebaseDAO<T> implements IFirebaseDAO<T> {
     private StateLiveData<List<T>> dataList;
 
     protected abstract T fromSnapshot(DocumentSnapshot snapshot);
-
-    protected abstract boolean filterById(String id, T document);
 
     @Override
     public StateLiveData<List<T>> readAll() {
@@ -88,7 +87,7 @@ public abstract class FirebaseDAO<T> implements IFirebaseDAO<T> {
 
                 case SUCCESS:
                     T doc = state.getData().stream()
-                            .filter(d -> filterById(id, d))
+                            .filter(d -> d.getId().equals(id))
                             .findFirst()
                             .orElse(null);
 

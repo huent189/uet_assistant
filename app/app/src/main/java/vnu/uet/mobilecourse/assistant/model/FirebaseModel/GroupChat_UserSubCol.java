@@ -1,25 +1,26 @@
 package vnu.uet.mobilecourse.assistant.model.FirebaseModel;
 
-public class GroupChatDocument_UserSubCol {
-    private String groupId;
-    private String groupName;
+public class GroupChat_UserSubCol implements IFirebaseModel {
+    private String id;
+    private String name;
     private String avatar;
     private String lastMessage;
 
-    public String getGroupId() {
-        return groupId;
+    @Override
+    public String getId() {
+        return id;
     }
 
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getGroupName() {
-        return groupName;
+    public String getName() {
+        return name;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAvatar() {

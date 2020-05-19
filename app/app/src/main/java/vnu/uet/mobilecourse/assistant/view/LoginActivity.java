@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                 case SUCCESS:
                     if (!loginSuccess) {
                         loginSuccess = true;
-                        Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
 //                        navigateToMyCourses();
 
                         tvLoadingTitle.setVisibility(View.INVISIBLE);
