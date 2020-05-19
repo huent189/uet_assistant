@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.model.FirebaseModel;
+package vnu.uet.mobilecourse.assistant.model.firebase;
 
 public class Course implements IFirebaseModel {
     private String name;

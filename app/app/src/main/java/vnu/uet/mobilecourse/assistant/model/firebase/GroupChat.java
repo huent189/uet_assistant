@@ -1,10 +1,31 @@
-package vnu.uet.mobilecourse.assistant.model.FirebaseModel;
+package vnu.uet.mobilecourse.assistant.model.firebase;
+
+import com.google.firebase.firestore.Exclude;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GroupChat implements IFirebaseModel {
     private String id;
     private long createdTime;
     private String avatar;
     private String name;
+
+    @Exclude
+    private List<Member_GroupChatSubCol> members = new ArrayList<>();
+
+    @Exclude
+    private List<Message_GroupChatSubCol> messages = new ArrayList<>();
+
+    @Exclude
+    public List<Member_GroupChatSubCol> getMembers() {
+        return members;
+    }
+
+    @Exclude
+    public List<Message_GroupChatSubCol> getMessages() {
+        return messages;
+    }
 
     @Override
     public String getId() {

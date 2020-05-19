@@ -2,8 +2,8 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.FirebaseCollectionName;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoList;
+import vnu.uet.mobilecourse.assistant.model.firebase.FirebaseCollectionName;
+import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 
 public class TodoListDAO extends FirebaseDAO<TodoList> {
     public TodoListDAO() {

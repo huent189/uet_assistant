@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.model.FirebaseModel;
+package vnu.uet.mobilecourse.assistant.model.firebase;
 
 public class User {
     private String studentId;

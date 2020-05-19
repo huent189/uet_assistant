@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.Todo;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoList;
+import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
+import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 
 public class ExpandableTodoList extends ExpandableGroup<Todo> {
     public ExpandableTodoList(String title, List<Todo> items) {

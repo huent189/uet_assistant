@@ -4,9 +4,9 @@ import java.util.List;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.Todo;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoList;
-import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
+import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
+import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
+import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
 public class CalendarSharedViewModel extends ViewModel {

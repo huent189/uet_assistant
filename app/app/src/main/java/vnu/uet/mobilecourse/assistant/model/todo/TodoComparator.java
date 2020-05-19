@@ -2,7 +2,7 @@ package vnu.uet.mobilecourse.assistant.model.todo;
 
 import java.util.Comparator;
 
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.Todo;
+import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 
 public class TodoComparator implements Comparator<Todo> {
     @Override

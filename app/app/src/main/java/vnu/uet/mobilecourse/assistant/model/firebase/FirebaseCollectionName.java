@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.model.FirebaseModel;
+package vnu.uet.mobilecourse.assistant.model.firebase;
 
 public abstract class FirebaseCollectionName {
     public static final String USER = "user";

@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.repository;
+package vnu.uet.mobilecourse.assistant.repository.firebase;
 
 import java.util.Date;
 import java.util.List;
@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.database.DAO.TodoDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.TodoListDAO;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.Todo;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoList;
+import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
+import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
-import vnu.uet.mobilecourse.assistant.repository.FirebaseRepo.TodoListsLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.DeepTodoListsStateLiveData;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -95,7 +95,7 @@ public class TodoRepository implements ITodoRepository {
 
     @Override
     public IStateLiveData<List<TodoList>> getAllTodoLists() {
-        return new TodoListsLiveData(listLiveData, todoLiveData);
+        return new DeepTodoListsStateLiveData(listLiveData, todoLiveData);
     }
 
     @Override

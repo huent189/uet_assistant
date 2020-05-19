@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.TodoListAdapter;
-import vnu.uet.mobilecourse.assistant.model.FirebaseModel.TodoList;
-import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
+import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
+import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 

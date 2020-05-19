@@ -6,9 +6,8 @@ import java.util.Map;
 
 import androidx.lifecycle.ViewModel;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
-import vnu.uet.mobilecourse.assistant.repository.TodoRepository;
+import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 
 public class CalendarViewModel extends ViewModel {
     private TodoRepository todoRepo = TodoRepository.getInstance();
