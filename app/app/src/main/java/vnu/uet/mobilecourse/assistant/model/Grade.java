@@ -93,6 +93,10 @@ public class Grade {
         this.materialId = materialId;
     }
 
+    public static final String ASSIGN = "assign";
+
+    public static final String QUIZ = "quiz";
+
     @Override
     public String toString() {
         return "Grade{" +

@@ -1,6 +1,8 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -85,14 +88,28 @@ public class GradeAdapter extends RecyclerView.Adapter<GradeAdapter.ViewHolder> 
             String title = grade.getName();
             tvTitle.setText(title);
 
-            String gradeProgress = String.format(Locale.ROOT,
-                    "%.0f/%.0f",
-                    grade.getUserGrade(),
-                    grade.getMaxGrade());
+            double userGrade = grade.getUserGrade();
+            double maxGrade = grade.getMaxGrade();
+
+            String gradeProgress;
+
+            if (userGrade > 0) {
+                gradeProgress = String.format(Locale.ROOT, "%.0f/%.0f", userGrade, maxGrade);
+            } else {
+                gradeProgress = String.format(Locale.ROOT, "/%.0f", maxGrade);
+            }
 
             tvGrade.setText(gradeProgress);
 
-            Log.d("GRADE_TYPE", grade.getType());
+            switch (grade.getType()) {
+                case Grade.ASSIGN:
+                    break;
+
+                case Grade.QUIZ:
+                    Context context = owner.getContext();
+                    Drawable icon = ContextCompat.getDrawable(context, R.drawable.ic_format_list_bulleted_32dp);
+                    ivThumbnail.setImageDrawable(icon);
+            }
         }
     }
 }

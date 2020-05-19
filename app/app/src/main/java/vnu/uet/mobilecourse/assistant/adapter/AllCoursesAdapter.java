@@ -73,7 +73,10 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Co
             String courseCode = course.getCode();
 
             mTvCourseTitle.setText(courseTitle);
-            mTvCourseId.setText(courseCode);
+
+            if (!courseCode.isEmpty()) {
+                mTvCourseId.setText(courseCode);
+            }
 
             mBtnAccessCourse.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
