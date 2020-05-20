@@ -1,10 +1,8 @@
 package vnu.uet.mobilecourse.assistant.view.course;
 
 import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -26,9 +24,9 @@ import vnu.uet.mobilecourse.assistant.R;
 
 public class CourseClassmateFragment extends Fragment {
 
-    private CourseClassmateViewModel viewModel;
+    private CourseClassmateViewModel mViewModel;
 
-    private ClassMateAdapter adapter;
+    private ClassMateAdapter mAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,7 +39,7 @@ public class CourseClassmateFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_course_classmate, container, false);
 
-        viewModel = new ViewModelProvider(this).get(CourseClassmateViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(CourseClassmateViewModel.class);
 
         initializeClassMateListView(root);
 
@@ -49,14 +47,14 @@ public class CourseClassmateFragment extends Fragment {
     }
 
     private void initializeClassMateListView(View root) {
-        adapter = new ClassMateAdapter(viewModel.getClassMates().getValue(), this);
+        mAdapter = new ClassMateAdapter(mViewModel.getClassMates().getValue(), this);
 
         RecyclerView rvClassMate = root.findViewById(R.id.rvClassMate);
 
-        rvClassMate.setAdapter(adapter);
+        rvClassMate.setAdapter(mAdapter);
         rvClassMate.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        viewModel.getClassMates().observe(getViewLifecycleOwner(), mates -> adapter.notifyDataSetChanged());
+        mViewModel.getClassMates().observe(getViewLifecycleOwner(), mates -> mAdapter.notifyDataSetChanged());
     }
 
     @Override
@@ -82,7 +80,7 @@ public class CourseClassmateFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
+                mAdapter.getFilter().filter(newText);
                 return false;
             }
         });

@@ -11,7 +11,7 @@ import vnu.uet.mobilecourse.assistant.R;
 
 public class MaxHeightNestedScrollView extends NestedScrollView {
 
-    private int maxHeight = -1;
+    private int mMaxHeight = -1;
 
     public MaxHeightNestedScrollView(@NonNull Context context) {
         super(context);
@@ -28,11 +28,11 @@ public class MaxHeightNestedScrollView extends NestedScrollView {
     }
 
     public int getMaxHeight() {
-        return maxHeight;
+        return mMaxHeight;
     }
 
     public void setMaxHeight(int maxHeight) {
-        this.maxHeight = maxHeight;
+        this.mMaxHeight = maxHeight;
     }
 
     private void initializeMaxHeight(Context context, AttributeSet attrs) {
@@ -46,13 +46,13 @@ public class MaxHeightNestedScrollView extends NestedScrollView {
     }
 
     public void setMaxHeightDensity(float dps){
-        this.maxHeight = (int) (dps * getContext().getResources().getDisplayMetrics().density);
+        this.mMaxHeight = (int) (dps * getContext().getResources().getDisplayMetrics().density);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (maxHeight > 0) {
-            heightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.AT_MOST);
+        if (mMaxHeight > 0) {
+            heightMeasureSpec = MeasureSpec.makeMeasureSpec(mMaxHeight, MeasureSpec.AT_MOST);
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }

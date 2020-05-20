@@ -10,27 +10,27 @@ import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
 public class CalendarViewModel extends ViewModel {
-    private TodoRepository todoRepo = TodoRepository.getInstance();
+    private TodoRepository mTodoRepo = TodoRepository.getInstance();
 
     public IStateLiveData<DailyTodoList> getDailyTodoList(Date date) {
-        return todoRepo.getDailyTodoList(date);
+        return mTodoRepo.getDailyTodoList(date);
     }
 
     public IStateLiveData<String> markTodoAsDone(String id) {
         Map<String, Object> changes = new HashMap<>();
         changes.put("completed", true);
 
-        return todoRepo.modifyTodo(id, changes);
+        return mTodoRepo.modifyTodo(id, changes);
     }
 
     public IStateLiveData<String> markTodoAsDoing(String id) {
         Map<String, Object> changes = new HashMap<>();
         changes.put("completed", false);
 
-        return todoRepo.modifyTodo(id, changes);
+        return mTodoRepo.modifyTodo(id, changes);
     }
 
     public IStateLiveData<String> deleteTodo(String id) {
-        return todoRepo.deleteTodo(id);
+        return mTodoRepo.deleteTodo(id);
     }
 }

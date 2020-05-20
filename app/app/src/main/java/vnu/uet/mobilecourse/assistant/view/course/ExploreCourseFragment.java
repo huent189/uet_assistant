@@ -21,17 +21,12 @@ import vnu.uet.mobilecourse.assistant.adapter.FragmentPageAdapter;
 
 public class ExploreCourseFragment extends Fragment {
 
-    private ViewPager vpCourseContent;
-
-    private FragmentPageAdapter pageAdapter;
-
-    private String courseTitle;
-
-    private int courseId;
-
-    private TabLayout tabLayout;
-
-    private Toolbar toolbar;
+    private ViewPager mVpCourseContent;
+    private FragmentPageAdapter mPageAdapter;
+    private String mCourseTitle;
+    private int mCourseId;
+    private TabLayout mTabLayout;
+    private Toolbar mToolbar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,8 +41,8 @@ public class ExploreCourseFragment extends Fragment {
         Bundle args = getArguments();
 
         if (args != null) {
-            courseTitle = args.getString("courseTitle");
-            courseId = args.getInt("courseId");
+            mCourseTitle = args.getString("courseTitle");
+            mCourseId = args.getInt("courseId");
         }
 
         initializeToolbar(root);
@@ -63,11 +58,11 @@ public class ExploreCourseFragment extends Fragment {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
 
         if (activity != null) {
-            toolbar = root.findViewById(R.id.toolbar);
+            mToolbar = root.findViewById(R.id.toolbar);
 
-            toolbar.setTitle(courseTitle);
+            mToolbar.setTitle(mCourseTitle);
 
-            activity.setSupportActionBar(toolbar);
+            activity.setSupportActionBar(mToolbar);
 
             setHasOptionsMenu(true);
         }
@@ -87,21 +82,21 @@ public class ExploreCourseFragment extends Fragment {
             page.setArguments(bundle);
         }
 
-        pageAdapter = new FragmentPageAdapter(fragmentManager, pages);
+        mPageAdapter = new FragmentPageAdapter(fragmentManager, pages);
     }
 
     private void initializeViewPager(View root) {
-        vpCourseContent = root.findViewById(R.id.vpCourseContent);
+        mVpCourseContent = root.findViewById(R.id.vpCourseContent);
 
-        vpCourseContent.setOffscreenPageLimit(pageAdapter.getCount());
-        vpCourseContent.setAdapter(pageAdapter);
+        mVpCourseContent.setOffscreenPageLimit(mPageAdapter.getCount());
+        mVpCourseContent.setAdapter(mPageAdapter);
 
-        tabLayout = root.findViewById(R.id.tabLayout);
+        mTabLayout = root.findViewById(R.id.tabLayout);
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                vpCourseContent.setCurrentItem(tab.getPosition());
+                mVpCourseContent.setCurrentItem(tab.getPosition());
             }
 
             @Override
@@ -116,28 +111,8 @@ public class ExploreCourseFragment extends Fragment {
         });
 
         ViewPager.OnPageChangeListener onPageChangeListener =
-                new TabLayout.TabLayoutOnPageChangeListener(tabLayout);
+                new TabLayout.TabLayoutOnPageChangeListener(mTabLayout);
 
-        vpCourseContent.addOnPageChangeListener(onPageChangeListener);
-    }
-
-//    private void animateTab() {
-//        final int newLeftMargin = <some value>;
-//        Animation a = new Animation() {
-//
-//            @Override
-//            protected void applyTransformation(float interpolatedTime, Transformation t) {
-//                LayoutParams params = yourView.getLayoutParams();
-//                params.leftMargin = (int)(newLeftMargin * interpolatedTime);
-//                yourView.setLayoutParams(params);
-//            }
-//        };
-//        a.setDuration(500); // in ms
-//        yourView.startAnimation(a);
-//    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        mVpCourseContent.addOnPageChangeListener(onPageChangeListener);
     }
 }
