@@ -30,14 +30,14 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(StateModel<String> stateModel) {
                 switch (stateModel.getStatus()) {
                     case SUCCESS:
-//                        boolean isFirebaseLoggedIn = FirebaseAuthenticationService.isFirebaseLoggedIn();
-//
-//                        if (isFirebaseLoggedIn)
-//                            navigateToActivity(MyCoursesActivity.class);
-//                        else
-//                            navigateToActivity(LoginFirebaseActivity.class);
+                        boolean isFirebaseLoggedIn = FirebaseAuthenticationService.isFirebaseLoggedIn();
 
-                        testAlarm();
+                        if (isFirebaseLoggedIn)
+                            navigateToActivity(MyCoursesActivity.class);
+                        else
+                            navigateToActivity(LoginFirebaseActivity.class);
+
+//                        testAlarm();
 
                         break;
 

@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -64,6 +65,7 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
         private ImageView mIvThumbnail;
         private TextView mTvTitle;
         private TextView mTvCourseId;
+        private CardView mCvCourseContainer;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,14 +74,30 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
             mTvTitle = itemView.findViewById(R.id.tvCourseTitle);
             mTvCourseId = itemView.findViewById(R.id.tvCourseId);
 
-            CardView cvCourseContainer = itemView.findViewById(R.id.cvCourseContainer);
+            mCvCourseContainer = itemView.findViewById(R.id.cvCourseContainer);
             int cardColor = getBackgroundColor(R.drawable.isometric_course_thumbnail);
-            cvCourseContainer.setCardBackgroundColor(cardColor);
+            mCvCourseContainer.setCardBackgroundColor(cardColor);
         }
 
         private void bind(Course course) {
-            mTvTitle.setText(course.getTitle());
-            mTvCourseId.setText(course.getCode());
+            String courseTitle = course.getTitle();
+            String courseCode = course.getCode();
+
+            mTvTitle.setText(courseTitle);
+            mTvCourseId.setText(courseCode);
+
+            mCvCourseContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("courseId", course.getId());
+                    bundle.putString("courseTitle", courseTitle);
+                    bundle.putString("courseCode", courseCode);
+
+//                    navController
+//                            .navigate(R.id.action_navigation_courses_to_navigation_explore_course, bundle);
+                }
+            });
         }
 
         private int getBackgroundColor(int thumbnail) {

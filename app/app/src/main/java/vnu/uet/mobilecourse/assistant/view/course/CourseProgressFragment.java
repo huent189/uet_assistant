@@ -59,7 +59,7 @@ public class CourseProgressFragment extends Fragment {
             mViewModel.getContent(courseId).observe(getViewLifecycleOwner(), contents -> {
                 // contents haven't loaded yet
                 // then show shimmer layout & hide rvMaterials
-                if (contents == null || contents.isEmpty()) {
+                if (contents == null) {
                     rvMaterials.setVisibility(View.INVISIBLE);
                     shimmerRvTasks.setVisibility(View.VISIBLE);
                 }

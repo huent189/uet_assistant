@@ -100,7 +100,7 @@ public class CourseGradeFragment extends Fragment {
 
             mViewModel.getCourseGrades(mCourseId).observe(getViewLifecycleOwner(), grades -> {
                 // grades not found -> loading state
-                if (grades == null || grades.isEmpty()) {
+                if (grades == null) {
                     shimmerRvGrades.setVisibility(View.VISIBLE);
                     rvGrades.setVisibility(View.INVISIBLE);
 

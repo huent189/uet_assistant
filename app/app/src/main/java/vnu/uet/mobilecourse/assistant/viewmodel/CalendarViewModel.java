@@ -2,9 +2,12 @@ package vnu.uet.mobilecourse.assistant.viewmodel;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import androidx.lifecycle.ViewModel;
+
+import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
@@ -28,6 +31,10 @@ public class CalendarViewModel extends ViewModel {
         changes.put("completed", false);
 
         return mTodoRepo.modifyTodo(id, changes);
+    }
+
+    public IStateLiveData<List<TodoList>> getAllTodoLists() {
+        return mTodoRepo.getAllTodoLists();
     }
 
     public IStateLiveData<String> deleteTodo(String id) {
