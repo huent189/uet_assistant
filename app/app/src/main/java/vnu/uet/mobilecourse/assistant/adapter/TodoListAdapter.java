@@ -26,44 +26,50 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 public class TodoListAdapter extends
         ExpandableRecyclerViewAdapter<TodoListAdapter.TodoListViewHolder, TodoViewHolder> {
 
-    private TodoListsFragment owner;
+    private static final boolean SHOW_LIST = false;
 
-    private List<TodoList> todoLists;
+    private TodoListsFragment mOwner;
+    private List<TodoList> mTodoLists;
+    private LayoutInflater mInflater;
+    private NavController mNavController;
 
-    private LayoutInflater inflater;
-
-    private NavController navController;
 
     public TodoListAdapter(List<TodoList> todoLists, TodoListsFragment owner) {
         super(ExpandableTodoList.convert(todoLists));
 
-        this.owner = owner;
-        this.inflater = owner.getLayoutInflater();
+        this.mOwner = owner;
+        this.mInflater = owner.getLayoutInflater();
+        this.mTodoLists = todoLists;
 
         Activity activity = owner.getActivity();
-
-        if (activity != null)
-            navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
+        if (activity != null) {
+            mNavController = Navigation
+                    .findNavController(activity, R.id.nav_host_fragment);
+        }
     }
 
     @Override
     public TodoListViewHolder onCreateGroupViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.layout_expandable_parent_item, parent, false);
+        View view = mInflater
+                .inflate(R.layout.layout_expandable_parent_item, parent, false);
+
         return new TodoListViewHolder(view);
     }
 
     @Override
     public TodoViewHolder onCreateChildViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.layout_todo_item, parent, false);
+        View view = mInflater
+                .inflate(R.layout.layout_todo_item, parent, false);
+
         return new TodoViewHolder(view) {
             @Override
             protected IStateLiveData<String> onMarkAsDone(Todo todo) {
-                return owner.getViewModel().markTodoAsDone(todo.getId());
+                return mOwner.getViewModel().markTodoAsDone(todo.getId());
             }
 
             @Override
             protected IStateLiveData<String> onMarkAsDoing(Todo todo) {
-                return owner.getViewModel().markTodoAsDoing(todo.getId());
+                return mOwner.getViewModel().markTodoAsDoing(todo.getId());
             }
         };
     }
@@ -75,7 +81,7 @@ public class TodoListAdapter extends
         if (group instanceof ExpandableTodoList) {
             ExpandableTodoList content = (ExpandableTodoList) group;
             final Todo todo = content.getItems().get(childIndex);
-            holder.bind(todo, false, owner.getViewLifecycleOwner());
+            holder.bind(todo, SHOW_LIST, mOwner.getViewLifecycleOwner());
         }
     }
 
@@ -89,20 +95,20 @@ public class TodoListAdapter extends
         }
     }
 
-    public class TodoListViewHolder extends GroupViewHolder {
-        private TextView tvTitle;
+    static class TodoListViewHolder extends GroupViewHolder {
 
-        private ImageView ivExpandArrow;
+        private TextView mTvTitle;
+        private ImageView mIvExpandArrow;
 
-        public TodoListViewHolder(@NonNull View itemView) {
+        TodoListViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            tvTitle = itemView.findViewById(R.id.tvTitle);
-            ivExpandArrow = itemView.findViewById(R.id.ivExpandArrow);
+            mTvTitle = itemView.findViewById(R.id.tvTitle);
+            mIvExpandArrow = itemView.findViewById(R.id.ivExpandArrow);
         }
 
-        public void bind(ExpandableTodoList content) {
-            tvTitle.setText(content.getTitle());
+        void bind(ExpandableTodoList content) {
+            mTvTitle.setText(content.getTitle());
         }
     }
 }
