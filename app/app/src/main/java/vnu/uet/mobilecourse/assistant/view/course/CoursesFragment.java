@@ -7,13 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-
-import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
-import com.facebook.shimmer.ShimmerFrameLayout;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,27 +15,27 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
+
+import com.facebook.shimmer.ShimmerFrameLayout;
+
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.AllCoursesAdapter;
 import vnu.uet.mobilecourse.assistant.adapter.RecentlyCoursesAdapter;
-import vnu.uet.mobilecourse.assistant.model.Course;
 import vnu.uet.mobilecourse.assistant.viewmodel.CoursesViewModel;
 
 public class CoursesFragment extends Fragment {
 
-    private CoursesViewModel viewModel;
+    private CoursesViewModel mViewModel;
 
-    private NavController navController;
+    private NavController mNavController;
 
-    private int prevTopAllItemPosition, prevTopRecentlyItemPosition;
+    private int mPrevCoursePositionForAll, mPrevCoursePositionForRecently;
 
-    private LinearLayoutManager allLayoutManager, recentlyLayoutManager;
+    private LinearLayoutManager mAllLayoutManager, mRecentlyLayoutManager;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -56,9 +49,8 @@ public class CoursesFragment extends Fragment {
         CoordinatorLayout coordinatorLayout = root.findViewById(R.id.coordinator_layout);
         ViewCompat.requestApplyInsets(coordinatorLayout);
 
-        viewModel = new ViewModelProvider(currentFragment).get(CoursesViewModel.class);
-        viewModel.setView(currentFragment);
-        viewModel.initialize();
+        mViewModel = new ViewModelProvider(currentFragment).get(CoursesViewModel.class);
+        mViewModel.initialize();
 
         ShimmerFrameLayout shimmerRvCourseRecently = root.findViewById(R.id.shimmerRvCourseRecently);
         shimmerRvCourseRecently.startShimmerAnimation();
@@ -70,47 +62,41 @@ public class CoursesFragment extends Fragment {
 
         RecyclerView rvAllCourses = initializeAllCoursesView(root);
 
-        viewModel.getRecentlyCourses().observe(getViewLifecycleOwner(), new Observer<List<Course>>() {
-            @Override
-            public void onChanged(List<Course> courses) {
-                if (courses == null) {
-                    shimmerRvCourseRecently.startShimmerAnimation();
-                    rvCourseRecently.setVisibility(View.INVISIBLE);
+        mViewModel.getRecentlyCourses().observe(getViewLifecycleOwner(), courses -> {
+            if (courses == null) {
+                shimmerRvCourseRecently.startShimmerAnimation();
+                rvCourseRecently.setVisibility(View.INVISIBLE);
 
-                } else {
-                    if (rvCourseRecently.getVisibility() == View.INVISIBLE) {
-                        shimmerRvCourseRecently.setVisibility(View.INVISIBLE);
-                        rvCourseRecently.setVisibility(View.VISIBLE);
-                    }
-
-                    RecentlyCoursesAdapter recentlyCoursesAdapter = new RecentlyCoursesAdapter(courses, currentFragment);
-                    rvCourseRecently.setAdapter(recentlyCoursesAdapter);
-
-                    // restore scroll position
-                    recentlyLayoutManager.scrollToPosition(prevTopRecentlyItemPosition);
+            } else {
+                if (rvCourseRecently.getVisibility() == View.INVISIBLE) {
+                    shimmerRvCourseRecently.setVisibility(View.INVISIBLE);
+                    rvCourseRecently.setVisibility(View.VISIBLE);
                 }
+
+                RecentlyCoursesAdapter adapter = new RecentlyCoursesAdapter(courses, currentFragment);
+                rvCourseRecently.setAdapter(adapter);
+
+                // restore scroll position
+                mRecentlyLayoutManager.scrollToPosition(mPrevCoursePositionForRecently);
             }
         });
 
-        viewModel.getCourses().observe(getViewLifecycleOwner(), new Observer<List<Course>>() {
-            @Override
-            public void onChanged(List<Course> courses) {
-                if (courses == null) {
-                    shimmerRvAllCourses.startShimmerAnimation();
-                    rvAllCourses.setVisibility(View.INVISIBLE);
+        mViewModel.getCourses().observe(getViewLifecycleOwner(), courses -> {
+            if (courses == null) {
+                shimmerRvAllCourses.startShimmerAnimation();
+                rvAllCourses.setVisibility(View.INVISIBLE);
 
-                } else {
-                    if (rvAllCourses.getVisibility() == View.INVISIBLE) {
-                        shimmerRvAllCourses.setVisibility(View.INVISIBLE);
-                        rvAllCourses.setVisibility(View.VISIBLE);
-                    }
-
-                    AllCoursesAdapter allCoursesAdapter = new AllCoursesAdapter(courses, currentFragment);
-                    rvAllCourses.setAdapter(allCoursesAdapter);
-
-                    // restore scroll position
-                    allLayoutManager.scrollToPosition(prevTopAllItemPosition);
+            } else {
+                if (rvAllCourses.getVisibility() == View.INVISIBLE) {
+                    shimmerRvAllCourses.setVisibility(View.INVISIBLE);
+                    rvAllCourses.setVisibility(View.VISIBLE);
                 }
+
+                AllCoursesAdapter adapter = new AllCoursesAdapter(courses, currentFragment);
+                rvAllCourses.setAdapter(adapter);
+
+                // restore scroll position
+                mAllLayoutManager.scrollToPosition(mPrevCoursePositionForAll);
             }
         });
 
@@ -138,12 +124,12 @@ public class CoursesFragment extends Fragment {
     private RecyclerView initializeRecentlyCoursesView(View root) {
         RecyclerView rvCourseRecently = root.findViewById(R.id.rvCourseRecently);
 
-        recentlyLayoutManager = new LinearLayoutManager(
+        mRecentlyLayoutManager = new LinearLayoutManager(
                 getContext(),
                 LinearLayoutManager.HORIZONTAL,
                 false);
 
-        rvCourseRecently.setLayoutManager(recentlyLayoutManager);
+        rvCourseRecently.setLayoutManager(mRecentlyLayoutManager);
 
         return rvCourseRecently;
     }
@@ -151,9 +137,9 @@ public class CoursesFragment extends Fragment {
     private RecyclerView initializeAllCoursesView(View root) {
         RecyclerView rvAllCourses = root.findViewById(R.id.rvAllCourses);
 
-        allLayoutManager = new LinearLayoutManager(this.getContext());
+        mAllLayoutManager = new LinearLayoutManager(this.getContext());
 
-        rvAllCourses.setLayoutManager(allLayoutManager);
+        rvAllCourses.setLayoutManager(mAllLayoutManager);
 
         return rvAllCourses;
     }
@@ -162,8 +148,11 @@ public class CoursesFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        prevTopRecentlyItemPosition = recentlyLayoutManager.findFirstCompletelyVisibleItemPosition();
-        prevTopAllItemPosition = allLayoutManager.findFirstCompletelyVisibleItemPosition();
+        mPrevCoursePositionForRecently = mRecentlyLayoutManager
+                .findFirstCompletelyVisibleItemPosition();
+
+        mPrevCoursePositionForAll = mAllLayoutManager
+                .findFirstCompletelyVisibleItemPosition();
     }
 
     @Override

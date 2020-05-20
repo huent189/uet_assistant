@@ -20,12 +20,9 @@ import vnu.uet.mobilecourse.assistant.viewmodel.CourseProgressViewModel;
 public class CourseProgressFragment extends Fragment {
 
     private CourseProgressViewModel mViewModel;
-
-    private int prevTopItemPosition;
-
-    private LinearLayoutManager layoutManager;
-
-    private CourseContentAdapter adapter;
+    private int mPrevTopItemPosition;
+    private LinearLayoutManager mLayoutManager;
+    private CourseContentAdapter mAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,8 +40,8 @@ public class CourseProgressFragment extends Fragment {
 
         // find rvMaterials
         RecyclerView rvMaterials = root.findViewById(R.id.rvMaterials);
-        layoutManager = new LinearLayoutManager(getContext());
-        rvMaterials.setLayoutManager(layoutManager);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        rvMaterials.setLayoutManager(mLayoutManager);
 
         // find shimmer layout & start shimmer animation
         ShimmerFrameLayout shimmerRvTasks = root.findViewById(R.id.shimmerRvTasks);
@@ -62,7 +59,7 @@ public class CourseProgressFragment extends Fragment {
             mViewModel.getContent(courseId).observe(getViewLifecycleOwner(), contents -> {
                 // contents haven't loaded yet
                 // then show shimmer layout & hide rvMaterials
-                if (contents == null || contents.isEmpty()) {
+                if (contents == null) {
                     rvMaterials.setVisibility(View.INVISIBLE);
                     shimmerRvTasks.setVisibility(View.VISIBLE);
                 }
@@ -75,14 +72,14 @@ public class CourseProgressFragment extends Fragment {
                     shimmerRvTasks.setVisibility(View.GONE);
 
                     // update new adapter with newest data
-                    adapter = new CourseContentAdapter(contents, thisFragment);
-                    rvMaterials.setAdapter(adapter);
+                    mAdapter = new CourseContentAdapter(contents, thisFragment);
+                    rvMaterials.setAdapter(mAdapter);
 
                     // restore expandable state
-                    adapter.onRestoreInstanceState(args);
+                    mAdapter.onRestoreInstanceState(args);
 
                     // restore scroll position
-                    layoutManager.scrollToPosition(prevTopItemPosition);
+                    mLayoutManager.scrollToPosition(mPrevTopItemPosition);
                 }
             });
         }
@@ -97,9 +94,9 @@ public class CourseProgressFragment extends Fragment {
         // save expandable state
         Bundle savedInstanceState = getArguments();
         if (savedInstanceState != null)
-            adapter.onSaveInstanceState(savedInstanceState);
+            mAdapter.onSaveInstanceState(savedInstanceState);
 
-        prevTopItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition();
+        mPrevTopItemPosition = mLayoutManager.findFirstCompletelyVisibleItemPosition();
     }
 
 

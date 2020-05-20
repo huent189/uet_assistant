@@ -29,8 +29,7 @@ import com.google.firebase.firestore.util.Util;
 public class AddTodoListFragment extends Fragment {
 
     private CalendarSharedViewModel mViewModel;
-
-    private NavController navController;
+    private NavController mNavController;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -39,7 +38,7 @@ public class AddTodoListFragment extends Fragment {
         FragmentActivity activity = getActivity();
         if (activity != null) {
             mViewModel = new ViewModelProvider(activity).get(CalendarSharedViewModel.class);
-            navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
+            mNavController = Navigation.findNavController(activity, R.id.nav_host_fragment);
         }
 
         View root = inflater.inflate(R.layout.fragment_add_todo_list, container, false);
@@ -71,11 +70,11 @@ public class AddTodoListFragment extends Fragment {
                         switch (stateModel.getStatus()) {
                             case SUCCESS:
                                 mViewModel.getTodoListTitle().postValue(todoList.getTitle());
-                                navController.navigateUp();
+                                mNavController.navigateUp();
                                 break;
 
                             case ERROR:
-                                Toast.makeText(getContext(), "Tạo danh sách không thành công", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), FAILURE_MESSAGE, Toast.LENGTH_LONG).show();
                                 break;
                         }
                     }
@@ -86,4 +85,6 @@ public class AddTodoListFragment extends Fragment {
 
         return root;
     }
+
+    private static final String FAILURE_MESSAGE = "Tạo danh sách không thành công";
 }

@@ -18,7 +18,8 @@ public class DateTimeUtils {
     public static final SimpleDateFormat DATE_TIME_FORMAT =
             new SimpleDateFormat("dd/MM/yy hh:mm a", Locale.ROOT);
 
-    public static final SimpleDateFormat TIME_12H_FORMAT = new SimpleDateFormat("hh:mm a", Locale.ROOT);
+    public static final SimpleDateFormat TIME_12H_FORMAT =
+            new SimpleDateFormat("hh:mm a", Locale.ROOT);
 
     public static Date fromSecond(long second) {
         return new Date(second * 1000);

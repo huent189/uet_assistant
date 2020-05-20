@@ -4,8 +4,8 @@
     <item android:state_selected="true" >
         <shape android:shape="rectangle">
             <solid android:color="@color/background" />
-            <corners android:topRightRadius="@dimen/tab_selected_radius"
-                android:topLeftRadius="@dimen/tab_selected_radius" />
+            <corners android:topRightRadius="@dimen/medium_radius"
+                android:topLeftRadius="@dimen/medium_radius" />
         </shape>
     </item>
     <item>

@@ -19,14 +19,14 @@ import vnu.uet.mobilecourse.assistant.viewmodel.NotificationsViewModel;
 
 public class NotificationsFragment extends Fragment {
 
-    private NotificationsViewModel viewModel;
+    private NotificationsViewModel mViewModel;
 
-    private NotificationAdapter notificationAdapter;
+    private NotificationAdapter mNotificationAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        viewModel = new ViewModelProvider(this).get(NotificationsViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(NotificationsViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_notifications, container, false);
 
@@ -42,11 +42,11 @@ public class NotificationsFragment extends Fragment {
             notifications.add("Bài kiểm tra " + i);
         }
 
-        notificationAdapter = new NotificationAdapter(notifications, this);
+        mNotificationAdapter = new NotificationAdapter(notifications, this);
 
         RecyclerView rvNotifications = root.findViewById(R.id.rvNotifications);
 
-        rvNotifications.setAdapter(notificationAdapter);
+        rvNotifications.setAdapter(mNotificationAdapter);
         rvNotifications.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
 }

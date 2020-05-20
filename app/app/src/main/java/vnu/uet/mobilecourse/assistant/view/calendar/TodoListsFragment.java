@@ -33,28 +33,28 @@ import java.util.List;
 
 public class TodoListsFragment extends Fragment {
 
-    private CalendarViewModel viewModel;
-
-    private FragmentActivity activity;
-
-    private NavController navController;
+    private CalendarViewModel mViewModel;
+    private FragmentActivity mActivity;
+    private NavController mNavController;
+    private TodoListAdapter mAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        activity = getActivity();
+        mActivity = getActivity();
 
-        assert activity != null;
-        viewModel = new ViewModelProvider(activity).get(CalendarViewModel.class);
+        assert mActivity != null;
+        mViewModel = new ViewModelProvider(mActivity).get(CalendarViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_todo_lists, container, false);
 
         initializeToolbar(root);
 
-        if (activity != null)
-            navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
-
+        if (mActivity != null) {
+            mNavController = Navigation
+                    .findNavController(mActivity, R.id.nav_host_fragment);
+        }
 
         RecyclerView rvTodoLists = root.findViewById(R.id.rvTodoLists);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -62,17 +62,29 @@ public class TodoListsFragment extends Fragment {
 
         TodoListsFragment thisFragment = this;
 
-        TodoRepository.getInstance().getAllTodoLists().observe(getViewLifecycleOwner(), new Observer<StateModel<List<TodoList>>>() {
-            @Override
-            public void onChanged(StateModel<List<TodoList>> stateModel) {
-                switch (stateModel.getStatus()) {
-                    case SUCCESS:
-                        List<TodoList> todoLists = stateModel.getData();
-                        TodoListAdapter adapter = new TodoListAdapter(todoLists, thisFragment);
-                        rvTodoLists.setAdapter(adapter);
-                        break;
-                }
+        // get bundle from prev fragment
+        if (getArguments() == null) {
+            setArguments(new Bundle());
+        }
+        Bundle args = getArguments();
 
+        mViewModel.getAllTodoLists().observe(getViewLifecycleOwner(), stateModel -> {
+            switch (stateModel.getStatus()) {
+                case SUCCESS:
+                    List<TodoList> todoLists = stateModel.getData();
+                    mAdapter = new TodoListAdapter(todoLists, thisFragment);
+                    rvTodoLists.setAdapter(mAdapter);
+
+                    mAdapter.onRestoreInstanceState(args);
+                    break;
+
+                case LOADING:
+                case ERROR:
+                    if (mAdapter != null) {
+                        mAdapter.onSaveInstanceState(args);
+                    }
+
+                    break;
             }
         });
 
@@ -80,12 +92,9 @@ public class TodoListsFragment extends Fragment {
     }
 
     private void initializeToolbar(View root) {
-        if (activity instanceof AppCompatActivity) {
+        if (mActivity instanceof AppCompatActivity) {
             Toolbar toolbar = root.findViewById(R.id.toolbar);
-
-            ((AppCompatActivity) activity).setSupportActionBar(toolbar);
-//            ((AppCompatActivity) activity).getSupportActionBar().setDisplayShowTitleEnabled(true);
-
+            ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
             setHasOptionsMenu(true);
         }
     }
@@ -100,13 +109,13 @@ public class TodoListsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         if (item.getItemId() == R.id.action_view_calendar) {
-            navController.navigate(R.id.action_navigation_todo_lists_to_navigation_calendar);
+            mNavController.navigate(R.id.action_navigation_todo_lists_to_navigation_calendar);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     public CalendarViewModel getViewModel() {
-        return viewModel;
+        return mViewModel;
     }
 }

@@ -10,10 +10,10 @@ import java.util.List;
 public class CourseClassmateViewModel extends ViewModel {
     // TODO: Implement the ViewModel
 
-    private MutableLiveData<List<String>> classMates;
+    private MutableLiveData<List<String>> mClassMates;
 
     public CourseClassmateViewModel() {
-        classMates = new MutableLiveData<>();
+        mClassMates = new MutableLiveData<>();
 
         List<String> mates = new ArrayList<>();
 
@@ -21,10 +21,10 @@ public class CourseClassmateViewModel extends ViewModel {
             mates.add("Bạn số " + i);
         }
 
-        classMates.setValue(mates);
+        mClassMates.setValue(mates);
     }
 
     public LiveData<List<String>> getClassMates() {
-        return classMates;
+        return mClassMates;
     }
 }

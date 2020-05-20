@@ -2,15 +2,13 @@ package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
-import android.view.LayoutInflater;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -43,8 +41,10 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
 
         Activity activity = mOwner.getActivity();
 
-        if (activity != null)
-            mNavController = Navigation.findNavController(activity, R.id.nav_host_fragment);
+        if (activity != null) {
+            mNavController = Navigation
+                    .findNavController(activity, R.id.nav_host_fragment);
+        }
 
         return holder;
     }
@@ -52,9 +52,7 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Course course = mCourses.get(position);
-
-        holder.tvCourseTitle.setText(course.getTitle());
-        holder.tvCourseId.setText(course.getCode());
+        holder.bind(course);
     }
 
     @Override
@@ -62,30 +60,50 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
         return mCourses.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView ivCourseThumbnail;
+    class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvCourseTitle;
+        private ImageView mIvThumbnail;
+        private TextView mTvTitle;
+        private TextView mTvCourseId;
+        private CardView mCvCourseContainer;
 
-        private TextView tvCourseId;
-
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            ivCourseThumbnail = itemView.findViewById(R.id.ivCourseThumbnail);
-            tvCourseTitle = itemView.findViewById(R.id.tvCourseTitle);
-            tvCourseId = itemView.findViewById(R.id.tvCourseId);
+            mIvThumbnail = itemView.findViewById(R.id.ivCourseThumbnail);
+            mTvTitle = itemView.findViewById(R.id.tvCourseTitle);
+            mTvCourseId = itemView.findViewById(R.id.tvCourseId);
 
-            CardView cvCourseContainer = itemView.findViewById(R.id.cvCourseContainer);
-
+            mCvCourseContainer = itemView.findViewById(R.id.cvCourseContainer);
             int cardColor = getBackgroundColor(R.drawable.isometric_course_thumbnail);
-            cvCourseContainer.setCardBackgroundColor(cardColor);
+            mCvCourseContainer.setCardBackgroundColor(cardColor);
         }
 
-        private int getBackgroundColor(int thumbnailImage) {
+        private void bind(Course course) {
+            String courseTitle = course.getTitle();
+            String courseCode = course.getCode();
+
+            mTvTitle.setText(courseTitle);
+            mTvCourseId.setText(courseCode);
+
+            mCvCourseContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("courseId", course.getId());
+                    bundle.putString("courseTitle", courseTitle);
+                    bundle.putString("courseCode", courseCode);
+
+//                    navController
+//                            .navigate(R.id.action_navigation_courses_to_navigation_explore_course, bundle);
+                }
+            });
+        }
+
+        private int getBackgroundColor(int thumbnail) {
             int cardColor;
 
-            switch (thumbnailImage) {
+            switch (thumbnail) {
                 case R.drawable.isometric_course_thumbnail:
                     cardColor = R.color.cardColor1;
                     break;

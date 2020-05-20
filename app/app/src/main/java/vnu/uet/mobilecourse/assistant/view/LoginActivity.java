@@ -1,6 +1,5 @@
 package vnu.uet.mobilecourse.assistant.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,47 +8,40 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.Locale;
-
 import androidx.appcompat.app.AppCompatActivity;
+
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.repository.UserRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText etStudentId;
-
-    private EditText etPassword;
-
-    private ProgressBar progressBar;
-
-    private TextView tvLoadingTitle;
-
-    private TextView tvVerifyMailTitle;
-
-    private Button btnLogin;
-
-    private boolean loginSuccess = false;
+    private EditText mEtStudentId;
+    private EditText mEtPassword;
+    private ProgressBar mProgressBar;
+    private TextView mTvLoadingTitle;
+    private TextView mTvVerifyMailTitle;
+    private Button mBtnLogin;
+    private boolean mLoginSuccess = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        etStudentId = findViewById(R.id.etStudentId);
-        etPassword = findViewById(R.id.etPassword);
-        btnLogin = findViewById(R.id.btnLogin);
+        mEtStudentId = findViewById(R.id.etStudentId);
+        mEtPassword = findViewById(R.id.etPassword);
+        mBtnLogin = findViewById(R.id.btnLogin);
 
-        tvLoadingTitle = findViewById(R.id.tvLoadingTitle);
-        progressBar = findViewById(R.id.progressBar);
+        mTvLoadingTitle = findViewById(R.id.tvLoadingTitle);
+        mProgressBar = findViewById(R.id.progressBar);
 
-        tvVerifyMailTitle = findViewById(R.id.tvVerifyMailTitle);
+        mTvVerifyMailTitle = findViewById(R.id.tvVerifyMailTitle);
     }
 
     public void login(View view) {
-        String studentId = etStudentId.getText().toString();
-        String password = etPassword.getText().toString();
+        String studentId = mEtStudentId.getText().toString();
+        String password = mEtPassword.getText().toString();
 
         UserRepository userRepo = new UserRepository();
         StateLiveData<String> res = userRepo.makeLoginRequest(studentId, password);
@@ -57,53 +49,48 @@ public class LoginActivity extends AppCompatActivity {
         res.observe(LoginActivity.this, stateModel -> {
             switch (stateModel.getStatus()) {
                 case SUCCESS:
-                    if (!loginSuccess) {
-                        loginSuccess = true;
-//                        Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-//                        navigateToMyCourses();
+                    if (!mLoginSuccess) {
+                        mLoginSuccess = true;
 
-                        tvLoadingTitle.setVisibility(View.INVISIBLE);
-                        progressBar.setVisibility(View.INVISIBLE);
+                        mTvLoadingTitle.setVisibility(View.INVISIBLE);
+                        mProgressBar.setVisibility(View.INVISIBLE);
 
-                        etStudentId.setVisibility(View.INVISIBLE);
-                        etPassword.setVisibility(View.INVISIBLE);
-                        btnLogin.setVisibility(View.INVISIBLE);
+                        mEtStudentId.setVisibility(View.INVISIBLE);
+                        mEtPassword.setVisibility(View.INVISIBLE);
+                        mBtnLogin.setVisibility(View.INVISIBLE);
 
-                        tvVerifyMailTitle.setVisibility(View.VISIBLE);
+                        mTvVerifyMailTitle.setVisibility(View.VISIBLE);
                     }
                     break;
 
                 case ERROR:
-                    Toast.makeText(LoginActivity.this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, LOGIN_FAILURE, Toast.LENGTH_SHORT).show();
 
-                    tvLoadingTitle.setVisibility(View.INVISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
+                    mTvLoadingTitle.setVisibility(View.INVISIBLE);
+                    mProgressBar.setVisibility(View.INVISIBLE);
 
-                    etStudentId.setVisibility(View.VISIBLE);
-                    etPassword.setVisibility(View.VISIBLE);
-                    btnLogin.setVisibility(View.VISIBLE);
+                    mEtStudentId.setVisibility(View.VISIBLE);
+                    mEtPassword.setVisibility(View.VISIBLE);
+                    mBtnLogin.setVisibility(View.VISIBLE);
 
-                    tvVerifyMailTitle.setVisibility(View.INVISIBLE);
+                    mTvVerifyMailTitle.setVisibility(View.INVISIBLE);
 
                     break;
 
                 case LOADING:
-                    tvLoadingTitle.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.VISIBLE);
+                    mTvLoadingTitle.setVisibility(View.VISIBLE);
+                    mProgressBar.setVisibility(View.VISIBLE);
 
-                    etStudentId.setVisibility(View.INVISIBLE);
-                    etPassword.setVisibility(View.INVISIBLE);
-                    btnLogin.setVisibility(View.INVISIBLE);
+                    mEtStudentId.setVisibility(View.INVISIBLE);
+                    mEtPassword.setVisibility(View.INVISIBLE);
+                    mBtnLogin.setVisibility(View.INVISIBLE);
 
-                    tvVerifyMailTitle.setVisibility(View.INVISIBLE);
+                    mTvVerifyMailTitle.setVisibility(View.INVISIBLE);
 
                     break;
             }
         });
     }
 
-    private void navigateToMyCourses() {
-        Intent intent = new Intent(LoginActivity.this, MyCoursesActivity.class);
-        startActivity(intent);
-    }
+    private static final String LOGIN_FAILURE = "Đăng nhập thất bại";
 }

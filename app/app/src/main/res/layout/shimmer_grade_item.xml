@@ -11,7 +11,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_gravity="center_vertical|start"
-        android:layout_marginHorizontal="@dimen/sibling_margin_x2"
+        android:layout_marginHorizontal="@dimen/margin_x2"
         android:background="@color/backgroundLight" />
 
         <TextView
@@ -19,11 +19,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginEnd="@dimen/sibling_margin_x3"
-            android:layout_marginVertical="@dimen/sibling_margin_x2"
+            android:layout_marginEnd="@dimen/margin_x3"
+            android:layout_marginVertical="@dimen/margin_x2"
             android:layout_gravity="center_vertical|start"
             android:background="@color/backgroundLight"
-            android:textSize="@dimen/header2_size"/>
+            android:textSize="@dimen/font_size_item_title"/>
 
         <TextView
             android:id="@+id/tvGrade"
@@ -31,9 +31,9 @@
             android:layout_height="wrap_content"
             android:background="@drawable/primary_button_background"
             android:backgroundTint="@color/backgroundLight"
-            android:textSize="@dimen/header2_size"
-            android:paddingHorizontal="@dimen/sibling_margin"
+            android:textSize="@dimen/font_size_caption"
+            android:paddingHorizontal="@dimen/margin"
             android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="@dimen/sibling_margin_x2" />
+            android:layout_marginEnd="@dimen/margin_x2" />
 
 </LinearLayout>

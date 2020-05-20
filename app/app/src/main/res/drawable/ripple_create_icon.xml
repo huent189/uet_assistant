@@ -16,7 +16,7 @@
                 <item>
                     <shape>
                         <solid android:color="@color/background" />
-                        <corners android:radius="@dimen/view_radius" />
+                        <corners android:radius="@dimen/large_radius" />
                     </shape>
                 </item>
             </layer-list>
@@ -27,7 +27,7 @@
             <item>
                 <shape>
                     <solid android:color="@color/backgroundLight" />
-                    <corners android:radius="@dimen/view_radius" />
+                    <corners android:radius="@dimen/large_radius" />
                 </shape>
             </item>
             <item android:drawable="@drawable/ic_create_24dp"/>

@@ -1,32 +1,34 @@
 package vnu.uet.mobilecourse.assistant.viewmodel.state;
 
 public class StateModel<T> {
-    private StateStatus status;
-    private T data;
-    private Exception error;
+
+    private StateStatus mStatus;
+    private T mData;
+    private Exception mError;
+
     public StateStatus getStatus() {
-        return status;
+        return mStatus;
     }
 
     public T getData() {
-        return data;
+        return mData;
     }
 
     public Exception getError() {
-        return error;
+        return mError;
     }
 
     public StateModel(StateStatus status, Exception error) {
-        this.status = status;
-        this.error = error;
+        this.mStatus = status;
+        this.mError = error;
     }
 
     public StateModel(StateStatus status, T data) {
-        this.status = status;
-        this.data = data;
+        this.mStatus = status;
+        this.mData = data;
     }
 
     public StateModel(StateStatus status) {
-        this.status = status;
+        this.mStatus = status;
     }
 }

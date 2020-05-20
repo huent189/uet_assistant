@@ -1,10 +1,10 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
-public abstract class FirebaseCollectionName {
-    public static final String USER = "user";
-    public static final String TODO_LIST = "todoList";
-    public static final String TODO = "todo";
-    public static final String ENROLLMENT = "enrollment";
-    public static final String COURSE = "course";
-    public static final String CHAT_GROUP = "chatGroup";
+public interface FirebaseCollectionName {
+    String USER = "user";
+    String TODO_LIST = "todoList";
+    String TODO = "todo";
+    String ENROLLMENT = "enrollment";
+    String COURSE = "course";
+    String CHAT_GROUP = "chatGroup";
 }

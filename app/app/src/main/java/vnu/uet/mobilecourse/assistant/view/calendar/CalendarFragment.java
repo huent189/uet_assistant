@@ -39,8 +39,6 @@ public class CalendarFragment extends Fragment {
 
     private CustomCalendarView calendarView;
 
-    private TextView tvDate;
-
     private DailyEventAdapter dailyEventAdapter;
 
     private NavController navController;
@@ -73,7 +71,7 @@ public class CalendarFragment extends Fragment {
 
         rvDailyTodoList.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        tvDate = root.findViewById(R.id.tvDate);
+//        tvDate = root.findViewById(R.id.tvDate);
 
         calendarView = root.findViewById(R.id.calendar_view);
 
@@ -105,7 +103,6 @@ public class CalendarFragment extends Fragment {
 
     private void updateDate(Date date) {
         String selectedDate = DateTimeUtils.DATE_FORMAT.format(date);
-        tvDate.setText(selectedDate);
 
         if (activity instanceof AppCompatActivity && toolbar != null) {
             collapsingToolbarLayout.setTitle(selectedDate);

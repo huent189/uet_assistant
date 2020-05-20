@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:padding="@dimen/sibling_margin_x2"
+        android:padding="@dimen/margin_x2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -33,7 +33,7 @@
 
             <TextView
                 android:id="@+id/tvClassMateName"
-                style="@style/Header2"
+                style="@style/ListItemTitle"
                 android:textColor="@color/primary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
 
             <TextView
                 android:id="@+id/tvClassMateId"
-                style="@style/Subtitle"
+                style="@style/SecondaryText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="17020845" />
@@ -51,8 +51,8 @@
         <Button
             style="@style/CircleButton"
             android:id="@+id/btnChat"
-            android:layout_width="@dimen/circle_button_size"
-            android:layout_height="@dimen/circle_button_size"
+            android:layout_width="@dimen/button_size"
+            android:layout_height="@dimen/button_size"
             android:background="@drawable/primary_button_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
