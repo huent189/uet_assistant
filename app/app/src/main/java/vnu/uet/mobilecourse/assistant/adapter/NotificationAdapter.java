@@ -19,66 +19,60 @@ import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
-    private static final String TAG = NotificationAdapter.class.getSimpleName();
 
-    private List<String> notifications;
-
-    private Fragment owner;
-
-    private NavController navController;
+    private List<String> mNotifications;
+    private Fragment mOwner;
+    private NavController mNavController;
 
     public NotificationAdapter(List<String> notifications, Fragment owner) {
-        this.notifications = notifications;
-        this.owner = owner;
+        this.mNotifications = notifications;
+        this.mOwner = owner;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = owner.getLayoutInflater();
+        View view = mOwner.getLayoutInflater()
+                .inflate(R.layout.layout_notification_item, parent, false);
 
-        View view = layoutInflater.inflate(R.layout.layout_notification_item, parent, false);
-
-        ViewHolder holder = new ViewHolder(view);
-
-        Activity activity = owner.getActivity();
+        Activity activity = mOwner.getActivity();
 
         if (activity != null)
-            navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
+            mNavController = Navigation.findNavController(activity, R.id.nav_host_fragment);
 
-        return holder;
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Log.d(TAG, "call onBindViewHolder");
+
     }
 
 
     @Override
     public int getItemCount() {
-        return notifications.size();
+        return mNotifications.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private ImageView ivNotifyIcon;
+        private ImageView mIvNotifyIcon;
 
-        private TextView tvNotifyTitle;
+        private TextView mTvNotifyTitle;
 
-        private TextView tvNotifyDesc;
+        private TextView mTvNotifyDesc;
 
-        private TextView tvNotifyTime;
+        private TextView mTvNotifyTime;
 
-        private Button btnViewNotify;
+        private Button mBtnViewNotify;
 
         public ViewHolder(@NonNull View view) {
             super(view);
 
-            ivNotifyIcon = view.findViewById(R.id.ivNotifyIcon);
-            tvNotifyTitle = view.findViewById(R.id.tvNotifyTitle);
-            tvNotifyDesc = view.findViewById(R.id.tvNotifyDesc);
-            tvNotifyTime = view.findViewById(R.id.tvNotifyTime);
-            btnViewNotify = view.findViewById(R.id.btnViewNotify);
+            mIvNotifyIcon = view.findViewById(R.id.ivNotifyIcon);
+            mTvNotifyTitle = view.findViewById(R.id.tvNotifyTitle);
+            mTvNotifyDesc = view.findViewById(R.id.tvNotifyDesc);
+            mTvNotifyTime = view.findViewById(R.id.tvNotifyTime);
+            mBtnViewNotify = view.findViewById(R.id.btnViewNotify);
 
         }
     }

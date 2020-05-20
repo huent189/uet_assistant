@@ -17,62 +17,55 @@ import vnu.uet.mobilecourse.assistant.view.calendar.CalendarFragment;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
 public class DailyEventAdapter extends RecyclerView.Adapter<TodoViewHolder> {
-    private static final String TAG = DailyEventAdapter.class.getSimpleName();
 
-    private DailyTodoList todoList;
-
-    private CalendarFragment owner;
-
-    private NavController navController;
+    private DailyTodoList mTodoList;
+    private CalendarFragment mOwner;
+    private NavController mNavController;
 
     public DailyEventAdapter(DailyTodoList todoList, CalendarFragment owner) {
-        this.todoList = todoList;
-        this.owner = owner;
+        this.mTodoList = todoList;
+        this.mOwner = owner;
     }
 
     @NonNull
     @Override
     public TodoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = owner.getLayoutInflater();
-
-        View view = layoutInflater.inflate(R.layout.layout_todo_item, parent, false);
+        View view = mOwner.getLayoutInflater()
+                .inflate(R.layout.layout_todo_item, parent, false);
 
         TodoViewHolder holder = new TodoViewHolder(view) {
             @Override
             protected IStateLiveData<String> onMarkAsDone(Todo todo) {
-                return owner.getViewModel().markTodoAsDone(todo.getId());
+                return mOwner.getViewModel().markTodoAsDone(todo.getId());
             }
 
             @Override
             protected IStateLiveData<String> onMarkAsDoing(Todo todo) {
-                return owner.getViewModel().markTodoAsDoing(todo.getId());
+                return mOwner.getViewModel().markTodoAsDoing(todo.getId());
             }
         };
 
-        Activity activity = owner.getActivity();
+        Activity activity = mOwner.getActivity();
 
         if (activity != null)
-            navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
+            mNavController = Navigation.findNavController(activity, R.id.nav_host_fragment);
 
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull TodoViewHolder holder, int position) {
-        Log.d(TAG, "call onBindViewHolder");
-
-        final Todo todo = todoList.get(position);
-
-        holder.bind(todo, true, owner.getViewLifecycleOwner());
+        final Todo todo = mTodoList.get(position);
+        holder.bind(todo, true, mOwner.getViewLifecycleOwner());
     }
 
 
     @Override
     public int getItemCount() {
-        return todoList.size();
+        return mTodoList.size();
     }
 
     public DailyTodoList getTodoList() {
-        return todoList;
+        return mTodoList;
     }
 }

@@ -23,43 +23,35 @@ import vnu.uet.mobilecourse.assistant.view.course.CoursesFragment;
 import vnu.uet.mobilecourse.assistant.model.Course;
 
 public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCoursesAdapter.ViewHolder> {
-    private static final String TAG = RecentlyCoursesAdapter.class.getSimpleName();
 
-    private List<Course> courses;
-
-    private LayoutInflater layoutInflater;
-
-    private CoursesFragment owner;
-
-    private NavController navController;
+    private List<Course> mCourses;
+    private CoursesFragment mOwner;
+    private NavController mNavController;
 
     public RecentlyCoursesAdapter(List<Course> courses, CoursesFragment owner) {
-        this.courses = courses;
-        this.owner = owner;
+        this.mCourses = courses;
+        this.mOwner = owner;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = owner.getLayoutInflater();
-
-        View view = layoutInflater.inflate(R.layout.card_course, parent, false);
+        View view = mOwner.getLayoutInflater()
+                .inflate(R.layout.card_course, parent, false);
 
         ViewHolder holder = new ViewHolder(view);
 
-        Activity activity = owner.getActivity();
+        Activity activity = mOwner.getActivity();
 
         if (activity != null)
-            navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
+            mNavController = Navigation.findNavController(activity, R.id.nav_host_fragment);
 
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Log.d(TAG, "call onBindViewHolder");
-
-        final Course course = courses.get(position);
+        final Course course = mCourses.get(position);
 
         holder.tvCourseTitle.setText(course.getTitle());
         holder.tvCourseId.setText(course.getCode());
@@ -67,7 +59,7 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
 
     @Override
     public int getItemCount() {
-        return courses.size();
+        return mCourses.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -107,7 +99,7 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
                     break;
             }
 
-            Context context = Objects.requireNonNull(owner.getContext());
+            Context context = mOwner.requireContext();
 
             return ContextCompat.getColor(context, cardColor);
         }

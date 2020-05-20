@@ -27,39 +27,38 @@ import vnu.uet.mobilecourse.assistant.model.Material;
 public class CourseContentAdapter extends
         ExpandableRecyclerViewAdapter<CourseContentAdapter.WeeklyMaterialViewHolder, CourseContentAdapter.MaterialViewHolder> {
 
-    private Fragment owner;
-
-    private List<CourseContent> contents;
-
-    private LayoutInflater inflater;
-
-    private NavController navController;
+    private List<CourseContent> mContents;
+    private Fragment mOwner;
+    private LayoutInflater mInflater;
+    private NavController mNavController;
 
     public CourseContentAdapter(List<CourseContent> contents, Fragment owner) {
         super(ExpandableCourseContent.convert(contents));
 
-        this.owner = owner;
-        this.inflater = owner.getLayoutInflater();
+        this.mOwner = owner;
+        this.mInflater = owner.getLayoutInflater();
 
         Activity activity = owner.getActivity();
 
-        if (activity != null)
-            navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
-    }
-
-    public void setContents(List<CourseContent> contents) {
-        this.contents = contents;
+        if (activity != null) {
+            mNavController = Navigation
+                    .findNavController(activity, R.id.nav_host_fragment);
+        }
     }
 
     @Override
     public WeeklyMaterialViewHolder onCreateGroupViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.layout_expandable_parent_item, parent, false);
+        View view = mInflater
+                .inflate(R.layout.layout_expandable_parent_item, parent, false);
+
         return new WeeklyMaterialViewHolder(view);
     }
 
     @Override
     public MaterialViewHolder onCreateChildViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.layout_material_item, parent, false);
+        View view = mInflater
+                .inflate(R.layout.layout_material_item, parent, false);
+
         return new MaterialViewHolder(view);
     }
 
@@ -84,55 +83,55 @@ public class CourseContentAdapter extends
         }
     }
 
-    public class WeeklyMaterialViewHolder extends GroupViewHolder {
-        private TextView tvWeeklyTitle;
+    static class WeeklyMaterialViewHolder extends GroupViewHolder {
+        private TextView mTvWeeklyTitle;
 
-        private ImageView ivExpandArrow;
+        private ImageView mIvExpandArrow;
 
-        public WeeklyMaterialViewHolder(@NonNull View itemView) {
+        WeeklyMaterialViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            tvWeeklyTitle = itemView.findViewById(R.id.tvTitle);
-            ivExpandArrow = itemView.findViewById(R.id.ivExpandArrow);
+            mTvWeeklyTitle = itemView.findViewById(R.id.tvTitle);
+            mIvExpandArrow = itemView.findViewById(R.id.ivExpandArrow);
         }
 
-        public void bind(ExpandableCourseContent content) {
-            tvWeeklyTitle.setText(content.getTitle());
+        void bind(ExpandableCourseContent content) {
+            mTvWeeklyTitle.setText(content.getTitle());
         }
     }
 
 
-    public class MaterialViewHolder extends ChildViewHolder {
-        private TextView tvTaskTitle;
+    class MaterialViewHolder extends ChildViewHolder {
+        private TextView mTvTaskTitle;
+        private ImageView mIvTaskStatus;
+        private View mView;
 
-        private ImageView ivTaskStatus;
-
-        private View itemView;
-
-        public MaterialViewHolder(@NonNull View itemView) {
+        MaterialViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            tvTaskTitle = itemView.findViewById(R.id.tvTaskTitle);
-            ivTaskStatus = itemView.findViewById(R.id.ivTaskStatus);
-            this.itemView = itemView;
+            mTvTaskTitle = itemView.findViewById(R.id.tvTaskTitle);
+            mIvTaskStatus = itemView.findViewById(R.id.ivTaskStatus);
+            this.mView = itemView;
         }
 
-        public void bind(Material material) {
-            tvTaskTitle.setText(material.getTitle());
+        void bind(Material material) {
+            mTvTaskTitle.setText(material.getTitle());
 
             if (material.getCompletion() == 1) {
-                ivTaskStatus.setImageResource(R.drawable.ic_check_circle_24dp);
+                mIvTaskStatus.setImageResource(R.drawable.ic_check_circle_24dp);
             } else {
-                ivTaskStatus.setImageResource(R.drawable.ic_unchecked_circle_24dp);
+                mIvTaskStatus.setImageResource(R.drawable.ic_unchecked_circle_24dp);
             }
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
                     bundle.putParcelable("material", material);
 
-                    navController.navigate(R.id.action_navigation_explore_course_to_navigation_material, bundle);
+                    int actionId = R.id.action_navigation_explore_course_to_navigation_material;
+
+                    mNavController.navigate(actionId, bundle);
                 }
             });
         }
