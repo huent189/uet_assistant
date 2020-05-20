@@ -7,22 +7,19 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 
+import vnu.uet.mobilecourse.assistant.model.todo.PriorityTodoList;
+
 public class TodoList implements IFirebaseModel {
     private String ownerId;
     private String id;
     private String title;
     private String description;
-//    private int progress;
 
     @Exclude
-    private List<Todo> todos = new ArrayList<>();
-
-    public void setTodos(List<Todo> todos) {
-        this.todos = todos;
-    }
+    private PriorityTodoList todos = new PriorityTodoList();
 
     @Exclude
-    public List<Todo> getTodos() {
+    public PriorityTodoList getTodos() {
         return todos;
     }
 
@@ -79,10 +76,6 @@ public class TodoList implements IFirebaseModel {
         return (float) complete / (float) size;
     }
 
-//    public void setProgress(int progress) {
-//        this.progress = progress;
-//    }
-
     @NonNull
     @Override
     public TodoList clone() {
@@ -91,7 +84,6 @@ public class TodoList implements IFirebaseModel {
         todoList.setId(id);
         todoList.setDescription(description);
         todoList.setTitle(title);
-//        todoList.setProgress(progress);
 
         return todoList;
     }
