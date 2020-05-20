@@ -42,21 +42,20 @@
 
     <TextView
         android:id="@+id/tvAppName"
-        style="@style/Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/sibling_margin"
+        android:layout_marginBottom="@dimen/margin"
         android:text="@string/app_name"
+        android:textSize="@dimen/font_size_large_title"
         app:layout_constraintBottom_toTopOf="@+id/tvShortIntroduce"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
         android:id="@+id/tvShortIntroduce"
-        style="@style/Subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/sibling_margin_x6"
+        android:layout_marginBottom="@dimen/margin_x6"
         android:text="@string/short_introduce"
         android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@+id/btnAccess"
@@ -67,7 +66,7 @@
         android:id="@+id/btnAccess"
         style="@style/Button"
         android:layout_width="260dp"
-        android:layout_marginBottom="@dimen/sibling_margin_x6"
+        android:layout_marginBottom="@dimen/margin_x6"
         android:text="@string/access_courses"
         android:onClick="accessCourses"
         app:layout_constraintBottom_toBottomOf="parent"

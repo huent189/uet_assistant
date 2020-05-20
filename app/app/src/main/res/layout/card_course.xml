@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="@dimen/sibling_margin">
+    android:paddingHorizontal="@dimen/margin">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cvCourseContainer"
         android:layout_width="@dimen/card_course_width"
         android:layout_height="@dimen/card_course_height"
         app:cardBackgroundColor="@color/primary"
-        app:cardCornerRadius="@dimen/view_radius">
+        app:cardCornerRadius="@dimen/large_radius">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -20,8 +20,8 @@
                 android:id="@+id/ivCourseThumbnail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/sibling_margin_x4"
-                android:layout_marginTop="@dimen/sibling_margin_x6"
+                android:layout_marginEnd="@dimen/margin_x4"
+                android:layout_marginTop="@dimen/margin_x6"
                 android:contentDescription="@string/card_course_desc"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.64"
@@ -31,22 +31,22 @@
 
             <TextView
                 android:id="@+id/tvCourseTitle"
-                style="@style/Header2"
+                style="@style/ListItemTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/sibling_margin_x2"
-                android:layout_marginTop="@dimen/sibling_margin_x2"
+                android:layout_marginHorizontal="@dimen/margin_x2"
+                android:layout_marginTop="@dimen/margin_x2"
                 android:text="@string/card_course_desc"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                style="@style/SecondaryText"
                 android:id="@+id/tvCourseId"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/card_course_desc"
-                android:textSize="@dimen/header2_size"
                 app:layout_constraintEnd_toEndOf="@+id/tvCourseTitle"
                 app:layout_constraintStart_toStartOf="@+id/tvCourseTitle"
                 app:layout_constraintTop_toBottomOf="@+id/tvCourseTitle" />

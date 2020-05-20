@@ -3,7 +3,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:paddingStart="@dimen/sibling_margin_x2"
+    android:paddingStart="@dimen/margin_x2"
     android:paddingEnd="88dp"
     android:background="@color/background"
     android:layout_width="match_parent"
@@ -19,7 +19,6 @@
             android:layout_height="wrap_content"
             android:text="Lam, 6:50 PM"
             android:textColor="@color/whiteDisable"
-            android:textSize="@dimen/small_text_size"
             app:layout_constraintBottom_toTopOf="@+id/tvMessage"
             app:layout_constraintStart_toStartOf="@+id/tvMessage"
             app:layout_constraintTop_toTopOf="parent" />
@@ -27,7 +26,7 @@
         <TextView
             android:id="@+id/tvMessage"
             style="@style/ReceiveMessage"
-            android:layout_marginStart="@dimen/sibling_margin"
+            android:layout_marginStart="@dimen/margin"
             android:text="@string/title_chat"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/civAvatar" />

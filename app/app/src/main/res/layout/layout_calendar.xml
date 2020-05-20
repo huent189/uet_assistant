@@ -19,14 +19,14 @@
             android:src="@drawable/ic_arrow_back_24dp"
             android:tint="@color/primaryDark"
             android:background="@drawable/transparent_button_background"
-            android:padding="@dimen/sibling_margin"
+            android:padding="@dimen/margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvCurrentMonth"
-            style="@style/Header2"
+            style="@style/ListItemTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -44,7 +44,7 @@
             android:src="@drawable/ic_arrow_back_24dp"
             android:tint="@color/primaryDark"
             android:background="@drawable/transparent_button_background"
-            android:padding="@dimen/sibling_margin"
+            android:padding="@dimen/margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -54,7 +54,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/sibling_margin"
+        android:paddingVertical="@dimen/margin"
         android:weightSum="7"
         android:background="@color/background">
 
@@ -62,19 +62,20 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/calendar_sunday_title"
+            android:textSize="@dimen/font_size_list_title"
             android:textAlignment="center"
             android:layout_weight="1"/>
 
         <TextView
-            style="@style/Subtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/calendar_monday_title"
+            android:textSize="@dimen/font_size_list_title"
             android:textAlignment="center"
             android:layout_weight="1"/>
 
         <TextView
-            style="@style/Subtitle"
+            android:textSize="@dimen/font_size_list_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/calendar_tuesday_title"
@@ -82,7 +83,7 @@
             android:layout_weight="1"/>
 
         <TextView
-            style="@style/Subtitle"
+            android:textSize="@dimen/font_size_list_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/calendar_wednesday_title"
@@ -90,7 +91,7 @@
             android:layout_weight="1"/>
 
         <TextView
-            style="@style/Subtitle"
+            android:textSize="@dimen/font_size_list_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/calendar_thursday_title"
@@ -98,7 +99,7 @@
             android:layout_weight="1"/>
 
         <TextView
-            style="@style/Subtitle"
+            android:textSize="@dimen/font_size_list_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/calendar_friday_title"
@@ -106,7 +107,7 @@
             android:layout_weight="1"/>
 
         <TextView
-            style="@style/Subtitle"
+            android:textSize="@dimen/font_size_list_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/calendar_saturday_title"

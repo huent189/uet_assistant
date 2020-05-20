@@ -25,18 +25,18 @@
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
             app:collapsedTitleTextAppearance="@style/ToolbarTitleText"
             app:expandedTitleTextAppearance="@style/ToolbarTitleText"
-            app:expandedTitleMarginBottom="@dimen/sibling_margin_x2"
+            app:expandedTitleMarginBottom="@dimen/margin_x2"
             app:expandedTitleMarginStart="60dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/collapsing_toolbar_size">
+                android:layout_height="@dimen/collapsing_toolbar_height">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/sibling_margin_x6"
-                    android:layout_marginStart="@dimen/sibling_margin_x2"
+                    android:layout_marginBottom="@dimen/margin_x6"
+                    android:layout_marginStart="@dimen/margin_x2"
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/isometric_course_thumbnail"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -64,7 +64,7 @@
             android:layout_gravity="center_horizontal"
             app:tabMode="scrollable"
             app:tabRippleColor="@color/transparent"
-            app:tabTextAppearance="@style/Subtitle"
+            app:tabTextAppearance="@style/TabTitle"
             app:tabUnboundedRipple="false">
 
             <com.google.android.material.tabs.TabItem

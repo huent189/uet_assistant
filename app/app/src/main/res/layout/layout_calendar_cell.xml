@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:padding="@dimen/sibling_margin"
+    android:padding="@dimen/margin"
     android:orientation="vertical"
     android:gravity="center"
     android:layout_width="match_parent"
@@ -37,7 +37,7 @@
 
         <TextView
             android:id="@+id/tvDayOfMonth"
-            style="@style/Subtitle"
+            style="@style/ListItemTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -48,7 +48,7 @@
     </FrameLayout>
 
     <LinearLayout
-        android:layout_marginTop="@dimen/calendar_small_margin_x2"
+        android:layout_marginTop="@dimen/small_margin"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -61,14 +61,6 @@
             android:visibility="invisible"
             android:layout_gravity="center_vertical"
             android:tint="@color/accent" />
-
-<!--        <ImageView-->
-<!--            android:layout_marginStart="@dimen/calendar_small_margin"-->
-<!--            android:layout_width="@dimen/calendar_dot_size"-->
-<!--            android:layout_height="@dimen/calendar_dot_size"-->
-<!--            android:scaleX="1.25"-->
-<!--            android:scaleY="1.25"-->
-<!--            android:src="@drawable/ic_add_circle_24dp" />-->
 
     </LinearLayout>
 

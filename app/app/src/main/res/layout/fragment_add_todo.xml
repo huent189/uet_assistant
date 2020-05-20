@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
-        android:padding="@dimen/sibling_margin_x2">
+        android:padding="@dimen/margin_x2">
 
         <EditText
             android:id="@+id/etTodoTitle"
@@ -50,7 +50,7 @@
             android:id="@+id/cvTodoListPicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/sibling_margin_x2"
+            android:layout_marginTop="@dimen/margin_x2"
             app:cardBackgroundColor="@color/transparent"
             app:cardCornerRadius="@dimen/small_radius"
             app:cardElevation="0dp"
@@ -60,7 +60,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:background="@drawable/edit_text_background"
-                android:paddingHorizontal="@dimen/sibling_margin_x2"
+                android:paddingHorizontal="@dimen/margin_x2"
                 android:paddingVertical="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -89,7 +89,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:maxHeight="100dp"
-                    android:layout_marginTop="@dimen/sibling_margin"
+                    android:layout_marginTop="@dimen/margin"
                     app:layout_constraintTop_toBottomOf="@+id/tvTodoListTitle">
 
                     <RadioGroup
@@ -110,7 +110,7 @@
             style="@style/EditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/sibling_margin_x2"
+            android:layout_marginTop="@dimen/margin_x2"
             android:hint="Mô tả"
             android:inputType="textMultiLine"
             android:gravity="top"
@@ -124,7 +124,7 @@
             android:id="@+id/layoutDateTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/sibling_margin_x2"
+            android:layout_marginTop="@dimen/margin_x2"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -138,11 +138,11 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:layout_marginEnd="@dimen/sibling_margin_x2"
+                android:layout_marginEnd="@dimen/margin_x2"
                 android:background="@drawable/primary_button_background"
                 android:drawableTint="@color/background"
-                android:paddingStart="@dimen/sibling_margin_x2"
-                android:paddingEnd="@dimen/sibling_margin"
+                android:paddingStart="@dimen/margin_x2"
+                android:paddingEnd="@dimen/margin"
                 android:drawableEnd="@drawable/ic_calendar_24dp"
                 android:hint="Chọn ngày"/>
 
@@ -156,8 +156,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/primary_button_background"
                 android:drawableTint="@color/background"
-                android:paddingStart="@dimen/sibling_margin_x2"
-                android:paddingEnd="@dimen/sibling_margin"
+                android:paddingStart="@dimen/margin_x2"
+                android:paddingEnd="@dimen/margin"
                 android:drawableEnd="@drawable/ic_alarm_24dp"
                 android:hint="Chọn giờ"/>
 
@@ -168,7 +168,7 @@
             style="@style/Button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/sibling_margin_x4"
+            android:layout_marginTop="@dimen/margin_x4"
             android:text="Lưu công việc"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

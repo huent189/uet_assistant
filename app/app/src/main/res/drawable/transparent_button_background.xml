@@ -14,14 +14,14 @@
     <item android:id="@android:id/mask">
         <shape>
             <solid android:color="@color/background" />
-            <corners android:radius="@dimen/view_radius" />
+            <corners android:radius="@dimen/large_radius" />
         </shape>
     </item>
 
     <item android:id="@android:id/background">
         <shape>
             <solid android:color="@color/background" />
-            <corners android:radius="@dimen/view_radius" />
+            <corners android:radius="@dimen/large_radius" />
         </shape>
     </item>
 </ripple>

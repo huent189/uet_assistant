@@ -2,8 +2,8 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:paddingVertical="@dimen/sibling_margin_x2"
-    android:paddingHorizontal="@dimen/sibling_margin_x2"
+    android:paddingVertical="@dimen/margin_x2"
+    android:paddingHorizontal="@dimen/margin_x2"
     android:background="@drawable/list_item_background"
     android:layout_height="wrap_content">
     
@@ -11,9 +11,10 @@
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/sibling_margin_x4"
+        android:layout_marginEnd="@dimen/margin_x4"
         android:text="Tuần 1"
-        android:textSize="@dimen/header2_size" />
+        android:layout_gravity="center_vertical"
+        android:textSize="@dimen/font_size_list_title" />
     
     <ImageView
         android:id="@+id/ivExpandArrow"

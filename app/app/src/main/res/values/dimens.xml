@@ -1,45 +1,65 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="background_light_size">540dp</dimen>
-    <dimen name="view_radius">30dp</dimen>
+
+    <!-- View radius -->
+    <dimen name="large_radius">30dp</dimen>
+    <dimen name="medium_radius">20dp</dimen>
+    <dimen name="small_radius">18dp</dimen>
+
+    <!-- View radius -->
     <dimen name="stroke_width">2dp</dimen>
-    <dimen name="sibling_margin">8dp</dimen>
-    <dimen name="sibling_margin_x2">16dp</dimen>
-    <dimen name="sibling_margin_x3">24dp</dimen>
-    <dimen name="sibling_margin_x4">32dp</dimen>
-    <dimen name="sibling_margin_x6">48dp</dimen>
-    <dimen name="login_input_field_width">240dp</dimen>
-    <dimen name="button_height">40dp</dimen>
+
+    <!-- Margin collection -->
+    <dimen name="margin">8dp</dimen>
+    <dimen name="margin_x2">16dp</dimen>
+    <dimen name="margin_x3">24dp</dimen>
+    <dimen name="margin_x4">32dp</dimen>
+    <dimen name="margin_x6">48dp</dimen>
+    <dimen name="small_margin">4dp</dimen>
+    <dimen name="small_margin_2">2dp</dimen>
+
+
+
+
+<!--    <dimen name="title_size">30sp</dimen>-->
+<!--    <dimen name="subtitle_size">15sp</dimen>-->
+<!--    <dimen name="header1_size">22sp</dimen>-->
+<!--    <dimen name="header2_size">18sp</dimen>-->
+
+    <!-- Card course view metrics -->
     <dimen name="card_course_height">360dp</dimen>
-    <dimen name="card_course_width">300dp</dimen>
+    <dimen name="card_course_width">280dp</dimen>
+    <dimen name="card_course_padding_start">16dp</dimen>
+    <dimen name="card_course_padding_end">100dp</dimen>
 
-    <dimen name="title_size">30sp</dimen>
-    <dimen name="subtitle_size">15sp</dimen>
-    <dimen name="header1_size">22sp</dimen>
-    <dimen name="header2_size">18sp</dimen>
+    <!-- Button view metrics -->
+    <dimen name="button_size">40dp</dimen>
+    <dimen name="edit_text_height">40dp</dimen>
 
-    <dimen name="card_course_start_padding">16dp</dimen>
-    <dimen name="card_course_end_padding">100dp</dimen>
-
-    <dimen name="circle_button_size">40dp</dimen>
-
-    <dimen name="tab_selected_radius">20dp</dimen>
+    <!-- Tab view metrics -->
     <dimen name="tab_height">36dp</dimen>
 
-    <dimen name="toolbar_size">40dp</dimen>
-    <dimen name="collapsing_toolbar_size">220dp</dimen>
+    <dimen name="collapsing_toolbar_height">220dp</dimen>
 
     <dimen name="img_avatar_size">56dp</dimen>
 
-    <dimen name="small_radius">18dp</dimen>
     <dimen name="small_img_avatar_size">36dp</dimen>
-    <dimen name="small_text_size">12sp</dimen>
+
+<!--    <dimen name="small_text_size">12sp</dimen>-->
 
     <dimen name="calendar_cell_height">56dp</dimen>
     <dimen name="calendar_dot_size">6dp</dimen>
-    <dimen name="calendar_selected_circle_size">28dp</dimen>
-    <dimen name="calendar_small_margin">2dp</dimen>
-    <dimen name="calendar_small_margin_x2">4dp</dimen>
+    <dimen name="calendar_selected_circle_size">32dp</dimen>
+
+    <dimen name="font_size_large_title">30sp</dimen>
+    <dimen name="font_size_page_title">20sp</dimen>
+    <dimen name="font_size_paragraph">14sp</dimen>
+    <dimen name="font_size_list_title">14sp</dimen>
+    <dimen name="font_size_item_title">16sp</dimen>
+    <dimen name="font_size_caption">14sp</dimen>
+    <dimen name="font_size_button_title">14sp</dimen>
+    <dimen name="font_size_tab_title">14sp</dimen>
+    <dimen name="font_size_input_text">14sp</dimen>
+    <dimen name="font_size_small">12sp</dimen>
+
 </resources>
