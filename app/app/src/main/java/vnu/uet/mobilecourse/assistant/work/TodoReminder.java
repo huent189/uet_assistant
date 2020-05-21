@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.work;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -22,6 +23,7 @@ import androidx.work.ListenableWorker;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
 
 public class TodoReminder extends Worker {
     private static final String CHANNEL_ID = TodoReminder.class.getName();
@@ -43,22 +45,16 @@ public class TodoReminder extends Worker {
         String title = data.getString("title");
         String desc = data.getString("description");
 
-        Log.e(CHANNEL_ID, "title: " + title);
-        Log.e(CHANNEL_ID, "description: " + desc);
-
         createNotificationChannel();
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_check_circle_24dp)
-                .setContentTitle(title)
-                .setContentText(desc)
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
+        Notification notification = NotificationHelper.getsInstance()
+                .build(mContext, CHANNEL_ID, R.drawable.ic_check_circle_24dp, title, desc);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
 
         // notificationId is a unique int for each notification that you must define
         assert id != null;
-        notificationManager.notify(id.hashCode(), builder.build());
+        notificationManager.notify(id.hashCode(), notification);
 
         return Result.success();
         // (Returning RETRY tells WorkManager to try this task again
