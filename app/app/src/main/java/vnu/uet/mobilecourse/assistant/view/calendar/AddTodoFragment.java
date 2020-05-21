@@ -23,6 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,20 +32,23 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.transition.AutoTransition;
 import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
+//import androidx.work.BackoffCriteria;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
-import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarSharedViewModel;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.work.TodoReminder;
 
 public class AddTodoFragment extends Fragment {
 
@@ -110,7 +114,7 @@ public class AddTodoFragment extends Fragment {
 
         if (args != null) {
             String currentDate = args.getString("currentDate");
-            mBtnDate.setText(currentDate);
+            mViewModel.setDate(currentDate);
 
             if (currentDate != null) {
                 try {
@@ -207,8 +211,10 @@ public class AddTodoFragment extends Fragment {
                         showFailureToast(stateModel.getError());
                         break;
 
-                    case SUCCESS:
+                    default:
                         Toast.makeText(getContext(),"Tạo thành công", Toast.LENGTH_SHORT).show();
+                        scheduleReminder(todo);
+                        mViewModel.clearHistory();
                         mNavController.navigateUp();
                 }
             });
@@ -216,6 +222,27 @@ public class AddTodoFragment extends Fragment {
         } catch (ParseException e) {
             showFailureToast(e);
         }
+    }
+
+    private void scheduleReminder(Todo todo) {
+        long delayTime = todo.getDeadline() * 1000 - System.currentTimeMillis();
+
+        Data inputData = new Data.Builder()
+                .putString("id", todo.getId())
+                .putString("title", todo.getTitle())
+                .putString("description", todo.getDescription())
+                .build();
+
+        // we then retrieve it inside the NotifyWorker with:
+        // final int DBEventID = getInputData().getInt(DBEventIDTag, ERROR_VALUE);
+
+        OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(TodoReminder.class)
+                .setInitialDelay(delayTime, TimeUnit.MILLISECONDS)
+                .setInputData(inputData)
+                .addTag(todo.getId())
+                .build();
+
+        WorkManager.getInstance(mActivity).enqueue(notificationWork);
     }
 
     private void showFailureToast(Exception e) {

@@ -44,8 +44,8 @@
     </style>
 
     <style name="CircleButton" parent="Button">
-        <item name="android:layout_height">@dimen/button_size</item>
-        <item name="android:layout_width">@dimen/button_size</item>
+        <item name="android:layout_height">@dimen/circle_button_size</item>
+        <item name="android:layout_width">@dimen/circle_button_size</item>
     </style>
 
     <style name="BackgroundHighlight">

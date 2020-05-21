@@ -28,6 +28,19 @@ public class CalendarSharedViewModel extends ViewModel {
         return mTodoRepo.getShallowTodoLists();
     }
 
+    public void setDate(String date) {
+        mTodoDate.postValue(date);
+    }
+
+    public void clearHistory() {
+        mTodoListTitle.postValue(null);
+        mTodoTitle.postValue(null);
+        mTodoDesc.postValue(null);
+        mTodoDate.postValue(null);
+        mTodoTime.postValue(null);
+        mIsCardExpand.postValue(false);
+    }
+
     public IStateLiveData<Todo> addTodo(Todo todo) {
         return mTodoRepo.addTodo(todo);
     }

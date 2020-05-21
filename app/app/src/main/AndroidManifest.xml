@@ -14,12 +14,6 @@
         android:theme="@style/DarkTheme"
         android:windowSoftInputMode="adjustPan">
 
-        <receiver
-            android:name=".AlarmReceiver"
-            android:enabled="true"
-            android:exported="true">
-        </receiver>
-
         <activity android:name=".view.LoginFirebaseActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

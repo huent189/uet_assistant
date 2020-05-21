@@ -68,13 +68,13 @@ public class AddTodoListFragment extends Fragment {
                     @Override
                     public void onChanged(StateModel<TodoList> stateModel) {
                         switch (stateModel.getStatus()) {
-                            case SUCCESS:
-                                mViewModel.getTodoListTitle().postValue(todoList.getTitle());
-                                mNavController.navigateUp();
-                                break;
-
                             case ERROR:
                                 Toast.makeText(getContext(), FAILURE_MESSAGE, Toast.LENGTH_LONG).show();
+                                break;
+
+                            default:
+                                mViewModel.getTodoListTitle().postValue(todoList.getTitle());
+                                mNavController.navigateUp();
                                 break;
                         }
                     }

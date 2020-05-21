@@ -33,8 +33,10 @@
     <dimen name="card_course_padding_end">100dp</dimen>
 
     <!-- Button view metrics -->
-    <dimen name="button_size">40dp</dimen>
-    <dimen name="edit_text_height">40dp</dimen>
+    <dimen name="button_size">48dp</dimen>
+    <dimen name="circle_button_size">40dp</dimen>
+
+    <dimen name="edit_text_height">48dp</dimen>
 
     <!-- Tab view metrics -->
     <dimen name="tab_height">36dp</dimen>
@@ -50,7 +52,7 @@
     <dimen name="calendar_dot_size">6dp</dimen>
     <dimen name="calendar_selected_circle_size">32dp</dimen>
 
-    <dimen name="font_size_large_title">30sp</dimen>
+    <dimen name="font_size_large_title">24sp</dimen>
     <dimen name="font_size_page_title">20sp</dimen>
     <dimen name="font_size_paragraph">14sp</dimen>
     <dimen name="font_size_list_title">14sp</dimen>
@@ -58,7 +60,7 @@
     <dimen name="font_size_caption">14sp</dimen>
     <dimen name="font_size_button_title">14sp</dimen>
     <dimen name="font_size_tab_title">14sp</dimen>
-    <dimen name="font_size_input_text">14sp</dimen>
+    <dimen name="font_size_input_text">16sp</dimen>
     <dimen name="font_size_small">12sp</dimen>
 
 </resources>

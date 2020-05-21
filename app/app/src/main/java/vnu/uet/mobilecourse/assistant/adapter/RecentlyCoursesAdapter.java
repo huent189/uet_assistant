@@ -52,7 +52,7 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Course course = mCourses.get(position);
-        holder.bind(course);
+        holder.bind(course, mNavController);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
             mCvCourseContainer.setCardBackgroundColor(cardColor);
         }
 
-        private void bind(Course course) {
+        void bind(Course course, NavController navController) {
             String courseTitle = course.getTitle();
             String courseCode = course.getCode();
 
@@ -94,8 +94,8 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
                     bundle.putString("courseTitle", courseTitle);
                     bundle.putString("courseCode", courseCode);
 
-//                    navController
-//                            .navigate(R.id.action_navigation_courses_to_navigation_explore_course, bundle);
+                    navController
+                            .navigate(R.id.action_navigation_courses_to_navigation_explore_course, bundle);
                 }
             });
         }

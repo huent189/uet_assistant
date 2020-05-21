@@ -2,6 +2,9 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -10,6 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import androidx.annotation.NonNull;
 import vnu.uet.mobilecourse.assistant.model.firebase.IFirebaseModel;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -112,6 +116,18 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
                 .collection(collectionName)
                 .document(id)
                 .set(document)
+                .addOnCanceledListener(new OnCanceledListener() {
+                    @Override
+                    public void onCanceled() {
+                        System.out.println();
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println();
+                    }
+                })
                 .addOnSuccessListener(aVoid -> {
                     response.postSuccess(document);
                     Log.d(TAG, "Add a new todo list: " + id);

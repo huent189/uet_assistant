@@ -15,8 +15,6 @@
         <Button
             android:id="@+id/btnCourseAccess"
             style="@style/CircleButton"
-            android:layout_width="@dimen/button_size"
-            android:layout_height="@dimen/button_size"
             android:background="@drawable/accent_button_background"
             android:backgroundTint="@color/accent"
             android:foreground="@drawable/ic_play_arrow_16dp"

@@ -32,8 +32,7 @@
         android:id="@+id/etStudentId"
         style="@style/EditText"
         android:layout_width="0dp"
-        android:layout_marginStart="@dimen/margin_x6"
-        android:layout_marginEnd="@dimen/margin_x6"
+        android:layout_marginHorizontal="@dimen/margin_x4"
         android:autofillHints=""
         android:drawableEnd="@drawable/ic_account_circle_28dp"
         android:drawablePadding="@dimen/margin"
@@ -78,9 +77,8 @@
 
     <TextView
         android:id="@+id/tvLoginTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="190dp"
         android:text="@string/welcome"
         android:textSize="@dimen/font_size_large_title"
         app:layout_constraintBottom_toTopOf="@+id/etStudentId"
