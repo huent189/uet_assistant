@@ -1,5 +1,7 @@
 package vnu.uet.mobilecourse.assistant.viewmodel;
 
+import android.os.Bundle;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +16,25 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
 public class CalendarViewModel extends ViewModel {
     private TodoRepository mTodoRepo = TodoRepository.getInstance();
+
+    private Bundle mTodoListViewState;
+    private Bundle mDailyListViewState;
+
+    public void setTodoListViewState(Bundle mTodoListViewState) {
+        this.mTodoListViewState = mTodoListViewState;
+    }
+
+    public Bundle getTodoListViewState() {
+        return mTodoListViewState;
+    }
+
+    public Bundle getDailyListViewState() {
+        return mDailyListViewState;
+    }
+
+    public void setDailyListViewState(Bundle mDailyListViewState) {
+        this.mDailyListViewState = mDailyListViewState;
+    }
 
     public IStateLiveData<DailyTodoList> getDailyTodoList(Date date) {
         return mTodoRepo.getDailyTodoList(date);

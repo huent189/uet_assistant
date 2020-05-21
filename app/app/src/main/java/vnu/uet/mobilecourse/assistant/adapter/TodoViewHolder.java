@@ -45,6 +45,8 @@ public abstract class TodoViewHolder extends ChildViewHolder {
         mTvCategory = itemView.findViewById(R.id.tvCategory);
     }
 
+
+
     void bind(Todo todo, boolean showList, LifecycleOwner lifecycleOwner) {
         // setup title text
         String title = todo.getTitle();

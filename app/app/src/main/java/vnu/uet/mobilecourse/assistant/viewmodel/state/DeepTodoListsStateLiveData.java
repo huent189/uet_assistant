@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import androidx.annotation.NonNull;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
+import vnu.uet.mobilecourse.assistant.model.todo.PriorityTodoList;
 
 public class DeepTodoListsStateLiveData extends StateMediatorLiveData<List<TodoList>> {
 

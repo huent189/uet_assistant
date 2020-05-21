@@ -36,11 +36,15 @@ public class DailyEventAdapter extends RecyclerView.Adapter<TodoViewHolder> {
         TodoViewHolder holder = new TodoViewHolder(view) {
             @Override
             protected IStateLiveData<String> onMarkAsDone(Todo todo) {
+                mOwner.saveRecycleViewState();
+
                 return mOwner.getViewModel().markTodoAsDone(todo.getId());
             }
 
             @Override
             protected IStateLiveData<String> onMarkAsDoing(Todo todo) {
+                mOwner.saveRecycleViewState();
+
                 return mOwner.getViewModel().markTodoAsDoing(todo.getId());
             }
         };
@@ -52,6 +56,8 @@ public class DailyEventAdapter extends RecyclerView.Adapter<TodoViewHolder> {
 
         return holder;
     }
+
+
 
     @Override
     public void onBindViewHolder(@NonNull TodoViewHolder holder, int position) {

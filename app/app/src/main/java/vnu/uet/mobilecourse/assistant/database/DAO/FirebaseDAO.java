@@ -26,37 +26,37 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
 
     private static final String OWNER_ID = User.getInstance().getStudentId();
 
-    private String collectionName;
+    private String mCollectionName;
 
     FirebaseDAO(String collectionName) {
-        this.collectionName = collectionName;
+        this.mCollectionName = collectionName;
     }
 
-    private StateLiveData<List<T>> dataList;
+    private StateLiveData<List<T>> mDataList;
 
     protected abstract T fromSnapshot(DocumentSnapshot snapshot);
 
     @Override
     public StateLiveData<List<T>> readAll() {
-        if (dataList == null) {
+        if (mDataList == null) {
             // initialize with loading state
-            dataList = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
+            mDataList = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
 
             // listen data from firebase
             FirebaseFirestore.getInstance()
                     // reference to collection
-                    .collection(collectionName)
+                    .collection(mCollectionName)
                     // query all document owned by current user
                     .whereEqualTo("ownerId", OWNER_ID)
                     // listen for data change
                     .addSnapshotListener((snapshots, e) -> {
                         if (e != null) {
                             Log.e(TAG, "Listen to data list failed.");
-                            dataList.postError(e);
+                            mDataList.postError(e);
 
                         } else if (snapshots == null) {
                             Log.d(TAG, "Listening to data list.");
-                            dataList.postLoading();
+                            mDataList.postLoading();
 
                         } else {
                             List<T> allLists = snapshots.getDocuments().stream()
@@ -64,12 +64,12 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
                                     .filter(Objects::nonNull)
                                     .collect(Collectors.toList());
 
-                            dataList.postSuccess(allLists);
+                            mDataList.postSuccess(allLists);
                         }
                     });
         }
 
-        return dataList;
+        return mDataList;
     }
 
     @Override
@@ -79,7 +79,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateModel<T> loadingState = new StateModel<>(StateStatus.LOADING);
         StateMediatorLiveData<T> response = new StateMediatorLiveData<>(loadingState);
 
-        response.addSource(dataList, state -> {
+        response.addSource(mDataList, state -> {
             switch (state.getStatus()) {
                 case LOADING:
                     response.postLoading();
@@ -113,7 +113,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateLiveData<T> response = new StateLiveData<>(loadingState);
 
         FirebaseFirestore.getInstance()
-                .collection(collectionName)
+                .collection(mCollectionName)
                 .document(id)
                 .set(document)
                 .addOnCanceledListener(new OnCanceledListener() {
@@ -146,7 +146,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateLiveData<String> response = new StateLiveData<>(loadingState);
 
         FirebaseFirestore.getInstance()
-                .collection(collectionName)
+                .collection(mCollectionName)
                 .document(id)
                 .delete()
                 .addOnSuccessListener(aVoid -> {
@@ -167,7 +167,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateLiveData<String> response = new StateLiveData<>(loadingState);
 
         FirebaseFirestore.getInstance()
-                .collection(collectionName)
+                .collection(mCollectionName)
                 .document(id)
                 .update(changes)
                 .addOnSuccessListener(aVoid -> {
