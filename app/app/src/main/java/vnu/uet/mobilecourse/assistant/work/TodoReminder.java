@@ -2,7 +2,7 @@ package vnu.uet.mobilecourse.assistant.work;
 
 import android.app.Notification;
 import android.content.Context;
-
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.work.Data;
 import androidx.work.Worker;
@@ -29,6 +29,8 @@ public class TodoReminder extends Worker {
         String id = data.getString("id");
         String title = data.getString("title");
         String desc = data.getString("description");
+
+        Log.e("TODO", "doWork: " + title );
 
         Notification notification = NotificationHelper.getsInstance()
                 .build(mContext, CHANNEL_ID, R.drawable.ic_check_circle_24dp, title, desc);
