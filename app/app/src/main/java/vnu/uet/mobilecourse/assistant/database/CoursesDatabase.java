@@ -24,7 +24,7 @@ public abstract class CoursesDatabase extends RoomDatabase {
         if (instance == null) {
             synchronized (CoursesDatabase.class) {
                 if (instance == null) {
-                    instance = Room.databaseBuilder(MyApplication.getInstance(),
+                    instance = Room.databaseBuilder(MyApplication.getInstance().getApplicationContext(),
                             CoursesDatabase.class, "courses_db")
                             .build();
                 }
