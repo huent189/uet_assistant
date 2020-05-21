@@ -42,9 +42,9 @@ public class NotificationHelper {
             String channelId = notification.getChannelId();
             boolean isChannelExist = isChannelExist(context, channelId);
 
-            if (!isChannelExist) {
+//            if (!isChannelExist) {
                 createChannel(context, channelId);
-            }
+//            }
 
             if (notifyManager != null) {
                 notifyManager.notify(id.hashCode(), notification);
