@@ -4,10 +4,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/margin_x2"
     android:background="@drawable/list_item_background">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+        android:padding="@dimen/margin_x2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -62,5 +66,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/layout_disable"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="@color/dark_fade"/>
+
+
+    </FrameLayout>
 
 </LinearLayout>
