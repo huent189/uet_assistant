@@ -45,36 +45,13 @@ public class TodoReminder extends Worker {
         String title = data.getString("title");
         String desc = data.getString("description");
 
-        createNotificationChannel();
-
         Notification notification = NotificationHelper.getsInstance()
                 .build(mContext, CHANNEL_ID, R.drawable.ic_check_circle_24dp, title, desc);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
-
-        // notificationId is a unique int for each notification that you must define
-        assert id != null;
-        notificationManager.notify(id.hashCode(), notification);
+        NotificationHelper.getsInstance().notify(mContext, id, notification);
 
         return Result.success();
         // (Returning RETRY tells WorkManager to try this task again
         // later; FAILURE says not to try again.)
-    }
-
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = CHANNEL_ID;
-            String description = CHANNEL_ID;
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = mContext.getSystemService(NotificationManager.class);
-            assert notificationManager != null;
-            notificationManager.createNotificationChannel(channel);
-        }
     }
 }
