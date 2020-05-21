@@ -108,14 +108,14 @@ public class CalendarFragment extends Fragment {
             collapsingToolbarLayout.setTitle(selectedDate);
         }
 
-        CalendarFragment fragment = this;
+//        CalendarFragment fragment = this;
 
         calendarViewModel.getDailyTodoList(date).observe(getViewLifecycleOwner(), stateModel -> {
             switch (stateModel.getStatus()) {
                 case SUCCESS:
                     DailyTodoList dailyTodoList = stateModel.getData();
 
-                    dailyEventAdapter = new DailyEventAdapter(dailyTodoList, fragment);
+                    dailyEventAdapter = new DailyEventAdapter(dailyTodoList, CalendarFragment.this);
                     rvDailyTodoList.setAdapter(dailyEventAdapter);
 
                     calendarView.notifyTodoSetChanged(getViewLifecycleOwner());

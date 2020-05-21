@@ -92,7 +92,7 @@ public class CourseGradeFragment extends Fragment {
             // get course id from bundle
             mCourseId = args.getInt("courseId");
 
-            Fragment thisFragment = this;
+//            Fragment thisFragment = this;
 
             // shimmer layout for loading state
             ShimmerFrameLayout shimmerRvGrades = root.findViewById(R.id.shimmerRvGrades);
@@ -110,7 +110,7 @@ public class CourseGradeFragment extends Fragment {
                     shimmerRvGrades.setVisibility(View.INVISIBLE);
                     rvGrades.setVisibility(View.VISIBLE);
 
-                    mGradeAdapter = new GradeAdapter(grades, thisFragment);
+                    mGradeAdapter = new GradeAdapter(grades, CourseGradeFragment.this);
                     rvGrades.setAdapter(mGradeAdapter);
                 }
             });

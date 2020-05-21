@@ -60,7 +60,7 @@ public class TodoListsFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         rvTodoLists.setLayoutManager(layoutManager);
 
-        TodoListsFragment thisFragment = this;
+//        TodoListsFragment thisFragment = this;
 
         // get bundle from prev fragment
         if (getArguments() == null) {
@@ -72,7 +72,7 @@ public class TodoListsFragment extends Fragment {
             switch (stateModel.getStatus()) {
                 case SUCCESS:
                     List<TodoList> todoLists = stateModel.getData();
-                    mAdapter = new TodoListAdapter(todoLists, thisFragment);
+                    mAdapter = new TodoListAdapter(todoLists, TodoListsFragment.this);
                     rvTodoLists.setAdapter(mAdapter);
 
                     mAdapter.onRestoreInstanceState(args);
