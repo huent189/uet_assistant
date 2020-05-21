@@ -6,10 +6,9 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
-import vnu.uet.mobilecourse.assistant.R;
+import androidx.core.app.NotificationManagerCompat;
 
 public class NotificationHelper {
     private static final String TAG = NotificationHelper.class.getSimpleName();
@@ -40,6 +39,7 @@ public class NotificationHelper {
 
         try {
             String channelId = notification.getChannelId();
+            Log.e(TAG, "notify: " + channelId);
             boolean isChannelExist = isChannelExist(context, channelId);
 
 //            if (!isChannelExist) {
@@ -47,7 +47,7 @@ public class NotificationHelper {
 //            }
 
             if (notifyManager != null) {
-                notifyManager.notify(id.hashCode(), notification);
+                NotificationManagerCompat.from(context).notify(id.hashCode(), notification);
                 return true;
             }
 

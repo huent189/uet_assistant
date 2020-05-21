@@ -3,6 +3,7 @@ package vnu.uet.mobilecourse.assistant.work;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
@@ -33,6 +34,8 @@ public class TodoReminder extends Worker {
         String id = data.getString("id");
         String title = data.getString("title");
         String desc = data.getString("description");
+
+        Log.e("TODO", "doWork: " + title );
 
         Intent intent = new Intent(mContext, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
