@@ -49,8 +49,6 @@ public abstract class TodoViewHolder extends ChildViewHolder {
         mLayoutDisable = itemView.findViewById(R.id.layout_disable);
     }
 
-    private static final int WARNING_BOUNDARY = 60 * 60 * 1000; // 1 hour
-
     void bind(Todo todo, boolean showList, LifecycleOwner lifecycleOwner) {
         // setup title text
         String title = todo.getTitle();
@@ -149,11 +147,13 @@ public abstract class TodoViewHolder extends ChildViewHolder {
         }
     }
 
-    private static final int RED_COLOR = Color.parseColor("#FFF44336");
-
     protected abstract IStateLiveData<String> onMarkAsDone(Todo todo);
 
     protected abstract IStateLiveData<String> onMarkAsDoing(Todo todo);
+
+    private static final int WARNING_BOUNDARY = 60 * 60 * 1000; // 1 hour
+
+    private static final int RED_COLOR = Color.parseColor("#FFF44336");
 
     private static final String LOADING_TITLE = "Đang tải";
 }

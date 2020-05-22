@@ -40,11 +40,7 @@ public class NotificationHelper {
         try {
             String channelId = notification.getChannelId();
             Log.e(TAG, "notify: " + channelId);
-            boolean isChannelExist = isChannelExist(context, channelId);
-
-//            if (!isChannelExist) {
-                createChannel(context, channelId);
-//            }
+            createChannel(context, channelId);
 
             if (notifyManager != null) {
                 NotificationManagerCompat.from(context).notify(id.hashCode(), notification);
@@ -56,20 +52,6 @@ public class NotificationHelper {
         }
 
         return false;
-    }
-
-    public boolean isChannelExist(@NonNull Context context, @NonNull String channelId) throws Exception {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-
-            if (notificationManager == null) {
-                throw new Exception("Notification Manager not found");
-            }
-
-            return notificationManager.getNotificationChannel(channelId) == null;
-        }
-
-        throw new Exception("App notification hasn't supported for current SDK version");
     }
 
     public void createChannel(@NonNull Context context, @NonNull String id) throws Exception {
