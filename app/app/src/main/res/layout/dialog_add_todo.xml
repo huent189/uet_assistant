@@ -8,15 +8,15 @@
     <EditText
         style="@style/EditText"
         android:layout_width="match_parent"
-        android:layout_marginHorizontal="@dimen/sibling_margin_x2"
-        android:layout_marginBottom="@dimen/sibling_margin_x2"
+        android:layout_marginHorizontal="@dimen/margin_x2"
+        android:layout_marginBottom="@dimen/margin_x2"
         android:hint="Tên công việc"/>
 
     <EditText
         style="@style/EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/sibling_margin_x2"
+        android:layout_marginHorizontal="@dimen/margin_x2"
         android:hint="Mô tả"
         android:paddingVertical="10dp"
         android:maxLines="5"

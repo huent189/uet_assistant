@@ -2,8 +2,8 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:paddingVertical="@dimen/sibling_margin_x2"
-    android:paddingHorizontal="@dimen/sibling_margin_x3"
+    android:paddingVertical="@dimen/margin_x2"
+    android:paddingHorizontal="@dimen/margin_x3"
     android:background="@drawable/list_item_background"
     android:layout_height="wrap_content">
     
@@ -12,12 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/backgroundLight"
-        android:layout_marginEnd="@dimen/sibling_margin_x6"
-        android:textSize="@dimen/header2_size" />
+        android:layout_marginEnd="@dimen/margin_x6"
+        android:textSize="@dimen/font_size_list_title" />
     
     <TextView
         android:id="@+id/ivExpandArrow"
-        android:layout_width="@dimen/sibling_margin_x3"
+        android:layout_width="@dimen/margin_x3"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical|end"
         android:background="@color/backgroundLight" />

@@ -3,6 +3,7 @@ package vnu.uet.mobilecourse.assistant.view.calendar;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,128 +33,114 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.transition.AutoTransition;
 import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
+//import androidx.work.BackoffCriteria;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
-import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
-import vnu.uet.mobilecourse.assistant.view.component.MaxHeightNestedScrollView;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarSharedViewModel;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.work.TodoReminder;
 
 public class AddTodoFragment extends Fragment {
 
+    /**
+     * Shared view model between add _todo and add _todo list
+     */
     private CalendarSharedViewModel mViewModel;
 
-    private RadioGroup rgTodoList;
+    /**
+     * Current activity allocate this fragment
+     */
+    private FragmentActivity mActivity;
 
-    private FragmentActivity activity;
+    /**
+     * Nav controller
+     */
+    private NavController mNavController;
 
-    private EditText etTodoTitle;
-
-    private TextView tvTodoListTitle;
-
-    private EditText etDescription;
-
-    private Button btnDate;
-
-    private Button btnTime;
-
-    private MaxHeightNestedScrollView svRgTodoListContainer;
-
-    private CardView cvTodoListPicker;
-
-    private NavController navController;
+    private RadioGroup mRgTodoList;
+    private EditText mEtTodoTitle;
+    private EditText mEtDescription;
+    private TextView mTvTodoListTitle;
+    private Button mBtnDate;
+    private Button mBtnTime;
+    private CardView mCvTodoListPicker;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        activity = getActivity();
+        mActivity = getActivity();
 
-        if (activity != null) {
-            mViewModel = new ViewModelProvider(activity).get(CalendarSharedViewModel.class);
-            navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
+        if (mActivity != null) {
+            mViewModel = new ViewModelProvider(mActivity).get(CalendarSharedViewModel.class);
+            mNavController = Navigation.findNavController(mActivity, R.id.nav_host_fragment);
         }
 
         View root = inflater.inflate(R.layout.fragment_add_todo, container, false);
 
-        svRgTodoListContainer = root.findViewById(R.id.svRgTodoListContainer);
-//        svRgTodoListContainer.setMaxHeightDensity(100);
-
         initializeToolbar(root);
 
-        cvTodoListPicker = root.findViewById(R.id.cvTodoListPicker);
+        mCvTodoListPicker = root.findViewById(R.id.cvTodoListPicker);
 
-        rgTodoList = root.findViewById(R.id.rgTodoList);
+        mRgTodoList = root.findViewById(R.id.rgTodoList);
 
-        tvTodoListTitle = root.findViewById(R.id.tvTodoListTitle);
+        mTvTodoListTitle = root.findViewById(R.id.tvTodoListTitle);
 
-        mViewModel.getShallowTodoLists().observe(getViewLifecycleOwner(), new Observer<StateModel<List<TodoList>>>() {
-                    @Override
-                    public void onChanged(StateModel<List<TodoList>> stateModel) {
-                        switch (stateModel.getStatus()) {
-                            case LOADING:
-                            case ERROR:
-                                break;
+        mViewModel.getShallowTodoLists().observe(getViewLifecycleOwner(), stateModel -> {
+            switch (stateModel.getStatus()) {
+                case LOADING:
+                case ERROR:
+                    break;
 
-                            case SUCCESS:
-                                generateRadioGroup(inflater, stateModel.getData());
-                                break;
-                        }
-                    }
-                }
+                case SUCCESS:
+                    generateRadioGroup(inflater, stateModel.getData());
+                    break;
+            }
+        }
         );
-
-//        rgTodoList.setOnCheckedChangeListener((group, checkedId) -> {
-//            mViewModel.getShallowTodoLists().observe(getViewLifecycleOwner(), new Observer<StateModel<List<TodoListDocument>>>() {
-//                @Override
-//                public void onChanged(StateModel<List<TodoListDocument>> stateModel) {
-//                    if (stateModel.getStatus() == StateStatus.SUCCESS) {
-//                        if (checkedId < stateModel.getData().size()) {
-//
-//                            TodoListDocument selected = stateModel.getData().get(checkedId);
-//
-//                            if (selected != null)
-//                                tvTodoListTitle.setText(selected.getTitle());
-//                        }
-//                    }
-//                }
-//            });
-//        });
 
         View.OnClickListener onExpandListener = generateOnExpandAnimation();
 
-        cvTodoListPicker.setOnClickListener(onExpandListener);
+        mCvTodoListPicker.setOnClickListener(onExpandListener);
 
         ImageButton btnExpand = root.findViewById(R.id.btnExpand);
         btnExpand.setOnClickListener(onExpandListener);
 
-        etDescription = root.findViewById(R.id.etDescription);
-        etTodoTitle = root.findViewById(R.id.etTodoTitle);
+        mEtDescription = root.findViewById(R.id.etDescription);
+        mEtTodoTitle = root.findViewById(R.id.etTodoTitle);
 
-        btnDate = root.findViewById(R.id.btnDate);
+        mBtnDate = root.findViewById(R.id.btnDate);
         Bundle args = getArguments();
 
         Calendar calendar = Calendar.getInstance();
 
         if (args != null) {
             String currentDate = args.getString("currentDate");
-            btnDate.setText(currentDate);
+            mViewModel.setDate(currentDate);
 
             if (currentDate != null) {
                 try {
                     Date date = DateTimeUtils.SHORT_DATE_FORMAT.parse(currentDate);
 
-                    if (date != null)
-                        calendar.setTime(date);
+                    if (date != null) {
+                        Calendar prev = Calendar.getInstance();
+                        prev.setTime(date);
+
+                        calendar.set(Calendar.YEAR, prev.get(Calendar.YEAR));
+                        calendar.set(Calendar.MONTH, prev.get(Calendar.MONTH));
+                        calendar.set(Calendar.DAY_OF_MONTH, prev.get(Calendar.DAY_OF_MONTH));
+                    }
 
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -163,50 +151,43 @@ public class AddTodoFragment extends Fragment {
         Locale locale = new Locale("vi", "VN");
         Locale.setDefault(locale);
 
-        btnDate.setOnClickListener(v -> {
+        mBtnDate.setOnClickListener(v -> {
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH);
             int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-            DatePickerDialog dialog = new DatePickerDialog(getActivity(),
+            DatePickerDialog dialog = new DatePickerDialog(
+                    getActivity(),
                     new DatePickerDialog.OnDateSetListener() {
-                @Override
-                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                }
-            }, year, month, dayOfMonth);
-
-//            DatePickerDialog dialog = new DatePickerDialog(
-//                    getContext(),
-//                    new DatePickerDialog.OnDateSetListener() {
-//                        @Override
-//                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//
-//                        }
-//                    }, year, month, dayOfMonth);
+                        }
+                    }, year, month, dayOfMonth
+            );
 
             dialog.setButton(DialogInterface.BUTTON_NEGATIVE, CANCEL_BUTTON_TITLE, dialog);
-
-//            SetHeaderMonthDay(dialog, locale);
 
             dialog.show();
 
         });
 
-        btnTime = root.findViewById(R.id.btnTime);
-        btnTime.setOnClickListener(v -> {
-//            Calendar temp = Calendar.getInstance();
-
+        mBtnTime = root.findViewById(R.id.btnTime);
+        mBtnTime.setOnClickListener(v -> {
             int HOUR = calendar.get(Calendar.HOUR);
             int MINUTE = calendar.get(Calendar.MINUTE);
 
             TimePickerDialog dialog = new TimePickerDialog(
                     getContext(),
                     (view, hourOfDay, minute) -> {
-                        String selectedTime = String.format(Locale.ROOT, "%02d:%02d", hourOfDay, minute);
-                        btnTime.setText(selectedTime);
+                        Calendar selected = Calendar.getInstance();
+                        selected.set(Calendar.HOUR, hourOfDay);
+                        selected.set(Calendar.MINUTE, minute);
+
+                        String selectedTime = DateTimeUtils.TIME_12H_FORMAT.format(selected.getTime());
+                        mBtnTime.setText(selectedTime);
                     },
-                    HOUR, MINUTE, true
+                    HOUR, MINUTE, false
             );
 
             dialog.setButton(DialogInterface.BUTTON_NEGATIVE, CANCEL_BUTTON_TITLE, dialog);
@@ -215,26 +196,21 @@ public class AddTodoFragment extends Fragment {
 
         mViewModel.isCardExpand().observe(getViewLifecycleOwner(), expand -> {
             if (expand)
-                rgTodoList.setVisibility(View.VISIBLE);
+                mRgTodoList.setVisibility(View.VISIBLE);
             else
-                rgTodoList.setVisibility(View.GONE);
+                mRgTodoList.setVisibility(View.GONE);
         });
 
-        mViewModel.getTodoDate().observe(getViewLifecycleOwner(), s -> btnDate.setText(s));
+        mViewModel.getTodoDate().observe(getViewLifecycleOwner(), s -> mBtnDate.setText(s));
 
-        mViewModel.getTodoDesc().observe(getViewLifecycleOwner(), s -> etDescription.setText(s));
+        mViewModel.getTodoDesc().observe(getViewLifecycleOwner(), s -> mEtDescription.setText(s));
 
-        mViewModel.getTodoTitle().observe(getViewLifecycleOwner(), s -> etTodoTitle.setText(s));
+        mViewModel.getTodoTitle().observe(getViewLifecycleOwner(), s -> mEtTodoTitle.setText(s));
 
-        mViewModel.getTodoTime().observe(getViewLifecycleOwner(), s -> btnTime.setText(s));
+        mViewModel.getTodoTime().observe(getViewLifecycleOwner(), s -> mBtnTime.setText(s));
 
         Button btnSave = root.findViewById(R.id.btnSave);
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                save();
-            }
-        });
+        btnSave.setOnClickListener(v -> save());
 
         return root;
     }
@@ -242,18 +218,17 @@ public class AddTodoFragment extends Fragment {
     private void save() {
         try {
             Todo todo = generateTodo();
-            mViewModel.addTodo(todo).observe(getViewLifecycleOwner(), new Observer<StateModel<Todo>>() {
-                @Override
-                public void onChanged(StateModel<Todo> stateModel) {
-                    switch (stateModel.getStatus()) {
-                        case ERROR:
-                            showFailureToast(stateModel.getError());
-                            break;
+            mViewModel.addTodo(todo).observe(getViewLifecycleOwner(), stateModel -> {
+                switch (stateModel.getStatus()) {
+                    case ERROR:
+                        showFailureToast(stateModel.getError());
+                        break;
 
-                        case SUCCESS:
-                            Toast.makeText(getContext(),"Tạo thành công", Toast.LENGTH_SHORT).show();
-                            navController.navigateUp();
-                    }
+                    default:
+                        Toast.makeText(getContext(),"Tạo thành công", Toast.LENGTH_SHORT).show();
+                        scheduleReminder(todo);
+                        mViewModel.clearHistory();
+                        mNavController.navigateUp();
                 }
             });
 
@@ -262,18 +237,36 @@ public class AddTodoFragment extends Fragment {
         }
     }
 
+    private void scheduleReminder(Todo todo) {
+        long delayTime = todo.getDeadline() * 1000 - System.currentTimeMillis();
+
+        Data inputData = new Data.Builder()
+                .putString("id", todo.getId())
+                .putString("title", todo.getTitle())
+                .putString("description", todo.getDescription())
+                .build();
+
+        OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(TodoReminder.class)
+                .setInitialDelay(delayTime, TimeUnit.MILLISECONDS)
+                .setInputData(inputData)
+                .addTag(todo.getId())
+                .build();
+
+        WorkManager.getInstance(mActivity).enqueue(notificationWork);
+    }
+
     private void showFailureToast(Exception e) {
         Toast.makeText(getContext(), "Tạo thất bại: " + e.getMessage(), Toast.LENGTH_LONG).show();
     }
 
     private void generateRadioGroup(LayoutInflater inflater, List<TodoList> todoLists) {
         // delete all exist radio button
-        rgTodoList.removeAllViews();
+        mRgTodoList.removeAllViews();
 
         // map todoList to corresponding radio button
         todoLists.forEach(todoList -> {
             RadioButton radioButton = (RadioButton)
-                    inflater.inflate(R.layout.layout_radio_button, rgTodoList, false);
+                    inflater.inflate(R.layout.layout_radio_button, mRgTodoList, false);
 
             String title = todoList.getTitle();
 
@@ -285,29 +278,29 @@ public class AddTodoFragment extends Fragment {
 
             radioButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked)
-                    tvTodoListTitle.setText(title);
+                    mTvTodoListTitle.setText(title);
             });
 
             if (title.equals(mViewModel.getTodoListTitle().getValue())) {
                 radioButton.setChecked(true);
             }
 
-            rgTodoList.addView(radioButton);
+            mRgTodoList.addView(radioButton);
         });
 
         // addition radio button to create new todoList
         RadioButton radioButton = (RadioButton)
-                inflater.inflate(R.layout.layout_radio_button, rgTodoList, false);
+                inflater.inflate(R.layout.layout_radio_button, mRgTodoList, false);
 
         radioButton.setText(ADD_NEW_TODO_LIST_TITLE);
         radioButton.setId(-1);
 
         radioButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked)
-                navController.navigate(R.id.action_navigation_add_todo_to_navigation_add_todo_list);
+                mNavController.navigate(R.id.action_navigation_add_todo_to_navigation_add_todo_list);
         });
 
-        rgTodoList.addView(radioButton);
+        mRgTodoList.addView(radioButton);
     }
 
     private Todo generateTodo() throws ParseException {
@@ -319,29 +312,21 @@ public class AddTodoFragment extends Fragment {
         String ownerId = User.getInstance().getStudentId();
         todo.setOwnerId(ownerId);
 
-        String title = etTodoTitle.getText().toString();
+        String title = mEtTodoTitle.getText().toString();
         todo.setTitle(title);
 
-        String desc = etDescription.getText().toString();
+        String desc = mEtDescription.getText().toString();
         todo.setDescription(desc);
-
-        String todoListTitle = tvTodoListTitle.getText().toString();
-//        mViewModel.getShallowTodoLists()
-//                .getValue().getData().stream()
-//                .filter(todoList -> todoList.getTitle().equals(todoListTitle))
-//                .findFirst()
-//                .orElse(null)
-//                .getTodoListId();
 
         String todoListId = mViewModel.getShallowTodoLists()
                 .getValue().getData()
-                .get(rgTodoList.getCheckedRadioButtonId())
+                .get(mRgTodoList.getCheckedRadioButtonId())
                 .getId();
 
         todo.setTodoListId(todoListId);
 
-        String date = btnDate.getText().toString();
-        String time = btnTime.getText().toString();
+        String date = mBtnDate.getText().toString();
+        String time = mBtnTime.getText().toString();
 
         Date deadlineDate = DateTimeUtils.DATE_TIME_FORMAT.parse(date + " " + time);
         assert deadlineDate != null;
@@ -356,7 +341,7 @@ public class AddTodoFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // get current visibility
-                int currentVisibility = rgTodoList.getVisibility();
+                int currentVisibility = mRgTodoList.getVisibility();
 
                 // on expand case
                 if (currentVisibility == View.VISIBLE) {
@@ -376,7 +361,7 @@ public class AddTodoFragment extends Fragment {
                         public void onTransitionEnd(@NonNull Transition transition) {
                             // change expand state in shared view model to false
                             mViewModel.isCardExpand().postValue(false);
-                            rgTodoList.setVisibility(View.GONE);
+                            mRgTodoList.setVisibility(View.GONE);
                         }
 
                         @Override
@@ -396,15 +381,15 @@ public class AddTodoFragment extends Fragment {
                     });
 
                     // apply created animation
-                    TransitionManager.beginDelayedTransition(cvTodoListPicker, transition);
-                    rgTodoList.setVisibility(View.INVISIBLE);
+                    TransitionManager.beginDelayedTransition(mCvTodoListPicker, transition);
+                    mRgTodoList.setVisibility(View.INVISIBLE);
 
                 } else if (currentVisibility == View.GONE) {
                     // apply expand animation
-                    TransitionManager.beginDelayedTransition(cvTodoListPicker, new AutoTransition());
+                    TransitionManager.beginDelayedTransition(mCvTodoListPicker, new AutoTransition());
 
                     // show radio group when animate finish
-                    rgTodoList.setVisibility(View.VISIBLE);
+                    mRgTodoList.setVisibility(View.VISIBLE);
 
                     // change expand state in shared view model to true
                     mViewModel.isCardExpand().postValue(true);
@@ -418,26 +403,26 @@ public class AddTodoFragment extends Fragment {
      */
     @Override
     public void onPause() {
-        String currentTodoTitle = etTodoTitle.getText().toString();
+        String currentTodoTitle = mEtTodoTitle.getText().toString();
         mViewModel.getTodoTitle().postValue(currentTodoTitle);
 
-        String currentTodoDesc = etDescription.getText().toString();
+        String currentTodoDesc = mEtDescription.getText().toString();
         mViewModel.getTodoDesc().postValue(currentTodoDesc);
 
-        String currentTodoDate = btnDate.getText().toString();
+        String currentTodoDate = mBtnDate.getText().toString();
         mViewModel.getTodoDate().postValue(currentTodoDate);
 
-        String currentTodoTime = btnTime.getText().toString();
+        String currentTodoTime = mBtnTime.getText().toString();
         mViewModel.getTodoTime().postValue(currentTodoTime);
 
         super.onPause();
     }
 
     private void initializeToolbar(View root) {
-        if (activity instanceof AppCompatActivity) {
+        if (mActivity instanceof AppCompatActivity) {
             Toolbar toolbar = root.findViewById(R.id.toolbar);
 
-            ((AppCompatActivity) activity).setSupportActionBar(toolbar);
+            ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
             setHasOptionsMenu(true);
         }
     }

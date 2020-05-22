@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/background"
-            android:padding="@dimen/sibling_margin_x2">
+            android:padding="@dimen/margin_x2">
 
             <EditText
                 android:id="@+id/etTitle"
@@ -100,7 +100,7 @@
                 style="@style/EditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/sibling_margin_x2"
+                android:layout_marginTop="@dimen/margin_x2"
                 android:hint="Mô tả"
                 android:inputType="textMultiLine"
                 android:gravity="top"
@@ -115,7 +115,7 @@
                 style="@style/Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/sibling_margin_x4"
+                android:layout_marginTop="@dimen/margin_x4"
                 android:text="Lưu danh sách"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

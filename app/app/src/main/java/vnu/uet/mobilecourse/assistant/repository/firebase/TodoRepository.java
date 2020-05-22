@@ -11,6 +11,7 @@ import vnu.uet.mobilecourse.assistant.database.DAO.TodoListDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
+import vnu.uet.mobilecourse.assistant.model.todo.TodoComparator;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.DeepTodoListsStateLiveData;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
@@ -77,6 +78,7 @@ public class TodoRepository implements ITodoRepository {
                                     Date deadline = DateTimeUtils.fromSecond(todo.getDeadline());
                                     return DateTimeUtils.isSameDate(date, deadline);
                                 })
+                                .sorted(new TodoComparator())
                                 .collect(Collectors.toList());
 
                         dailyTodoList.addAll(todoByDay);

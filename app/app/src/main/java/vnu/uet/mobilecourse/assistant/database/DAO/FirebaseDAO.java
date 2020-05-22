@@ -3,6 +3,9 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 import android.util.Log;
 
 import com.google.firebase.firestore.CollectionReference;
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -11,6 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import androidx.annotation.NonNull;
 import vnu.uet.mobilecourse.assistant.model.firebase.IFirebaseModel;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -23,6 +27,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
 
     private static final String OWNER_ID = User.getInstance().getStudentId();
 
+
     private FirebaseFirestore db;
     private CollectionReference colRef;
 
@@ -31,15 +36,15 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         colRef = db.collection(collectionName);
     }
 
-    private StateLiveData<List<T>> dataList;
+    private StateLiveData<List<T>> mDataList;
 
     protected abstract T fromSnapshot(DocumentSnapshot snapshot);
 
     @Override
     public StateLiveData<List<T>> readAll() {
-        if (dataList == null) {
+        if (mDataList == null) {
             // initialize with loading state
-            dataList = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
+            mDataList = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
 
             // listen data from firebase
             // query all document owned by current user
@@ -48,11 +53,11 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
                     .addSnapshotListener((snapshots, e) -> {
                         if (e != null) {
                             Log.e(TAG, "Listen to data list failed.");
-                            dataList.postError(e);
+                            mDataList.postError(e);
 
                         } else if (snapshots == null) {
                             Log.d(TAG, "Listening to data list.");
-                            dataList.postLoading();
+                            mDataList.postLoading();
 
                         } else {
                             List<T> allLists = snapshots.getDocuments().stream()
@@ -60,14 +65,11 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
                                     .filter(Objects::nonNull)
                                     .collect(Collectors.toList());
 
-                            dataList.postSuccess(allLists);
+                            mDataList.postSuccess(allLists);
                         }
                     });
         }
-
-
-
-        return dataList;
+        return mDataList;
     }
 
     @Override
@@ -77,7 +79,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateModel<T> loadingState = new StateModel<>(StateStatus.LOADING);
         StateMediatorLiveData<T> response = new StateMediatorLiveData<>(loadingState);
 
-        response.addSource(dataList, state -> {
+        response.addSource(mDataList, state -> {
             switch (state.getStatus()) {
                 case LOADING:
                     response.postLoading();
@@ -110,8 +112,21 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateModel<T> loadingState = new StateModel<>(StateStatus.LOADING);
         StateLiveData<T> response = new StateLiveData<>(loadingState);
 
+
         colRef.document(id)
                 .set(document)
+                .addOnCanceledListener(new OnCanceledListener() {
+                    @Override
+                    public void onCanceled() {
+                        System.out.println();
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        System.out.println();
+                    }
+                })
                 .addOnSuccessListener(aVoid -> {
                     response.postSuccess(document);
                     Log.d(TAG, "Add a new todo list: " + id);

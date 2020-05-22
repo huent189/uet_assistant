@@ -23,14 +23,9 @@ public class FriendProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
+        mViewModel = new ViewModelProvider(this).get(FriendProfileViewModel.class);
+
         return inflater.inflate(R.layout.fragment_friend_profile, container, false);
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(FriendProfileViewModel.class);
-        // TODO: Use the ViewModel
-    }
-
 }

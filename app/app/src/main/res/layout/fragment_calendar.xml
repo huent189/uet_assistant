@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
@@ -20,8 +21,8 @@
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             app:collapsedTitleTextAppearance="@style/ToolbarTitleText"
-            app:expandedTitleTextAppearance="@style/Header2"
-            app:expandedTitleMarginStart="@dimen/sibling_margin_x2">
+            app:expandedTitleTextAppearance="@style/ToolbarTitleText"
+            app:expandedTitleMarginStart="@dimen/margin_x2">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -44,7 +45,7 @@
                     android:background="@drawable/list_item_background"
                     android:gravity="center_vertical"
                     android:paddingEnd="0dp"
-                    android:paddingStart="@dimen/sibling_margin_x2"
+                    android:paddingStart="@dimen/margin_x2"
                     android:text="@string/title_calendar"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -58,14 +59,6 @@
                 android:layout_width="match_parent"
                 app:title="@string/title_all_courses"
                 app:menu="@menu/calendar_toolbar_menu">
-
-                <TextView
-                    android:id="@+id/tvDate"
-                    style="@style/Header2"
-                    android:visibility="gone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical" />
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -84,8 +77,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_marginEnd="@dimen/sibling_margin_x3"
-        android:layout_marginBottom="@dimen/sibling_margin_x3"
+        android:layout_marginEnd="@dimen/margin_x3"
+        android:layout_marginBottom="@dimen/margin_x3"
         android:src="@drawable/ic_add_24dp"
         android:tint="@color/white" />
 

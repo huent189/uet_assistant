@@ -13,6 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/DarkTheme"
         android:windowSoftInputMode="adjustPan">
+
         <activity android:name=".view.LoginFirebaseActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

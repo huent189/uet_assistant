@@ -10,53 +10,66 @@ import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
 public class CalendarSharedViewModel extends ViewModel {
-    private MutableLiveData<String> todoListTitle = new MutableLiveData<>();
 
-    private MutableLiveData<String> todoTitle = new MutableLiveData<>();
+    private TodoRepository mTodoRepo = TodoRepository.getInstance();
 
-    private MutableLiveData<String> todoDesc = new MutableLiveData<>();
-
-    private MutableLiveData<String> todoDate = new MutableLiveData<>();
-
-    private MutableLiveData<String> todoTime = new MutableLiveData<>();
-
-    private MutableLiveData<Boolean> isCardExpand = new MutableLiveData<>();
-
-    private TodoRepository todoRepo = TodoRepository.getInstance();
+    /**
+     * use live data in shared view model
+     * in order to save state between fragments
+     */
+    private MutableLiveData<String> mTodoListTitle = new MutableLiveData<>();
+    private MutableLiveData<String> mTodoTitle = new MutableLiveData<>();
+    private MutableLiveData<String> mTodoDesc = new MutableLiveData<>();
+    private MutableLiveData<String> mTodoDate = new MutableLiveData<>();
+    private MutableLiveData<String> mTodoTime = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mIsCardExpand = new MutableLiveData<>();
 
     public IStateLiveData<List<TodoList>> getShallowTodoLists() {
-        return todoRepo.getShallowTodoLists();
+        return mTodoRepo.getShallowTodoLists();
+    }
+
+    public void setDate(String date) {
+        mTodoDate.postValue(date);
+    }
+
+    public void clearHistory() {
+        mTodoListTitle.postValue(null);
+        mTodoTitle.postValue(null);
+        mTodoDesc.postValue(null);
+        mTodoDate.postValue(null);
+        mTodoTime.postValue(null);
+        mIsCardExpand.postValue(false);
     }
 
     public IStateLiveData<Todo> addTodo(Todo todo) {
-        return todoRepo.addTodo(todo);
+        return mTodoRepo.addTodo(todo);
     }
 
     public IStateLiveData<TodoList> addTodoList(TodoList todoList) {
-        return todoRepo.addTodoList(todoList);
+        return mTodoRepo.addTodoList(todoList);
     }
 
     public MutableLiveData<Boolean> isCardExpand() {
-        return isCardExpand;
+        return mIsCardExpand;
     }
 
     public MutableLiveData<String> getTodoListTitle() {
-        return todoListTitle;
+        return mTodoListTitle;
     }
 
     public MutableLiveData<String> getTodoTitle() {
-        return todoTitle;
+        return mTodoTitle;
     }
 
     public MutableLiveData<String> getTodoDesc() {
-        return todoDesc;
+        return mTodoDesc;
     }
 
     public MutableLiveData<String> getTodoDate() {
-        return todoDate;
+        return mTodoDate;
     }
 
     public MutableLiveData<String> getTodoTime() {
-        return todoTime;
+        return mTodoTime;
     }
 }

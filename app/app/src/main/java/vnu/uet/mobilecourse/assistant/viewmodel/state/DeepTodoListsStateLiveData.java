@@ -5,117 +5,111 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
+import vnu.uet.mobilecourse.assistant.model.todo.PriorityTodoList;
 
 public class DeepTodoListsStateLiveData extends StateMediatorLiveData<List<TodoList>> {
 
-    private List<TodoList> shallowTodoLists;
+    private List<TodoList> mShallowLists;
+    private List<Todo> mItems;
 
-    private List<Todo> todos;
-
-    private boolean listSuccess;
-
-    private boolean todoSuccess;
+    private boolean mListSuccess;
+    private boolean mItemSuccess;
 
     public DeepTodoListsStateLiveData(@NonNull StateLiveData<List<TodoList>> shallowTodoLists,
                                       @NonNull StateLiveData<List<Todo>> todos) {
         super(new StateModel<>(StateStatus.LOADING));
 
-        this.shallowTodoLists = new ArrayList<>();
+        this.mShallowLists = new ArrayList<>();
+        this.mItems = new ArrayList<>();
 
-        this.todos = new ArrayList<>();
+        addSource(shallowTodoLists, stateModel -> {
+            switch (stateModel.getStatus()) {
+                case LOADING:
+                    mListSuccess = false;
+                    postLoading();
+                    break;
 
-        addSource(shallowTodoLists, new Observer<StateModel<List<TodoList>>>() {
-            @Override
-            public void onChanged(StateModel<List<TodoList>> stateModel) {
-                switch (stateModel.getStatus()) {
-                    case LOADING:
-                        listSuccess = false;
-                        postLoading();
-                        break;
+                case ERROR:
+                    mListSuccess = false;
+                    postError(stateModel.getError());
+                    break;
 
-                    case ERROR:
-                        listSuccess = false;
-                        postError(stateModel.getError());
-                        break;
+                case SUCCESS:
+                    mListSuccess = true;
 
-                    case SUCCESS:
-                        listSuccess = true;
+                    List<TodoList> todoLists = stateModel.getData();
+                    updateShallowTodoLists(todoLists);
 
-                        List<TodoList> todoLists = stateModel.getData();
-                        updateShallowTodoLists(todoLists);
+                    if (mListSuccess && mItemSuccess) {
+                        List<TodoList> value = combineData();
+                        postSuccess(value);
+                    }
 
-                        if (listSuccess && todoSuccess) {
-                            List<TodoList> value = combineData();
-                            postSuccess(value);
-                        }
-
-                        break;
-                }
+                    break;
             }
         });
 
-        addSource(todos, new Observer<StateModel<List<Todo>>>() {
-            @Override
-            public void onChanged(StateModel<List<Todo>> stateModel) {
-                switch (stateModel.getStatus()) {
-                    case LOADING:
-                        todoSuccess = false;
-                        postLoading();
-                        break;
+        addSource(todos, stateModel -> {
+            switch (stateModel.getStatus()) {
+                case LOADING:
+                    mItemSuccess = false;
+                    postLoading();
+                    break;
 
-                    case ERROR:
-                        todoSuccess = false;
-                        postError(stateModel.getError());
-                        break;
+                case ERROR:
+                    mItemSuccess = false;
+                    postError(stateModel.getError());
+                    break;
 
-                    case SUCCESS:
-                        todoSuccess = true;
+                case SUCCESS:
+                    mItemSuccess = true;
 
-                        List<Todo> todos = stateModel.getData();
-                        updateTodos(todos);
+                    List<Todo> items = stateModel.getData();
+                    updateTodos(items);
 
-                        if (todoSuccess && listSuccess) {
-                            List<TodoList> value = combineData();
-                            postSuccess(value);
-                        }
+                    if (mItemSuccess && mListSuccess) {
+                        List<TodoList> value = combineData();
+                        postSuccess(value);
+                    }
 
-                        break;
-                }
+                    break;
             }
         });
     }
 
-    public void updateShallowTodoLists(List<TodoList> newList) {
+    private void updateShallowTodoLists(List<TodoList> newList) {
         if (newList == null)
             return;
 
-        shallowTodoLists.clear();
-        shallowTodoLists.addAll(newList);
+        mShallowLists.clear();
+        mShallowLists.addAll(newList);
     }
 
-    public void updateTodos(List<Todo> newList) {
+    private void updateTodos(List<Todo> newList) {
         if (newList == null)
             return;
 
-        todos.clear();
-        todos.addAll(newList);
+        mItems.clear();
+        mItems.addAll(newList);
     }
 
-    public List<TodoList> combineData() {
-        List<TodoList> result = shallowTodoLists.stream()
-                .map(TodoList::clone)
+    private List<TodoList> combineData() {
+        List<TodoList> result = mShallowLists.stream()
+                .map(list -> {
+                    TodoList output = list.clone();
+                    output.clear();
+                    return output;
+                })
                 .collect(Collectors.toList());
 
-        todos.forEach(todo -> {
+        mItems.forEach(todo -> {
             String todoListId = todo.getTodoListId();
 
             result.forEach(todoList -> {
                 if (todoList.getId().equals(todoListId)) {
-                    if (!todoList.contains(todo))
-                        todoList.add(todo);
+                    todoList.add(todo);
                 }
             });
         });

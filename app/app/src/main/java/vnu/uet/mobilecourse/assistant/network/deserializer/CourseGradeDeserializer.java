@@ -20,6 +20,9 @@ public class CourseGradeDeserializer implements JsonDeserializer<Grade[]> {
                 if(g.getGradedDate() == 0){
                     g.setUserGrade(-1.0);
                 }
+                if(g.getParentType().equals("course")){
+                    g.setType("course");
+                }
             }
         }
 

@@ -4,65 +4,77 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/sibling_margin_x2"
     android:background="@drawable/list_item_background">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+        android:padding="@dimen/margin_x2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tvTodoTitle"
-            android:layout_width="wrap_content"
+            style="@style/ListItemTitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Todo Title"
-            android:textSize="@dimen/header2_size"
+            android:layout_marginEnd="@dimen/margin_x2"
+            app:layout_constraintEnd_toStartOf="@+id/cbDone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/tvCategory"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/sibling_margin"
-            android:layout_marginEnd="@dimen/sibling_margin_x2"
-            app:layout_constraintEnd_toStartOf="@+id/cbDone"
+            android:layout_marginStart="@dimen/margin_x2"
+            android:background="@drawable/send_message_background"
+            android:backgroundTint="@color/primaryDark"
+            android:paddingHorizontal="@dimen/small_margin"
+            android:textSize="@dimen/font_size_caption"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvDeadline"
+            app:layout_constraintTop_toTopOf="@+id/tvDeadline" />
+
+        <ImageView
+            android:id="@+id/ivAlarm"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_alarm_24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvDeadline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvTodoTitle">
+            app:layout_constraintTop_toTopOf="@+id/tvDeadline" />
 
-            <TextView
-                android:id="@+id/tvCategory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/sibling_margin_x3"
-                android:background="@drawable/send_message_background"
-                android:backgroundTint="@color/primaryDark"
-                android:paddingHorizontal="@dimen/calendar_small_margin_x2"
-                android:text="Category" />
-
-            <ImageView
-                android:id="@+id/ivAlarm"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_alarm_24dp" />
-
-            <TextView
-                android:id="@+id/tvDeadline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="05/04 19:30" />
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/tvDeadline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin"
+            android:textSize="@dimen/font_size_caption"
+            app:layout_constraintStart_toEndOf="@+id/ivAlarm"
+            app:layout_constraintTop_toBottomOf="@+id/tvTodoTitle" />
 
         <CheckBox
             android:id="@+id/cbDone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/whiteDisable"
+            android:buttonTint="@color/primary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/layout_disable"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="@color/dark_fade"/>
+
+
+    </FrameLayout>
 
 </LinearLayout>

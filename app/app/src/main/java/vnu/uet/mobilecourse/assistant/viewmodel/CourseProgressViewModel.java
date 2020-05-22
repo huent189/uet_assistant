@@ -9,13 +9,13 @@ import vnu.uet.mobilecourse.assistant.repository.CourseRepository;
 
 public class CourseProgressViewModel extends ViewModel {
 
-    private CourseRepository courseRepo = CourseRepository.getInstance();
+    private CourseRepository mCourseRepo = CourseRepository.getInstance();
 
     public CourseRepository getCourseRepository() {
-        return courseRepo;
+        return mCourseRepo;
     }
 
     public LiveData<List<CourseContent>> getContent(int courseId) {
-        return courseRepo.getContent(courseId);
+        return mCourseRepo.getContent(courseId);
     }
 }

@@ -18,10 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.TodoListAdapter;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
+import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,59 +35,108 @@ import java.util.List;
 
 public class TodoListsFragment extends Fragment {
 
-    private CalendarViewModel viewModel;
-
-    private FragmentActivity activity;
-
-    private NavController navController;
+    private CalendarViewModel mViewModel;
+    private FragmentActivity mActivity;
+    private NavController mNavController;
+    private TodoListAdapter mAdapter;
+    private RecyclerView mRvTodoLists;
+    private Bundle mRecyclerViewState;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        activity = getActivity();
+        mActivity = getActivity();
 
-        assert activity != null;
-        viewModel = new ViewModelProvider(activity).get(CalendarViewModel.class);
+        if (mActivity != null) {
+            mViewModel = new ViewModelProvider(mActivity).get(CalendarViewModel.class);
+        }
 
         View root = inflater.inflate(R.layout.fragment_todo_lists, container, false);
 
         initializeToolbar(root);
 
-        if (activity != null)
-            navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
+        if (mActivity != null) {
+            mNavController = Navigation
+                    .findNavController(mActivity, R.id.nav_host_fragment);
+        }
 
-
-        RecyclerView rvTodoLists = root.findViewById(R.id.rvTodoLists);
+        mRvTodoLists = root.findViewById(R.id.rvTodoLists);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        rvTodoLists.setLayoutManager(layoutManager);
+        mRvTodoLists.setLayoutManager(layoutManager);
 
-        TodoListsFragment thisFragment = this;
+//        TodoListsFragment thisFragment = this;
 
-        TodoRepository.getInstance().getAllTodoLists().observe(getViewLifecycleOwner(), new Observer<StateModel<List<TodoList>>>() {
-            @Override
-            public void onChanged(StateModel<List<TodoList>> stateModel) {
-                switch (stateModel.getStatus()) {
-                    case SUCCESS:
-                        List<TodoList> todoLists = stateModel.getData();
-                        TodoListAdapter adapter = new TodoListAdapter(todoLists, thisFragment);
-                        rvTodoLists.setAdapter(adapter);
-                        break;
-                }
+//        // get bundle from prev fragment
+//        if (getArguments() == null) {
+//            setArguments(new Bundle());
+//        }
+//
+//        Bundle args = getArguments();
 
+        mRecyclerViewState = mViewModel.getTodoListViewState();
+//        restoreRecycleViewState();
+
+        mViewModel.getAllTodoLists().observe(getViewLifecycleOwner(), stateModel -> {
+            switch (stateModel.getStatus()) {
+                case SUCCESS:
+                    List<TodoList> todoLists = stateModel.getData();
+                    mAdapter = new TodoListAdapter(todoLists, TodoListsFragment.this);
+                    mRvTodoLists.setAdapter(mAdapter);
+//                    mAdapter.onRestoreInstanceState(args);
+
+                    restoreRecycleViewState();
+
+                    break;
+
+                case LOADING:
+                case ERROR:
+                    if (mAdapter != null) {
+//                        mAdapter.onSaveInstanceState(args);
+                    }
+
+                    break;
             }
         });
 
         return root;
     }
 
+    private static final String KEY_RECYCLER_STATE = TodoListAdapter.class.getName();
+
+    public void saveRecycleViewState() {
+        mRecyclerViewState = new Bundle();
+        Parcelable onSaveInstanceState = mRvTodoLists.getLayoutManager().onSaveInstanceState();
+        mRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, onSaveInstanceState);
+        mAdapter.onSaveInstanceState(mRecyclerViewState);
+    }
+
+    public void restoreRecycleViewState() {
+        if (mRecyclerViewState != null) {
+            mAdapter.onRestoreInstanceState(mRecyclerViewState);
+            Parcelable onSaveInstanceState = mRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
+            mRvTodoLists.getLayoutManager().onRestoreInstanceState(onSaveInstanceState);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        saveRecycleViewState();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        restoreRecycleViewState();
+    }
+
     private void initializeToolbar(View root) {
-        if (activity instanceof AppCompatActivity) {
+        if (mActivity instanceof AppCompatActivity) {
             Toolbar toolbar = root.findViewById(R.id.toolbar);
-
-            ((AppCompatActivity) activity).setSupportActionBar(toolbar);
-//            ((AppCompatActivity) activity).getSupportActionBar().setDisplayShowTitleEnabled(true);
-
+            ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
             setHasOptionsMenu(true);
         }
     }
@@ -100,13 +151,15 @@ public class TodoListsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         if (item.getItemId() == R.id.action_view_calendar) {
-            navController.navigate(R.id.action_navigation_todo_lists_to_navigation_calendar);
+            saveRecycleViewState();
+            mViewModel.setTodoListViewState(mRecyclerViewState);
+            mNavController.navigateUp();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     public CalendarViewModel getViewModel() {
-        return viewModel;
+        return mViewModel;
     }
 }

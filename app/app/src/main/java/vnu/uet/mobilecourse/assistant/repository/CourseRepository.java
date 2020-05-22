@@ -82,6 +82,7 @@ public class CourseRepository {
         return dao.getGrades(courseId);
     }
     public LiveData<Grade> getTotalGrades(int courseId){
+        updateCourseGrade(courseId);
         return dao.getTotalGrade(courseId);
     }
     public void updateCourseGrade(int courseId) {

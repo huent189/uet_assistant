@@ -4,38 +4,32 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.transition.TransitionManager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
-import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.repository.FirebaseAuthenticationService;
 import vnu.uet.mobilecourse.assistant.repository.UserRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 
 public class LoginFirebaseActivity extends AppCompatActivity {
 
-    private ConstraintLayout layoutVerifySuccess;
-
-    private ConstraintLayout layoutVerifyFail;
-
-    private LinearLayout layoutVerifying;
+    private ViewGroup mLayoutVerifySuccess;
+    private ViewGroup mLayoutVerifyFail;
+    private ViewGroup mLayoutVerifying;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_firebase);
 
-        layoutVerifySuccess = findViewById(R.id.layoutVerifySuccess);
-        layoutVerifyFail = findViewById(R.id.layoutVerifyFail);
-        layoutVerifying = findViewById(R.id.layoutVerifying);
+        mLayoutVerifySuccess = findViewById(R.id.layoutVerifySuccess);
+        mLayoutVerifyFail = findViewById(R.id.layoutVerifyFail);
+        mLayoutVerifying = findViewById(R.id.layoutVerifying);
 
         String deepLink = getIntent().getDataString();
 
@@ -65,16 +59,20 @@ public class LoginFirebaseActivity extends AppCompatActivity {
         }
     }
 
+    private void setupReminders() {
+
+    }
+
     private void showSuccessLayout() {
-        layoutVerifySuccess.setVisibility(View.VISIBLE);
-        layoutVerifyFail.setVisibility(View.GONE);
-        layoutVerifying.setVisibility(View.GONE);
+        mLayoutVerifySuccess.setVisibility(View.VISIBLE);
+        mLayoutVerifyFail.setVisibility(View.GONE);
+        mLayoutVerifying.setVisibility(View.GONE);
     }
 
     private void showErrorLayout() {
-        layoutVerifySuccess.setVisibility(View.GONE);
-        layoutVerifyFail.setVisibility(View.VISIBLE);
-        layoutVerifying.setVisibility(View.GONE);
+        mLayoutVerifySuccess.setVisibility(View.GONE);
+        mLayoutVerifyFail.setVisibility(View.VISIBLE);
+        mLayoutVerifying.setVisibility(View.GONE);
     }
 
     private void navigateToMyCourses() {

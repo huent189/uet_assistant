@@ -27,14 +27,15 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Title"
+                        android:textSize="@dimen/font_size_large_title"
+                        android:textStyle="bold"
                         android:layout_width="140dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/sibling_margin_x4"
+                        android:layout_marginTop="@dimen/margin_x4"
                         android:background="@drawable/primary_button_background"
                         android:backgroundTint="@color/backgroundLight"
                         android:layout_gravity="center_horizontal"
-                        android:paddingHorizontal="@dimen/sibling_margin_x2" />
+                        android:paddingHorizontal="@dimen/margin_x2" />
 
                 </LinearLayout>
 
@@ -43,14 +44,15 @@
 
             <TextView
             android:id="@+id/tvGradeProgress"
-            style="@style/Title"
+            android:textSize="@dimen/font_size_large_title"
+            android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/sibling_margin_x4"
+            android:layout_marginTop="@dimen/margin_x4"
             android:background="@drawable/primary_button_background"
             android:backgroundTint="@color/primary"
             android:layout_gravity="center_horizontal"
-            android:paddingHorizontal="@dimen/sibling_margin_x2"
+            android:paddingHorizontal="@dimen/margin_x2"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,10 +62,9 @@
 
         <TextView
             android:id="@+id/textView"
-            style="@style/Subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/sibling_margin_x2"
+            android:layout_marginTop="@dimen/margin_x2"
             android:layout_gravity="center_horizontal"
             android:text="@string/desc_average_grade"
             app:layout_constraintEnd_toEndOf="parent"
@@ -99,7 +100,7 @@
             android:id="@+id/rvGrades"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/sibling_margin_x2"
+            android:layout_marginTop="@dimen/margin_x2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -115,7 +115,18 @@ public class ClassMateAdapter extends RecyclerView.Adapter<ClassMateAdapter.Clas
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            mClassMates = ((List<String>) results.values);
+            mClassMates = new ArrayList<>();
+
+            if (results.values instanceof List) {
+                List list = (List) results.values;
+
+                for (Object item : list) {
+                    if (item instanceof String) {
+                        mClassMates.add((String) item);
+                    }
+                }
+            }
+
             notifyDataSetChanged();
         }
     }

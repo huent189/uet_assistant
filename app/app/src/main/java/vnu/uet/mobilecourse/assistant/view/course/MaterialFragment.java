@@ -27,7 +27,7 @@ public class MaterialFragment extends Fragment {
 
     private MaterialViewModel mViewModel;
 
-    private FragmentActivity activity;
+    private FragmentActivity mActivity;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -37,7 +37,7 @@ public class MaterialFragment extends Fragment {
 
         mViewModel = new ViewModelProvider(this).get(MaterialViewModel.class);
 
-        activity = getActivity();
+        mActivity = getActivity();
 
         Toolbar toolbar = initializeToolbar(root);
 
@@ -72,7 +72,7 @@ public class MaterialFragment extends Fragment {
                     tvAttachment.setOnClickListener(v -> {
                         String fileUrl = material.getFileUrl();
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(fileUrl));
-                        activity.startActivity(intent);
+                        mActivity.startActivity(intent);
                     });
                 }
 
@@ -91,10 +91,10 @@ public class MaterialFragment extends Fragment {
     }
 
     private Toolbar initializeToolbar(View root) {
-        if (activity instanceof AppCompatActivity) {
+        if (mActivity instanceof AppCompatActivity) {
             Toolbar toolbar = root.findViewById(R.id.toolbar);
 
-            ((AppCompatActivity) activity).setSupportActionBar(toolbar);
+            ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
             setHasOptionsMenu(true);
 
             return toolbar;

@@ -1,7 +1,6 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,13 +20,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private static final int MSG_RECEIVE_TYPE = 0;
     private static final int MSG_SEND_TYPE = 1;
 
-    private Fragment owner;
-    private List<String> messages;
-    private NavController navController;
+    private Fragment mOwner;
+    private List<String> mMessages;
+    private NavController mNavController;
 
     public MessageAdapter(List<String> messages, Fragment owner) {
-        this.messages = messages;
-        this.owner = owner;
+        this.mMessages = messages;
+        this.mOwner = owner;
     }
 
     @NonNull
@@ -41,40 +40,39 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             holder = generateSendMessageViewHolder(parent);
         }
 
-        Activity activity = owner.getActivity();
+        Activity activity = mOwner.getActivity();
 
-        if (activity != null)
-            navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
+        if (activity != null) {
+            mNavController = Navigation
+                    .findNavController(activity, R.id.nav_host_fragment);
+        }
 
         return holder;
     }
 
     private MessageViewHolder generateReceiveMessageViewHolder(@NonNull ViewGroup parent) {
-        LayoutInflater layoutInflater = owner.getLayoutInflater();
-
-        View view = layoutInflater.inflate(R.layout.layout_receive_message_item, parent, false);
+        View view = mOwner.getLayoutInflater()
+                .inflate(R.layout.layout_receive_message_item, parent, false);
 
         return new ReceiveMessageViewHolder(view);
     }
 
     private MessageViewHolder generateSendMessageViewHolder(@NonNull ViewGroup parent) {
-        LayoutInflater layoutInflater = owner.getLayoutInflater();
-
-        View view = layoutInflater.inflate(R.layout.layout_send_message_item, parent, false);
+        View view =  mOwner.getLayoutInflater()
+                .inflate(R.layout.layout_send_message_item, parent, false);
 
         return new SendMessageViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
-        String message = messages.get(position);
-
-        holder.tvMessage.setText(message);
+        String message = mMessages.get(position);
+        holder.mTvMessage.setText(message);
     }
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        return mMessages.size();
     }
 
     @Override
@@ -82,33 +80,32 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return position % 2;
     }
 
-    public class SendMessageViewHolder extends MessageViewHolder {
-
-        public SendMessageViewHolder(@NonNull View itemView) {
+    public static class SendMessageViewHolder extends MessageViewHolder {
+        SendMessageViewHolder(@NonNull View itemView) {
             super(itemView);
         }
     }
 
-    public class ReceiveMessageViewHolder extends MessageViewHolder {
-        private CircleImageView civAvatar;
+    public static class ReceiveMessageViewHolder extends MessageViewHolder {
+        private CircleImageView mCivAvatar;
 
-        public ReceiveMessageViewHolder(@NonNull View itemView) {
+        ReceiveMessageViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            civAvatar = itemView.findViewById(R.id.civAvatar);
+            mCivAvatar = itemView.findViewById(R.id.civAvatar);
         }
     }
 
-    public abstract class MessageViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvTime;
+    abstract static class MessageViewHolder extends RecyclerView.ViewHolder {
+        private TextView mTvTime;
 
-        private TextView tvMessage;
+        private TextView mTvMessage;
 
-        public MessageViewHolder(@NonNull View itemView) {
+        MessageViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            tvTime = itemView.findViewById(R.id.tvTime);
-            tvMessage = itemView.findViewById(R.id.tvMessage);
+            mTvTime = itemView.findViewById(R.id.tvTime);
+            mTvMessage = itemView.findViewById(R.id.tvMessage);
         }
     }
 

@@ -1,9 +1,6 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
-import android.media.Image;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,79 +17,86 @@ import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.Grade;
 
-public class GradeAdapter extends RecyclerView.Adapter<GradeAdapter.ViewHolder> {
-    private static final String TAG = GradeAdapter.class.getSimpleName();
+public class GradeAdapter extends RecyclerView.Adapter<GradeAdapter.GradeViewHolder> {
 
-    private List<Grade> grades;
-
-    private Fragment owner;
-
-    private NavController navController;
+    private List<Grade> mGrades;
+    private Fragment mOwner;
+    private NavController mNavController;
 
     public GradeAdapter(List<Grade> grades, Fragment owner) {
-        this.grades = grades;
-        this.owner = owner;
+        this.mGrades = grades;
+        this.mOwner = owner;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = owner.getLayoutInflater();
+    public GradeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = mOwner.getLayoutInflater()
+                .inflate(R.layout.layout_grade_item, parent, false);
 
-        View view = layoutInflater.inflate(R.layout.layout_grade_item, parent, false);
+        Activity activity = mOwner.getActivity();
 
-        ViewHolder holder = new ViewHolder(view);
+        if (activity != null) {
+            mNavController = Navigation
+                    .findNavController(activity, R.id.nav_host_fragment);
+        }
 
-        Activity activity = owner.getActivity();
-
-        if (activity != null)
-            navController = Navigation.findNavController(activity, R.id.nav_host_fragment);
-
-        return holder;
+        return new GradeViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Log.d(TAG, "call onBindViewHolder");
-
-        final Grade currentGrade = grades.get(position);
-
+    public void onBindViewHolder(@NonNull GradeViewHolder holder, int position) {
+        final Grade currentGrade = mGrades.get(position);
         holder.bind(currentGrade);
     }
 
 
     @Override
     public int getItemCount() {
-        return grades.size();
+        return mGrades.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvTitle;
+    static class GradeViewHolder extends RecyclerView.ViewHolder {
+        private TextView mTvTitle;
 
-        private TextView tvGrade;
+        private TextView mTvGrade;
 
-        private ImageView ivThumbnail;
+        private ImageView mIvThumbnail;
 
-        public ViewHolder(@NonNull View view) {
+        GradeViewHolder(@NonNull View view) {
             super(view);
 
-            tvTitle = view.findViewById(R.id.tvTitle);
-            tvGrade = view.findViewById(R.id.tvGrade);
-            ivThumbnail = view.findViewById(R.id.ivThumbnail);
+            mTvTitle = view.findViewById(R.id.tvTitle);
+            mTvGrade = view.findViewById(R.id.tvGrade);
+            mIvThumbnail = view.findViewById(R.id.ivThumbnail);
         }
 
-        public void bind(Grade grade) {
+        void bind(Grade grade) {
             String title = grade.getName();
-            tvTitle.setText(title);
+            mTvTitle.setText(title);
 
-            String gradeProgress = String.format(Locale.ROOT,
-                    "%.0f/%.0f",
-                    grade.getUserGrade(),
-                    grade.getMaxGrade());
+            double userGrade = grade.getUserGrade();
+            double maxGrade = grade.getMaxGrade();
 
-            tvGrade.setText(gradeProgress);
+            String gradeProgress;
 
-            Log.d("GRADE_TYPE", grade.getType());
+            // assignment/quiz has been graded
+            if (userGrade > 0) {
+                gradeProgress = String.format(Locale.ROOT, "%.0f/%.0f", userGrade, maxGrade);
+            } else {
+                gradeProgress = String.format(Locale.ROOT, "/%.0f", maxGrade);
+            }
+
+            mTvGrade.setText(gradeProgress);
+
+            switch (grade.getType()) {
+                case Grade.ASSIGN:
+                    break;
+
+                case Grade.QUIZ:
+                    mIvThumbnail.setImageResource(R.drawable.ic_format_list_bulleted_32dp);
+                    break;
+            }
         }
     }
 }
