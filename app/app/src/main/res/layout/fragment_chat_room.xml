@@ -21,10 +21,25 @@
         <androidx.appcompat.widget.Toolbar
             style="@style/Toolbar"
             android:id="@+id/toolbar"
+            app:navigationIcon="@drawable/ic_arrow_back_24dp"
             android:layout_width="match_parent"
-            app:title="@string/title_chat"
-            app:menu="@menu/chat_toolbar_menu" />
+            app:menu="@menu/chat_toolbar_menu">
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civAvatar"
+                android:layout_width="@dimen/small_img_avatar_size"
+                android:layout_height="@dimen/small_img_avatar_size"
+                android:layout_marginEnd="@dimen/margin"
+                android:src="@drawable/avatar" />
+
+            <TextView
+                android:id="@+id/tvChatGroupTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_chat"
+                style="@style/ToolbarTitleText"/>
+
+        </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
