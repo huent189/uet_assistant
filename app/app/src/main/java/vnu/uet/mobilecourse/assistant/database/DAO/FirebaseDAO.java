@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 
 import android.util.Log;
 
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -22,10 +23,12 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
 
     private static final String OWNER_ID = User.getInstance().getStudentId();
 
-    private String collectionName;
+    private FirebaseFirestore db;
+    private CollectionReference colRef;
 
     FirebaseDAO(String collectionName) {
-        this.collectionName = collectionName;
+        db = FirebaseFirestore.getInstance();
+        colRef = db.collection(collectionName);
     }
 
     private StateLiveData<List<T>> dataList;
@@ -39,11 +42,8 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
             dataList = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
 
             // listen data from firebase
-            FirebaseFirestore.getInstance()
-                    // reference to collection
-                    .collection(collectionName)
-                    // query all document owned by current user
-                    .whereEqualTo("ownerId", OWNER_ID)
+            // query all document owned by current user
+            colRef.whereEqualTo("ownerId", OWNER_ID)
                     // listen for data change
                     .addSnapshotListener((snapshots, e) -> {
                         if (e != null) {
@@ -64,6 +64,8 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
                         }
                     });
         }
+
+
 
         return dataList;
     }
@@ -108,9 +110,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateModel<T> loadingState = new StateModel<>(StateStatus.LOADING);
         StateLiveData<T> response = new StateLiveData<>(loadingState);
 
-        FirebaseFirestore.getInstance()
-                .collection(collectionName)
-                .document(id)
+        colRef.document(id)
                 .set(document)
                 .addOnSuccessListener(aVoid -> {
                     response.postSuccess(document);
@@ -129,9 +129,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateModel<String> loadingState = new StateModel<>(StateStatus.LOADING);
         StateLiveData<String> response = new StateLiveData<>(loadingState);
 
-        FirebaseFirestore.getInstance()
-                .collection(collectionName)
-                .document(id)
+        colRef.document(id)
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     response.postSuccess(id);
@@ -150,9 +148,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateModel<String> loadingState = new StateModel<>(StateStatus.LOADING);
         StateLiveData<String> response = new StateLiveData<>(loadingState);
 
-        FirebaseFirestore.getInstance()
-                .collection(collectionName)
-                .document(id)
+        colRef.document(id)
                 .update(changes)
                 .addOnSuccessListener(aVoid -> {
                     response.postSuccess(id);
