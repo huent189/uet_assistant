@@ -22,67 +22,54 @@
             style="@style/Toolbar"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            app:title="@string/title_chat"
-            app:menu="@menu/chat_toolbar_menu" />
+            app:menu="@menu/chat_toolbar_menu">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civAvatar"
+                android:layout_width="@dimen/small_img_avatar_size"
+                android:layout_height="@dimen/small_img_avatar_size"
+                android:layout_marginEnd="@dimen/margin"
+                android:src="@drawable/avatar" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/title_chat"
+                style="@style/ToolbarTitleText"/>
+
+        </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvChat"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/margin"
-            app:layout_constraintBottom_toTopOf="@+id/etMessage"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/etMessage"
-            style="@style/EditText"
-            android:layout_height="wrap_content"
-            android:paddingVertical="10dp"
-            android:layout_width="0dp"
-            android:layout_marginStart="@dimen/margin_x3"
-            android:layout_marginEnd="@dimen/margin"
-            android:layout_marginBottom="@dimen/margin"
-            android:autofillHints=""
-            android:drawableTint="@color/primary"
-            android:hint="@string/title_chat"
-            android:ems="10"
-            android:maxLines="5"
-            android:scrollbars="vertical"
-            android:gravity="start|center_vertical"
-            android:inputType="textMultiLine"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/button"
-            app:layout_constraintStart_toStartOf="parent" />
+            <EditText
+                android:id="@+id/etSearch"
+                style="@style/EditText"
+                android:layout_height="@dimen/edit_text_height"
+                android:drawableStart="@drawable/ic_search_24dp"
+                android:paddingHorizontal="@dimen/margin"
+                android:hint="@string/title_search_hint"
+                android:drawablePadding="@dimen/margin"
+                android:layout_marginHorizontal="@dimen/margin_x2"
+                android:layout_marginVertical="@dimen/margin"
+                android:layout_width="match_parent"/>
 
-        <Button
-            android:id="@+id/button"
-            style="@style/CircleButton"
-            android:layout_width="40dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="@dimen/margin_x3"
-            app:layout_constraintBottom_toBottomOf="@+id/etMessage"
-            app:layout_constraintDimensionRatio="h,1:1"
-            app:layout_constraintEnd_toEndOf="parent" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvChatGroups"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_send_24dp"
-            app:layout_constraintBottom_toBottomOf="@+id/button"
-            app:layout_constraintEnd_toEndOf="@+id/button"
-            app:layout_constraintStart_toStartOf="@+id/button"
-            app:layout_constraintTop_toTopOf="@+id/button"
-            android:contentDescription="Send Message" />
+        </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

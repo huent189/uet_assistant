@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.MessageAdapter;
+import vnu.uet.mobilecourse.assistant.viewmodel.ChatRoomViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.ChatViewModel;
 
 import android.text.method.ScrollingMovementMethod;
@@ -24,8 +25,6 @@ import java.util.List;
 
 public class ChatFragment extends Fragment {
 
-    private MessageAdapter mMessageAapter;
-
     private ChatViewModel mViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -35,29 +34,14 @@ public class ChatFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_chat, container, false);
 
-        EditText etMessage= root.findViewById(R.id.etMessage);
-        etMessage.setMovementMethod(new ScrollingMovementMethod());
-
-        initializeListView(root);
+        EditText etSearch= root.findViewById(R.id.etSearch);
+        etSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: navigate to search chat room/student fragment
+            }
+        });
 
         return root;
-    }
-
-    private void initializeListView(View root) {
-        List<String> messages = new ArrayList<>();
-        for (int i = 0; i < 20; i++)
-            messages.add("Tin nhắn số " + i);
-
-        mMessageAapter = new MessageAdapter(messages, this);
-
-        RecyclerView rvChat = root.findViewById(R.id.rvChat);
-        rvChat.setHasFixedSize(true);
-
-        rvChat.setAdapter(mMessageAapter);
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this.getContext());
-        linearLayoutManager.setStackFromEnd(true);
-
-        rvChat.setLayoutManager(linearLayoutManager);
     }
 }

@@ -37,22 +37,22 @@ public class DailyEventAdapter extends RecyclerView.Adapter<TodoViewHolder> {
             @Override
             protected IStateLiveData<String> onMarkAsDone(Todo todo) {
                 mOwner.saveRecycleViewState();
-
                 return mOwner.getViewModel().markTodoAsDone(todo.getId());
             }
 
             @Override
             protected IStateLiveData<String> onMarkAsDoing(Todo todo) {
                 mOwner.saveRecycleViewState();
-
                 return mOwner.getViewModel().markTodoAsDoing(todo.getId());
             }
         };
 
         Activity activity = mOwner.getActivity();
 
-        if (activity != null)
-            mNavController = Navigation.findNavController(activity, R.id.nav_host_fragment);
+        if (activity != null) {
+            mNavController = Navigation
+                    .findNavController(activity, R.id.nav_host_fragment);
+        }
 
         return holder;
     }

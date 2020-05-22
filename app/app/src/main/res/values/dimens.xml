@@ -18,14 +18,6 @@
     <dimen name="small_margin">4dp</dimen>
     <dimen name="small_margin_2">2dp</dimen>
 
-
-
-
-<!--    <dimen name="title_size">30sp</dimen>-->
-<!--    <dimen name="subtitle_size">15sp</dimen>-->
-<!--    <dimen name="header1_size">22sp</dimen>-->
-<!--    <dimen name="header2_size">18sp</dimen>-->
-
     <!-- Card course view metrics -->
     <dimen name="card_course_height">360dp</dimen>
     <dimen name="card_course_width">280dp</dimen>
@@ -36,22 +28,24 @@
     <dimen name="button_size">48dp</dimen>
     <dimen name="circle_button_size">40dp</dimen>
 
-    <dimen name="edit_text_height">48dp</dimen>
+    <dimen name="edit_text_height">42dp</dimen>
 
     <!-- Tab view metrics -->
     <dimen name="tab_height">36dp</dimen>
 
     <dimen name="collapsing_toolbar_height">220dp</dimen>
 
-    <dimen name="img_avatar_size">56dp</dimen>
+    <dimen name="img_avatar_size">48dp</dimen>
 
-    <dimen name="small_img_avatar_size">36dp</dimen>
+    <dimen name="small_img_avatar_size">32dp</dimen>
 
 
+    <!-- Calendar metrics -->
     <dimen name="calendar_cell_height">56dp</dimen>
     <dimen name="calendar_dot_size">6dp</dimen>
     <dimen name="calendar_selected_circle_size">32dp</dimen>
 
+    <!-- Font size metrics -->
     <dimen name="font_size_large_title">24sp</dimen>
     <dimen name="font_size_page_title">20sp</dimen>
     <dimen name="font_size_paragraph">14sp</dimen>
@@ -62,5 +56,6 @@
     <dimen name="font_size_tab_title">14sp</dimen>
     <dimen name="font_size_input_text">16sp</dimen>
     <dimen name="font_size_small">12sp</dimen>
+    <dimen name="new_message_dot">8dp</dimen>
 
 </resources>

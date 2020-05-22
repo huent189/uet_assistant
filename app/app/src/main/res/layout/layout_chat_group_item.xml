@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/list_item_background"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -23,25 +23,25 @@
 
 
         <LinearLayout
+            android:id="@+id/layout_chat_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnChat"
+            app:layout_constraintEnd_toStartOf="@+id/tvLastMessageTime"
             app:layout_constraintStart_toEndOf="@+id/civAvatar"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tvClassMateName"
+                android:id="@+id/tvChatGroupTitle"
                 style="@style/ListItemTitle"
-                android:textColor="@color/primary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nguyễn Tùng Lâm" />
 
             <TextView
-                android:id="@+id/tvClassMateId"
+                android:id="@+id/tvLastMessage"
                 style="@style/SecondaryText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,27 +49,24 @@
 
         </LinearLayout>
 
-        <Button
-            style="@style/CircleButton"
-            android:id="@+id/btnChat"
-            android:layout_width="@dimen/circle_button_size"
-            android:layout_height="@dimen/circle_button_size"
-            android:background="@drawable/primary_button_background"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:contentDescription="@string/title_chat"
+        <TextView
+            android:id="@+id/tvLastMessageTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_chat_24dp"
-            android:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/btnChat"
-            app:layout_constraintEnd_toEndOf="@+id/btnChat"
-            app:layout_constraintStart_toStartOf="@+id/btnChat"
-            app:layout_constraintTop_toTopOf="@+id/btnChat" />
+            android:text="02:23 AM"
+            android:textSize="@dimen/font_size_caption"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/layout_chat_content" />
 
+        <ImageView
+            android:id="@+id/ivNewMessageDot"
+            android:layout_width="@dimen/new_message_dot"
+            android:layout_height="@dimen/new_message_dot"
+            android:layout_marginTop="@dimen/margin"
+            android:src="@drawable/calendar_selected_item"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvLastMessageTime" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
