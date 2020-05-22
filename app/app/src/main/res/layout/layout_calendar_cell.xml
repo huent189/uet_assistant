@@ -15,7 +15,7 @@
             android:id="@+id/ivSelectedCircle"
             android:layout_width="@dimen/calendar_selected_circle_size"
             android:layout_height="@dimen/calendar_selected_circle_size"
-            android:src="@drawable/calendar_selected_item"
+            android:src="@drawable/circle"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/tvDayOfMonth"
             app:layout_constraintEnd_toEndOf="@+id/tvDayOfMonth"
@@ -44,7 +44,7 @@
             android:id="@+id/ivHaveTodo"
             android:layout_width="@dimen/calendar_dot_size"
             android:layout_height="@dimen/calendar_dot_size"
-            android:src="@drawable/calendar_selected_item"
+            android:src="@drawable/circle"
             android:visibility="invisible"
             android:layout_gravity="center_vertical"
             android:tint="@color/accent" />

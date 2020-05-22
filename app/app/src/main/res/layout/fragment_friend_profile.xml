@@ -56,8 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|start"
-                android:paddingStart="20dp"
-                android:paddingEnd="@dimen/margin_x2"
+                android:paddingHorizontal="12dp"
                 android:src="@drawable/ic_cake_32dp"
                 android:tint="@color/primaryDark" />
 
@@ -94,8 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|start"
-                android:paddingStart="20dp"
-                android:paddingEnd="@dimen/margin_x2"
+                android:paddingHorizontal="12dp"
                 android:src="@drawable/ic_school_32dp"
                 android:tint="@color/primaryDark" />
 
@@ -129,8 +127,8 @@
         android:id="@+id/tvCommonCourses"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_x3"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="@dimen/margin_x2"
+        android:layout_marginTop="@dimen/margin_x2"
         android:text="@string/title_common_courses"
         android:textSize="@dimen/font_size_list_title"
         app:layout_constraintStart_toStartOf="parent"

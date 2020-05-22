@@ -64,7 +64,7 @@
             android:layout_width="@dimen/new_message_dot"
             android:layout_height="@dimen/new_message_dot"
             android:layout_marginTop="@dimen/margin"
-            android:src="@drawable/calendar_selected_item"
+            android:src="@drawable/circle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvLastMessageTime" />
 

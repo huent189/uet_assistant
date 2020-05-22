@@ -1,11 +1,10 @@
-package vnu.uet.mobilecourse.assistant.view.calendar;
+package vnu.uet.mobilecourse.assistant.view.component;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LifecycleOwner;
+
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.CalendarGridAdapter;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;

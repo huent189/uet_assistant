@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.adapter;
+package vnu.uet.mobilecourse.assistant.adapter.viewholder;
 
 import android.graphics.Color;
 import android.text.SpannableString;
@@ -38,7 +38,7 @@ public abstract class TodoViewHolder extends ChildViewHolder {
     private SpannableString mTitleText;
     private TextView mLayoutDisable;
 
-    TodoViewHolder(@NonNull View itemView) {
+    protected TodoViewHolder(@NonNull View itemView) {
         super(itemView);
 
         mTvTodoTitle = itemView.findViewById(R.id.tvTodoTitle);
@@ -49,7 +49,7 @@ public abstract class TodoViewHolder extends ChildViewHolder {
         mLayoutDisable = itemView.findViewById(R.id.layout_disable);
     }
 
-    void bind(Todo todo, boolean showList, LifecycleOwner lifecycleOwner) {
+    public void bind(Todo todo, boolean showList, LifecycleOwner lifecycleOwner) {
         // setup title text
         String title = todo.getTitle();
         mTitleText = new SpannableString(title);

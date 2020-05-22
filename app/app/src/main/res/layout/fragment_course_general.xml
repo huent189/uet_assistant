@@ -12,6 +12,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:layout_marginEnd="@dimen/margin_x2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -19,8 +20,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|start"
-                android:paddingStart="20dp"
-                android:paddingEnd="@dimen/margin_x2"
+                android:paddingHorizontal="12dp"
                 android:src="@drawable/ic_cake_32dp"
                 android:tint="@color/primaryDark" />
 
@@ -49,6 +49,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginEnd="@dimen/margin_x2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -56,8 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|start"
-                android:paddingStart="20dp"
-                android:paddingEnd="@dimen/margin_x2"
+                android:paddingHorizontal="12dp"
                 android:src="@drawable/ic_cake_32dp"
                 android:tint="@color/primaryDark" />
 
@@ -92,6 +92,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:layout_marginEnd="@dimen/margin_x2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
@@ -100,8 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|start"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="@dimen/margin_x2"
+                    android:paddingHorizontal="12dp"
                     android:src="@drawable/ic_cake_32dp"
                     android:tint="@color/primaryDark" />
 
@@ -130,6 +130,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginEnd="@dimen/margin_x2"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
@@ -138,8 +139,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|start"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="@dimen/margin_x2"
+                    android:paddingHorizontal="12dp"
                     android:src="@drawable/ic_school_32dp"
                     android:tint="@color/primaryDark" />
 
@@ -172,7 +172,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_x3"
+            android:layout_marginStart="@dimen/margin_x2"
             android:layout_marginVertical="@dimen/margin"
             android:text="@string/title_schedule"
             android:textSize="@dimen/font_size_list_title"/>
