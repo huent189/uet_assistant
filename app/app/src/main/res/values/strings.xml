@@ -58,5 +58,10 @@
     <string name="title_common_courses">Các khóa học chung</string>
     <string name="title_birthday">Ngày sinh</string>
     <string name="tab_title_general">Tổng quan</string>
+    <string name="title_schedule">Thời khóa biểu</string>
+    <string name="title_student_size">Sĩ số</string>
+    <string name="title_course_unit_number">Số tín chỉ</string>
+    <string name="title_course_code">Mã môn học</string>
+    <string name="title_course_title">Tên môn học</string>
 
 </resources>

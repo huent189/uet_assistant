@@ -35,7 +35,7 @@
                     style="@style/ListTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tên môn học"/>
+                    android:text="@string/title_course_title"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -72,7 +72,7 @@
                     style="@style/ListTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mã môn học"/>
+                    android:text="@string/title_course_code"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -116,7 +116,7 @@
                         style="@style/ListTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Số tín chỉ"/>
+                        android:text="@string/title_course_unit_number"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -154,7 +154,7 @@
                         style="@style/ListTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Sĩ số"/>
+                        android:text="@string/title_student_size"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -173,9 +173,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_x3"
-            android:layout_marginTop="@dimen/margin"
-            android:text="Thời khóa biểu"
+            android:layout_marginVertical="@dimen/margin"
+            android:text="@string/title_schedule"
             android:textSize="@dimen/font_size_list_title"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 
