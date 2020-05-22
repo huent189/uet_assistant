@@ -57,5 +57,6 @@
     <string name="title_uet_class">Lớp khóa học</string>
     <string name="title_common_courses">Các khóa học chung</string>
     <string name="title_birthday">Ngày sinh</string>
+    <string name="tab_title_general">Tổng quan</string>
 
 </resources>
