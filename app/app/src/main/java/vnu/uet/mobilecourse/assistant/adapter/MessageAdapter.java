@@ -14,6 +14,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
@@ -21,10 +22,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private static final int MSG_SEND_TYPE = 1;
 
     private Fragment mOwner;
-    private List<String> mMessages;
+    private List<Message_GroupChatSubCol> mMessages;
     private NavController mNavController;
 
-    public MessageAdapter(List<String> messages, Fragment owner) {
+    public MessageAdapter(List<Message_GroupChatSubCol> messages, Fragment owner) {
         this.mMessages = messages;
         this.mOwner = owner;
     }
@@ -66,8 +67,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
-        String message = mMessages.get(position);
-        holder.mTvMessage.setText(message);
+        Message_GroupChatSubCol message = mMessages.get(position);
+
+        holder.bind(message);
     }
 
     @Override
@@ -80,13 +82,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         return position % 2;
     }
 
-    public static class SendMessageViewHolder extends MessageViewHolder {
+    static class SendMessageViewHolder extends MessageViewHolder {
         SendMessageViewHolder(@NonNull View itemView) {
             super(itemView);
         }
+
+        @Override
+        void bind(Message_GroupChatSubCol message) {
+
+        }
     }
 
-    public static class ReceiveMessageViewHolder extends MessageViewHolder {
+    static class ReceiveMessageViewHolder extends MessageViewHolder {
         private CircleImageView mCivAvatar;
 
         ReceiveMessageViewHolder(@NonNull View itemView) {
@@ -94,12 +101,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
             mCivAvatar = itemView.findViewById(R.id.civAvatar);
         }
+
+        @Override
+        void bind(Message_GroupChatSubCol message) {
+
+        }
     }
 
     abstract static class MessageViewHolder extends RecyclerView.ViewHolder {
-        private TextView mTvTime;
+        TextView mTvTime;
 
-        private TextView mTvMessage;
+        TextView mTvMessage;
 
         MessageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -107,6 +119,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             mTvTime = itemView.findViewById(R.id.tvTime);
             mTvMessage = itemView.findViewById(R.id.tvMessage);
         }
+
+        abstract void bind(Message_GroupChatSubCol message);
     }
 
 
