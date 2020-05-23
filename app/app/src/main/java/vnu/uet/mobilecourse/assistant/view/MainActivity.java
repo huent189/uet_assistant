@@ -4,12 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.repository.FirebaseAuthenticationService;
 import vnu.uet.mobilecourse.assistant.repository.UserRepository;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,30 +24,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void accessCourses(View view) {
         mBtnAccess.setActivated(false);
-//        navigateToActivity(MyCoursesActivity.class);
 
+        new UserRepository().isLoggedIn().observe(MainActivity.this, stateModel -> {
+            switch (stateModel.getStatus()) {
+                case SUCCESS:
+                    boolean isFirebaseLoggedIn = FirebaseAuthenticationService.isFirebaseLoggedIn();
 
-        new UserRepository().isLoggedIn().observe(MainActivity.this, new Observer<StateModel<String>>() {
-            @Override
-            public void onChanged(StateModel<String> stateModel) {
-                switch (stateModel.getStatus()) {
-                    case SUCCESS:
-                        boolean isFirebaseLoggedIn = FirebaseAuthenticationService.isFirebaseLoggedIn();
+                    if (isFirebaseLoggedIn) {
+                        navigateToActivity(MyCoursesActivity.class);
+                    } else {
+                        navigateToActivity(LoginFirebaseActivity.class);
+                    }
 
-                        if (isFirebaseLoggedIn)
-                            navigateToActivity(MyCoursesActivity.class);
-                        else
-                            navigateToActivity(LoginFirebaseActivity.class);
+                    break;
 
-                        break;
+                case ERROR:
+                    stateModel.getError().printStackTrace();
+                    navigateToActivity(LoginActivity.class);
 
-                    case ERROR:
-                        stateModel.getError().printStackTrace();
-                        navigateToActivity(LoginActivity.class);
-
-                        break;
-
-                }
+                    break;
             }
         });
     }

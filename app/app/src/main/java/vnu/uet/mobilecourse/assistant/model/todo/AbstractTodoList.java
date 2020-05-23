@@ -1,9 +1,11 @@
 package vnu.uet.mobilecourse.assistant.model.todo;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.PriorityQueue;
 
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
+import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 
 public abstract class AbstractTodoList extends PriorityQueue<Todo> {
 

@@ -3,6 +3,7 @@ package vnu.uet.mobilecourse.assistant.view.calendar;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,16 +53,28 @@ import vnu.uet.mobilecourse.assistant.work.TodoReminder;
 
 public class AddTodoFragment extends Fragment {
 
+    /**
+     * Shared view model between add _todo and add _todo list
+     */
     private CalendarSharedViewModel mViewModel;
-    private RadioGroup mRgTodoList;
+
+    /**
+     * Current activity allocate this fragment
+     */
     private FragmentActivity mActivity;
+
+    /**
+     * Nav controller
+     */
+    private NavController mNavController;
+
+    private RadioGroup mRgTodoList;
     private EditText mEtTodoTitle;
     private EditText mEtDescription;
     private TextView mTvTodoListTitle;
     private Button mBtnDate;
     private Button mBtnTime;
     private CardView mCvTodoListPicker;
-    private NavController mNavController;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -232,9 +245,6 @@ public class AddTodoFragment extends Fragment {
                 .putString("title", todo.getTitle())
                 .putString("description", todo.getDescription())
                 .build();
-
-        // we then retrieve it inside the NotifyWorker with:
-        // final int DBEventID = getInputData().getInt(DBEventIDTag, ERROR_VALUE);
 
         OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(TodoReminder.class)
                 .setInitialDelay(delayTime, TimeUnit.MILLISECONDS)

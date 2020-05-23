@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.adapter.viewholder.TodoViewHolder;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.view.calendar.TodoListsFragment;
@@ -64,11 +65,13 @@ public class TodoListAdapter extends
         return new TodoViewHolder(view) {
             @Override
             protected IStateLiveData<String> onMarkAsDone(Todo todo) {
+                mOwner.saveRecycleViewState();
                 return mOwner.getViewModel().markTodoAsDone(todo.getId());
             }
 
             @Override
             protected IStateLiveData<String> onMarkAsDoing(Todo todo) {
+                mOwner.saveRecycleViewState();
                 return mOwner.getViewModel().markTodoAsDoing(todo.getId());
             }
         };

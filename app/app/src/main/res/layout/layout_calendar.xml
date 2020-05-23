@@ -115,7 +115,7 @@
             android:layout_weight="1"/>
     </LinearLayout>
 
-    <vnu.uet.mobilecourse.assistant.view.calendar.CalendarDatesGridView
+    <vnu.uet.mobilecourse.assistant.view.component.CalendarDatesGridView
         android:id="@+id/gvDates"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

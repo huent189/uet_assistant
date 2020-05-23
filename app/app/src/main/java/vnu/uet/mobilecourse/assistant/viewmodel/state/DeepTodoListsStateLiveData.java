@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import androidx.annotation.NonNull;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
+import vnu.uet.mobilecourse.assistant.model.todo.PriorityTodoList;
 
 public class DeepTodoListsStateLiveData extends StateMediatorLiveData<List<TodoList>> {
 
@@ -96,7 +97,11 @@ public class DeepTodoListsStateLiveData extends StateMediatorLiveData<List<TodoL
 
     private List<TodoList> combineData() {
         List<TodoList> result = mShallowLists.stream()
-                .map(TodoList::clone)
+                .map(list -> {
+                    TodoList output = list.clone();
+                    output.clear();
+                    return output;
+                })
                 .collect(Collectors.toList());
 
         mItems.forEach(todo -> {
@@ -104,8 +109,7 @@ public class DeepTodoListsStateLiveData extends StateMediatorLiveData<List<TodoL
 
             result.forEach(todoList -> {
                 if (todoList.getId().equals(todoListId)) {
-                    if (!todoList.contains(todo))
-                        todoList.add(todo);
+                    todoList.add(todo);
                 }
             });
         });

@@ -1,8 +1,6 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -11,6 +9,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.adapter.viewholder.TodoViewHolder;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
 import vnu.uet.mobilecourse.assistant.view.calendar.CalendarFragment;
@@ -36,22 +35,28 @@ public class DailyEventAdapter extends RecyclerView.Adapter<TodoViewHolder> {
         TodoViewHolder holder = new TodoViewHolder(view) {
             @Override
             protected IStateLiveData<String> onMarkAsDone(Todo todo) {
+                mOwner.saveRecycleViewState();
                 return mOwner.getViewModel().markTodoAsDone(todo.getId());
             }
 
             @Override
             protected IStateLiveData<String> onMarkAsDoing(Todo todo) {
+                mOwner.saveRecycleViewState();
                 return mOwner.getViewModel().markTodoAsDoing(todo.getId());
             }
         };
 
         Activity activity = mOwner.getActivity();
 
-        if (activity != null)
-            mNavController = Navigation.findNavController(activity, R.id.nav_host_fragment);
+        if (activity != null) {
+            mNavController = Navigation
+                    .findNavController(activity, R.id.nav_host_fragment);
+        }
 
         return holder;
     }
+
+
 
     @Override
     public void onBindViewHolder(@NonNull TodoViewHolder holder, int position) {

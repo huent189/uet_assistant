@@ -1,5 +1,9 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
+/**
+ * Not need any more
+ */
+@Deprecated
 public class Enrollment implements IFirebaseModel {
     private String id;
     private String studentId;

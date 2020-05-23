@@ -89,7 +89,7 @@ public class FirebaseAuthenticationService {
     }
 
     public static boolean isFirebaseLoggedIn (){
-        return FirebaseAuth.getInstance().getCurrentUser() == null ? false : true;
+        return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
 
 }

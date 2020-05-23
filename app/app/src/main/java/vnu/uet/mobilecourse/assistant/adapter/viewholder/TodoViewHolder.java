@@ -1,5 +1,6 @@
-package vnu.uet.mobilecourse.assistant.adapter;
+package vnu.uet.mobilecourse.assistant.adapter.viewholder;
 
+import android.graphics.Color;
 import android.text.SpannableString;
 import android.text.style.StrikethroughSpan;
 import android.view.View;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.R;
@@ -34,8 +36,9 @@ public abstract class TodoViewHolder extends ChildViewHolder {
     private CheckBox mCbDone;
     private StrikethroughSpan mStrikeSpan = new StrikethroughSpan();
     private SpannableString mTitleText;
+    private TextView mLayoutDisable;
 
-    TodoViewHolder(@NonNull View itemView) {
+    protected TodoViewHolder(@NonNull View itemView) {
         super(itemView);
 
         mTvTodoTitle = itemView.findViewById(R.id.tvTodoTitle);
@@ -43,9 +46,10 @@ public abstract class TodoViewHolder extends ChildViewHolder {
         mTvDeadline = itemView.findViewById(R.id.tvDeadline);
         mCbDone = itemView.findViewById(R.id.cbDone);
         mTvCategory = itemView.findViewById(R.id.tvCategory);
+        mLayoutDisable = itemView.findViewById(R.id.layout_disable);
     }
 
-    void bind(Todo todo, boolean showList, LifecycleOwner lifecycleOwner) {
+    public void bind(Todo todo, boolean showList, LifecycleOwner lifecycleOwner) {
         // setup title text
         String title = todo.getTitle();
         mTitleText = new SpannableString(title);
@@ -80,6 +84,8 @@ public abstract class TodoViewHolder extends ChildViewHolder {
 
         if (todo.isCompleted()) {
             updateDoneEffect(title);
+        } else {
+            updateDoingEffect(todo.getDeadline());
         }
 
         mCbDone.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -91,7 +97,7 @@ public abstract class TodoViewHolder extends ChildViewHolder {
                     // recover in case catch a error
                     switch (state.getStatus()) {
                         case ERROR:
-                            updateDoingEffect();
+                            updateDoingEffect(todo.getDeadline());
                             break;
                     }
                 });
@@ -99,7 +105,7 @@ public abstract class TodoViewHolder extends ChildViewHolder {
             }
             // mark as doing
             else {
-                updateDoingEffect();
+                updateDoingEffect(todo.getDeadline());
 
                 onMarkAsDoing(todo).observe(lifecycleOwner, state -> {
                     // recover in case catch a error
@@ -119,19 +125,35 @@ public abstract class TodoViewHolder extends ChildViewHolder {
         mTitleText.setSpan(mStrikeSpan, 0, title.length() - 1, 0);
         mTvTodoTitle.setText(mTitleText);
 
+        mLayoutDisable.setVisibility(View.VISIBLE);
+
+        mTvDeadline.setTextColor(Color.WHITE);
+        mIvAlarm.setColorFilter(Color.WHITE);
+
         mCbDone.setChecked(true);
     }
 
-    private void updateDoingEffect() {
+    private void updateDoingEffect(long deadline) {
         mTitleText.removeSpan(mStrikeSpan);
         mTvTodoTitle.setText(mTitleText);
 
+        mLayoutDisable.setVisibility(View.GONE);
+
         mCbDone.setChecked(false);
+
+        if (deadline - System.currentTimeMillis() < WARNING_BOUNDARY) {
+            mTvDeadline.setTextColor(RED_COLOR);
+            mIvAlarm.setColorFilter(RED_COLOR);
+        }
     }
 
     protected abstract IStateLiveData<String> onMarkAsDone(Todo todo);
 
     protected abstract IStateLiveData<String> onMarkAsDoing(Todo todo);
+
+    private static final int WARNING_BOUNDARY = 60 * 60 * 1000; // 1 hour
+
+    private static final int RED_COLOR = Color.parseColor("#FFF44336");
 
     private static final String LOADING_TITLE = "Đang tải";
 }

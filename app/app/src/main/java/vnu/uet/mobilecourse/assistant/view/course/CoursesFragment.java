@@ -41,7 +41,7 @@ public class CoursesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        CoursesFragment currentFragment = this;
+//        CoursesFragment currentFragment = this;
 
         View root = inflater.inflate(R.layout.fragment_courses, container, false);
 
@@ -49,7 +49,7 @@ public class CoursesFragment extends Fragment {
         CoordinatorLayout coordinatorLayout = root.findViewById(R.id.coordinator_layout);
         ViewCompat.requestApplyInsets(coordinatorLayout);
 
-        mViewModel = new ViewModelProvider(currentFragment).get(CoursesViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(CoursesViewModel.class);
         mViewModel.initialize();
 
         ShimmerFrameLayout shimmerRvCourseRecently = root.findViewById(R.id.shimmerRvCourseRecently);
@@ -73,7 +73,7 @@ public class CoursesFragment extends Fragment {
                     rvCourseRecently.setVisibility(View.VISIBLE);
                 }
 
-                RecentlyCoursesAdapter adapter = new RecentlyCoursesAdapter(courses, currentFragment);
+                RecentlyCoursesAdapter adapter = new RecentlyCoursesAdapter(courses, CoursesFragment.this);
                 rvCourseRecently.setAdapter(adapter);
 
                 // restore scroll position
@@ -92,7 +92,7 @@ public class CoursesFragment extends Fragment {
                     rvAllCourses.setVisibility(View.VISIBLE);
                 }
 
-                AllCoursesAdapter adapter = new AllCoursesAdapter(courses, currentFragment);
+                AllCoursesAdapter adapter = new AllCoursesAdapter(courses, CoursesFragment.this);
                 rvAllCourses.setAdapter(adapter);
 
                 // restore scroll position

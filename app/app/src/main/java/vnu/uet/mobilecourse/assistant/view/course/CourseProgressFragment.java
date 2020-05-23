@@ -54,7 +54,7 @@ public class CourseProgressFragment extends Fragment {
             // get course id from bundle
             int courseId = args.getInt("courseId");
 
-            Fragment thisFragment = this;
+//            Fragment thisFragment = this;
 
             mViewModel.getContent(courseId).observe(getViewLifecycleOwner(), contents -> {
                 // contents haven't loaded yet
@@ -72,7 +72,7 @@ public class CourseProgressFragment extends Fragment {
                     shimmerRvTasks.setVisibility(View.GONE);
 
                     // update new adapter with newest data
-                    mAdapter = new CourseContentAdapter(contents, thisFragment);
+                    mAdapter = new CourseContentAdapter(contents, CourseProgressFragment.this);
                     rvMaterials.setAdapter(mAdapter);
 
                     // restore expandable state

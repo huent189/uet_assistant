@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.view.calendar;
+package vnu.uet.mobilecourse.assistant.view.component;
 
 import android.content.Context;
 import android.util.AttributeSet;
