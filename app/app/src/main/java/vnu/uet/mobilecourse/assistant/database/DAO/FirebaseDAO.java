@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 
 import android.util.Log;
 
+import com.google.firebase.firestore.CollectionReference;
 import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,10 +27,13 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
 
     private static final String OWNER_ID = User.getInstance().getStudentId();
 
-    private String mCollectionName;
+
+    private FirebaseFirestore db;
+    private CollectionReference colRef;
 
     FirebaseDAO(String collectionName) {
-        this.mCollectionName = collectionName;
+        db = FirebaseFirestore.getInstance();
+        colRef = db.collection(collectionName);
     }
 
     private StateLiveData<List<T>> mDataList;
@@ -43,11 +47,8 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
             mDataList = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
 
             // listen data from firebase
-            FirebaseFirestore.getInstance()
-                    // reference to collection
-                    .collection(mCollectionName)
-                    // query all document owned by current user
-                    .whereEqualTo("ownerId", OWNER_ID)
+            // query all document owned by current user
+            colRef.whereEqualTo("ownerId", OWNER_ID)
                     // listen for data change
                     .addSnapshotListener((snapshots, e) -> {
                         if (e != null) {
@@ -68,7 +69,6 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
                         }
                     });
         }
-
         return mDataList;
     }
 
@@ -112,9 +112,8 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateModel<T> loadingState = new StateModel<>(StateStatus.LOADING);
         StateLiveData<T> response = new StateLiveData<>(loadingState);
 
-        FirebaseFirestore.getInstance()
-                .collection(mCollectionName)
-                .document(id)
+
+        colRef.document(id)
                 .set(document)
                 .addOnCanceledListener(new OnCanceledListener() {
                     @Override
@@ -145,9 +144,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateModel<String> loadingState = new StateModel<>(StateStatus.LOADING);
         StateLiveData<String> response = new StateLiveData<>(loadingState);
 
-        FirebaseFirestore.getInstance()
-                .collection(mCollectionName)
-                .document(id)
+        colRef.document(id)
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     response.postSuccess(id);
@@ -166,9 +163,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateModel<String> loadingState = new StateModel<>(StateStatus.LOADING);
         StateLiveData<String> response = new StateLiveData<>(loadingState);
 
-        FirebaseFirestore.getInstance()
-                .collection(mCollectionName)
-                .document(id)
+        colRef.document(id)
                 .update(changes)
                 .addOnSuccessListener(aVoid -> {
                     response.postSuccess(id);
