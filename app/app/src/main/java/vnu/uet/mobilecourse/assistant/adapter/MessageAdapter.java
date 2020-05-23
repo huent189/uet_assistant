@@ -109,8 +109,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     abstract static class MessageViewHolder extends RecyclerView.ViewHolder {
-        TextView mTvTime;
 
+        TextView mTvTime;
         TextView mTvMessage;
 
         MessageViewHolder(@NonNull View itemView) {
