@@ -41,7 +41,6 @@ public class User {
     }
 
     public String getStudentId() {
-//        return "17020845";
         return email.replace(CONST.VNU_EMAIL_DOMAIN, CONST.EMPTY);
     }
 

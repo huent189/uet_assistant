@@ -70,6 +70,11 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/tab_title_general" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/tab_title_progress" />
 
             <com.google.android.material.tabs.TabItem

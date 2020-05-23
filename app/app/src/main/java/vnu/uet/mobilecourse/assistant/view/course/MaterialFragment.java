@@ -102,11 +102,4 @@ public class MaterialFragment extends Fragment {
 
         return null;
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(MaterialViewModel.class);
-        // TODO: Use the ViewModel
-    }
 }

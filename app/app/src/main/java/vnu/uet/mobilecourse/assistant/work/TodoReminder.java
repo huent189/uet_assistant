@@ -37,7 +37,8 @@ public class TodoReminder extends Worker {
 
         Log.e("TODO", "doWork: " + title );
 
-        Intent intent = new Intent(mContext, MainActivity.class);
+        Intent intent = new Intent(LAUNCH_ACTION);
+        intent.setClassName(APP_PACKAGE, ACTIVITY_ID);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mContext.startActivity(intent);
 
@@ -50,4 +51,8 @@ public class TodoReminder extends Worker {
         // (Returning RETRY tells WorkManager to try this task again
         // later; FAILURE says not to try again.)
     }
+
+    private static final String LAUNCH_ACTION = "android.intent.category.LAUNCHER";
+    private static final String APP_PACKAGE = "vnu.uet.mobilecourse.assistant";
+    private static final String ACTIVITY_ID = "vnu.uet.mobilecourse.assistant.view.MainActivity";
 }

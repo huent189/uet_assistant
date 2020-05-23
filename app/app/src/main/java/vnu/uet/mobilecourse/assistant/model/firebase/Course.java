@@ -1,11 +1,21 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
+import com.google.firebase.firestore.Exclude;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Course implements IFirebaseModel {
+
     private String name;
     private String id;
-    private String teacherName;
-    private String classroom;
-    private long time;
+
+    private Map<String, CourseSession> sessions = new HashMap<>();
+
+    @Exclude
+    private List<Participant_CourseSubCol> participants = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -24,27 +34,20 @@ public class Course implements IFirebaseModel {
         this.id = id;
     }
 
-    public String getTeacherName() {
-        return teacherName;
+    public void setSessions(Map<String, CourseSession> sessions) {
+        this.sessions = sessions;
     }
 
-    public void setTeacherName(String teacherName) {
-        this.teacherName = teacherName;
+    public Map<String, CourseSession> getSessions() {
+        return sessions;
     }
 
-    public String getClassroom() {
-        return classroom;
+    public void setParticipants(List<Participant_CourseSubCol> participants) {
+        this.participants = participants;
     }
 
-    public void setClassroom(String classroom) {
-        this.classroom = classroom;
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
+    @Exclude
+    public List<Participant_CourseSubCol> getParticipants() {
+        return participants;
     }
 }

@@ -5,6 +5,8 @@ public class GroupChat_UserSubCol implements IFirebaseModel {
     private String name;
     private String avatar;
     private String lastMessage;
+    private long lastMessageTime;
+    private boolean seen;
 
     @Override
     public String getId() {
@@ -37,5 +39,21 @@ public class GroupChat_UserSubCol implements IFirebaseModel {
 
     public void setLastMessage(String lastMessage) {
         this.lastMessage = lastMessage;
+    }
+
+    public long getLastMessageTime() {
+        return lastMessageTime;
+    }
+
+    public void setLastMessageTime(long lastMessageTime) {
+        this.lastMessageTime = lastMessageTime;
+    }
+
+    public boolean isSeen() {
+        return seen;
+    }
+
+    public void setSeen(boolean seen) {
+        this.seen = seen;
     }
 }

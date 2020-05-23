@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
@@ -72,6 +71,7 @@ public class ExploreCourseFragment extends Fragment {
         FragmentManager fragmentManager = getChildFragmentManager();
 
         Fragment[] pages = new Fragment[] {
+                new CourseGeneralFragment(),
                 new CourseProgressFragment(),
                 new CourseGradeFragment(),
                 new CourseClassmateFragment()

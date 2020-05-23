@@ -16,8 +16,9 @@ public class NotificationHelper {
     private static NotificationHelper sInstance;
 
     public static NotificationHelper getsInstance() {
-        if (sInstance == null)
+        if (sInstance == null) {
             sInstance = new NotificationHelper();
+        }
 
         return sInstance;
     }

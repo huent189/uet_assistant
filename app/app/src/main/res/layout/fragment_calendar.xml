@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="?attr/actionBarSize">
 
-                <vnu.uet.mobilecourse.assistant.view.calendar.CustomCalendarView
+                <vnu.uet.mobilecourse.assistant.view.component.CustomCalendarView
                     android:id="@+id/calendar_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
                 android:layout_gravity="top"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                app:title="@string/title_all_courses"
+                app:title="@string/title_calendar"
                 app:menu="@menu/calendar_toolbar_menu">
 
             </androidx.appcompat.widget.Toolbar>
@@ -72,13 +72,14 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <vnu.uet.mobilecourse.assistant.view.component.MovableFloatingActionButton
         android:id="@+id/fabAddTodo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_gravity="end|bottom"
-        android:layout_marginEnd="@dimen/margin_x3"
-        android:layout_marginBottom="@dimen/margin_x3"
+        android:background="@drawable/circle"
+        android:backgroundTint="@color/accent"
+        android:layout_margin="@dimen/margin_x3"
         android:src="@drawable/ic_add_24dp"
         android:tint="@color/white" />
 

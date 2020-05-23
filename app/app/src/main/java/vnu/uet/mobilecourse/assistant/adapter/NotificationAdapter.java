@@ -37,8 +37,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         Activity activity = mOwner.getActivity();
 
-        if (activity != null)
-            mNavController = Navigation.findNavController(activity, R.id.nav_host_fragment);
+        if (activity != null) {
+            mNavController = Navigation
+                    .findNavController(activity, R.id.nav_host_fragment);
+        }
 
         return new ViewHolder(view);
     }
