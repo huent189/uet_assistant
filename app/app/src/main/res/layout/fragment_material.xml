@@ -107,5 +107,13 @@
 
     </androidx.core.widget.NestedScrollView>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/margin_x3"
+        android:layout_marginBottom="@dimen/margin_x3"
+        android:src="@drawable/ic_language_24dp"
+        android:tint="@color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
