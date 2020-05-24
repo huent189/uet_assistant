@@ -44,11 +44,11 @@ public class ChatRoomFragment extends Fragment {
     }
 
     private void initializeListView(View root) {
-        List<String> messages = new ArrayList<>();
-        for (int i = 0; i < 20; i++)
-            messages.add("Tin nhắn số " + i);
-
-        mMessageAdapter = new MessageAdapter(messages, this);
+//        List<String> messages = new ArrayList<>();
+//        for (int i = 0; i < 20; i++)
+//            messages.add("Tin nhắn số " + i);
+//
+//        mMessageAdapter = new MessageAdapter(messages, this);
 
         RecyclerView rvChat = root.findViewById(R.id.rvChat);
         rvChat.setHasFixedSize(true);

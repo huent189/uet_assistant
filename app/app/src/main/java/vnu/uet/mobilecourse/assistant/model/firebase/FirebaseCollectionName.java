@@ -11,4 +11,5 @@ public interface FirebaseCollectionName {
     String PARTICIPANT = "participant";
     String MEMBER = "member";
     String MESSAGE = "message";
+    String USER_INFO = "userInfo";
 }
