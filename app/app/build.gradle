@@ -58,14 +58,14 @@ dependencies {
     implementation "androidx.work:work-rxjava2:$work_version"
     implementation "androidx.work:work-gcm:$work_version"
 
-//    implementation "com.android.support:support-compat:28.0.0"
-
     annotationProcessor "androidx.room:room-compiler:2.2.5"
     testImplementation 'junit:junit:4.13'
-    testImplementation 'android.arch.core:core-testing:1.0.0-alpha3'
+    testImplementation 'android.arch.core:core-testing:1.1.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     testImplementation "androidx.room:room-testing:2.2.5"
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
-    
+
+    implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.6'
+    implementation 'com.google.guava:guava:27.0.1-android'
 }

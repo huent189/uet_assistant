@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,8 +44,8 @@ public class CourseGeneralFragment extends Fragment {
                     case SUCCESS:
 
                         CourseInfo courseInfo = stateModel.getData();
-                        System.out.println(courseInfo.getId());
-                        System.out.println(courseInfo.getSessions());
+                        Log.d("COURSE", courseInfo.getId());
+                        Log.d("COURSE", courseInfo.getSessions().toString());
                 }
             }
         });
