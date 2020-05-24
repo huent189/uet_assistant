@@ -2,6 +2,9 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
+import java.util.List;
 
 import vnu.uet.mobilecourse.assistant.model.firebase.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.model.firebase.IFirebaseModel;
@@ -15,7 +18,7 @@ public class MessageDAO extends FirebaseDAO<Message_GroupChatSubCol> {
     }
 
     @Override
-    protected Message_GroupChatSubCol fromSnapshot(DocumentSnapshot snapshot) {
-        return snapshot.toObject(Message_GroupChatSubCol.class);
+    public StateLiveData<List<Message_GroupChatSubCol>> readAll() {
+        return null;
     }
 }

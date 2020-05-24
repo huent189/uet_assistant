@@ -44,12 +44,12 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
-    implementation 'com.google.firebase:firebase-auth:16.0.5'
-    implementation 'com.google.firebase:firebase-firestore:17.1.2'
-    implementation 'com.google.firebase:firebase-invites:16.0.4'
+    implementation 'com.google.firebase:firebase-auth:19.3.1'
+    implementation 'com.google.firebase:firebase-firestore:21.4.3'
+    implementation 'com.google.firebase:firebase-invites:17.0.0'
     implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
     implementation 'com.github.sharish:ShimmerRecyclerView:v1.3'
-    implementation 'io.reactivex.rxjava2:rxjava:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
     implementation "androidx.room:room-runtime:2.2.5"
 

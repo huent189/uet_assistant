@@ -7,6 +7,11 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 
 public interface IFirebaseDAO<T> {
+
+    /**
+     * Get all data in firestore db
+     * and update live data whenever a snapshot change
+     */
     StateLiveData<List<T>> readAll();
 
     StateMediatorLiveData<T> read(String id);
