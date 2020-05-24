@@ -206,6 +206,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         mColReference.document(id)
                 .delete()
                 .addOnSuccessListener(aVoid -> {
+                    // response post success with id of deleted document
                     response.postSuccess(id);
                     Log.d(TAG, "Delete document: " + id);
                 })
@@ -238,6 +239,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         mColReference.document(id)
                 .update(changes)
                 .addOnSuccessListener(aVoid -> {
+                    // response post success with id of updated document
                     response.postSuccess(id);
                     Log.d(TAG, "Change document: " + id);
                 })
