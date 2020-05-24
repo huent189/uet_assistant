@@ -11,6 +11,8 @@ import vnu.uet.mobilecourse.assistant.model.Grade;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.network.deserializer.CourseContentDeserializer;
 import vnu.uet.mobilecourse.assistant.network.deserializer.CourseGradeDeserializer;
+import vnu.uet.mobilecourse.assistant.network.error_detector.ConnectivityInterceptor;
+import vnu.uet.mobilecourse.assistant.view.MyApplication;
 
 import java.io.IOException;
 
@@ -21,6 +23,7 @@ public class HTTPClient {
     private static HTTPClient instance;
     private HTTPClient(){
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(new ConnectivityInterceptor(MyApplication.getInstance().getApplicationContext()))
                 .addInterceptor(new Interceptor() {
                     @Override
                     public Response intercept(Chain chain) throws IOException {
