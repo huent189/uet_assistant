@@ -1,18 +1,24 @@
 package vnu.uet.mobilecourse.assistant.database.DAO;
 
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import vnu.uet.mobilecourse.assistant.model.firebase.FirebaseCollectionName;
+import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 
-public class NotificationDAO extends FirebaseDAO<Todo> {
+public class NotificationDAO extends FirebaseDAO<Notification_UserSubCol> {
 
-//    public NotificationDAO() {
-        super(FirebaseCollectionName.);
-//    }
+    public NotificationDAO() {
+        super(FirebaseFirestore.getInstance()
+                .collection(FirebaseCollectionName.USER)
+                .document(OWNER_ID)
+                .collection(FirebaseCollectionName.NOTIFICATION)
+        );
+    }
 
     @Override
-    protected Todo fromSnapshot(DocumentSnapshot snapshot) {
-        return snapshot.toObject(Todo.class);
+    protected Notification_UserSubCol fromSnapshot(DocumentSnapshot snapshot) {
+        return snapshot.toObject(Notification_UserSubCol.class);
     }
 }

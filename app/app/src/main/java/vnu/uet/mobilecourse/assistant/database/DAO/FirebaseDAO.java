@@ -25,15 +25,12 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebaseDAO<T> {
     private static final String TAG = FirebaseDAO.class.getSimpleName();
 
-    private static final String OWNER_ID = User.getInstance().getStudentId();
+    protected static final String OWNER_ID = User.getInstance().getStudentId();
 
+    private CollectionReference mColReference;
 
-    private FirebaseFirestore db;
-    private CollectionReference colRef;
-
-    FirebaseDAO(String collectionName) {
-        db = FirebaseFirestore.getInstance();
-        colRef = db.collection(collectionName);
+    FirebaseDAO(CollectionReference colRef) {
+        mColReference = colRef;
     }
 
     private StateLiveData<List<T>> mDataList;
@@ -48,7 +45,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
 
             // listen data from firebase
             // query all document owned by current user
-            colRef.whereEqualTo("ownerId", OWNER_ID)
+            mColReference.whereEqualTo("ownerId", OWNER_ID)
                     // listen for data change
                     .addSnapshotListener((snapshots, e) -> {
                         if (e != null) {
@@ -113,7 +110,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateLiveData<T> response = new StateLiveData<>(loadingState);
 
 
-        colRef.document(id)
+        mColReference.document(id)
                 .set(document)
                 .addOnCanceledListener(new OnCanceledListener() {
                     @Override
@@ -144,7 +141,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateModel<String> loadingState = new StateModel<>(StateStatus.LOADING);
         StateLiveData<String> response = new StateLiveData<>(loadingState);
 
-        colRef.document(id)
+        mColReference.document(id)
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     response.postSuccess(id);
@@ -163,7 +160,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateModel<String> loadingState = new StateModel<>(StateStatus.LOADING);
         StateLiveData<String> response = new StateLiveData<>(loadingState);
 
-        colRef.document(id)
+        mColReference.document(id)
                 .update(changes)
                 .addOnSuccessListener(aVoid -> {
                     response.postSuccess(id);

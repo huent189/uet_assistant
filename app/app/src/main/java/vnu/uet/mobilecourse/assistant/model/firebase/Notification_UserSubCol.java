@@ -5,6 +5,7 @@ public class Notification_UserSubCol implements IFirebaseModel {
     private String category;
     private String title;
     private String description;
+    private long notifyTime;
 
     @Override
     public String getId() {
@@ -13,6 +14,14 @@ public class Notification_UserSubCol implements IFirebaseModel {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public long getNotifyTime() {
+        return notifyTime;
+    }
+
+    public void setNotifyTime(long notifyTime) {
+        this.notifyTime = notifyTime;
     }
 
     public String getCategory() {
