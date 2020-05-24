@@ -55,7 +55,9 @@ public class Course {
     public void setId(int id) {
         this.id = id;
     }
-
+    public String getFirebasrId(){
+        return code.replace("1920II_" , "").replace("_", " ");
+    }
     public long getLastAccessTime() {
         return lastAccessTime;
     }
