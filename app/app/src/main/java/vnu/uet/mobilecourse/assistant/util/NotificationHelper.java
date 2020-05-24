@@ -41,10 +41,11 @@ public class NotificationHelper {
         try {
             String channelId = notification.getChannelId();
             Log.e(TAG, "notify: " + channelId);
-            createChannel(context, channelId);
 
             if (notifyManager != null) {
-                NotificationManagerCompat.from(context).notify(id.hashCode(), notification);
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+                createChannel(notificationManager, channelId);
+                notificationManager.notify(id.hashCode(), notification);
                 return true;
             }
 
@@ -55,19 +56,13 @@ public class NotificationHelper {
         return false;
     }
 
-    public void createChannel(@NonNull Context context, @NonNull String id) throws Exception {
+    public void createChannel(@NonNull NotificationManagerCompat notificationManager, @NonNull String id) throws Exception {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(id, id, NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription(id);
 
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
-            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-
-            if (notificationManager == null) {
-                throw new Exception("Notification Manager not found");
-            }
-
             notificationManager.createNotificationChannel(channel);
 
         } else throw new Exception("App notification hasn't supported for current SDK version");

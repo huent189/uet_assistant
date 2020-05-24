@@ -7,4 +7,5 @@ public interface FirebaseCollectionName {
     String ENROLLMENT = "enrollment";
     String COURSE = "course";
     String CHAT_GROUP = "chatGroup";
+    String NOTIFICATION = "notification";
 }
