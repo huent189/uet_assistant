@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Course implements IFirebaseModel {
+public class CourseInfo implements IFirebaseModel {
 
     private String name;
     private String id;

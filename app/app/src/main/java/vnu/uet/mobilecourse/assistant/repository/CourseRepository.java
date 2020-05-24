@@ -7,11 +7,17 @@ import vnu.uet.mobilecourse.assistant.model.Course;
 import vnu.uet.mobilecourse.assistant.model.CourseContent;
 import vnu.uet.mobilecourse.assistant.model.Grade;
 import vnu.uet.mobilecourse.assistant.model.User;
+import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CourseRepository {
@@ -36,8 +42,73 @@ public class CourseRepository {
         return instance;
     }
 
+    public class MergeCourseLiveData extends StateMediatorLiveData<List<Course>> {
+        private List<Course> courses = new ArrayList<>();
+        private List<CourseInfo> fbCourses = new ArrayList<>();
+        private boolean coursesSuccess;
+        private boolean fbSuccess;
+
+        public MergeCourseLiveData(LiveData<List<Course>> coursesLiveData,
+                                   StateLiveData<List<CourseInfo>> fbLiveData) {
+            postLoading();
+
+            addSource(coursesLiveData, courses -> {
+                if (courses == null) {
+                    coursesSuccess = false;
+                    postLoading();
+                } else {
+                    coursesSuccess = true;
+                    setCourses(courses);
+
+                    if (coursesSuccess && fbSuccess) {
+
+                    }
+                }
+            });
+
+            addSource(fbLiveData, stateModel -> {
+                switch (stateModel.getStatus()) {
+                    case ERROR:
+                        fbSuccess = false;
+                        postError(stateModel.getError());
+                        break;
+
+                    case LOADING:
+                        fbSuccess = false;
+                        postLoading();
+                        break;
+
+                    case SUCCESS:
+                        fbSuccess = true;
+                        setFbCourses(stateModel.getData());
+
+                        if (coursesSuccess && fbSuccess) {
+
+                        }
+                }
+            });
+        }
+
+        private void setCourses(List<Course> courses) {
+            this.courses = courses;
+        }
+
+        private void setFbCourses(List<CourseInfo> fbCourses) {
+            this.fbCourses = fbCourses;
+        }
+
+        private List<Course> combineData() {
+
+        }
+
+    }
+
     public LiveData<List<Course>> getCourses() {
         updateMyCourses();
+
+        StateMediatorLiveData<List<Course>> merger = new StateMediatorLiveData<>(new StateModel<>(StateStatus.LOADING));
+        merger.
+
         return dao.getMyCourses();
     }
 

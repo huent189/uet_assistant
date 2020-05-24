@@ -9,28 +9,22 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import vnu.uet.mobilecourse.assistant.model.firebase.Course;
+import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.FirebaseCollectionName;
-import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
-import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
-public class CourseInfoDAO extends FirebaseDAO<Course> {
+public class CourseInfoDAO extends FirebaseDAO<CourseInfo> {
 
     public CourseInfoDAO() {
         super(FirebaseFirestore.getInstance()
@@ -38,8 +32,8 @@ public class CourseInfoDAO extends FirebaseDAO<Course> {
         );
     }
 
-    public StateLiveData<List<Course>> getParticipateCourses(String studentId) {
-        StateLiveData<List<Course>> liveData = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
+    public StateLiveData<List<CourseInfo>> getParticipateCourses(String studentId) {
+        StateLiveData<List<CourseInfo>> liveData = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
 
         // listen data from firebase
         // query all document owned by current user
@@ -61,7 +55,7 @@ public class CourseInfoDAO extends FirebaseDAO<Course> {
                         }
                         // query completed with snapshots
                         else {
-                            List<Course> courses = new ArrayList<>();
+                            List<CourseInfo> courses = new ArrayList<>();
 
                             for (QueryDocumentSnapshot snapshot : snapshots) {
                                 DocumentReference courseDocRef = snapshot.getReference().getParent().getParent();
@@ -71,7 +65,7 @@ public class CourseInfoDAO extends FirebaseDAO<Course> {
                                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                             @Override
                                             public void onSuccess(DocumentSnapshot snapshot) {
-                                                Course course = snapshot.toObject(Course.class);
+                                                CourseInfo course = snapshot.toObject(CourseInfo.class);
                                                 courses.add(course);
                                                 liveData.postSuccess(courses);
                                             }
@@ -92,7 +86,7 @@ public class CourseInfoDAO extends FirebaseDAO<Course> {
     }
 
     @Override
-    public StateLiveData<List<Course>> readAll() {
+    public StateLiveData<List<CourseInfo>> readAll() {
         // this live data will only initialize once
         // data change will auto update by 'addSnapshotListener'
         // to listen for data changes
@@ -106,7 +100,7 @@ public class CourseInfoDAO extends FirebaseDAO<Course> {
 
     @Deprecated
     @Override
-    public StateLiveData<Course> add(String id, Course document) {
+    public StateLiveData<CourseInfo> add(String id, CourseInfo document) {
         return super.add(id, document);
     }
 
