@@ -47,6 +47,6 @@ public class ChatRepository implements IChatRepository {
 
     @Override
     public IStateLiveData<GroupChat> createGroupChat(GroupChat groupChat) {
-        return new GroupChatDAO(FirebaseCollectionName.GROUP_CHAT).add(groupChat.getId(), groupChat);
+        return new GroupChatDAO().add(groupChat.getId(), groupChat);
     }
 }
