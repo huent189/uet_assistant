@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.view;
 
 import android.app.Application;
 
+@Deprecated
 public class MyApplication extends Application {
     private static MyApplication instance;
 
