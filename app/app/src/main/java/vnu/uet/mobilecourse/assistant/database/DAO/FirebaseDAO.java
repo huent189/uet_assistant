@@ -28,7 +28,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
     /**
      * Student Id = Owner Id
      */
-    protected static final String OWNER_ID = User.getInstance().getStudentId();
+    static final String OWNER_ID = User.getInstance().getStudentId();
 
     private CollectionReference mColReference;
 
@@ -57,6 +57,9 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
      */
     @Override
     public StateLiveData<List<T>> readAll() {
+        // this live data will only initialize once
+        // data change will auto update by 'addSnapshotListener'
+        // to listen for data changes
         if (mDataList == null) {
             // initialize with loading state
             mDataList = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
@@ -66,15 +69,18 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
             mColReference.whereEqualTo("ownerId", OWNER_ID)
                     // listen for data change
                     .addSnapshotListener((snapshots, e) -> {
+                        // catch an exception
                         if (e != null) {
                             Log.e(TAG, "Listen to data list failed.");
                             mDataList.postError(e);
-
-                        } else if (snapshots == null) {
+                        }
+                        // hasn't got snapshots yet
+                        else if (snapshots == null) {
                             Log.d(TAG, "Listening to data list.");
                             mDataList.postLoading();
-
-                        } else {
+                        }
+                        // query completed with snapshots
+                        else {
                             List<T> allLists = snapshots.getDocuments().stream()
                                     .map(this::fromSnapshot)
                                     .filter(Objects::nonNull)
@@ -84,6 +90,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
                         }
                     });
         }
+
         return mDataList;
     }
 
@@ -101,31 +108,44 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
      */
     @Override
     public StateMediatorLiveData<T> read(String id) {
+        // query to get all documents
+        // in case list live data hasn't init yet
         readAll();
 
+        // initialize output state live data with loading state
         StateModel<T> loadingState = new StateModel<>(StateStatus.LOADING);
         StateMediatorLiveData<T> response = new StateMediatorLiveData<>(loadingState);
 
+        // output state live data will bind with mDataList
+        // when mDataList change, output from this function
+        // will auto update data
         response.addSource(mDataList, state -> {
+            // consider the state of mDataList
             switch (state.getStatus()) {
+                // post loading state
                 case LOADING:
                     response.postLoading();
                     break;
 
+                // post error state
                 case ERROR:
                     response.postError(state.getError());
                     break;
 
+                // post success state
                 case SUCCESS:
+                    // filter the selected document by id
                     T doc = state.getData().stream()
                             .filter(d -> d.getId().equals(id))
                             .findFirst()
                             .orElse(null);
 
-                    if (doc == null)
-                        response.postLoading();
-                    else
-                        response.postSuccess(doc);
+                    // in case can't not found document
+                    // we will post loading state
+                    // (or error state .-. idk)
+                    if (doc == null) response.postLoading();
+                    // post success state when find the doc
+                    else response.postSuccess(doc);
 
                     break;
             }
@@ -145,24 +165,15 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
      */
     @Override
     public StateLiveData<T> add(String id, T document) {
+        // initialize output state live data with loading state
         StateModel<T> loadingState = new StateModel<>(StateStatus.LOADING);
         StateLiveData<T> response = new StateLiveData<>(loadingState);
 
-
+        // add document into firestore db
+        // *note: if this operation executed without internet connection
+        // state of the response won't change (still loading)
         mColReference.document(id)
                 .set(document)
-                .addOnCanceledListener(new OnCanceledListener() {
-                    @Override
-                    public void onCanceled() {
-                        System.out.println();
-                    }
-                })
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        System.out.println();
-                    }
-                })
                 .addOnSuccessListener(aVoid -> {
                     response.postSuccess(document);
                     Log.d(TAG, "Add a new todo list: " + id);
@@ -185,9 +196,13 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
      */
     @Override
     public StateLiveData<String> delete(String id) {
+        // initialize output state live data with loading state
         StateModel<String> loadingState = new StateModel<>(StateStatus.LOADING);
         StateLiveData<String> response = new StateLiveData<>(loadingState);
 
+        // delete document from firestore db
+        // *note: if this operation executed without internet connection
+        // state of the response won't change (still loading)
         mColReference.document(id)
                 .delete()
                 .addOnSuccessListener(aVoid -> {
@@ -213,9 +228,13 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
      */
     @Override
     public StateLiveData<String> update(String id, Map<String, Object> changes) {
+        // initialize output state live data with loading state
         StateModel<String> loadingState = new StateModel<>(StateStatus.LOADING);
         StateLiveData<String> response = new StateLiveData<>(loadingState);
 
+        // update document into firestore db
+        // *note: if this operation executed without internet connection
+        // state of the response won't change (still loading)
         mColReference.document(id)
                 .update(changes)
                 .addOnSuccessListener(aVoid -> {
