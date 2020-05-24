@@ -1,42 +1,29 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
-public class User {
-    private String studentId;
-    private String name;
-    private String uetClass;
-    private String DOB;
+import com.google.firebase.firestore.Exclude;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class User implements IFirebaseModel {
+
+    private String id;
+
     private String avatar;
 
-    public String getStudentId() {
-        return studentId;
+    @Exclude
+    private List<GroupChat_UserSubCol> groupChats = new ArrayList<>();
+
+    @Exclude
+    private List<Notification_UserSubCol> notifications = new ArrayList<>();
+
+    @Override
+    public String getId() {
+        return id;
     }
 
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUetClass() {
-        return uetClass;
-    }
-
-    public void setUetClass(String uetClass) {
-        this.uetClass = uetClass;
-    }
-
-    public String getDOB() {
-        return DOB;
-    }
-
-    public void setDOB(String DOB) {
-        this.DOB = DOB;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getAvatar() {
@@ -47,4 +34,21 @@ public class User {
         this.avatar = avatar;
     }
 
+    @Exclude
+    public List<GroupChat_UserSubCol> getGroupChats() {
+        return groupChats;
+    }
+
+    public void setGroupChats(List<GroupChat_UserSubCol> groupChats) {
+        this.groupChats = groupChats;
+    }
+
+    @Exclude
+    public List<Notification_UserSubCol> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification_UserSubCol> notifications) {
+        this.notifications = notifications;
+    }
 }

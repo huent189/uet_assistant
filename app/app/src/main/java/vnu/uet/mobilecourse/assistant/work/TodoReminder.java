@@ -3,13 +3,21 @@ package vnu.uet.mobilecourse.assistant.work;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+
+import com.google.firebase.firestore.util.Util;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.database.DAO.NotificationDAO;
+import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
+import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.repository.firebase.NotificationRepository;
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
 import vnu.uet.mobilecourse.assistant.view.MainActivity;
 
@@ -35,12 +43,35 @@ public class TodoReminder extends Worker {
         String title = data.getString("title");
         String desc = data.getString("description");
 
+        Notification_UserSubCol notificationDoc = new Notification_UserSubCol();
+        notificationDoc.setId(Util.autoId());
+        notificationDoc.setCategory("todo");
+        notificationDoc.setTitle(title);
+        notificationDoc.setDescription(desc);
+        notificationDoc.setNotifyTime(System.currentTimeMillis() / 1000);
+        notificationDoc.setType(NotificationType.TODO);
+        notificationDoc.setReference(id);
+
+        NotificationRepository.getInstance().add(notificationDoc);
+
         Log.e("TODO", "doWork: " + title );
 
-        Intent intent = new Intent(LAUNCH_ACTION);
-        intent.setClassName(APP_PACKAGE, ACTIVITY_ID);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mContext.startActivity(intent);
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(mContext, MainActivity.class);
+                intent.setAction(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_LAUNCHER);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(intent);
+            }
+        });
+
+
+//        Intent intent = new Intent("android.intent.category.DEFAULT");
+//        intent.setClassName(APP_PACKAGE, ACTIVITY_ID);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        mContext.startActivity(intent);
 
         Notification notification = NotificationHelper.getsInstance()
                 .build(mContext, CHANNEL_ID, R.drawable.ic_check_circle_24dp, title, desc);
