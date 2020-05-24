@@ -14,6 +14,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.exception.InvalidLoginException;
+import vnu.uet.mobilecourse.assistant.exception.NoConnectivityException;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.UserRequest;
@@ -107,7 +108,13 @@ public class UserRepository {
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable throwable) {
-                loginState.postError(new Exception(throwable));
+                if(throwable instanceof NoConnectivityException){
+                    loginState.postSuccess("login successfully");
+                    Log.d("COURSE_DEBUG", "onFailure: no internet");
+                } else {
+                    loginState.postError(new Exception(throwable));
+                }
+
             }
         });
         return loginState;

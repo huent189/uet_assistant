@@ -3,6 +3,7 @@
     package="vnu.uet.mobilecourse.assistant">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".view.MyApplication"
@@ -31,7 +32,6 @@
         <activity
             android:name=".view.LoginActivity"
             android:label="@string/login" />
-<!--        <activity android:name=".view.TestActivity">-->
         <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
