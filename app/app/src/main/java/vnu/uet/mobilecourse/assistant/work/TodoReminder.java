@@ -15,7 +15,9 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.database.DAO.NotificationDAO;
+import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
 import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.repository.firebase.NotificationRepository;
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
 import vnu.uet.mobilecourse.assistant.view.MainActivity;
 
@@ -47,8 +49,10 @@ public class TodoReminder extends Worker {
         notificationDoc.setTitle(title);
         notificationDoc.setDescription(desc);
         notificationDoc.setNotifyTime(System.currentTimeMillis() / 1000);
+        notificationDoc.setType(NotificationType.TODO);
+        notificationDoc.setReference(id);
 
-        new NotificationDAO().add(notificationDoc.getId(), notificationDoc);
+        NotificationRepository.getInstance().add(notificationDoc);
 
         Log.e("TODO", "doWork: " + title );
 
