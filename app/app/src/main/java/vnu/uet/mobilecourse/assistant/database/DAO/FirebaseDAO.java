@@ -25,18 +25,36 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebaseDAO<T> {
     private static final String TAG = FirebaseDAO.class.getSimpleName();
 
+    /**
+     * Student Id = Owner Id
+     */
     protected static final String OWNER_ID = User.getInstance().getStudentId();
 
     private CollectionReference mColReference;
 
+    /**
+     * DAO usually interact in an collection/sub collection
+     *
+     * @param colRef reference of the corresponding collection
+     */
     FirebaseDAO(CollectionReference colRef) {
         mColReference = colRef;
     }
 
+    /**
+     * state live data contains a list of model
+     * this will initialize once,
+     * and we will listen for snapshot change
+     * to update live data.
+     */
     private StateLiveData<List<T>> mDataList;
 
     protected abstract T fromSnapshot(DocumentSnapshot snapshot);
 
+    /**
+     * Get all data in firestore db
+     * and update live data whenever a snapshot change
+     */
     @Override
     public StateLiveData<List<T>> readAll() {
         if (mDataList == null) {
@@ -69,6 +87,18 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         return mDataList;
     }
 
+    /**
+     * Get a document by id
+     *
+     * This function will filter from mDataList
+     * to get the selected document
+     *
+     * We avoid reading directly from db for reduce read throughput
+     *
+     * @param id of the document
+     *
+     * @return state live data contains document
+     */
     @Override
     public StateMediatorLiveData<T> read(String id) {
         readAll();
@@ -104,6 +134,15 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         return response;
     }
 
+    /**
+     * Add a document into firestore db
+     *
+     * @param id of document
+     * @param document contains document info
+     *
+     * @return state live data contains
+     * response of this function
+     */
     @Override
     public StateLiveData<T> add(String id, T document) {
         StateModel<T> loadingState = new StateModel<>(StateStatus.LOADING);
@@ -136,6 +175,14 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         return response;
     }
 
+    /**
+     * Delete a document by id
+     *
+     * @param id of the document
+     *
+     * @return state live data contains
+     * response of this function
+     */
     @Override
     public StateLiveData<String> delete(String id) {
         StateModel<String> loadingState = new StateModel<>(StateStatus.LOADING);
@@ -155,6 +202,15 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         return response;
     }
 
+    /**
+     * Update a document by id
+     *
+     * @param id of the document
+     * @param changes - a field name to value map
+     *
+     * @return state live data contains
+     * response of this function
+     */
     @Override
     public StateLiveData<String> update(String id, Map<String, Object> changes) {
         StateModel<String> loadingState = new StateModel<>(StateStatus.LOADING);
