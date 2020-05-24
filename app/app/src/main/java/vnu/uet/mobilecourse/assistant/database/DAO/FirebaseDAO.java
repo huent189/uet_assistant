@@ -25,41 +25,62 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebaseDAO<T> {
     private static final String TAG = FirebaseDAO.class.getSimpleName();
 
-    private static final String OWNER_ID = User.getInstance().getStudentId();
+    /**
+     * Student Id = Owner Id
+     */
+    static final String OWNER_ID = User.getInstance().getStudentId();
 
+    private CollectionReference mColReference;
 
-    private FirebaseFirestore db;
-    private CollectionReference colRef;
-
-    FirebaseDAO(String collectionName) {
-        db = FirebaseFirestore.getInstance();
-        colRef = db.collection(collectionName);
+    /**
+     * DAO usually interact in an collection/sub collection
+     *
+     * @param colRef reference of the corresponding collection
+     */
+    FirebaseDAO(CollectionReference colRef) {
+        mColReference = colRef;
     }
 
+    /**
+     * state live data contains a list of model
+     * this will initialize once,
+     * and we will listen for snapshot change
+     * to update live data.
+     */
     private StateLiveData<List<T>> mDataList;
 
     protected abstract T fromSnapshot(DocumentSnapshot snapshot);
 
+    /**
+     * Get all data in firestore db
+     * and update live data whenever a snapshot change
+     */
     @Override
     public StateLiveData<List<T>> readAll() {
+        // this live data will only initialize once
+        // data change will auto update by 'addSnapshotListener'
+        // to listen for data changes
         if (mDataList == null) {
             // initialize with loading state
             mDataList = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
 
             // listen data from firebase
             // query all document owned by current user
-            colRef.whereEqualTo("ownerId", OWNER_ID)
+            mColReference.whereEqualTo("ownerId", OWNER_ID)
                     // listen for data change
                     .addSnapshotListener((snapshots, e) -> {
+                        // catch an exception
                         if (e != null) {
                             Log.e(TAG, "Listen to data list failed.");
                             mDataList.postError(e);
-
-                        } else if (snapshots == null) {
+                        }
+                        // hasn't got snapshots yet
+                        else if (snapshots == null) {
                             Log.d(TAG, "Listening to data list.");
                             mDataList.postLoading();
-
-                        } else {
+                        }
+                        // query completed with snapshots
+                        else {
                             List<T> allLists = snapshots.getDocuments().stream()
                                     .map(this::fromSnapshot)
                                     .filter(Objects::nonNull)
@@ -69,36 +90,62 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
                         }
                     });
         }
+
         return mDataList;
     }
 
+    /**
+     * Get a document by id
+     *
+     * This function will filter from mDataList
+     * to get the selected document
+     *
+     * We avoid reading directly from db for reduce read throughput
+     *
+     * @param id of the document
+     *
+     * @return state live data contains document
+     */
     @Override
     public StateMediatorLiveData<T> read(String id) {
+        // query to get all documents
+        // in case list live data hasn't init yet
         readAll();
 
+        // initialize output state live data with loading state
         StateModel<T> loadingState = new StateModel<>(StateStatus.LOADING);
         StateMediatorLiveData<T> response = new StateMediatorLiveData<>(loadingState);
 
+        // output state live data will bind with mDataList
+        // when mDataList change, output from this function
+        // will auto update data
         response.addSource(mDataList, state -> {
+            // consider the state of mDataList
             switch (state.getStatus()) {
+                // post loading state
                 case LOADING:
                     response.postLoading();
                     break;
 
+                // post error state
                 case ERROR:
                     response.postError(state.getError());
                     break;
 
+                // post success state
                 case SUCCESS:
+                    // filter the selected document by id
                     T doc = state.getData().stream()
                             .filter(d -> d.getId().equals(id))
                             .findFirst()
                             .orElse(null);
 
-                    if (doc == null)
-                        response.postLoading();
-                    else
-                        response.postSuccess(doc);
+                    // in case can't not found document
+                    // we will post loading state
+                    // (or error state .-. idk)
+                    if (doc == null) response.postLoading();
+                    // post success state when find the doc
+                    else response.postSuccess(doc);
 
                     break;
             }
@@ -107,26 +154,26 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         return response;
     }
 
+    /**
+     * Add a document into firestore db
+     *
+     * @param id of document
+     * @param document contains document info
+     *
+     * @return state live data contains
+     * response of this function
+     */
     @Override
     public StateLiveData<T> add(String id, T document) {
+        // initialize output state live data with loading state
         StateModel<T> loadingState = new StateModel<>(StateStatus.LOADING);
         StateLiveData<T> response = new StateLiveData<>(loadingState);
 
-
-        colRef.document(id)
+        // add document into firestore db
+        // *note: if this operation executed without internet connection
+        // state of the response won't change (still loading)
+        mColReference.document(id)
                 .set(document)
-                .addOnCanceledListener(new OnCanceledListener() {
-                    @Override
-                    public void onCanceled() {
-                        System.out.println();
-                    }
-                })
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        System.out.println();
-                    }
-                })
                 .addOnSuccessListener(aVoid -> {
                     response.postSuccess(document);
                     Log.d(TAG, "Add a new todo list: " + id);
@@ -139,14 +186,27 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         return response;
     }
 
+    /**
+     * Delete a document by id
+     *
+     * @param id of the document
+     *
+     * @return state live data contains
+     * response of this function
+     */
     @Override
     public StateLiveData<String> delete(String id) {
+        // initialize output state live data with loading state
         StateModel<String> loadingState = new StateModel<>(StateStatus.LOADING);
         StateLiveData<String> response = new StateLiveData<>(loadingState);
 
-        colRef.document(id)
+        // delete document from firestore db
+        // *note: if this operation executed without internet connection
+        // state of the response won't change (still loading)
+        mColReference.document(id)
                 .delete()
                 .addOnSuccessListener(aVoid -> {
+                    // response post success with id of deleted document
                     response.postSuccess(id);
                     Log.d(TAG, "Delete document: " + id);
                 })
@@ -158,14 +218,28 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         return response;
     }
 
+    /**
+     * Update a document by id
+     *
+     * @param id of the document
+     * @param changes - a field name to value map
+     *
+     * @return state live data contains
+     * response of this function
+     */
     @Override
     public StateLiveData<String> update(String id, Map<String, Object> changes) {
+        // initialize output state live data with loading state
         StateModel<String> loadingState = new StateModel<>(StateStatus.LOADING);
         StateLiveData<String> response = new StateLiveData<>(loadingState);
 
-        colRef.document(id)
+        // update document into firestore db
+        // *note: if this operation executed without internet connection
+        // state of the response won't change (still loading)
+        mColReference.document(id)
                 .update(changes)
                 .addOnSuccessListener(aVoid -> {
+                    // response post success with id of updated document
                     response.postSuccess(id);
                     Log.d(TAG, "Change document: " + id);
                 })
