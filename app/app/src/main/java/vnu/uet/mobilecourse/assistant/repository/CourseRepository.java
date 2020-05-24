@@ -2,16 +2,19 @@ package vnu.uet.mobilecourse.assistant.repository;
 
 import androidx.lifecycle.LiveData;
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
+import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.CoursesDAO;
 import vnu.uet.mobilecourse.assistant.model.Course;
 import vnu.uet.mobilecourse.assistant.model.CourseContent;
 import vnu.uet.mobilecourse.assistant.model.Grade;
+import vnu.uet.mobilecourse.assistant.model.ICourse;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
@@ -19,6 +22,7 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CourseRepository {
     /**
@@ -26,6 +30,8 @@ public class CourseRepository {
      */
     private static CourseRepository instance;
     private CoursesDAO dao;
+    private CourseInfoDAO infoDAO;
+
     /**
      * Data set
      */
@@ -37,12 +43,13 @@ public class CourseRepository {
         if (instance == null) {
             instance = new CourseRepository();
             instance.dao = CoursesDatabase.getDatabase().coursesDAO();
+            instance.infoDAO = new CourseInfoDAO();
         }
 
         return instance;
     }
 
-    public class MergeCourseLiveData extends StateMediatorLiveData<List<Course>> {
+    public static class MergeCourseLiveData extends StateMediatorLiveData<List<ICourse>> {
         private List<Course> courses = new ArrayList<>();
         private List<CourseInfo> fbCourses = new ArrayList<>();
         private boolean coursesSuccess;
@@ -61,7 +68,8 @@ public class CourseRepository {
                     setCourses(courses);
 
                     if (coursesSuccess && fbSuccess) {
-
+                        List<ICourse> combineData = combineData();
+                        postSuccess(combineData);
                     }
                 }
             });
@@ -83,7 +91,8 @@ public class CourseRepository {
                         setFbCourses(stateModel.getData());
 
                         if (coursesSuccess && fbSuccess) {
-
+                            List<ICourse> combineData = combineData();
+                            postSuccess(combineData);
                         }
                 }
             });
@@ -97,19 +106,34 @@ public class CourseRepository {
             this.fbCourses = fbCourses;
         }
 
-        private List<Course> combineData() {
+        private List<ICourse> combineData() {
+            List<ICourse> merged = new ArrayList<>(courses);
 
+            List<CourseInfo> others = fbCourses.stream().filter(courseInfo -> {
+                for (ICourse course : merged) {
+                    if (course.getCode().equals(courseInfo.getCode()))
+                        return false;
+                }
+
+                return true;
+            }).collect(Collectors.toList());
+
+            merged.addAll(others);
+
+            return merged;
         }
-
     }
 
     public LiveData<List<Course>> getCourses() {
         updateMyCourses();
 
-        StateMediatorLiveData<List<Course>> merger = new StateMediatorLiveData<>(new StateModel<>(StateStatus.LOADING));
-        merger.
-
         return dao.getMyCourses();
+    }
+
+    public IStateLiveData<List<ICourse>> getFullCourses() {
+        updateMyCourses();
+
+        return new MergeCourseLiveData(dao.getMyCourses(), infoDAO.readAll());
     }
 
     public void updateMyCourses(){

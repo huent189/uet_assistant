@@ -15,15 +15,16 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.Course;
+import vnu.uet.mobilecourse.assistant.model.ICourse;
 import vnu.uet.mobilecourse.assistant.view.course.CoursesFragment;
 
 public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.CourseViewHolder> {
 
-    private List<Course> mCourses;
+    private List<ICourse> mCourses;
     private CoursesFragment mOwner;
     private NavController mNavController;
 
-    public AllCoursesAdapter(List<Course> courses, CoursesFragment owner) {
+    public AllCoursesAdapter(List<ICourse> courses, CoursesFragment owner) {
         this.mCourses = courses;
         this.mOwner = owner;
     }
@@ -46,7 +47,7 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Co
 
     @Override
     public void onBindViewHolder(@NonNull CourseViewHolder holder, int position) {
-        final Course currentCourse = mCourses.get(position);
+        final ICourse currentCourse = mCourses.get(position);
         holder.bind(currentCourse, mNavController);
     }
 
@@ -68,7 +69,7 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Co
             mBtnAccessCourse = view.findViewById(R.id.btnCourseAccess);
         }
 
-        void bind(Course course, NavController navController) {
+        void bind(ICourse course, NavController navController) {
             String courseTitle = course.getTitle();
             String courseCode = course.getCode();
 
@@ -80,9 +81,15 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Co
 
             mBtnAccessCourse.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-                bundle.putInt("courseId", course.getId());
+
+                if (course instanceof Course) {
+                    bundle.putInt("courseId", ((Course) course).getId());
+                }
+
                 bundle.putString("courseTitle", courseTitle);
                 bundle.putString("courseCode", courseCode);
+
+
 
                 navController
                         .navigate(R.id.action_navigation_courses_to_navigation_explore_course, bundle);

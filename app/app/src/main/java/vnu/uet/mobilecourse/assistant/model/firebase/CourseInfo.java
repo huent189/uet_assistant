@@ -7,7 +7,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CourseInfo implements IFirebaseModel {
+import androidx.annotation.Nullable;
+import vnu.uet.mobilecourse.assistant.model.ICourse;
+import vnu.uet.mobilecourse.assistant.util.CONST;
+
+public class CourseInfo implements IFirebaseModel, ICourse {
 
     private String name;
     private String id;
@@ -49,5 +53,15 @@ public class CourseInfo implements IFirebaseModel {
     @Exclude
     public List<Participant_CourseSubCol> getParticipants() {
         return participants;
+    }
+
+    @Override
+    public String getCode() {
+        return CONST.COURSE_PREFIX + CONST.UNDERSCORE + id.replace(CONST.SPACE, CONST.UNDERSCORE);
+    }
+
+    @Override
+    public String getTitle() {
+        return name;
     }
 }
