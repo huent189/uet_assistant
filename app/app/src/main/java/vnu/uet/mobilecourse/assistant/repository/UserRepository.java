@@ -97,8 +97,10 @@ public class UserRepository {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (response.body().get("errorcode") == null) {
+                    Log.d("COURSES_DEBUG", response.toString());
                     loginState.postSuccess("login successfully");
                 } else {
+                    Log.d("COURSES_DEBUG", "login failed");
                     loginState.postError(new InvalidLoginException());
                 }
             }
