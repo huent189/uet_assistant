@@ -6,6 +6,8 @@ public class Notification_UserSubCol implements IFirebaseModel {
     private String title;
     private String description;
     private long notifyTime;
+    private int type;
+    private String reference;
 
     @Override
     public String getId() {
@@ -22,6 +24,22 @@ public class Notification_UserSubCol implements IFirebaseModel {
 
     public void setNotifyTime(long notifyTime) {
         this.notifyTime = notifyTime;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getReference() {
+        return reference;
+    }
+
+    public void setReference(String reference) {
+        this.reference = reference;
     }
 
     public String getCategory() {
