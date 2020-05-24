@@ -1,23 +1,25 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.google.firebase.firestore.Exclude;
 
-public class UserInfo {
-    private String stuentId;
+public class UserInfo implements IFirebaseModel {
+
+    private String id;
     private String name;
     private long DOB;
     private String uetClass;
 
-    public String getStuentId() {
-        return stuentId;
+    @Exclude
+    private String avatar;
+
+    @Override
+    public String getId() {
+        return id;
     }
 
-    public void setStuentId(String stuentId) {
-        this.stuentId = stuentId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -42,5 +44,13 @@ public class UserInfo {
 
     public void setUetClass(String uetClass) {
         this.uetClass = uetClass;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

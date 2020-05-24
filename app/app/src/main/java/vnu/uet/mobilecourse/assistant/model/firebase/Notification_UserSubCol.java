@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
 public class Notification_UserSubCol implements IFirebaseModel {
+
     private String id;
     private String category;
     private String title;
