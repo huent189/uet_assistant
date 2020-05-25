@@ -4,6 +4,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import vnu.uet.mobilecourse.assistant.database.DAO.CoursesDAO;
+import vnu.uet.mobilecourse.assistant.database.DAO.GradeDAO;
+import vnu.uet.mobilecourse.assistant.database.DAO.MaterialDAO;
 import vnu.uet.mobilecourse.assistant.model.Grade;
 import vnu.uet.mobilecourse.assistant.model.Course;
 import vnu.uet.mobilecourse.assistant.model.Material;
@@ -20,6 +22,8 @@ public abstract class CoursesDatabase extends RoomDatabase {
     public static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
     public abstract CoursesDAO coursesDAO();
+    public abstract GradeDAO gradeDAO();
+    public abstract MaterialDAO materialDAO();
     public static CoursesDatabase getDatabase() {
         if (instance == null) {
             synchronized (CoursesDatabase.class) {
