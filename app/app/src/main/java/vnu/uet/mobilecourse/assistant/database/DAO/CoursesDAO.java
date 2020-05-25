@@ -12,7 +12,7 @@ public interface CoursesDAO {
     LiveData<List<Course>> getMyCourses();
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertCourse(Course... course);
-    @Query("UPDATE Course SET lastAccessTime =:accessTime WHERE id = :id")
+    @Query("UPDATE Course SET lastAccessTime =:accessTime WHERE id = :id and lastAccessTime < :accessTime")
     void updateLastAccessTime(int id, long accessTime);
     //TODO: clear all table
 }

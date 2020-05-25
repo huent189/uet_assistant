@@ -9,6 +9,7 @@ public class SharedPreferencesManager {
     public static final String USER_ID = "USER_ID";
     public static final String TOKEN = "TOKEN";
     public static final String REGISTER_EMAIL = "REGISTER_EMAIL";
+    public static final String LAST_SYNCHONIZE_TIME = "LAST_SYNCHONIZE_TIME";
     private static final String APP_SHARED_PREFS = "MySharedPrefs";
     private static void initPreference(){
         if (preferences == null){
@@ -16,9 +17,13 @@ public class SharedPreferencesManager {
                     Context.MODE_PRIVATE);
         }
     }
-    public static String getValue(String key){
+    public static String getStringValue(String key){
         initPreference();
         return preferences.getString(key, null);
+    }
+    public static long getLongValue(String key){
+        initPreference();
+        return preferences.getLong(key, -1);
     }
     public static void deleteKey(String key){
         initPreference();
@@ -27,6 +32,10 @@ public class SharedPreferencesManager {
     public static void setString(String key, String value){
         initPreference();
         preferences.edit().putString(key, value).apply();
+    }
+    public static void setLong(String key, Long value){
+        initPreference();
+        preferences.edit().putLong(key, value).apply();
     }
     public static void clearAll(){
         initPreference();

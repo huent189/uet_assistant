@@ -44,7 +44,12 @@ public class CourseRepository {
     }
 
     public LiveData<List<Course>> getCourses() {
-        updateMyCourses();
+        if(User.getInstance().getLastSynchonizedTime() == -1){
+            updateMyCourses();
+        }
+        else {
+            synchonizeAccessTime();
+        }
         return coursesDAO.getMyCourses();
     }
 
@@ -102,6 +107,20 @@ public class CourseRepository {
                         CoursesDatabase.databaseWriteExecutor.execute(() ->{
                             gradeDAO.insertGrade(response);
                         });
+                    }
+                });
+    }
+    public void synchonizeAccessTime(){
+        HTTPClient.getInstance().request(CourseRequest.class).getMyCoures(User.getInstance().getUserId())
+                .enqueue(new CoursesResponseCallback<Course[]>(Course[].class) {
+                    @Override
+                    public void onSucess(Course[] response) {
+                        for (Course couse :response) {
+                            CoursesDatabase.databaseWriteExecutor.execute(() -> {
+                                coursesDAO.updateLastAccessTime(couse.getId(), couse.getLastAccessTime());
+                            });
+                        }
+                        User.getInstance().setLastSynchonizedTime(System.currentTimeMillis() / 1000);
                     }
                 });
     }

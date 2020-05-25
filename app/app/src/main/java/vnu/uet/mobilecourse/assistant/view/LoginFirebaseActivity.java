@@ -38,7 +38,7 @@ public class LoginFirebaseActivity extends AppCompatActivity {
             StateLiveData<String> loginFirebase = new FirebaseAuthenticationService()
                     .signInWithEmailLink(
                             SharedPreferencesManager
-                                    .getValue(SharedPreferencesManager.REGISTER_EMAIL)
+                                    .getStringValue(SharedPreferencesManager.REGISTER_EMAIL)
                             , deepLink
                     );
 
