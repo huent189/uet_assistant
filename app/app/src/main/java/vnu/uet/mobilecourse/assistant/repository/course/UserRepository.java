@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.repository;
+package vnu.uet.mobilecourse.assistant.repository.course;
 
 import android.util.Log;
 import androidx.annotation.NonNull;
@@ -20,6 +20,7 @@ import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.UserRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
 import vnu.uet.mobilecourse.assistant.network.response.LoginResponse;
+import vnu.uet.mobilecourse.assistant.repository.FirebaseAuthenticationService;
 import vnu.uet.mobilecourse.assistant.util.CONST;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;

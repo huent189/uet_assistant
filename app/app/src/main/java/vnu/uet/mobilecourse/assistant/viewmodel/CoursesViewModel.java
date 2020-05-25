@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import vnu.uet.mobilecourse.assistant.model.Course;
-import vnu.uet.mobilecourse.assistant.repository.CourseRepository;
+import vnu.uet.mobilecourse.assistant.repository.course.CourseRepository;
 
 public class CoursesViewModel extends ViewModel {
 

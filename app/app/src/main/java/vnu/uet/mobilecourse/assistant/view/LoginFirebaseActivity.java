@@ -6,13 +6,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.repository.FirebaseAuthenticationService;
-import vnu.uet.mobilecourse.assistant.repository.UserRepository;
+import vnu.uet.mobilecourse.assistant.repository.course.UserRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 
 

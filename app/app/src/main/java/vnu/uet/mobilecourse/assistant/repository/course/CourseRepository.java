@@ -1,8 +1,10 @@
-package vnu.uet.mobilecourse.assistant.repository;
+package vnu.uet.mobilecourse.assistant.repository.course;
 
 import androidx.lifecycle.LiveData;
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
 import vnu.uet.mobilecourse.assistant.database.DAO.CoursesDAO;
+import vnu.uet.mobilecourse.assistant.database.DAO.GradeDAO;
+import vnu.uet.mobilecourse.assistant.database.DAO.MaterialDAO;
 import vnu.uet.mobilecourse.assistant.model.Course;
 import vnu.uet.mobilecourse.assistant.model.CourseContent;
 import vnu.uet.mobilecourse.assistant.model.Grade;
@@ -19,7 +21,9 @@ public class CourseRepository {
      * Singleton instance
      */
     private static CourseRepository instance;
-    private CoursesDAO dao;
+    private CoursesDAO coursesDAO;
+    private MaterialDAO materialDAO;
+    private GradeDAO gradeDAO;
     /**
      * Data set
      */
@@ -30,7 +34,10 @@ public class CourseRepository {
     public static CourseRepository getInstance() {
         if (instance == null) {
             instance = new CourseRepository();
-            instance.dao = CoursesDatabase.getDatabase().coursesDAO();
+            instance.coursesDAO = CoursesDatabase.getDatabase().coursesDAO();
+            instance.materialDAO = CoursesDatabase.getDatabase().materialDAO();
+            instance.gradeDAO = CoursesDatabase.getDatabase().gradeDAO();
+
         }
 
         return instance;
@@ -38,7 +45,7 @@ public class CourseRepository {
 
     public LiveData<List<Course>> getCourses() {
         updateMyCourses();
-        return dao.getMyCourses();
+        return coursesDAO.getMyCourses();
     }
 
     public void updateMyCourses(){
@@ -53,7 +60,7 @@ public class CourseRepository {
                                 for (Course entity:response) {
                                     entity.setTitle(StringUtils.courseTitleFormat(entity.getTitle()));
                                 }
-                                dao.insertCourse(response);
+                                coursesDAO.insertCourse(response);
                             }
                         });
                     }
@@ -66,7 +73,7 @@ public class CourseRepository {
                     @Override
                     public void onSucess(CourseContent[] response) {
                         CoursesDatabase.databaseWriteExecutor.execute(()->{
-                            dao.insertCourseContent(courseId, response);
+                            materialDAO.insertCourseContent(courseId, response);
                         });
 
                     }
@@ -75,15 +82,16 @@ public class CourseRepository {
 
     public LiveData<List<CourseContent>> getContent(int courseId){
         updateCourseContent(courseId);
-        return dao.getCourseContent(courseId);
+        new CourseActionRepository().triggerCourseView(courseId);
+        return materialDAO.getCourseContent(courseId);
     }
     public LiveData<List<Grade>> getGrades(int courseId){
         updateCourseGrade(courseId);
-        return dao.getGrades(courseId);
+        return gradeDAO.getGrades(courseId);
     }
     public LiveData<Grade> getTotalGrades(int courseId){
         updateCourseGrade(courseId);
-        return dao.getTotalGrade(courseId);
+        return gradeDAO.getTotalGrade(courseId);
     }
     public void updateCourseGrade(int courseId) {
         HTTPClient.getInstance().request(CourseRequest.class)
@@ -92,7 +100,7 @@ public class CourseRepository {
                     @Override
                     public void onSucess(Grade[] response) {
                         CoursesDatabase.databaseWriteExecutor.execute(() ->{
-                            dao.insertGrade(response);
+                            gradeDAO.insertGrade(response);
                         });
                     }
                 });
