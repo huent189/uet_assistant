@@ -10,12 +10,15 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.NotificationAdapter;
+import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.NotificationsViewModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class NotificationsFragment extends Fragment {
 
@@ -36,17 +39,23 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void initializeNotificationListView(View root) {
-        List<String> notifications = new ArrayList<>();
-
-        for (int i = 1; i < 20; i++) {
-            notifications.add("Bài kiểm tra " + i);
-        }
-
-        mNotificationAdapter = new NotificationAdapter(notifications, this);
-
         RecyclerView rvNotifications = root.findViewById(R.id.rvNotifications);
 
         rvNotifications.setAdapter(mNotificationAdapter);
         rvNotifications.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
+        mViewModel.getNotifications().observe(getViewLifecycleOwner(), new Observer<StateModel<List<Notification_UserSubCol>>>() {
+            @Override
+            public void onChanged(StateModel<List<Notification_UserSubCol>> stateModel) {
+                switch (stateModel.getStatus()) {
+                    case SUCCESS:
+                        List<Notification_UserSubCol> notifications = stateModel.getData();
+                        mNotificationAdapter = new NotificationAdapter(notifications, NotificationsFragment.this);
+                        rvNotifications.setAdapter(mNotificationAdapter);
+
+                        break;
+                }
+            }
+        });
     }
 }

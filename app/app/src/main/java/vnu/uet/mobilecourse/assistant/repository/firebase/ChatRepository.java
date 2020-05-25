@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.List;
 
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChatDAO;
+import vnu.uet.mobilecourse.assistant.database.DAO.GroupChat_UserSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.MessageDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
@@ -20,15 +21,19 @@ public class ChatRepository implements IChatRepository {
     private FirebaseUser mUser;
     private FirebaseFirestore db;
 
+    private GroupChat_UserSubColDAO subColDAO;
+
     public ChatRepository() {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
+
+        subColDAO = new GroupChat_UserSubColDAO();
     }
 
     @Override
     public IStateLiveData<List<GroupChat_UserSubCol>> getAllUserGroupChats() {
-        return null;
+        return subColDAO.readAll();
     }
 
     @Override

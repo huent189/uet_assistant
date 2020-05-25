@@ -28,8 +28,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="@dimen/margin"
+            android:layout_marginHorizontal="@dimen/margin"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btnViewNotify"
@@ -37,49 +36,44 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+                style="@style/ListItemTitle"
                 android:id="@+id/tvNotifyTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text="Bài kiểm tra 8a"
                 android:textColor="@color/primary" />
 
             <TextView
                 android:id="@+id/tvNotifyDesc"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textSize="@dimen/font_size_caption"
                 android:layout_marginTop="2dp"
                 android:text="Đây là một thông mới được ví dụ" />
 
             <TextView
+                style="@style/SecondaryText"
                 android:id="@+id/tvNotifyTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/font_size_small"
                 android:layout_marginTop="2dp"
-                android:text="10 phút trước"
-                android:textColor="@color/whiteDisable" />
+                android:text="10 phút trước" />
 
         </LinearLayout>
 
-        <Button
-            style="@style/CircleButton"
+        <ImageButton
             android:id="@+id/btnViewNotify"
-            android:layout_width="@dimen/button_size"
-            android:layout_height="@dimen/button_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/transparent_button_background"
+            android:layout_marginEnd="@dimen/margin_x2"
+            android:src="@drawable/ic_chevron_right_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/title_chat"
-            android:src="@drawable/ic_chevron_right_24dp"
-            android:tint="@color/whiteDisable"
-            app:layout_constraintBottom_toBottomOf="@+id/btnViewNotify"
-            app:layout_constraintEnd_toEndOf="@+id/btnViewNotify"
-            app:layout_constraintStart_toStartOf="@+id/btnViewNotify"
-            app:layout_constraintTop_toTopOf="@+id/btnViewNotify" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

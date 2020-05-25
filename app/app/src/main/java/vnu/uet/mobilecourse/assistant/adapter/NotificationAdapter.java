@@ -1,14 +1,13 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Date;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -17,21 +16,23 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 
-public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
+public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotificationHolder> {
 
-    private List<String> mNotifications;
+    private List<Notification_UserSubCol> mNotifications;
     private Fragment mOwner;
     private NavController mNavController;
 
-    public NotificationAdapter(List<String> notifications, Fragment owner) {
+    public NotificationAdapter(List<Notification_UserSubCol> notifications, Fragment owner) {
         this.mNotifications = notifications;
         this.mOwner = owner;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public NotificationHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mOwner.getLayoutInflater()
                 .inflate(R.layout.layout_notification_item, parent, false);
 
@@ -42,12 +43,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     .findNavController(activity, R.id.nav_host_fragment);
         }
 
-        return new ViewHolder(view);
+        return new NotificationHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+    public void onBindViewHolder(@NonNull NotificationHolder holder, int position) {
+        final Notification_UserSubCol notification = mNotifications.get(position);
+        holder.bind(notification);
     }
 
 
@@ -56,18 +58,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return mNotifications.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class NotificationHolder extends RecyclerView.ViewHolder {
+
         private ImageView mIvNotifyIcon;
-
         private TextView mTvNotifyTitle;
-
         private TextView mTvNotifyDesc;
-
         private TextView mTvNotifyTime;
+        private ImageButton mBtnViewNotify;
 
-        private Button mBtnViewNotify;
-
-        public ViewHolder(@NonNull View view) {
+        public NotificationHolder(@NonNull View view) {
             super(view);
 
             mIvNotifyIcon = view.findViewById(R.id.ivNotifyIcon);
@@ -76,6 +75,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             mTvNotifyTime = view.findViewById(R.id.tvNotifyTime);
             mBtnViewNotify = view.findViewById(R.id.btnViewNotify);
 
+        }
+
+        public void bind(Notification_UserSubCol notification) {
+            String title = notification.getTitle();
+            mTvNotifyTitle.setText(title);
+
+            String desc = notification.getDescription();
+            mTvNotifyDesc.setText(desc);
+
+            Date notifyTime = DateTimeUtils.fromSecond(notification.getNotifyTime());
+            String time = DateTimeUtils.DATE_TIME_FORMAT.format(notifyTime);
+            mTvNotifyTime.setText(time);
         }
     }
 }
