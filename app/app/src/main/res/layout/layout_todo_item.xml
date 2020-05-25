@@ -20,9 +20,9 @@
             style="@style/ListItemTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_x2"
-            app:layout_constraintEnd_toStartOf="@+id/cbDone"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="@dimen/margin_x2"
+            app:layout_constraintStart_toEndOf="@+id/cbDone"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_height="0dp"
             android:src="@drawable/ic_alarm_24dp"
             app:layout_constraintBottom_toBottomOf="@+id/tvDeadline"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvTodoTitle"
             app:layout_constraintTop_toTopOf="@+id/tvDeadline" />
 
         <TextView
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:buttonTint="@color/primary"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -54,7 +54,7 @@ public class CourseClassmateFragment extends Fragment {
         rvClassMate.setAdapter(mAdapter);
         rvClassMate.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        mViewModel.getClassMates().observe(getViewLifecycleOwner(), mates -> mAdapter.notifyDataSetChanged());
+//        mViewModel.getClassMates().observe(getViewLifecycleOwner(), mates -> mAdapter.notifyDataSetChanged());
     }
 
     @Override
