@@ -1,6 +1,10 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
-public class Participant_CourseSubCol implements IFirebaseModel {
+import com.google.firebase.firestore.Exclude;
+
+import vnu.uet.mobilecourse.assistant.model.IStudent;
+
+public class Participant_CourseSubCol implements IFirebaseModel, IStudent {
 
     private String id;
 
@@ -8,7 +12,8 @@ public class Participant_CourseSubCol implements IFirebaseModel {
 
     private int group;
 
-    private String courseId;
+    @Exclude
+    private String avatar;
 
     @Override
     public String getId() {
@@ -19,6 +24,12 @@ public class Participant_CourseSubCol implements IFirebaseModel {
         this.id = id;
     }
 
+    @Override
+    public String getCode() {
+        return id;
+    }
+
+    @Override
     public String getName() {
         return name;
     }
@@ -27,19 +38,21 @@ public class Participant_CourseSubCol implements IFirebaseModel {
         this.name = name;
     }
 
+    @Override
+    @Exclude
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public int getGroup() {
         return group;
     }
 
     public void setGroup(int group) {
         this.group = group;
-    }
-
-    public String getCourseId() {
-        return courseId;
-    }
-
-    public void setCourseId(String courseId) {
-        this.courseId = courseId;
     }
 }

@@ -21,6 +21,16 @@ public class ChatRepository implements IChatRepository {
 
     private GroupChat_UserSubColDAO subColDAO;
 
+    private static ChatRepository instance;
+
+    public static ChatRepository getInstance() {
+        if (instance == null) {
+            instance = new ChatRepository();
+        }
+
+        return instance;
+    }
+
     public ChatRepository() {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();

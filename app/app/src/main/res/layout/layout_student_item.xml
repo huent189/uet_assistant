@@ -32,7 +32,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tvClassMateName"
+                android:id="@+id/tvName"
                 style="@style/ListItemTitle"
                 android:textColor="@color/primary"
                 android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
                 android:text="Nguyễn Tùng Lâm" />
 
             <TextView
-                android:id="@+id/tvClassMateId"
+                android:id="@+id/tvId"
                 style="@style/SecondaryText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

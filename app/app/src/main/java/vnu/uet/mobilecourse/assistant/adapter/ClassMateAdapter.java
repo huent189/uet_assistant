@@ -20,15 +20,18 @@ import java.util.stream.Collectors;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.adapter.viewholder.StudentViewHolder;
+import vnu.uet.mobilecourse.assistant.model.firebase.Participant_CourseSubCol;
 
-public class ClassMateAdapter extends RecyclerView.Adapter<ClassMateAdapter.ClassMateViewHolder> implements Filterable {
-    private List<String> mClassMates;
-    private List<String> mFullList;
+public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> implements Filterable {
+
+    private List<Participant_CourseSubCol> mClassMates;
+    private List<Participant_CourseSubCol> mFullList;
     private NavController mNavController;
     private Fragment mOwner;
     private Filter mFilter;
 
-    public ClassMateAdapter(List<String> classMates, Fragment owner) {
+    public ClassMateAdapter(List<Participant_CourseSubCol> classMates, Fragment owner) {
         this.mClassMates = classMates;
         this.mFullList = new ArrayList<>(classMates);
         this.mOwner = owner;
@@ -37,9 +40,9 @@ public class ClassMateAdapter extends RecyclerView.Adapter<ClassMateAdapter.Clas
 
     @NonNull
     @Override
-    public ClassMateViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public StudentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mOwner.getLayoutInflater()
-                .inflate(R.layout.layout_classmate_item, parent, false);
+                .inflate(R.layout.layout_student_item, parent, false);
 
         Activity activity = mOwner.getActivity();
 
@@ -47,13 +50,20 @@ public class ClassMateAdapter extends RecyclerView.Adapter<ClassMateAdapter.Clas
             mNavController = Navigation.findNavController(activity, R.id.nav_host_fragment);
         }
 
-        return new ClassMateViewHolder(view);
+        return new StudentViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ClassMateViewHolder holder, int position) {
-        final String current = mClassMates.get(position);
+    public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
+        final Participant_CourseSubCol current = mClassMates.get(position);
+
         holder.bind(current);
+        holder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNavController.navigate(R.id.action_navigation_explore_course_to_navigation_friend_profile);
+            }
+        });
     }
 
     @Override
@@ -66,46 +76,46 @@ public class ClassMateAdapter extends RecyclerView.Adapter<ClassMateAdapter.Clas
         return mFilter;
     }
 
-    class ClassMateViewHolder extends RecyclerView.ViewHolder {
-        private CircleImageView mCivAvatar;
-        private TextView mTvClassMateName;
-        private TextView mTvClassMateId;
-        private Button mBtnChat;
-
-        ClassMateViewHolder(@NonNull View view) {
-            super(view);
-
-            mCivAvatar = view.findViewById(R.id.civAvatar);
-            mTvClassMateName = view.findViewById(R.id.tvClassMateName);
-            mTvClassMateId = view.findViewById(R.id.tvClassMateId);
-            mBtnChat = view.findViewById(R.id.btnChat);
-
-            view.setOnClickListener(v ->
-                    mNavController.navigate(
-                            R.id.action_navigation_explore_course_to_navigation_friend_profile
-                    )
-            );
-        }
-
-        void bind(String classMate) {
-            mTvClassMateName.setText(classMate);
-        }
-    }
+//    class ClassMateViewHolder extends RecyclerView.ViewHolder {
+//        private CircleImageView mCivAvatar;
+//        private TextView mTvClassMateName;
+//        private TextView mTvClassMateId;
+//        private Button mBtnChat;
+//
+//        ClassMateViewHolder(@NonNull View view) {
+//            super(view);
+//
+//            mCivAvatar = view.findViewById(R.id.civAvatar);
+//            mTvClassMateName = view.findViewById(R.id.tvName);
+//            mTvClassMateId = view.findViewById(R.id.tvId);
+//            mBtnChat = view.findViewById(R.id.btnChat);
+//
+//            view.setOnClickListener(v ->
+//                    mNavController.navigate(
+//                            R.id.action_navigation_explore_course_to_navigation_friend_profile
+//                    )
+//            );
+//        }
+//
+//        void bind(String classMate) {
+//            mTvClassMateName.setText(classMate);
+//        }
+//    }
 
     public class ClassMateFilter extends Filter {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<String> filteredList;
+            List<String> filteredList = new ArrayList<>();
 
-            if (constraint == null || constraint.length() == 0)
-                filteredList = new ArrayList<>(mFullList);
-            else {
-                final String filterPattern = constraint.toString().toLowerCase().trim();
-
-                filteredList = mFullList.stream()
-                        .filter(i -> i.toLowerCase().contains(filterPattern))
-                        .collect(Collectors.toList());
-            }
+//            if (constraint == null || constraint.length() == 0)
+//                filteredList = new ArrayList<>(mFullList);
+//            else {
+//                final String filterPattern = constraint.toString().toLowerCase().trim();
+//
+//                filteredList = mFullList.stream()
+//                        .filter(i -> i.toLowerCase().contains(filterPattern))
+//                        .collect(Collectors.toList());
+//            }
 
             FilterResults results = new FilterResults();
             results.values = filteredList;
@@ -117,15 +127,15 @@ public class ClassMateAdapter extends RecyclerView.Adapter<ClassMateAdapter.Clas
         protected void publishResults(CharSequence constraint, FilterResults results) {
             mClassMates = new ArrayList<>();
 
-            if (results.values instanceof List) {
-                List list = (List) results.values;
-
-                for (Object item : list) {
-                    if (item instanceof String) {
-                        mClassMates.add((String) item);
-                    }
-                }
-            }
+//            if (results.values instanceof List) {
+//                List list = (List) results.values;
+//
+//                for (Object item : list) {
+//                    if (item instanceof String) {
+//                        mClassMates.add((String) item);
+//                    }
+//                }
+//            }
 
             notifyDataSetChanged();
         }
