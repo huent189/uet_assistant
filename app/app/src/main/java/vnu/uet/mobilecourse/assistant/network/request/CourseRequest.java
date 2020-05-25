@@ -16,4 +16,7 @@ public interface CourseRequest {
     @FormUrlEncoded
     @POST("webservice/rest/server.php?wsfunction=gradereport_user_get_grade_items")
     Call<JsonElement> getCourseGrade(@Field("courseid") String courseId, @Field("userid") String userId);
+    @FormUrlEncoded
+    @POST("webservice/rest/server.php?wsfunction=core_course_view_course&sectionnumber=0")
+    Call<JsonElement> triggerCourseView(@Field("courseid") int courseId);
 }
