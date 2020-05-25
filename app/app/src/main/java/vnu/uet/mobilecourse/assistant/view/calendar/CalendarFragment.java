@@ -33,6 +33,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.view.component.CustomCalendarView;
+import vnu.uet.mobilecourse.assistant.view.component.MovableFloatingViewListener;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
 
@@ -83,12 +84,16 @@ public class CalendarFragment extends Fragment {
         mCalendarView.setOnDateChangeListener(this::updateDate);
 
         FloatingActionButton fabAddTodo = root.findViewById(R.id.fabAddTodo);
+
         fabAddTodo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addTodo();
             }
         });
+
+        MovableFloatingViewListener movableListener = new MovableFloatingViewListener(fabAddTodo);
+        fabAddTodo.setOnTouchListener(movableListener);
 
         enableSwipeToDeleteAndUndo();
 

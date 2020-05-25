@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class MovableFloatingActionButton extends FloatingActionButton implements View.OnTouchListener {
+public class MovableFloatingViewListener implements View.OnTouchListener {
 
     // Often, there will be a slight, unintentional,
     // drag when the user taps the FAB,
@@ -18,23 +18,10 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
     private float downRawX, downRawY;
     private float dX, dY;
 
-    public MovableFloatingActionButton(Context context) {
-        super(context);
-        init();
-    }
+    private View mView;
 
-    public MovableFloatingActionButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public MovableFloatingActionButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    private void init() {
-        setOnTouchListener(this);
+    public MovableFloatingViewListener(View view) {
+        mView = view;
     }
 
     @Override
@@ -94,7 +81,7 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
 
             // A click
             if (Math.abs(upDX) < CLICK_DRAG_TOLERANCE && Math.abs(upDY) < CLICK_DRAG_TOLERANCE) {
-                return performClick();
+                return mView.performClick();
             }
             // A drag
             else {
@@ -104,7 +91,7 @@ public class MovableFloatingActionButton extends FloatingActionButton implements
 
         }
         else {
-            return super.onTouchEvent(motionEvent);
+            return mView.onTouchEvent(motionEvent);
         }
 
     }
