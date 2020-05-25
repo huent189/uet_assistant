@@ -2,17 +2,13 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 
 import android.util.Log;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import vnu.uet.mobilecourse.assistant.model.firebase.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
-import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;

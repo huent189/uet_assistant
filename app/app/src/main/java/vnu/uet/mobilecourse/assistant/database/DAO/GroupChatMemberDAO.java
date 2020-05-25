@@ -8,23 +8,24 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
-public class GroupChat_UserSubColDAO extends FirebaseDAO<GroupChat_UserSubCol> {
+public class GroupChatMemberDAO extends FirebaseDAO<Member_GroupChatSubCol> {
 
-    public GroupChat_UserSubColDAO() {
-        super(FirebaseFirestore.getInstance()
-                .collection(FirebaseCollectionName.USER)
-                .document(STUDENT_ID)
-                .collection(FirebaseCollectionName.GROUP_CHAT)
+    public GroupChatMemberDAO(String groupChatId) {
+        super(
+                FirebaseFirestore.getInstance()
+                        .collection(FirebaseCollectionName.GROUP_CHAT)
+                        .document(groupChatId)
+                        .collection(FirebaseCollectionName.MEMBER)
         );
     }
 
     @Override
-    public StateLiveData<List<GroupChat_UserSubCol>> readAll() {
+    public StateLiveData<List<Member_GroupChatSubCol>> readAll() {
         // this live data will only initialize once
         // data change will auto update by 'addSnapshotListener'
         // to listen for data changes
@@ -49,8 +50,8 @@ public class GroupChat_UserSubColDAO extends FirebaseDAO<GroupChat_UserSubCol> {
                         }
                         // query completed with snapshots
                         else {
-                            List<GroupChat_UserSubCol> list = snapshots.getDocuments().stream()
-                                    .map(snapshot -> snapshot.toObject(GroupChat_UserSubCol.class))
+                            List<Member_GroupChatSubCol> list = snapshots.getDocuments().stream()
+                                    .map(snapshot -> snapshot.toObject(Member_GroupChatSubCol.class))
                                     .filter(Objects::nonNull)
                                     .collect(Collectors.toList());
 
