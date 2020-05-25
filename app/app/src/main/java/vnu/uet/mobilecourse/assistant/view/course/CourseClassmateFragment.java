@@ -47,7 +47,7 @@ public class CourseClassmateFragment extends Fragment {
     }
 
     private void initializeClassMateListView(View root) {
-        mAdapter = new ClassMateAdapter(mViewModel.getClassMates().getValue(), this);
+//        mAdapter = new ClassMateAdapter(mViewModel.getClassMates().getValue(), this);
 
         RecyclerView rvClassMate = root.findViewById(R.id.rvClassMate);
 

@@ -64,4 +64,6 @@
     <string name="title_course_code">Mã môn học</string>
     <string name="title_course_title">Tên môn học</string>
 
+    <string name="fab_title_add_todo">Thêm công việc</string>
+    <string name="fab_title_add_list">Thêm danh sách</string>
 </resources>
