@@ -38,6 +38,9 @@
         <action
             android:id="@+id/action_navigation_chat_to_navigation_chat_room"
             app:destination="@id/navigation_chat_room" />
+        <action
+            android:id="@+id/action_navigation_chat_to_navigation_search_student"
+            app:destination="@id/navigation_search_student" />
     </fragment>
 
     <fragment
@@ -108,5 +111,15 @@
         android:name="vnu.uet.mobilecourse.assistant.view.chat.ChatRoomFragment"
         android:label="fragment_chat_room"
         tools:layout="@layout/fragment_chat_room" />
+
+    <fragment
+        android:id="@+id/navigation_search_student"
+        android:name="vnu.uet.mobilecourse.assistant.view.chat.SearchStudentFragment"
+        android:label="fragment_search_student"
+        tools:layout="@layout/fragment_search_student" >
+        <action
+            android:id="@+id/action_navigation_search_student_to_navigation_chat_room"
+            app:destination="@id/navigation_chat_room" />
+    </fragment>
 
 </navigation>

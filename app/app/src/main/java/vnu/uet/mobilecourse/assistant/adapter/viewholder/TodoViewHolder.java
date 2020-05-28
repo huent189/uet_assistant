@@ -122,7 +122,7 @@ public abstract class TodoViewHolder extends ChildViewHolder {
     }
 
     private void updateDoneEffect(String title) {
-        mTitleText.setSpan(mStrikeSpan, 0, title.length() - 1, 0);
+        mTitleText.setSpan(mStrikeSpan, 0, mTitleText.length() - 1, 0);
         mTvTodoTitle.setText(mTitleText);
 
         mLayoutDisable.setVisibility(View.VISIBLE);

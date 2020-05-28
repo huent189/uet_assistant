@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.view.chat;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,14 @@ public class ChatRoomFragment extends Fragment {
 
         EditText etMessage= root.findViewById(R.id.etMessage);
         etMessage.setMovementMethod(new ScrollingMovementMethod());
+
+        TextView tvChatGroupTitle = root.findViewById(R.id.tvChatGroupTitle);
+
+        Bundle args = getArguments();
+        if (args != null) {
+            String title = args.getString("title");
+            tvChatGroupTitle.setText(title);
+        }
 
         initializeListView(root);
 

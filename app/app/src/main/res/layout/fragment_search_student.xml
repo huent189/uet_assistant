@@ -39,12 +39,12 @@
 <!--                style="@style/ToolbarTitleText"/>-->
 
             <androidx.appcompat.widget.SearchView
-                style="@style/SearchViewMy"
+                android:id="@+id/searchView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/edit_text_height"
                 android:layout_marginEnd="@dimen/margin_x2"
-                app:searchIcon="@null"
                 app:queryHint="@string/title_search_hint"
+                app:searchIcon="@null"
                 app:defaultQueryHint="@string/title_search_hint"/>
 
         </androidx.appcompat.widget.Toolbar>
@@ -60,6 +60,25 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvSearchResultTitle"
+                style="@style/ListTitle"
+                android:layout_marginHorizontal="@dimen/margin_x2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_x2"
+                android:text="Sinh viên" />
+
+            <include android:id="@+id/layoutSearchResult" layout="@layout/layout_student_item"/>
+
+            <TextView
+                style="@style/ListTitle"
+                android:layout_marginHorizontal="@dimen/margin_x2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_x2"
+                android:text="Phòng chat đã tạo" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvChatGroups"

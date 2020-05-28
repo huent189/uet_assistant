@@ -4,12 +4,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,11 +28,18 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 public class ChatFragment extends Fragment {
 
     private ChatViewModel mViewModel;
+    private FragmentActivity mActivity;
+    private NavController mNavController;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         mViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
+        mActivity = getActivity();
+
+        if (mActivity != null) {
+            mNavController = Navigation.findNavController(mActivity, R.id.nav_host_fragment);
+        }
 
         View root = inflater.inflate(R.layout.fragment_chat, container, false);
 
@@ -47,11 +58,11 @@ public class ChatFragment extends Fragment {
             }
         });
 
-        EditText etSearch= root.findViewById(R.id.etSearch);
-        etSearch.setOnClickListener(new View.OnClickListener() {
+        Button btnSearch = root.findViewById(R.id.btnSearch);
+        btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: navigate to search chat room/student fragment
+                mNavController.navigate(R.id.action_navigation_chat_to_navigation_search_student);
             }
         });
 

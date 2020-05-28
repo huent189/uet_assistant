@@ -22,6 +22,6 @@ public class FirebaseUserRepository {
     }
 
     public IStateLiveData<User> search(String id) {
-        return dao.search(id);
+        return dao.read(id);
     }
 }
