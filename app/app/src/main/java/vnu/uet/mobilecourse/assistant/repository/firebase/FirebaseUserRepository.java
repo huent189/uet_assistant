@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.repository.firebase;
 
 import vnu.uet.mobilecourse.assistant.database.DAO.UserDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
+import vnu.uet.mobilecourse.assistant.repository.cache.FirebaseUserCache;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 
@@ -9,6 +10,7 @@ public class FirebaseUserRepository {
 
     private static FirebaseUserRepository instance;
     private UserDAO dao;
+    private FirebaseUserCache cache;
 
     public static FirebaseUserRepository getInstance() {
         if (instance == null) {
@@ -20,9 +22,20 @@ public class FirebaseUserRepository {
 
     public FirebaseUserRepository() {
         dao = new UserDAO();
+        cache = new FirebaseUserCache();
     }
 
     public StateLiveData<User> search(String id) {
-        return dao.read(id);
+        StateLiveData<User> liveData = null;
+
+        if (cache.containsKey(id)) {
+            if (cache.get(id) instanceof StateLiveData)
+                liveData = (StateLiveData<User>) cache.get(id);
+        } else {
+            liveData = dao.read(id);
+            cache.put(id, liveData);
+        }
+
+        return liveData;
     }
 }
