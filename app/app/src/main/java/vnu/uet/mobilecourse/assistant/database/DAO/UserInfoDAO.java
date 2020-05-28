@@ -4,10 +4,9 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
 
-public class UserInfoDAO extends FirebaseReadOnlyDAO<UserInfo> {
+public class UserInfoDAO extends FirebaseDocReadOnlyDAO<UserInfo> {
 
     private static final String STUDENT_ID_FIELD_NAME = "stuentId";
 

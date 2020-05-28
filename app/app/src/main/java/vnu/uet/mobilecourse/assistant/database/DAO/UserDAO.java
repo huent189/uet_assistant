@@ -6,7 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
 
-public class UserDAO extends FirebaseReadOnlyDAO<User> {
+public class UserDAO extends FirebaseDocReadOnlyDAO<User> {
 
     private static final String USER_ID_FIELD_NAME = "id";
 

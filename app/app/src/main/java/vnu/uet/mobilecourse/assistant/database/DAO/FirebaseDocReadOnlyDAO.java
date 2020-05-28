@@ -6,21 +6,18 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
 import vnu.uet.mobilecourse.assistant.exception.MultipleDocumentsException;
 import vnu.uet.mobilecourse.assistant.model.firebase.IFirebaseModel;
-import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
-public abstract class FirebaseReadOnlyDAO<T extends IFirebaseModel> implements IFirebaseReadOnlyDAO<T> {
-    protected static final String TAG = FirebaseReadOnlyDAO.class.getSimpleName();
+public abstract class FirebaseDocReadOnlyDAO<T extends IFirebaseModel> implements IFirebaseReadOnlyDAO<T> {
+    protected static final String TAG = FirebaseDocReadOnlyDAO.class.getSimpleName();
 
     private CollectionReference mColReference;
     private String mKeyField;
@@ -30,10 +27,9 @@ public abstract class FirebaseReadOnlyDAO<T extends IFirebaseModel> implements I
      *
      * @param colRef reference of the corresponding collection
      */
-    FirebaseReadOnlyDAO(CollectionReference colRef, String keyField) {
+    FirebaseDocReadOnlyDAO(CollectionReference colRef, String keyField) {
         mColReference = colRef;
         mKeyField = keyField;
-
     }
 
     /**
