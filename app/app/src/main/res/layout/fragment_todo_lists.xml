@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             app:fab_colorNormal="@color/accent"
             app:fab_title="@string/fab_title_add_todo"
-            app:fab_icon="@drawable/ic_cake_32dp"
+            app:fab_icon="@drawable/ic_note_add_24dp"
             app:fab_colorPressed="@color/accent"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             app:fab_colorNormal="@color/accent"
             app:fab_title="@string/fab_title_add_list"
-            app:fab_icon="@drawable/ic_cake_32dp"
+            app:fab_icon="@drawable/ic_playlist_add_24dp"
             app:fab_colorPressed="@color/accent"/>
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
