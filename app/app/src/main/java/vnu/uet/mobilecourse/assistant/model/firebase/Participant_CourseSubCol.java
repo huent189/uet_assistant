@@ -15,6 +15,9 @@ public class Participant_CourseSubCol implements IFirebaseModel, IStudent {
     @Exclude
     private String avatar;
 
+    @Exclude
+    private boolean active;
+
     @Override
     public String getId() {
         return id;
@@ -54,5 +57,14 @@ public class Participant_CourseSubCol implements IFirebaseModel, IStudent {
 
     public void setGroup(int group) {
         this.group = group;
+    }
+
+    @Exclude
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

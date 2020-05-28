@@ -70,6 +70,15 @@
                 android:layout_marginTop="@dimen/margin_x2"
                 android:text="Sinh viên" />
 
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerSearchResult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <include layout="@layout/shimmer_student_item"/>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
             <include android:id="@+id/layoutSearchResult" layout="@layout/layout_student_item"/>
 
             <TextView

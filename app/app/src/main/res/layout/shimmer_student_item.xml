@@ -11,15 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <de.hdodenhof.circleimageview.CircleImageView
+        <ImageView
             android:id="@+id/civAvatar"
             android:layout_width="@dimen/img_avatar_size"
             android:layout_height="@dimen/img_avatar_size"
-            android:src="@drawable/avatar"
+            android:background="@color/backgroundLight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
 
         <LinearLayout
             android:layout_width="0dp"
@@ -27,7 +26,6 @@
             android:layout_marginHorizontal="16dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnChat"
             app:layout_constraintStart_toEndOf="@+id/civAvatar"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -35,28 +33,19 @@
                 android:id="@+id/tvName"
                 style="@style/ListItemTitle"
                 android:textColor="@color/primary"
-                android:layout_width="wrap_content"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:text="Nguyễn Tùng Lâm" />
+                android:background="@color/backgroundLight" />
 
             <TextView
                 android:id="@+id/tvId"
                 style="@style/SecondaryText"
-                android:layout_width="wrap_content"
+                android:layout_width="120dp"
+                android:layout_marginTop="@dimen/small_margin"
                 android:layout_height="wrap_content"
-                android:text="17020845" />
+                android:background="@color/backgroundLight" />
 
         </LinearLayout>
-
-        <ImageButton
-            android:id="@+id/btnChat"
-            android:layout_width="@dimen/circle_button_size"
-            android:layout_height="@dimen/circle_button_size"
-            android:src="@drawable/ic_chat_24dp"
-            android:background="@drawable/primary_button_background"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

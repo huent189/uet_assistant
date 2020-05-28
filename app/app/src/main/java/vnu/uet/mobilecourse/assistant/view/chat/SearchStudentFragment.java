@@ -4,7 +4,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
 
@@ -16,16 +15,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.database.DAO.UserInfoDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
 import vnu.uet.mobilecourse.assistant.viewmodel.SearchStudentViewModel;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class SearchStudentFragment extends Fragment {
@@ -35,9 +34,6 @@ public class SearchStudentFragment extends Fragment {
     private SearchStudentViewModel mViewModel;
     private FragmentActivity mActivity;
     private NavController mNavController;
-
-    private TextView mTvSearchResultTitle;
-    private View mLayoutSearchResult;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -56,13 +52,19 @@ public class SearchStudentFragment extends Fragment {
         searchView.onActionViewExpanded();
         searchView.setIconified(false);
 
-        mTvSearchResultTitle = root.findViewById(R.id.tvSearchResultTitle);
-        mLayoutSearchResult = root.findViewById(R.id.layoutSearchResult);
+        TextView tvSearchResultTitle = root.findViewById(R.id.tvSearchResultTitle);
+        View layoutSearchResult = root.findViewById(R.id.layoutSearchResult);
 
-        TextView tvName = mLayoutSearchResult.findViewById(R.id.tvName);
-        TextView tvId = mLayoutSearchResult.findViewById(R.id.tvId);
+        TextView tvName = layoutSearchResult.findViewById(R.id.tvName);
+        TextView tvId = layoutSearchResult.findViewById(R.id.tvId);
+        ImageButton btnChat = layoutSearchResult.findViewById(R.id.btnChat);
 
-        hideSearchResult();
+        ShimmerFrameLayout shimmerSearchResult = root.findViewById(R.id.shimmerSearchResult);
+        shimmerSearchResult.startShimmerAnimation();
+
+        tvSearchResultTitle.setVisibility(View.GONE);
+        layoutSearchResult.setVisibility(View.GONE);
+        shimmerSearchResult.setVisibility(View.GONE);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -72,31 +74,53 @@ public class SearchStudentFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.length() != 8) {
-                    hideSearchResult();
+                if (!newText.matches("[0-9]+")) {
+                    tvSearchResultTitle.setVisibility(View.GONE);
+                    layoutSearchResult.setVisibility(View.GONE);
+                    shimmerSearchResult.setVisibility(View.GONE);
                     return false;
                 }
 
-                new UserInfoDAO().read(newText).observe(getViewLifecycleOwner(), new Observer<StateModel<UserInfo>>() {
+                if (newText.length() != 8) {
+                    tvSearchResultTitle.setVisibility(View.VISIBLE);
+                    layoutSearchResult.setVisibility(View.GONE);
+                    shimmerSearchResult.setVisibility(View.VISIBLE);
+                    return false;
+                }
+
+                mViewModel.searchStudent(newText).observe(getViewLifecycleOwner(), new Observer<StateModel<UserInfo>>() {
                     @Override
                     public void onChanged(StateModel<UserInfo> stateModel) {
                         switch (stateModel.getStatus()) {
                             case SUCCESS:
-                                showSearchResult();
+                                tvSearchResultTitle.setVisibility(View.VISIBLE);
+                                layoutSearchResult.setVisibility(View.VISIBLE);
+                                shimmerSearchResult.setVisibility(View.GONE);
 
                                 UserInfo userInfo = stateModel.getData();
                                 tvName.setText(userInfo.getName());
                                 tvId.setText(userInfo.getId());
 
+                                if (!userInfo.isActive()) {
+                                    btnChat.setImageResource(R.drawable.ic_warning_24dp);
+                                    btnChat.setBackgroundResource(R.color.background);
+                                    btnChat.setClickable(false);
+                                    btnChat.setEnabled(false);
+                                }
+
                                 break;
 
                             case LOADING:
-                                hideSearchResult();
+                                tvSearchResultTitle.setVisibility(View.VISIBLE);
+                                layoutSearchResult.setVisibility(View.GONE);
+                                shimmerSearchResult.setVisibility(View.VISIBLE);
                                 Log.i(TAG, "Loading");
                                 break;
 
                             case ERROR:
-                                hideSearchResult();
+                                tvSearchResultTitle.setVisibility(View.GONE);
+                                layoutSearchResult.setVisibility(View.GONE);
+                                shimmerSearchResult.setVisibility(View.GONE);
                                 Log.e(TAG, "Error");
                                 break;
                         }
@@ -107,7 +131,6 @@ public class SearchStudentFragment extends Fragment {
             }
         });
 
-        Button btnChat = mLayoutSearchResult.findViewById(R.id.btnChat);
         btnChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,15 +141,5 @@ public class SearchStudentFragment extends Fragment {
         });
 
         return root;
-    }
-
-    private void hideSearchResult() {
-        mTvSearchResultTitle.setVisibility(View.GONE);
-        mLayoutSearchResult.setVisibility(View.GONE);
-    }
-
-    private void showSearchResult() {
-        mTvSearchResultTitle.setVisibility(View.VISIBLE);
-        mLayoutSearchResult.setVisibility(View.VISIBLE);
     }
 }

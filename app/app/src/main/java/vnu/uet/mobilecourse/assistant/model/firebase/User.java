@@ -7,7 +7,7 @@ import java.util.List;
 
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 
-public class User implements IFirebaseModel, IStudent {
+public class User implements IFirebaseModel {
 
     private String id;
     private String name;
@@ -24,16 +24,10 @@ public class User implements IFirebaseModel, IStudent {
         return id;
     }
 
-    @Override
-    public String getCode() {
-        return id;
-    }
-
     public void setId(String id) {
         this.id = id;
     }
 
-    @Override
     public String getAvatar() {
         return avatar;
     }
@@ -60,7 +54,6 @@ public class User implements IFirebaseModel, IStudent {
         this.notifications = notifications;
     }
 
-    @Override
     public String getName() {
         return name;
     }

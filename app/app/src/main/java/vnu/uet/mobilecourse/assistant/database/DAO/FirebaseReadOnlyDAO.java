@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
+import vnu.uet.mobilecourse.assistant.exception.MultipleDocumentsException;
 import vnu.uet.mobilecourse.assistant.model.firebase.IFirebaseModel;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -72,11 +74,11 @@ public abstract class FirebaseReadOnlyDAO<T extends IFirebaseModel> implements I
                                 .collect(Collectors.toList());
 
                         if (list.isEmpty()) {
-                            liveData.postLoading();
+                            liveData.postError(new DocumentNotFoundException());
                         } else if (list.size() == 1) {
                             liveData.postSuccess(list.get(0));
                         } else {
-                            liveData.postError(new Exception("Multiple documents have the same id."));
+                            liveData.postError(new MultipleDocumentsException());
                         }
                     }
                 });
