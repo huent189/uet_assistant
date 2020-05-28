@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.work;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
@@ -41,11 +42,13 @@ public class TodoReminder extends Worker {
         Data data = getInputData();
         String id = data.getString("id");
         String title = data.getString("title");
+        title = "Đến hạn " + title;
         String desc = data.getString("description");
+        String category = data.getString("todoList");
 
         Notification_UserSubCol notificationDoc = new Notification_UserSubCol();
         notificationDoc.setId(Util.autoId());
-        notificationDoc.setCategory("todo");
+        notificationDoc.setCategory(category);
         notificationDoc.setTitle(title);
         notificationDoc.setDescription(desc);
         notificationDoc.setNotifyTime(System.currentTimeMillis() / 1000);

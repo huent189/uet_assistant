@@ -244,6 +244,7 @@ public class AddTodoFragment extends Fragment {
                 .putString("id", todo.getId())
                 .putString("title", todo.getTitle())
                 .putString("description", todo.getDescription())
+                .putString("todoList", todo.getTodoListId())
                 .build();
 
         OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(TodoReminder.class)
