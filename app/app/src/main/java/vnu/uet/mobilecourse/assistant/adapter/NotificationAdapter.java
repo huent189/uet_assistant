@@ -16,6 +16,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
 import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 
@@ -52,13 +53,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         holder.bind(notification);
     }
 
+    public List<Notification_UserSubCol> getNotifications() {
+        return mNotifications;
+    }
 
     @Override
     public int getItemCount() {
         return mNotifications.size();
     }
 
-    public class NotificationHolder extends RecyclerView.ViewHolder {
+    public static class NotificationHolder extends RecyclerView.ViewHolder {
 
         private ImageView mIvNotifyIcon;
         private TextView mTvNotifyTitle;
@@ -87,6 +91,38 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             Date notifyTime = DateTimeUtils.fromSecond(notification.getNotifyTime());
             String time = DateTimeUtils.DATE_TIME_FORMAT.format(notifyTime);
             mTvNotifyTime.setText(time);
+
+            switch (notification.getType()) {
+                case NotificationType.TODO:
+                    String todoId = notification.getReference();
+                    mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // TODO: navigate to view todo info
+                        }
+                    });
+                    break;
+
+                case NotificationType.MATERIAL:
+                    String materialId = notification.getReference();
+                    mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // TODO: navigate to view material info
+                        }
+                    });
+                    break;
+
+                case NotificationType.ATTENDANCE:
+                    String courseId = notification.getReference();
+                    mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // TODO: navigate to view course info
+                        }
+                    });
+                    break;
+            }
         }
     }
 }

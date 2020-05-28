@@ -33,9 +33,6 @@ public class CourseRepository {
     private CourseInfoDAO infoDAO;
 
     /**
-     * Data set
-     */
-    /**
      * Get singleton instance
      * @return singleton instance
      */

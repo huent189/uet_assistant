@@ -30,7 +30,11 @@ public class NotificationRepository {
         return liveData;
     }
 
-    public IStateLiveData<Notification_UserSubCol> add(Notification_UserSubCol noti) {
-        return dao.add(noti.getId(), noti);
+    public IStateLiveData<Notification_UserSubCol> add(Notification_UserSubCol notification) {
+        return dao.add(notification.getId(), notification);
+    }
+
+    public IStateLiveData<String> delete(Notification_UserSubCol notification) {
+        return dao.delete(notification.getId());
     }
 }

@@ -15,4 +15,8 @@ public class NotificationsViewModel extends ViewModel {
     public IStateLiveData<List<Notification_UserSubCol>> getNotifications() {
         return notifyRepo.getAllNotifications();
     }
+
+    public IStateLiveData<String> deleteNotification(Notification_UserSubCol notification) {
+        return notifyRepo.delete(notification);
+    }
 }

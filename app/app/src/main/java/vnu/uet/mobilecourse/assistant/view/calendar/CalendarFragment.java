@@ -91,7 +91,7 @@ public class CalendarFragment extends Fragment {
             }
         });
 
-        enableSwipeToDeleteAndUndo();
+        enableSwipeToDelete();
 
         return root;
     }
@@ -172,7 +172,7 @@ public class CalendarFragment extends Fragment {
         mNavController.navigate(R.id.action_navigation_calendar_to_addTodoFragment, bundle);
     }
 
-    private void enableSwipeToDeleteAndUndo() {
+    private void enableSwipeToDelete() {
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(getContext()) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
