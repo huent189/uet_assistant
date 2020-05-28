@@ -9,11 +9,23 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.Observer;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
+import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.repository.FirebaseAuthenticationService;
 import vnu.uet.mobilecourse.assistant.repository.UserRepository;
+import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.work.TodoReminder;
 
 
 public class LoginFirebaseActivity extends AppCompatActivity {
@@ -48,7 +60,7 @@ public class LoginFirebaseActivity extends AppCompatActivity {
                 switch (loginState.getStatus()) {
                     case SUCCESS:
                         showSuccessLayout();
-                        navigateToMyCourses();
+                        setupReminders();
                         break;
 
                     case ERROR:
@@ -60,7 +72,47 @@ public class LoginFirebaseActivity extends AppCompatActivity {
     }
 
     private void setupReminders() {
+        TodoRepository.getInstance().getAllTodos().observe(LoginFirebaseActivity.this, new Observer<StateModel<List<Todo>>>() {
+            @Override
+            public void onChanged(StateModel<List<Todo>> stateModel) {
+                switch (stateModel.getStatus()) {
+                    case SUCCESS:
+                        stateModel.getData().forEach(todo -> {
+                            long deadline = todo.getDeadline() * 1000;
 
+                            if (deadline > System.currentTimeMillis()) {
+                                scheduleReminder(todo);
+                            }
+                        });
+
+                        navigateToMyCourses();
+
+                        break;
+
+                }
+
+            }
+        });
+    }
+
+
+    private void scheduleReminder(Todo todo) {
+        long delayTime = todo.getDeadline() * 1000 - System.currentTimeMillis();
+
+        Data inputData = new Data.Builder()
+                .putString("id", todo.getId())
+                .putString("title", todo.getTitle())
+                .putString("description", todo.getDescription())
+                .putString("todoList", todo.getTodoListId())
+                .build();
+
+        OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(TodoReminder.class)
+                .setInitialDelay(delayTime, TimeUnit.MILLISECONDS)
+                .setInputData(inputData)
+                .addTag(todo.getId())
+                .build();
+
+        WorkManager.getInstance(getApplicationContext()).enqueue(notificationWork);
     }
 
     private void showSuccessLayout() {
