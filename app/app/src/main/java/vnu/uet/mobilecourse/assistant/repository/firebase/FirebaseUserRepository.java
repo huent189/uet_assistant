@@ -3,6 +3,7 @@ package vnu.uet.mobilecourse.assistant.repository.firebase;
 import vnu.uet.mobilecourse.assistant.database.DAO.UserDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 
 public class FirebaseUserRepository {
 
@@ -21,7 +22,7 @@ public class FirebaseUserRepository {
         dao = new UserDAO();
     }
 
-    public IStateLiveData<User> search(String id) {
+    public StateLiveData<User> search(String id) {
         return dao.read(id);
     }
 }

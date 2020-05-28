@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.model.firebase;
 
 import com.google.firebase.firestore.Exclude;
 
+import androidx.annotation.NonNull;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 
 public class Participant_CourseSubCol implements IFirebaseModel, IStudent {
@@ -66,5 +67,15 @@ public class Participant_CourseSubCol implements IFirebaseModel, IStudent {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    @NonNull
+    @Override
+    public Participant_CourseSubCol clone() {
+        Participant_CourseSubCol clone = new Participant_CourseSubCol();
+        clone.setId(id);
+        clone.setName(name);
+        clone.setGroup(group);
+        return clone;
     }
 }

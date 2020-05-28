@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
 
 public abstract class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
 
@@ -25,7 +26,6 @@ public abstract class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
 
     private int mIntrinsicWidth;
     private int mIntrinsicHeight;
-
 
     protected SwipeToDeleteCallback(Context context) {
         sBackgroundColor = ContextCompat.getColor(context, R.color.red);

@@ -17,7 +17,7 @@ public class StudentRepository {
 
     private static StudentRepository instance;
 
-    private UserDAO userDAO;
+    private FirebaseUserRepository userRepo;
     private UserInfoDAO userInfoDAO;
 
     public static StudentRepository getInstance() {
@@ -29,12 +29,12 @@ public class StudentRepository {
     }
 
     public StudentRepository() {
-        userDAO = new UserDAO();
+        userRepo = FirebaseUserRepository.getInstance();
         userInfoDAO = new UserInfoDAO();
     }
 
     public IStateLiveData<UserInfo> getStudentById(String id) {
-        return new MergeStudentStateLiveData(userDAO.read(id), userInfoDAO.read(id));
+        return new MergeStudentStateLiveData(userRepo.search(id), userInfoDAO.read(id));
     }
 
     public static class MergeStudentStateLiveData extends StateMediatorLiveData<UserInfo> {
