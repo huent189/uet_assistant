@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.repository.firebase;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.database.DAO.ParticipantDAO;
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
@@ -61,7 +62,8 @@ public class ParticipantRepository {
 
     public static class MergeParticipantLiveData extends StateMediatorLiveData<List<Participant_CourseSubCol>> {
 
-        public MergeParticipantLiveData(FirebaseUserRepository userRepo, StateLiveData<List<Participant_CourseSubCol>> participant) {
+        public MergeParticipantLiveData(@NonNull FirebaseUserRepository userRepo,
+                                        @NonNull StateLiveData<List<Participant_CourseSubCol>> participant) {
             super(new StateModel<>(StateStatus.LOADING));
 
             addSource(participant, new Observer<StateModel<List<Participant_CourseSubCol>>>() {
@@ -93,6 +95,7 @@ public class ParticipantRepository {
                                                 if (e instanceof DocumentNotFoundException) {
                                                     participant.setActive(false);
                                                     participant.setAvatar(null);
+                                                    postSuccess(participants);
                                                 } else {
                                                     postError(stateModel.getError());
                                                 }
@@ -107,6 +110,7 @@ public class ParticipantRepository {
                                                 User user = stateModel.getData();
                                                 participant.setActive(true);
                                                 participant.setAvatar(user.getAvatar());
+                                                postSuccess(participants);
                                         }
                                     }
                                 });

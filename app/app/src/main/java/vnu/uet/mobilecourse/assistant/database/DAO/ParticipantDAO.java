@@ -11,7 +11,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.Participant_CourseSubCol;
 public class ParticipantDAO extends FirebaseColReadOnlyDAO<List<Participant_CourseSubCol>> {
 
     public ParticipantDAO() {
-        super(FirebaseFirestore.getInstance().collection(FirebaseCollectionName.PARTICIPANT));
+        super(FirebaseFirestore.getInstance().collection(FirebaseCollectionName.COURSE), FirebaseCollectionName.PARTICIPANT);
     }
 
     @Override

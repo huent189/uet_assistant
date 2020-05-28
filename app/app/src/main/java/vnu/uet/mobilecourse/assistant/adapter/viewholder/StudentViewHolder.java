@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.adapter.viewholder;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,7 +17,7 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
     private CircleImageView mCivAvatar;
     private TextView mTvName;
     private TextView mTvId;
-    private Button mBtnChat;
+    private ImageButton mBtnChat;
 
     private View mView;
 

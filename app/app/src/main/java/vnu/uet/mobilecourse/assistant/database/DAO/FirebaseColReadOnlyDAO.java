@@ -21,14 +21,16 @@ public abstract class FirebaseColReadOnlyDAO<T extends List<? extends IFirebaseM
     protected static final String TAG = FirebaseColReadOnlyDAO.class.getSimpleName();
 
     private CollectionReference mColReference;
+    private String mCollectionName;
 
     /**
      * DAO usually interact in an collection/sub collection
      *
      * @param colRef reference of the corresponding collection
      */
-    FirebaseColReadOnlyDAO(CollectionReference colRef) {
+    FirebaseColReadOnlyDAO(CollectionReference colRef, String collectionName) {
         mColReference = colRef;
+        mCollectionName = collectionName;
     }
 
     /**
@@ -49,6 +51,8 @@ public abstract class FirebaseColReadOnlyDAO<T extends List<? extends IFirebaseM
         StateLiveData<T> liveData = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
 
         mColReference
+                .document(id)
+                .collection(mCollectionName)
                 // listen for data change
                 .addSnapshotListener((snapshots, e) -> {
                     // catch an exception
