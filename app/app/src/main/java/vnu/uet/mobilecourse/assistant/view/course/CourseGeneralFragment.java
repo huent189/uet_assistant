@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.view.course;
 
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
@@ -25,39 +26,33 @@ public class CourseGeneralFragment extends Fragment {
 
     private CourseGeneralViewModel mViewModel;
 
-    public static CourseGeneralFragment newInstance() {
-        return new CourseGeneralFragment();
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        String id = getArguments().getString("courseCode");
-        assert id != null;
-        id = id.replace(CONST.COURSE_PREFIX + CONST.UNDERSCORE, "").replace(CONST.UNDERSCORE, CONST.SPACE);
+        mViewModel = new ViewModelProvider(this).get(CourseGeneralViewModel.class);
 
-        new CourseInfoDAO().read(id).observe(getViewLifecycleOwner(), new Observer<StateModel<CourseInfo>>() {
-            @Override
-            public void onChanged(StateModel<CourseInfo> stateModel) {
-                switch (stateModel.getStatus()) {
-                    case SUCCESS:
+        Bundle args = getArguments();
+        if (args != null) {
+            String id = args.getString("courseCode");
+            assert id != null;
+            id = id.replace(CONST.COURSE_PREFIX + CONST.UNDERSCORE, "")
+                    .replace(CONST.UNDERSCORE, CONST.SPACE);
 
-                        CourseInfo courseInfo = stateModel.getData();
-                        Log.d("COURSE", courseInfo.getId());
-                        Log.d("COURSE", courseInfo.getSessions().toString());
+            new CourseInfoDAO().read(id).observe(getViewLifecycleOwner(), new Observer<StateModel<CourseInfo>>() {
+                @Override
+                public void onChanged(StateModel<CourseInfo> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case SUCCESS:
+
+                            CourseInfo courseInfo = stateModel.getData();
+                            Log.d("COURSE", courseInfo.getId());
+                            Log.d("COURSE", courseInfo.getSessions().toString());
+                    }
                 }
-            }
-        });
+            });
+        }
 
         return inflater.inflate(R.layout.fragment_course_general, container, false);
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(CourseGeneralViewModel.class);
-        // TODO: Use the ViewModel
-    }
-
 }
