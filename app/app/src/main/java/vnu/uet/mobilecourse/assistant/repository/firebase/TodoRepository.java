@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.database.DAO.TodoDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.TodoListDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
@@ -56,35 +55,32 @@ public class TodoRepository implements ITodoRepository {
         StateModel<DailyTodoList> loadingState = new StateModel<>(StateStatus.LOADING);
         StateMediatorLiveData<DailyTodoList> response = new StateMediatorLiveData<>(loadingState);
 
-        response.addSource(todoLiveData, new Observer<StateModel<List<Todo>>>() {
-            @Override
-            public void onChanged(StateModel<List<Todo>> stateModel) {
-                switch (stateModel.getStatus()) {
-                    case LOADING:
-                        response.postLoading();
-                        break;
+        response.addSource(todoLiveData, stateModel -> {
+            switch (stateModel.getStatus()) {
+                case LOADING:
+                    response.postLoading();
+                    break;
 
-                    case ERROR:
-                        response.postError(stateModel.getError());
-                        break;
+                case ERROR:
+                    response.postError(stateModel.getError());
+                    break;
 
-                    case SUCCESS:
-                        List<Todo> todos = stateModel.getData();
+                case SUCCESS:
+                    List<Todo> todos = stateModel.getData();
 
-                        DailyTodoList dailyTodoList = new DailyTodoList(date);
+                    DailyTodoList dailyTodoList = new DailyTodoList(date);
 
-                        List<Todo> todoByDay = todos.stream()
-                                .filter(todo -> {
-                                    Date deadline = DateTimeUtils.fromSecond(todo.getDeadline());
-                                    return DateTimeUtils.isSameDate(date, deadline);
-                                })
-                                .sorted(new TodoComparator())
-                                .collect(Collectors.toList());
+                    List<Todo> todoByDay = todos.stream()
+                            .filter(todo -> {
+                                Date deadline = DateTimeUtils.fromSecond(todo.getDeadline());
+                                return DateTimeUtils.isSameDate(date, deadline);
+                            })
+                            .sorted(new TodoComparator())
+                            .collect(Collectors.toList());
 
-                        dailyTodoList.addAll(todoByDay);
+                    dailyTodoList.addAll(todoByDay);
 
-                        response.postSuccess(dailyTodoList);
-                }
+                    response.postSuccess(dailyTodoList);
             }
         });
 

@@ -53,7 +53,8 @@ public class ParticipantRepository {
         }
         // if not in cache, query in database
         else {
-            IStateLiveData<List<Participant_CourseSubCol>> liveData = new MergeParticipantLiveData(userRepo, dao.read(courseId));
+            IStateLiveData<List<Participant_CourseSubCol>> liveData =
+                    new MergeParticipantLiveData(userRepo, dao.read(courseId));
 
             cache.put(courseId, liveData);
             return liveData;

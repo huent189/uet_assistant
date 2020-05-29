@@ -1,10 +1,7 @@
 package vnu.uet.mobilecourse.assistant.repository.firebase;
 
-import androidx.lifecycle.Observer;
-import vnu.uet.mobilecourse.assistant.database.DAO.UserDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.UserInfoDAO;
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
-import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
@@ -16,7 +13,6 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 public class StudentRepository {
 
     private static StudentRepository instance;
-
     private FirebaseUserRepository userRepo;
     private UserInfoDAO userInfoDAO;
 
@@ -34,7 +30,9 @@ public class StudentRepository {
     }
 
     public IStateLiveData<UserInfo> getStudentById(String id) {
-        return new MergeStudentStateLiveData(userRepo.search(id), userInfoDAO.read(id));
+        StateLiveData<User> userLiveData = userRepo.search(id);
+        StateLiveData<UserInfo> infoLiveData = userInfoDAO.read(id);
+        return new MergeStudentStateLiveData(userLiveData, infoLiveData);
     }
 
     public static class MergeStudentStateLiveData extends StateMediatorLiveData<UserInfo> {
@@ -48,63 +46,57 @@ public class StudentRepository {
             super(new StateModel<>(StateStatus.LOADING));
 
 
-            addSource(info, new Observer<StateModel<UserInfo>>() {
-                @Override
-                public void onChanged(StateModel<UserInfo> stateModel) {
-                    switch (stateModel.getStatus()) {
-                        case LOADING:
-                            infoDone = false;
-                            postLoading();
-                            break;
+            addSource(info, stateModel -> {
+                switch (stateModel.getStatus()) {
+                    case LOADING:
+                        infoDone = false;
+                        postLoading();
+                        break;
 
-                        case ERROR:
-                            infoDone = false;
-                            postError(stateModel.getError());
-                            break;
+                    case ERROR:
+                        infoDone = false;
+                        postError(stateModel.getError());
+                        break;
 
-                        case SUCCESS:
-                            infoDone = true;
-                            infoModel = stateModel.getData();
+                    case SUCCESS:
+                        infoDone = true;
+                        infoModel = stateModel.getData();
 
-                            if (userDone && infoDone) {
-                                UserInfo combine = combineData();
-                                postSuccess(combine);
-                            }
-                    }
+                        if (userDone && infoDone) {
+                            UserInfo combine = combineData();
+                            postSuccess(combine);
+                        }
                 }
             });
 
-            addSource(user, new Observer<StateModel<User>>() {
-                @Override
-                public void onChanged(StateModel<User> stateModel) {
-                    switch (stateModel.getStatus()) {
-                        case LOADING:
-                            userDone = false;
-                            postLoading();
-                            break;
+            addSource(user, stateModel -> {
+                switch (stateModel.getStatus()) {
+                    case LOADING:
+                        userDone = false;
+                        postLoading();
+                        break;
 
-                        case ERROR:
-                            Exception e = stateModel.getError();
+                    case ERROR:
+                        Exception e = stateModel.getError();
 
-                            if (e instanceof DocumentNotFoundException) {
-                                userModel = null;
-                                userDone = true;
-                            } else {
-                                userDone = false;
-                                postError(e);
-                            }
-
-                            break;
-
-                        case SUCCESS:
+                        if (e instanceof DocumentNotFoundException) {
+                            userModel = null;
                             userDone = true;
-                            userModel = stateModel.getData();
+                        } else {
+                            userDone = false;
+                            postError(e);
+                        }
 
-                            if (userDone && infoDone) {
-                                UserInfo combine = combineData();
-                                postSuccess(combine);
-                            }
-                    }
+                        break;
+
+                    case SUCCESS:
+                        userDone = true;
+                        userModel = stateModel.getData();
+
+                        if (userDone && infoDone) {
+                            UserInfo combine = combineData();
+                            postSuccess(combine);
+                        }
                 }
             });
         }
