@@ -22,6 +22,7 @@ import vnu.uet.mobilecourse.assistant.repository.UserRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.work.RemindScheduler;
 import vnu.uet.mobilecourse.assistant.work.TodoReminder;
 
 
@@ -78,7 +79,7 @@ public class LoginFirebaseActivity extends AppCompatActivity {
                             long deadline = todo.getDeadline() * 1000;
 
                             if (deadline > System.currentTimeMillis()) {
-                                scheduleReminder(todo);
+                                RemindScheduler.getInstance().enqueue(getApplicationContext(), todo);
                             }
                         });
 
@@ -93,26 +94,6 @@ public class LoginFirebaseActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-
-    private void scheduleReminder(Todo todo) {
-        long delayTime = todo.getDeadline() * 1000 - System.currentTimeMillis();
-
-        Data inputData = new Data.Builder()
-                .putString("id", todo.getId())
-                .putString("title", todo.getTitle())
-                .putString("description", todo.getDescription())
-                .putString("todoList", todo.getTodoListId())
-                .build();
-
-        OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(TodoReminder.class)
-                .setInitialDelay(delayTime, TimeUnit.MILLISECONDS)
-                .setInputData(inputData)
-                .addTag(todo.getId())
-                .build();
-
-        WorkManager.getInstance(getApplicationContext()).enqueue(notificationWork);
     }
 
     private void showSuccessLayout() {
