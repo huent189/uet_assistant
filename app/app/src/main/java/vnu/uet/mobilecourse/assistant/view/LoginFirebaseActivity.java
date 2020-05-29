@@ -1,14 +1,11 @@
 package vnu.uet.mobilecourse.assistant.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
@@ -89,6 +86,9 @@ public class LoginFirebaseActivity extends AppCompatActivity {
 
                         break;
 
+                    case ERROR:
+                        showErrorLayout();
+                        break;
                 }
 
             }
