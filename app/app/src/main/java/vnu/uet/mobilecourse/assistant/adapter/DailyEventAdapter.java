@@ -52,7 +52,7 @@ public class DailyEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         RecyclerView.ViewHolder holder = null;
 
         switch (viewType) {
-            case TYPE_TODO:
+            default:
                 holder = new TodoViewHolder(view) {
                     @Override
                     protected IStateLiveData<String> onMarkAsDone(Todo todo) {

@@ -46,7 +46,9 @@ public class CourseRepository {
         return instance;
     }
 
-
+    public StateLiveData<List<CourseInfo>> getAllCourseInfos() {
+        return infoDAO.readAll();
+    }
 
     public LiveData<List<Course>> getCourses() {
         updateMyCourses();

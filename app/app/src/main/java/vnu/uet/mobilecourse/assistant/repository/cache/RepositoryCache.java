@@ -9,6 +9,6 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
  *
  * @param <T> value type
  */
-public abstract class RepositoryCache<T> extends HashMap<String, IStateLiveData<T>> {
+public abstract class RepositoryCache<T> extends HashMap<Object, IStateLiveData<T>> {
 
 }

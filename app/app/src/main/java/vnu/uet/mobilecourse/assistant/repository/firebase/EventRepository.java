@@ -14,7 +14,10 @@ import vnu.uet.mobilecourse.assistant.model.event.EventComparator;
 import vnu.uet.mobilecourse.assistant.model.event.IEvent;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
+import vnu.uet.mobilecourse.assistant.model.firebase.Participant_CourseSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
+import vnu.uet.mobilecourse.assistant.repository.CourseRepository;
+import vnu.uet.mobilecourse.assistant.repository.cache.DailyEventCache;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.SessionConverter;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
@@ -27,7 +30,16 @@ public class EventRepository {
 
     private static EventRepository instance;
 
-    private TodoRepository todoRepo = TodoRepository.getInstance();
+    private TodoRepository todoRepo;
+    private CourseRepository courseRepo;
+    private DailyEventCache cache;
+
+    public EventRepository() {
+        todoRepo = TodoRepository.getInstance();
+        courseRepo = CourseRepository.getInstance();
+
+        cache = new DailyEventCache();
+    }
 
     public static EventRepository getInstance() {
         if (instance == null) {
@@ -38,10 +50,21 @@ public class EventRepository {
     }
 
     public IStateLiveData<DailyEventList> getDailyEvent(Date date) {
-        return new MergeDailyEventLiveData(date, todoRepo.getAllTodos(), new CourseInfoDAO().readAll());
+        // check in cache first
+        if (cache.containsKey(date)) {
+            return cache.get(date);
+        }
+        // if not in cache, query in database
+        else {
+            IStateLiveData<DailyEventList> liveData =
+                    new MergeDailyEventLiveData(date, todoRepo.getAllTodos(), courseRepo.getAllCourseInfos());
+
+            cache.put(date, liveData);
+            return liveData;
+        }
     }
 
-    public class MergeDailyEventLiveData extends StateMediatorLiveData<DailyEventList> {
+    public static class MergeDailyEventLiveData extends StateMediatorLiveData<DailyEventList> {
 
         private List<Todo> todoList;
         private List<CourseSessionEvent> courseSessions;
