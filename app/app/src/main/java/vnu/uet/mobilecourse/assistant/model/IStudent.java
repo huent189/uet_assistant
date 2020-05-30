@@ -4,4 +4,5 @@ public interface IStudent {
     String getName();
     String getCode();
     String getAvatar();
+    boolean isActive();
 }

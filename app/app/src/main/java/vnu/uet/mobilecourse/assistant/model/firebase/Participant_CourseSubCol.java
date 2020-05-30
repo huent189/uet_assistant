@@ -1,12 +1,14 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
 import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.PropertyName;
 
 import androidx.annotation.NonNull;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 
 public class Participant_CourseSubCol implements IFirebaseModel, IStudent {
 
+    @PropertyName("studentId")
     private String id;
 
     private String name;
@@ -20,10 +22,12 @@ public class Participant_CourseSubCol implements IFirebaseModel, IStudent {
     private boolean active;
 
     @Override
+    @PropertyName("studentId")
     public String getId() {
         return id;
     }
 
+    @PropertyName("studentId")
     public void setId(String id) {
         this.id = id;
     }

@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.adapter.viewholder;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -35,6 +36,18 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
     public void bind(IStudent student) {
         mTvName.setText(student.getName());
         mTvId.setText(student.getCode());
+
+        if (!student.isActive()) {
+            mBtnChat.setImageResource(R.drawable.ic_warning_24dp);
+            mBtnChat.setBackground(null);
+            mBtnChat.setClickable(false);
+            mBtnChat.setEnabled(false);
+        } else {
+            mBtnChat.setImageResource(R.drawable.ic_chat_24dp);
+            mBtnChat.setBackgroundResource(R.drawable.primary_button_background);
+            mBtnChat.setClickable(true);
+            mBtnChat.setEnabled(true);
+        }
     }
 
     public void setOnClickListener(View.OnClickListener listener) {
