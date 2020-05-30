@@ -4,7 +4,14 @@ package vnu.uet.mobilecourse.assistant.model.firebase;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Todo implements Parcelable, IFirebaseModel {
+import com.google.firebase.firestore.Exclude;
+
+import java.util.Date;
+
+import vnu.uet.mobilecourse.assistant.model.event.IEvent;
+import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+
+public class Todo implements Parcelable, IFirebaseModel, IEvent {
     private String ownerId;
     private String todoListId;
     private String id;
@@ -13,9 +20,10 @@ public class Todo implements Parcelable, IFirebaseModel {
     private long deadline;
     private boolean completed;
 
-    public Todo() {
+    @Exclude
+    private String category;
 
-    }
+    public Todo() {}
 
     public String getOwnerId() {
         return ownerId;
@@ -43,6 +51,21 @@ public class Todo implements Parcelable, IFirebaseModel {
 
     public String getTitle() {
         return title;
+    }
+
+    @Override
+    @Exclude
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    @Override
+    public Date getTime() {
+        return DateTimeUtils.fromSecond(deadline);
     }
 
     public void setTitle(String title) {

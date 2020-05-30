@@ -30,7 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.DailyEventAdapter;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
-import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
+import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.view.component.CustomCalendarView;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
@@ -143,7 +143,7 @@ public class CalendarFragment extends Fragment {
         mViewModel.getDailyTodoList(date).observe(getViewLifecycleOwner(), stateModel -> {
             switch (stateModel.getStatus()) {
                 case SUCCESS:
-                    DailyTodoList dailyTodoList = stateModel.getData();
+                    DailyEventList dailyTodoList = stateModel.getData();
 
                     mDailyEventAdapter = new DailyEventAdapter(dailyTodoList, CalendarFragment.this);
                     mRvDailyTodoList.setAdapter(mDailyEventAdapter);
@@ -176,10 +176,10 @@ public class CalendarFragment extends Fragment {
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(getContext()) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                final int position = viewHolder.getAdapterPosition();
-                final Todo item = mDailyEventAdapter.getTodoList().get(position);
-
-                mViewModel.deleteTodo(item.getId());
+//                final int position = viewHolder.getAdapterPosition();
+//                final Todo item = mDailyEventAdapter.getTodoList().get(position);
+//
+//                mViewModel.deleteTodo(item.getId());
             }
         };
 

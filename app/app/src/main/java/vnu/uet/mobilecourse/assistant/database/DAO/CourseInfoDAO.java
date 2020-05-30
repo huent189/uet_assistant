@@ -13,12 +13,16 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import vnu.uet.mobilecourse.assistant.model.Course;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
+import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
@@ -64,7 +68,7 @@ public class CourseInfoDAO extends FirebaseDAO<CourseInfo> {
                                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                             @Override
                                             public void onSuccess(DocumentSnapshot snapshot) {
-                                                CourseInfo course = snapshot.toObject(CourseInfo.class);
+                                                CourseInfo course = fromSnapshot(snapshot);
                                                 courses.add(course);
                                                 liveData.postSuccess(courses);
                                             }
@@ -75,7 +79,7 @@ public class CourseInfoDAO extends FirebaseDAO<CourseInfo> {
                                                 liveData.postError(e);
                                             }
                                         });
-                            };
+                            }
 
                         }
                     }
@@ -95,6 +99,80 @@ public class CourseInfoDAO extends FirebaseDAO<CourseInfo> {
         }
 
         return mDataList;
+    }
+
+    private CourseInfo fromSnapshot(DocumentSnapshot snapshot) {
+        CourseInfo courseInfo = snapshot.toObject(CourseInfo.class);
+
+        // convert sessions map to list of session
+        Object o1 = snapshot.get("courseInfo");
+        if (courseInfo != null && o1 instanceof Map) {
+
+            for (Object o2 : ((Map) o1).entrySet()) {
+                CourseSession session = new CourseSession();
+
+                session.setCourseName(courseInfo.getName());
+
+                Map.Entry entry = (Map.Entry) o2;
+
+                String key = entry.getKey().toString();
+
+                if (key.matches("[0-9] \\| [0-9]{1,2}-[0-9]{1,2}")) {
+                    String[] temp = key.split("\\Q | \\E");
+
+                    session.setDayOfWeek(Integer.parseInt(temp[0]));
+
+                    temp = temp[1].split("-");
+
+                    session.setStart(Integer.parseInt(temp[0]));
+                    session.setEnd(Integer.parseInt(temp[1]));
+                }
+
+                Object value = entry.getValue();
+
+                if (value instanceof Map) {
+                    Map map = (Map) value;
+
+                    Object teacherName = map.get("teacherName");
+                    if (teacherName != null) {
+                        session.setTeacherName(teacherName.toString());
+                    }
+
+                    Object classroom = map.get("classroom");
+                    if (classroom != null) {
+                        session.setClassroom(classroom.toString());
+                    }
+
+                    Object type = map.get("type");
+                    if (type != null) {
+                        switch (type.toString().toUpperCase()) {
+                            case "CL":
+                                session.setType(0);
+                                break;
+
+                            case "N1":
+                                session.setType(1);
+                                break;
+
+                            case "N2":
+                                session.setType(2);
+                                break;
+
+                            case "N3":
+                                session.setType(3);
+                                break;
+                        }
+                    }
+
+                }
+
+                courseInfo.getSessions().add(session);
+
+            }
+        }
+
+
+        return courseInfo;
     }
 
     @Deprecated

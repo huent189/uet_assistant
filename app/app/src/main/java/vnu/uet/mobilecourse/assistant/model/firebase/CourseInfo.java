@@ -16,7 +16,9 @@ public class CourseInfo implements IFirebaseModel, ICourse {
     private String name;
     private String id;
 
-    private Map<String, CourseSession> sessions = new HashMap<>();
+    private int credits;
+
+    private List<CourseSession> sessions = new ArrayList<>();
 
     @Exclude
     private List<Participant_CourseSubCol> participants = new ArrayList<>();
@@ -38,12 +40,20 @@ public class CourseInfo implements IFirebaseModel, ICourse {
         this.id = id;
     }
 
-    public void setSessions(Map<String, CourseSession> sessions) {
+    public List<CourseSession> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(List<CourseSession> sessions) {
         this.sessions = sessions;
     }
 
-    public Map<String, CourseSession> getSessions() {
-        return sessions;
+    public int getCredits() {
+        return credits;
+    }
+
+    public void setCredits(int credits) {
+        this.credits = credits;
     }
 
     public void setParticipants(List<Participant_CourseSubCol> participants) {

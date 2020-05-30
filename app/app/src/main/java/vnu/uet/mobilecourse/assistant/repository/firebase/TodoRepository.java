@@ -11,8 +11,8 @@ import vnu.uet.mobilecourse.assistant.database.DAO.TodoDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.TodoListDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
-import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
-import vnu.uet.mobilecourse.assistant.model.todo.TodoComparator;
+import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
+import vnu.uet.mobilecourse.assistant.model.event.EventComparator;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -49,43 +49,43 @@ public class TodoRepository implements ITodoRepository {
         return todoLiveData;
     }
 
-    @Override
-    public StateMediatorLiveData<DailyTodoList> getDailyTodoList(Date date) {
-        // initialize state live data with loading state
-        StateModel<DailyTodoList> loadingState = new StateModel<>(StateStatus.LOADING);
-        StateMediatorLiveData<DailyTodoList> response = new StateMediatorLiveData<>(loadingState);
-
-        response.addSource(todoLiveData, stateModel -> {
-            switch (stateModel.getStatus()) {
-                case LOADING:
-                    response.postLoading();
-                    break;
-
-                case ERROR:
-                    response.postError(stateModel.getError());
-                    break;
-
-                case SUCCESS:
-                    List<Todo> todos = stateModel.getData();
-
-                    DailyTodoList dailyTodoList = new DailyTodoList(date);
-
-                    List<Todo> todoByDay = todos.stream()
-                            .filter(todo -> {
-                                Date deadline = DateTimeUtils.fromSecond(todo.getDeadline());
-                                return DateTimeUtils.isSameDate(date, deadline);
-                            })
-                            .sorted(new TodoComparator())
-                            .collect(Collectors.toList());
-
-                    dailyTodoList.addAll(todoByDay);
-
-                    response.postSuccess(dailyTodoList);
-            }
-        });
-
-        return response;
-    }
+//    @Override
+//    public StateMediatorLiveData<DailyEventList> getDailyTodoList(Date date) {
+//        // initialize state live data with loading state
+//        StateModel<DailyEventList> loadingState = new StateModel<>(StateStatus.LOADING);
+//        StateMediatorLiveData<DailyEventList> response = new StateMediatorLiveData<>(loadingState);
+//
+//        response.addSource(todoLiveData, stateModel -> {
+//            switch (stateModel.getStatus()) {
+//                case LOADING:
+//                    response.postLoading();
+//                    break;
+//
+//                case ERROR:
+//                    response.postError(stateModel.getError());
+//                    break;
+//
+//                case SUCCESS:
+//                    List<Todo> todos = stateModel.getData();
+//
+//                    DailyEventList dailyTodoList = new DailyEventList(date);
+//
+//                    List<Todo> todoByDay = todos.stream()
+//                            .filter(todo -> {
+//                                Date deadline = DateTimeUtils.fromSecond(todo.getDeadline());
+//                                return DateTimeUtils.isSameDate(date, deadline);
+//                            })
+//                            .sorted(new EventComparator())
+//                            .collect(Collectors.toList());
+//
+//                    dailyTodoList.addAll(todoByDay);
+//
+//                    response.postSuccess(dailyTodoList);
+//            }
+//        });
+//
+//        return response;
+//    }
 
     public IStateLiveData<List<TodoList>> getShallowTodoLists() {
         return listLiveData;

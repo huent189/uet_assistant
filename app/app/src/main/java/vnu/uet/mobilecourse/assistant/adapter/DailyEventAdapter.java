@@ -10,41 +10,65 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.TodoViewHolder;
+import vnu.uet.mobilecourse.assistant.model.event.CourseSessionEvent;
+import vnu.uet.mobilecourse.assistant.model.event.IEvent;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
-import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
+import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
 import vnu.uet.mobilecourse.assistant.view.calendar.CalendarFragment;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
-public class DailyEventAdapter extends RecyclerView.Adapter<TodoViewHolder> {
+public class DailyEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private DailyTodoList mTodoList;
+    private DailyEventList mDailyList;
     private CalendarFragment mOwner;
     private NavController mNavController;
 
-    public DailyEventAdapter(DailyTodoList todoList, CalendarFragment owner) {
-        this.mTodoList = todoList;
+    public DailyEventAdapter(DailyEventList todoList, CalendarFragment owner) {
+        this.mDailyList = todoList;
         this.mOwner = owner;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        IEvent event = mDailyList.get(position);
+
+        if (event instanceof Todo)
+            return TYPE_TODO;
+        else if (event instanceof CourseSessionEvent)
+            return COURSE_SESSION_TYPE;
+
+        return -1;
+    }
+
+    private static final int TYPE_TODO = 0;
+    private static final int COURSE_SESSION_TYPE = 1;
+
     @NonNull
     @Override
-    public TodoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mOwner.getLayoutInflater()
                 .inflate(R.layout.layout_todo_item, parent, false);
 
-        TodoViewHolder holder = new TodoViewHolder(view) {
-            @Override
-            protected IStateLiveData<String> onMarkAsDone(Todo todo) {
-                mOwner.saveRecycleViewState();
-                return mOwner.getViewModel().markTodoAsDone(todo.getId());
-            }
+        RecyclerView.ViewHolder holder = null;
 
-            @Override
-            protected IStateLiveData<String> onMarkAsDoing(Todo todo) {
-                mOwner.saveRecycleViewState();
-                return mOwner.getViewModel().markTodoAsDoing(todo.getId());
-            }
-        };
+        switch (viewType) {
+            case TYPE_TODO:
+                holder = new TodoViewHolder(view) {
+                    @Override
+                    protected IStateLiveData<String> onMarkAsDone(Todo todo) {
+                        mOwner.saveRecycleViewState();
+                        return mOwner.getViewModel().markTodoAsDone(todo.getId());
+                    }
+
+                    @Override
+                    protected IStateLiveData<String> onMarkAsDoing(Todo todo) {
+                        mOwner.saveRecycleViewState();
+                        return mOwner.getViewModel().markTodoAsDoing(todo.getId());
+                    }
+                };
+
+                break;
+        }
 
         Activity activity = mOwner.getActivity();
 
@@ -59,18 +83,18 @@ public class DailyEventAdapter extends RecyclerView.Adapter<TodoViewHolder> {
 
 
     @Override
-    public void onBindViewHolder(@NonNull TodoViewHolder holder, int position) {
-        final Todo todo = mTodoList.get(position);
-        holder.bind(todo, true, mOwner.getViewLifecycleOwner());
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        final IEvent event = mDailyList.get(position);
+
     }
 
 
     @Override
     public int getItemCount() {
-        return mTodoList.size();
+        return mDailyList.size();
     }
 
-    public DailyTodoList getTodoList() {
-        return mTodoList;
+    public DailyEventList getTodoList() {
+        return mDailyList;
     }
 }

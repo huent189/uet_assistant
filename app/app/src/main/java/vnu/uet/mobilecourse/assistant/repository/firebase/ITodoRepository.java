@@ -6,7 +6,7 @@ import java.util.Map;
 
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
-import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
+import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
 public interface ITodoRepository {
@@ -17,7 +17,7 @@ public interface ITodoRepository {
      * @param date selected date on calendar
      * @return list of todo_ on specific date
      */
-    IStateLiveData<DailyTodoList> getDailyTodoList(Date date);
+//    IStateLiveData<DailyEventList> getDailyTodoList(Date date);
 
 //    /**
 //     * Use in Calendar Fragment, when touch on two specific date
