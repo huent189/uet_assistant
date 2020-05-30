@@ -61,21 +61,23 @@ public class CourseClassmateFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             String id = args.getString("courseCode");
-            assert id != null;
-            id = id.replace(CONST.COURSE_PREFIX + CONST.UNDERSCORE, "")
-                    .replace(CONST.UNDERSCORE, CONST.SPACE);
 
-            mViewModel.getClassMates(id).observe(getViewLifecycleOwner(), new Observer<StateModel<List<Participant_CourseSubCol>>>() {
-                @Override
-                public void onChanged(StateModel<List<Participant_CourseSubCol>> stateModel) {
-                    switch (stateModel.getStatus()) {
-                        case SUCCESS:
-                            mAdapter = new ClassMateAdapter(stateModel.getData(), CourseClassmateFragment.this);
-                            rvClassMate.setAdapter(mAdapter);
-                            break;
+            if (id != null && !id.isEmpty()) {
+                id = id.replace(CONST.COURSE_PREFIX + CONST.UNDERSCORE, "")
+                        .replace(CONST.UNDERSCORE, CONST.SPACE);
+
+                mViewModel.getClassMates(id).observe(getViewLifecycleOwner(), new Observer<StateModel<List<Participant_CourseSubCol>>>() {
+                    @Override
+                    public void onChanged(StateModel<List<Participant_CourseSubCol>> stateModel) {
+                        switch (stateModel.getStatus()) {
+                            case SUCCESS:
+                                mAdapter = new ClassMateAdapter(stateModel.getData(), CourseClassmateFragment.this);
+                                rvClassMate.setAdapter(mAdapter);
+                                break;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 
