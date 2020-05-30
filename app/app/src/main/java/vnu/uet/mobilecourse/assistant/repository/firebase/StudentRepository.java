@@ -61,11 +61,12 @@ public class StudentRepository {
                     case SUCCESS:
                         infoDone = true;
                         infoModel = stateModel.getData();
+                        break;
+                }
 
-                        if (userDone && infoDone) {
-                            UserInfo combine = combineData();
-                            postSuccess(combine);
-                        }
+                if (userDone && infoDone) {
+                    UserInfo combine = combineData();
+                    postSuccess(combine);
                 }
             });
 
@@ -93,10 +94,12 @@ public class StudentRepository {
                         userDone = true;
                         userModel = stateModel.getData();
 
-                        if (userDone && infoDone) {
-                            UserInfo combine = combineData();
-                            postSuccess(combine);
-                        }
+                        break;
+                }
+
+                if (userDone && infoDone) {
+                    UserInfo combine = combineData();
+                    postSuccess(combine);
                 }
             });
         }
