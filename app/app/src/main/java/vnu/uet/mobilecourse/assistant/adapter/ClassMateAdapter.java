@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -61,7 +62,12 @@ public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> im
         holder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNavController.navigate(R.id.action_navigation_explore_course_to_navigation_friend_profile);
+                Bundle bundle = new Bundle();
+                bundle.putString("name", current.getName());
+                bundle.putString("code", current.getCode());
+                bundle.putString("avatar", current.getAvatar());
+
+                mNavController.navigate(R.id.action_navigation_explore_course_to_navigation_friend_profile, bundle);
             }
         });
     }

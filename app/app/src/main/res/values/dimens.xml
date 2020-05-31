@@ -36,7 +36,7 @@
     <dimen name="collapsing_toolbar_height">220dp</dimen>
 
     <dimen name="img_avatar_size">48dp</dimen>
-
+    <dimen name="big_img_avatar_size">128dp</dimen>
     <dimen name="small_img_avatar_size">32dp</dimen>
 
 
