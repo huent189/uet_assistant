@@ -1,32 +1,23 @@
 package vnu.uet.mobilecourse.assistant.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.repository.FirebaseAuthenticationService;
-import vnu.uet.mobilecourse.assistant.repository.UserRepository;
-import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.repository.course.UserRepository;
+import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.work.RemindScheduler;
-import vnu.uet.mobilecourse.assistant.work.TodoReminder;
 
 
 public class LoginFirebaseActivity extends AppCompatActivity {

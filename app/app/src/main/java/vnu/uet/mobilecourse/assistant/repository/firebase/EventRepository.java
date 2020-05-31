@@ -7,24 +7,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import androidx.lifecycle.Observer;
-import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
 import vnu.uet.mobilecourse.assistant.model.event.CourseSessionEvent;
 import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
 import vnu.uet.mobilecourse.assistant.model.event.EventComparator;
-import vnu.uet.mobilecourse.assistant.model.event.IEvent;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
-import vnu.uet.mobilecourse.assistant.model.firebase.Participant_CourseSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
-import vnu.uet.mobilecourse.assistant.repository.CourseRepository;
 import vnu.uet.mobilecourse.assistant.repository.cache.DailyEventCache;
+import vnu.uet.mobilecourse.assistant.repository.course.CourseRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.SessionConverter;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class EventRepository {
 

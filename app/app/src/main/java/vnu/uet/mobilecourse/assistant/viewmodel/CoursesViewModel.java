@@ -1,16 +1,14 @@
 package vnu.uet.mobilecourse.assistant.viewmodel;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.ViewModel;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.ViewModel;
 import vnu.uet.mobilecourse.assistant.model.Course;
-import vnu.uet.mobilecourse.assistant.repository.course.CourseRepository;
 import vnu.uet.mobilecourse.assistant.model.ICourse;
-import vnu.uet.mobilecourse.assistant.repository.CourseRepository;
+import vnu.uet.mobilecourse.assistant.repository.course.CourseRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
 public class CoursesViewModel extends ViewModel {
