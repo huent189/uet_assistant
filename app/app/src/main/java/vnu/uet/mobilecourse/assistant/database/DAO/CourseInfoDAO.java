@@ -42,7 +42,7 @@ public class CourseInfoDAO extends FirebaseDAO<CourseInfo> {
         // query all document owned by current user
         FirebaseFirestore.getInstance()
                 .collectionGroup(FirebaseCollectionName.PARTICIPANT)
-                .whereEqualTo("id", studentId)
+                .whereEqualTo("studentId", studentId)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
