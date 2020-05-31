@@ -35,14 +35,47 @@
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddTodo"
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/fabAddTodo"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="end|bottom"-->
+<!--        android:layout_marginEnd="@dimen/margin_x3"-->
+<!--        android:layout_marginBottom="@dimen/margin_x3"-->
+<!--        android:src="@drawable/ic_add_24dp"-->
+<!--        android:tint="@color/white" />-->
+    
+    
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/multiple_actions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_marginEnd="@dimen/margin_x3"
-        android:layout_marginBottom="@dimen/margin_x3"
-        android:src="@drawable/ic_add_24dp"
-        android:tint="@color/white" />
+        android:layout_gravity="bottom|end"
+        android:layout_marginVertical="4dp"
+        android:layout_marginHorizontal="7dp"
+        app:fab_labelStyle="@style/menu_labels_style"
+        app:fab_addButtonColorNormal="@color/accent"
+        app:fab_addButtonColorPressed="@color/primary"
+        app:fab_addButtonPlusIconColor="@color/white">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/accent"
+            app:fab_title="@string/fab_title_add_todo"
+            app:fab_icon="@drawable/ic_note_add_24dp"
+            app:fab_colorPressed="@color/accent"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/accent"
+            app:fab_title="@string/fab_title_add_list"
+            app:fab_icon="@drawable/ic_playlist_add_24dp"
+            app:fab_colorPressed="@color/accent"/>
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

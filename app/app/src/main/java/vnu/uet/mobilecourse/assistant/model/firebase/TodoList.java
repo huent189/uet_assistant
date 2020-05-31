@@ -2,14 +2,12 @@ package vnu.uet.mobilecourse.assistant.model.firebase;
 
 import com.google.firebase.firestore.Exclude;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 
-import vnu.uet.mobilecourse.assistant.model.todo.PriorityTodoList;
+import vnu.uet.mobilecourse.assistant.model.event.PriorityTodoList;
 
 public class TodoList implements IFirebaseModel {
+
     private String ownerId;
     private String id;
     private String title;

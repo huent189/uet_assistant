@@ -10,17 +10,24 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.NotificationAdapter;
+import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
+import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.NotificationsViewModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class NotificationsFragment extends Fragment {
 
     private NotificationsViewModel mViewModel;
 
+    private RecyclerView mRvNotifications;
     private NotificationAdapter mNotificationAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -32,21 +39,44 @@ public class NotificationsFragment extends Fragment {
 
         initializeNotificationListView(root);
 
+        enableSwipeToDelete();
+
         return root;
     }
 
+    private void enableSwipeToDelete() {
+        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(getContext()) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                final int position = viewHolder.getAdapterPosition();
+                final Notification_UserSubCol item = mNotificationAdapter.getNotifications().get(position);
+
+                mViewModel.deleteNotification(item);
+            }
+        };
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(mRvNotifications);
+    }
+
     private void initializeNotificationListView(View root) {
-        List<String> notifications = new ArrayList<>();
+        mRvNotifications = root.findViewById(R.id.rvNotifications);
 
-        for (int i = 1; i < 20; i++) {
-            notifications.add("Bài kiểm tra " + i);
-        }
+        mRvNotifications.setAdapter(mNotificationAdapter);
+        mRvNotifications.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        mNotificationAdapter = new NotificationAdapter(notifications, this);
+        mViewModel.getNotifications().observe(getViewLifecycleOwner(), new Observer<StateModel<List<Notification_UserSubCol>>>() {
+            @Override
+            public void onChanged(StateModel<List<Notification_UserSubCol>> stateModel) {
+                switch (stateModel.getStatus()) {
+                    case SUCCESS:
+                        List<Notification_UserSubCol> notifications = stateModel.getData();
+                        mNotificationAdapter = new NotificationAdapter(notifications, NotificationsFragment.this);
+                        mRvNotifications.setAdapter(mNotificationAdapter);
 
-        RecyclerView rvNotifications = root.findViewById(R.id.rvNotifications);
-
-        rvNotifications.setAdapter(mNotificationAdapter);
-        rvNotifications.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                        break;
+                }
+            }
+        });
     }
 }

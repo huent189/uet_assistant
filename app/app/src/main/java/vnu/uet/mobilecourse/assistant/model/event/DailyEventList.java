@@ -1,11 +1,11 @@
-package vnu.uet.mobilecourse.assistant.model.todo;
+package vnu.uet.mobilecourse.assistant.model.event;
 
 import java.util.Date;
 
-public class DailyTodoList extends AbstractTodoList {
+public class DailyEventList extends AbstractEventList<IEvent> {
     private Date date;
 
-    public DailyTodoList(Date date) {
+    public DailyEventList(Date date) {
         super();
         this.date = date;
     }

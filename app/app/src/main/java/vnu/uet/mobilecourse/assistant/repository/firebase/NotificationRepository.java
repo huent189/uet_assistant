@@ -1,26 +1,11 @@
 package vnu.uet.mobilecourse.assistant.repository.firebase;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.database.DAO.NotificationDAO;
-import vnu.uet.mobilecourse.assistant.database.DAO.TodoDAO;
-import vnu.uet.mobilecourse.assistant.database.DAO.TodoListDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
-import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
-import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
-import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
-import vnu.uet.mobilecourse.assistant.model.todo.TodoComparator;
-import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.DeepTodoListsStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class NotificationRepository {
     private static NotificationRepository instance;
@@ -45,7 +30,11 @@ public class NotificationRepository {
         return liveData;
     }
 
-    public IStateLiveData<Notification_UserSubCol> add(Notification_UserSubCol noti) {
-        return dao.add(noti.getId(), noti);
+    public IStateLiveData<Notification_UserSubCol> add(Notification_UserSubCol notification) {
+        return dao.add(notification.getId(), notification);
+    }
+
+    public IStateLiveData<String> delete(Notification_UserSubCol notification) {
+        return dao.delete(notification.getId());
     }
 }

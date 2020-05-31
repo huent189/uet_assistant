@@ -6,4 +6,9 @@ public interface CONST {
     String VNU_EMAIL_DOMAIN = "@vnu.edu.vn";
 
     String EMPTY = "";
+
+    String COURSE_PREFIX = "1920II";
+
+    char UNDERSCORE = '_';
+    char SPACE = ' ';
 }

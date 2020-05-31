@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.view.course;
 
 import androidx.appcompat.widget.SearchView;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -18,9 +19,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import vnu.uet.mobilecourse.assistant.adapter.ClassMateAdapter;
+import vnu.uet.mobilecourse.assistant.model.firebase.Participant_CourseSubCol;
+import vnu.uet.mobilecourse.assistant.util.CONST;
 import vnu.uet.mobilecourse.assistant.viewmodel.CourseClassmateViewModel;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class CourseClassmateFragment extends Fragment {
 
@@ -47,14 +53,32 @@ public class CourseClassmateFragment extends Fragment {
     }
 
     private void initializeClassMateListView(View root) {
-        mAdapter = new ClassMateAdapter(mViewModel.getClassMates().getValue(), this);
+//        mAdapter = new ClassMateAdapter(mViewModel.getClassMates().getValue(), this);
 
         RecyclerView rvClassMate = root.findViewById(R.id.rvClassMate);
-
-        rvClassMate.setAdapter(mAdapter);
         rvClassMate.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        mViewModel.getClassMates().observe(getViewLifecycleOwner(), mates -> mAdapter.notifyDataSetChanged());
+        Bundle args = getArguments();
+        if (args != null) {
+            String id = args.getString("courseCode");
+
+            if (id != null && !id.isEmpty()) {
+                id = id.replace(CONST.COURSE_PREFIX + CONST.UNDERSCORE, "")
+                        .replace(CONST.UNDERSCORE, CONST.SPACE);
+
+                mViewModel.getClassMates(id).observe(getViewLifecycleOwner(), new Observer<StateModel<List<Participant_CourseSubCol>>>() {
+                    @Override
+                    public void onChanged(StateModel<List<Participant_CourseSubCol>> stateModel) {
+                        switch (stateModel.getStatus()) {
+                            case SUCCESS:
+                                mAdapter = new ClassMateAdapter(stateModel.getData(), CourseClassmateFragment.this);
+                                rvClassMate.setAdapter(mAdapter);
+                                break;
+                        }
+                    }
+                });
+            }
+        }
     }
 
     @Override

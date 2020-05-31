@@ -10,7 +10,8 @@ import java.util.Map;
 import androidx.lifecycle.ViewModel;
 
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
-import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
+import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
+import vnu.uet.mobilecourse.assistant.repository.firebase.EventRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
@@ -36,8 +37,9 @@ public class CalendarViewModel extends ViewModel {
         this.mDailyListViewState = mDailyListViewState;
     }
 
-    public IStateLiveData<DailyTodoList> getDailyTodoList(Date date) {
-        return mTodoRepo.getDailyTodoList(date);
+    public IStateLiveData<DailyEventList> getDailyTodoList(Date date) {
+//        return mTodoRepo.getDailyTodoList(date);
+        return EventRepository.getInstance().getDailyEvent(date);
     }
 
     public IStateLiveData<String> markTodoAsDone(String id) {

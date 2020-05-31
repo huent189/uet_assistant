@@ -7,8 +7,7 @@
     android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:paddingHorizontal="@dimen/margin_x2"
-        android:paddingVertical="@dimen/margin"
+        android:padding="@dimen/margin_x2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -33,7 +32,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tvClassMateName"
+                android:id="@+id/tvName"
                 style="@style/ListItemTitle"
                 android:textColor="@color/primary"
                 android:layout_width="wrap_content"
@@ -41,7 +40,7 @@
                 android:text="Nguyễn Tùng Lâm" />
 
             <TextView
-                android:id="@+id/tvClassMateId"
+                android:id="@+id/tvId"
                 style="@style/SecondaryText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,27 +48,15 @@
 
         </LinearLayout>
 
-        <Button
-            style="@style/CircleButton"
+        <ImageButton
             android:id="@+id/btnChat"
             android:layout_width="@dimen/circle_button_size"
             android:layout_height="@dimen/circle_button_size"
+            android:src="@drawable/ic_chat_24dp"
             android:background="@drawable/primary_button_background"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:contentDescription="@string/title_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_chat_24dp"
-            android:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/btnChat"
-            app:layout_constraintEnd_toEndOf="@+id/btnChat"
-            app:layout_constraintStart_toStartOf="@+id/btnChat"
-            app:layout_constraintTop_toTopOf="@+id/btnChat" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

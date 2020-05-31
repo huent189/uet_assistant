@@ -89,8 +89,6 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
             mTvLastMessageTime.setText(lastMessageTimeInStr);
 
             mIvNewMessageDot.setVisibility(chat.isSeen() ? View.GONE : View.VISIBLE);
-
-
         }
     }
 

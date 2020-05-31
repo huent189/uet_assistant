@@ -48,7 +48,6 @@ public class CoursesFragment extends Fragment {
         ViewCompat.requestApplyInsets(coordinatorLayout);
 
         mViewModel = new ViewModelProvider(this).get(CoursesViewModel.class);
-        mViewModel.initialize();
 
         ShimmerFrameLayout shimmerRvCourseRecently = root.findViewById(R.id.shimmerRvCourseRecently);
         shimmerRvCourseRecently.startShimmerAnimation();
@@ -79,23 +78,46 @@ public class CoursesFragment extends Fragment {
             }
         });
 
-        mViewModel.getCourses().observe(getViewLifecycleOwner(), courses -> {
-            if (courses == null) {
-                shimmerRvAllCourses.startShimmerAnimation();
-                rvAllCourses.setVisibility(View.INVISIBLE);
+        mViewModel.getCourses().observe(getViewLifecycleOwner(), stateModel -> {
+            switch (stateModel.getStatus()) {
+                case LOADING:
+                    shimmerRvAllCourses.startShimmerAnimation();
+                    rvAllCourses.setVisibility(View.INVISIBLE);
+                    break;
 
-            } else {
-                if (rvAllCourses.getVisibility() == View.INVISIBLE) {
-                    shimmerRvAllCourses.setVisibility(View.INVISIBLE);
-                    rvAllCourses.setVisibility(View.VISIBLE);
-                }
 
-                AllCoursesAdapter adapter = new AllCoursesAdapter(courses, CoursesFragment.this);
-                rvAllCourses.setAdapter(adapter);
+                case SUCCESS:
+                    if (rvAllCourses.getVisibility() == View.INVISIBLE) {
+                        shimmerRvAllCourses.setVisibility(View.INVISIBLE);
+                        rvAllCourses.setVisibility(View.VISIBLE);
+                    }
 
-                // restore scroll position
-                mAllLayoutManager.scrollToPosition(mPrevCoursePositionForAll);
+                    AllCoursesAdapter adapter = new AllCoursesAdapter(stateModel.getData(), CoursesFragment.this);
+                    rvAllCourses.setAdapter(adapter);
+
+                    // restore scroll position
+                    mAllLayoutManager.scrollToPosition(mPrevCoursePositionForAll);
+
+                    break;
             }
+
+
+//            if (courses == null) {
+//                shimmerRvAllCourses.startShimmerAnimation();
+//                rvAllCourses.setVisibility(View.INVISIBLE);
+//
+//            } else {
+//                if (rvAllCourses.getVisibility() == View.INVISIBLE) {
+//                    shimmerRvAllCourses.setVisibility(View.INVISIBLE);
+//                    rvAllCourses.setVisibility(View.VISIBLE);
+//                }
+//
+//                AllCoursesAdapter adapter = new AllCoursesAdapter(courses, CoursesFragment.this);
+//                rvAllCourses.setAdapter(adapter);
+//
+//                // restore scroll position
+//                mAllLayoutManager.scrollToPosition(mPrevCoursePositionForAll);
+//            }
         });
 
         Toolbar toolbar = initializeToolbar(root);

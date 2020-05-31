@@ -63,7 +63,7 @@
             android:paddingHorizontal="@dimen/margin_x2"
             android:paddingVertical="@dimen/margin"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <EditText

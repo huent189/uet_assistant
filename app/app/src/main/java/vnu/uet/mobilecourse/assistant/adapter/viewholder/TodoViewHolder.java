@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -38,6 +39,8 @@ public abstract class TodoViewHolder extends ChildViewHolder {
     private SpannableString mTitleText;
     private TextView mLayoutDisable;
 
+    private Todo mTodo;
+
     protected TodoViewHolder(@NonNull View itemView) {
         super(itemView);
 
@@ -49,7 +52,13 @@ public abstract class TodoViewHolder extends ChildViewHolder {
         mLayoutDisable = itemView.findViewById(R.id.layout_disable);
     }
 
+    public Todo getTodo() {
+        return mTodo;
+    }
+
     public void bind(Todo todo, boolean showList, LifecycleOwner lifecycleOwner) {
+        mTodo = todo;
+
         // setup title text
         String title = todo.getTitle();
         mTitleText = new SpannableString(title);
@@ -57,10 +66,12 @@ public abstract class TodoViewHolder extends ChildViewHolder {
 
         // setup deadline text
         Date deadline = DateTimeUtils.fromSecond(todo.getDeadline());
-        mTvDeadline.setText(DateTimeUtils.DATE_TIME_FORMAT.format(deadline));
+        SimpleDateFormat dateFormat = DateTimeUtils.DATE_TIME_FORMAT;
 
         // show category case
         if (showList) {
+            dateFormat = DateTimeUtils.TIME_12H_FORMAT;
+
             TodoRepository.getInstance()
                     .getShallowTodoLists()
                     .observe(lifecycleOwner, stateModel -> {
@@ -81,6 +92,8 @@ public abstract class TodoViewHolder extends ChildViewHolder {
                         }
                     });
         }
+
+        mTvDeadline.setText(dateFormat.format(deadline));
 
         if (todo.isCompleted()) {
             updateDoneEffect(title);
@@ -122,7 +135,7 @@ public abstract class TodoViewHolder extends ChildViewHolder {
     }
 
     private void updateDoneEffect(String title) {
-        mTitleText.setSpan(mStrikeSpan, 0, title.length() - 1, 0);
+        mTitleText.setSpan(mStrikeSpan, 0, mTitleText.length() - 1, 0);
         mTvTodoTitle.setText(mTitleText);
 
         mLayoutDisable.setVisibility(View.VISIBLE);
