@@ -5,7 +5,6 @@ import android.text.SpannableString;
 import android.text.style.StrikethroughSpan;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,20 +12,16 @@ import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public abstract class TodoViewHolder extends ChildViewHolder {
 
@@ -96,7 +91,7 @@ public abstract class TodoViewHolder extends ChildViewHolder {
         mTvDeadline.setText(dateFormat.format(deadline));
 
         if (todo.isCompleted()) {
-            updateDoneEffect(title);
+            updateDoneEffect();
         } else {
             updateDoingEffect(todo.getDeadline());
         }
@@ -104,7 +99,7 @@ public abstract class TodoViewHolder extends ChildViewHolder {
         mCbDone.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // mark as done
             if (isChecked) {
-                updateDoneEffect(title);
+                updateDoneEffect();
 
                 onMarkAsDone(todo).observe(lifecycleOwner, state -> {
                     // recover in case catch a error
@@ -124,7 +119,7 @@ public abstract class TodoViewHolder extends ChildViewHolder {
                     // recover in case catch a error
                     switch (state.getStatus()) {
                         case ERROR:
-                            updateDoneEffect(title);
+                            updateDoneEffect();
                             break;
                     }
                 });
@@ -134,7 +129,7 @@ public abstract class TodoViewHolder extends ChildViewHolder {
         mTvCategory.setVisibility(showList ? View.VISIBLE : View.GONE);
     }
 
-    private void updateDoneEffect(String title) {
+    private void updateDoneEffect() {
         mTitleText.setSpan(mStrikeSpan, 0, mTitleText.length() - 1, 0);
         mTvTodoTitle.setText(mTitleText);
 
