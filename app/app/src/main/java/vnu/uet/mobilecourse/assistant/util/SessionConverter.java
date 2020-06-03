@@ -11,7 +11,7 @@ public class SessionConverter {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(Calendar.DAY_OF_WEEK, session.getDayOfWeek());
-        calendar.set(Calendar.HOUR, OPEN_HOUR + session.getStart() - 1);
+        calendar.set(Calendar.HOUR_OF_DAY, OPEN_HOUR + session.getStart() - 1);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 

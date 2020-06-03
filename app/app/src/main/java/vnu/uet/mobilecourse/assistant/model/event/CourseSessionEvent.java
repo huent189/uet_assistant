@@ -37,6 +37,6 @@ public class CourseSessionEvent implements IEvent {
 
     @Override
     public boolean isCompleted() {
-        return false;
+        return time.before(new Date());
     }
 }

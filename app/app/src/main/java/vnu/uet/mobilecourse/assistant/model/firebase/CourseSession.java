@@ -1,11 +1,5 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import vnu.uet.mobilecourse.assistant.model.event.IEvent;
-import vnu.uet.mobilecourse.assistant.util.SessionConverter;
-
 public class CourseSession {
     /**
      * Type of course session
