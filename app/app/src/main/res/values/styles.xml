@@ -11,9 +11,11 @@
         <item name="android:textColorHint">@color/whiteDisable</item>
         <item name="searchViewStyle">@style/SearchViewMy</item>
         <item name="android:timePickerStyle">@style/TimePicker</item>
+        <item name="android:datePickerDialogTheme">@style/DatePickerDialog</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem</item>
         <item name="radioButtonStyle">@style/RadioButton</item>
+
     </style>
 
     <style name="menu_labels_style">
@@ -137,6 +139,30 @@
         <item name="android:numbersBackgroundColor">@color/background</item>
         <item name="android:numbersInnerTextColor">@color/whiteDisable</item>
         <item name="android:numbersTextColor">@color/white</item>
+    </style>
+
+    <style name="DatePickerDialog" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">@color/primary</item>
+        <item name="android:datePickerStyle">@style/DatePicker</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
+    <style name="DatePicker" parent="android:Widget.Material.Light.DatePicker">
+        <item name="dialogCornerRadius">@dimen/small_radius</item>
+<!--        <item name="android:descendantFocusability">blocksDescendants</item>-->
+        <item name="android:background">@color/background</item>
+        <item name="buttonBarButtonStyle">@style/Button</item>
+        <item name="android:headerBackground">@color/primary</item>
+        <item name="android:windowBackground">@color/background</item>
+        <!--        <item name="android:colorPrimaryDark">@color/backgroundLight</item>-->
+<!--        <item name="android:numbersBackgroundColor">@color/background</item>-->
+<!--        <item name="android:numbersInnerTextColor">@color/whiteDisable</item>-->
+        <item name="android:colorControlNormal">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:weekNumberColor">@color/white</item>
+        <item name="android:weekDayTextAppearance">@style/ListTitle</item>
     </style>
 
     <style name="EditText" parent="Widget.AppCompat.EditText">
