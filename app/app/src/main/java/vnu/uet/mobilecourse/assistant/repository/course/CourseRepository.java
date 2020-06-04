@@ -2,22 +2,12 @@ package vnu.uet.mobilecourse.assistant.repository.course;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
 import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.CoursesDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GradeDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.MaterialDAO;
-import vnu.uet.mobilecourse.assistant.model.Course;
-import vnu.uet.mobilecourse.assistant.model.CourseContent;
-import vnu.uet.mobilecourse.assistant.model.Grade;
-import vnu.uet.mobilecourse.assistant.model.ICourse;
-import vnu.uet.mobilecourse.assistant.model.User;
+import vnu.uet.mobilecourse.assistant.model.*;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
@@ -27,7 +17,10 @@ import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CourseRepository {
     /**
@@ -126,7 +119,7 @@ public class CourseRepository {
         request.getMyCoures(User.getInstance().getUserId())
                 .enqueue(new CoursesResponseCallback<Course[]>(Course[].class) {
                     @Override
-                    public void onSucess(Course[] response) {
+                    public void onSuccess(Course[] response) {
                         CoursesDatabase.databaseWriteExecutor.execute(new Runnable() {
                             @Override
                             public void run() {
@@ -142,9 +135,9 @@ public class CourseRepository {
 
     public void updateCourseContent(int courseId){
         HTTPClient.getInstance().request(CourseRequest.class).getCourseContent(courseId + "")
-                .enqueue(new CoursesResponseCallback<CourseContent[]>(CourseContent[].class) {
+                .enqueue(new CoursesResponseCallback<CourseOverview[]>(CourseOverview[].class) {
                     @Override
-                    public void onSucess(CourseContent[] response) {
+                    public void onSuccess(CourseOverview[] response) {
                         CoursesDatabase.databaseWriteExecutor.execute(()->{
                             materialDAO.insertCourseContent(courseId, response);
                         });
@@ -153,7 +146,7 @@ public class CourseRepository {
                 });
     }
 
-    public LiveData<List<CourseContent>> getContent(int courseId){
+    public LiveData<List<CourseOverview>> getContent(int courseId){
         updateCourseContent(courseId);
         new CourseActionRepository().triggerCourseView(courseId);
         return materialDAO.getCourseContent(courseId);
@@ -174,7 +167,7 @@ public class CourseRepository {
                 .getCourseGrade(courseId + "", User.getInstance().getUserId())
                 .enqueue(new CoursesResponseCallback<Grade[]>(Grade[].class) {
                     @Override
-                    public void onSucess(Grade[] response) {
+                    public void onSuccess(Grade[] response) {
                         CoursesDatabase.databaseWriteExecutor.execute(() ->{
                             gradeDAO.insertGrade(response);
                         });
@@ -186,7 +179,7 @@ public class CourseRepository {
         HTTPClient.getInstance().request(CourseRequest.class).getMyCoures(User.getInstance().getUserId())
                 .enqueue(new CoursesResponseCallback<Course[]>(Course[].class) {
                     @Override
-                    public void onSucess(Course[] response) {
+                    public void onSuccess(Course[] response) {
                         for (Course couse :response) {
                             CoursesDatabase.databaseWriteExecutor.execute(() -> {
                                 coursesDAO.updateLastAccessTime(couse.getId(), couse.getLastAccessTime());
