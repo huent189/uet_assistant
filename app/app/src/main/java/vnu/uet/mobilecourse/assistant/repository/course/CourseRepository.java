@@ -66,10 +66,18 @@ public class CourseRepository {
         commonCourseCache = new CommonCourseCache();
     }
 
+    /**
+     * Get course info (such as credit number, participant number, sessions, ...)
+     * @param courseId of selected course
+     * @return live data contains result of this operation
+     */
     public StateMediatorLiveData<CourseInfo> getCourseInfo(String courseId) {
         return infoDAO.read(courseId);
     }
 
+    /**
+     * @return all participate course information
+     */
     public StateLiveData<List<CourseInfo>> getAllCourseInfos() {
         return infoDAO.readAll();
     }
@@ -84,12 +92,19 @@ public class CourseRepository {
         return coursesDAO.getMyCourses();
     }
 
+    /**
+     * @return courses from courses.uet.vnu.edu.vn and courses from firebase
+     */
     public IStateLiveData<List<ICourse>> getFullCourses() {
         updateMyCourses();
 
         return new MergeCourseLiveData(getCourses(), infoDAO.readAll());
     }
 
+    /**
+     * Get common course between current user and a specific student
+     * @param otherId - other student's code
+     */
     public IStateLiveData<List<ICourse>> getCommonCourses(String otherId) {
         if (commonCourseCache.containsKey(otherId)) {
             return commonCourseCache.get(otherId);
