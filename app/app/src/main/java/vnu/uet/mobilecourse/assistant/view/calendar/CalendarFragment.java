@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.DailyEventAdapter;
+import vnu.uet.mobilecourse.assistant.model.event.IEvent;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
@@ -176,10 +177,13 @@ public class CalendarFragment extends Fragment {
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(getContext()) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-//                final int position = viewHolder.getAdapterPosition();
-//                final Todo item = mDailyEventAdapter.getTodoList().get(position);
-//
-//                mViewModel.deleteTodo(item.getId());
+                final int position = viewHolder.getAdapterPosition();
+                final IEvent item = mDailyEventAdapter.getTodoList().get(position);
+
+                if (item instanceof Todo) {
+                    String id = ((Todo) item).getId();
+                    mViewModel.deleteTodo(id);
+                }
             }
         };
 

@@ -38,7 +38,6 @@ public class CalendarViewModel extends ViewModel {
     }
 
     public IStateLiveData<DailyEventList> getDailyTodoList(Date date) {
-//        return mTodoRepo.getDailyTodoList(date);
         return EventRepository.getInstance().getDailyEvent(date);
     }
 
@@ -54,6 +53,10 @@ public class CalendarViewModel extends ViewModel {
         changes.put("completed", false);
 
         return mTodoRepo.modifyTodo(id, changes);
+    }
+
+    public IStateLiveData<List<TodoList>> getShallowTodoLists() {
+        return mTodoRepo.getShallowTodoLists();
     }
 
     public IStateLiveData<List<TodoList>> getAllTodoLists() {

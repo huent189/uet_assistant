@@ -17,7 +17,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.adapter.viewholder.EventViewHolder;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.TodoViewHolder;
+import vnu.uet.mobilecourse.assistant.adapter.viewholder.UnmodifiedEventViewHolder;
 import vnu.uet.mobilecourse.assistant.model.event.CourseSessionEvent;
 import vnu.uet.mobilecourse.assistant.model.event.IEvent;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
@@ -26,7 +28,7 @@ import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.view.calendar.CalendarFragment;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
-public class DailyEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class DailyEventAdapter extends RecyclerView.Adapter<EventViewHolder> {
 
     private DailyEventList mDailyList;
     private CalendarFragment mOwner;
@@ -54,15 +56,15 @@ public class DailyEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mOwner.getLayoutInflater()
                 .inflate(R.layout.layout_todo_item, parent, false);
 
-        RecyclerView.ViewHolder holder = null;
+        EventViewHolder holder;
 
         switch (viewType) {
             case TYPE_TODO:
-                holder = new TodoViewHolder(view) {
+                holder = new TodoViewHolder(view, mOwner) {
                     @Override
                     protected IStateLiveData<String> onMarkAsDone(Todo todo) {
                         mOwner.saveRecycleViewState();
@@ -76,10 +78,12 @@ public class DailyEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 };
 
+
+
                 break;
 
             default:
-                holder = new BasicEventHolder(view);
+                holder = new UnmodifiedEventViewHolder(view);
                 break;
         }
 
@@ -94,14 +98,10 @@ public class DailyEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         final IEvent event = mDailyList.get(position);
 
-        if (holder instanceof TodoViewHolder && event instanceof Todo) {
-            ((TodoViewHolder) holder).bind((Todo) event, true, mOwner.getViewLifecycleOwner());
-        } else if (holder instanceof BasicEventHolder) {
-            ((BasicEventHolder) holder).bind(event);
-        }
+        holder.bind(event);
     }
 
     @Override
@@ -111,78 +111,5 @@ public class DailyEventAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public DailyEventList getTodoList() {
         return mDailyList;
-    }
-
-    public static class BasicEventHolder extends RecyclerView.ViewHolder {
-
-        private ImageView mIvAlarm;
-        private TextView mTvDeadline;
-        private TextView mTvTodoTitle;
-        private TextView mTvCategory;
-        private CheckBox mCbDone;
-        private StrikethroughSpan mStrikeSpan = new StrikethroughSpan();
-        private SpannableString mTitleText;
-        private TextView mLayoutDisable;
-
-        protected BasicEventHolder(@NonNull View itemView) {
-            super(itemView);
-
-            mTvTodoTitle = itemView.findViewById(R.id.tvTodoTitle);
-            mIvAlarm = itemView.findViewById(R.id.ivAlarm);
-            mTvDeadline = itemView.findViewById(R.id.tvDeadline);
-            mCbDone = itemView.findViewById(R.id.cbDone);
-            mTvCategory = itemView.findViewById(R.id.tvCategory);
-            mLayoutDisable = itemView.findViewById(R.id.layout_disable);
-        }
-
-        public void bind(IEvent event) {
-            // setup title text
-            String title = event.getTitle();
-            mTitleText = new SpannableString(title);
-            mTvTodoTitle.setText(mTitleText);
-
-            // setup deadline text
-            Date deadline = event.getTime();
-            mTvDeadline.setText(DateTimeUtils.TIME_12H_FORMAT.format(deadline));
-
-            // setup category text
-            mTvCategory.setText(event.getCategory());
-
-            if (event.isCompleted()) {
-                updateDoneEffect();
-            } else {
-                updateDoingEffect(deadline.getTime());
-            }
-        }
-
-        private void updateDoneEffect() {
-            mTitleText.setSpan(mStrikeSpan, 0, mTitleText.length() - 1, 0);
-            mTvTodoTitle.setText(mTitleText);
-
-            mLayoutDisable.setVisibility(View.VISIBLE);
-
-            mTvDeadline.setTextColor(Color.WHITE);
-            mIvAlarm.setColorFilter(Color.WHITE);
-
-            mCbDone.setChecked(true);
-        }
-
-        private void updateDoingEffect(long deadline) {
-            mTitleText.removeSpan(mStrikeSpan);
-            mTvTodoTitle.setText(mTitleText);
-
-            mLayoutDisable.setVisibility(View.GONE);
-
-            mCbDone.setChecked(false);
-
-            if (deadline - System.currentTimeMillis() < WARNING_BOUNDARY) {
-                mTvDeadline.setTextColor(RED_COLOR);
-                mIvAlarm.setColorFilter(RED_COLOR);
-            }
-        }
-
-        private static final int WARNING_BOUNDARY = 60 * 60 * 1000; // 1 hour
-
-        private static final int RED_COLOR = Color.parseColor("#FFF44336");
     }
 }

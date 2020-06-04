@@ -226,6 +226,7 @@ public class TodoRepository implements ITodoRepository {
 
                 result.forEach(todoList -> {
                     if (todoList.getId().equals(todoListId)) {
+                        todo.setCategory(todoList.getTitle());
                         todoList.add(todo);
                     }
                 });
