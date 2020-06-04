@@ -108,6 +108,12 @@
         <action
             android:id="@+id/action_navigation_todo_lists_to_navigation_calendar"
             app:destination="@id/navigation_calendar" />
+        <action
+            android:id="@+id/action_navigation_todo_lists_to_navigation_add_todo"
+            app:destination="@id/navigation_add_todo" />
+        <action
+            android:id="@+id/action_navigation_todo_lists_to_navigation_add_todo_list"
+            app:destination="@id/navigation_add_todo_list" />
     </fragment>
 
     <fragment

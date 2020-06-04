@@ -31,6 +31,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+
 import java.util.List;
 
 public class TodoListsFragment extends Fragment {
@@ -101,7 +103,27 @@ public class TodoListsFragment extends Fragment {
 
         enableSwipeToDelete();
 
+        setupFloatingActionButton(root);
+
         return root;
+    }
+
+    private void setupFloatingActionButton(View root) {
+        FloatingActionButton fabAddTodo = root.findViewById(R.id.fabAddTodo);
+        fabAddTodo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNavController.navigate(R.id.action_navigation_todo_lists_to_navigation_add_todo);
+            }
+        });
+
+        FloatingActionButton fabAddList = root.findViewById(R.id.fabAddList);
+        fabAddList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNavController.navigate(R.id.action_navigation_todo_lists_to_navigation_add_todo_list);
+            }
+        });
     }
 
     private static final String KEY_RECYCLER_STATE = TodoListAdapter.class.getName();
