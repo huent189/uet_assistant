@@ -66,6 +66,7 @@ public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> im
                 bundle.putString("name", current.getName());
                 bundle.putString("code", current.getCode());
                 bundle.putString("avatar", current.getAvatar());
+                bundle.putBoolean("active", current.isActive());
 
                 mNavController.navigate(R.id.action_navigation_explore_course_to_navigation_friend_profile, bundle);
             }

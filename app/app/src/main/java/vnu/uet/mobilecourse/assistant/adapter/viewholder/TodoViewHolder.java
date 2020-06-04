@@ -8,6 +8,7 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
+import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.event.IEvent;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
@@ -65,37 +66,9 @@ public abstract class TodoViewHolder extends EventViewHolder {
 
                 // hide category text
                 mTvCategory.setVisibility(View.GONE);
-
-                mCbDone.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    // mark as done
-                    if (isChecked) {
-                        updateDoneEffect();
-
-                        onMarkAsDone(todo).observe(mLifecycleOwner, state -> {
-                            // recover in case catch a error
-                            if (state.getStatus() == StateStatus.ERROR) {
-                                updateDoingEffect(todo.getDeadline());
-                            }
-                        });
-
-                    }
-                    // mark as doing
-                    else {
-                        updateDoingEffect(todo.getDeadline());
-
-                        onMarkAsDoing(todo).observe(mLifecycleOwner, state -> {
-                            // recover in case catch a error
-                            if (state.getStatus() == StateStatus.ERROR) {
-                                updateDoneEffect();
-                            }
-                        });
-                    }
-                });
             } else {
                 mViewModel.getShallowTodoLists()
                         .observe(mLifecycleOwner, stateModel -> {
-                            String todoListTitle = "Đang tải";
-
                             if (stateModel.getStatus() == StateStatus.SUCCESS) {
                                 TodoList todoList = stateModel.getData().stream()
                                         .filter(Objects::nonNull)
@@ -103,13 +76,38 @@ public abstract class TodoViewHolder extends EventViewHolder {
                                         .findFirst()
                                         .orElse(null);
 
-                                if (todoList != null)
-                                    todoListTitle = todoList.getTitle();
-
-                                mTvCategory.setText(todoListTitle);
+                                if (todoList != null) {
+                                    mTvCategory.setText(todoList.getTitle());
+                                }
                             }
                         });
             }
+
+            mCbDone.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                // mark as done
+                if (isChecked) {
+                    updateDoneEffect();
+
+                    onMarkAsDone(todo).observe(mLifecycleOwner, state -> {
+                        // recover in case catch a error
+                        if (state.getStatus() == StateStatus.ERROR) {
+                            updateDoingEffect(todo.getDeadline());
+                        }
+                    });
+
+                }
+                // mark as doing
+                else {
+                    updateDoingEffect(todo.getDeadline());
+
+                    onMarkAsDoing(todo).observe(mLifecycleOwner, state -> {
+                        // recover in case catch a error
+                        if (state.getStatus() == StateStatus.ERROR) {
+                            updateDoneEffect();
+                        }
+                    });
+                }
+            });
         }
     }
 

@@ -95,7 +95,7 @@ public class CourseRepository {
     /**
      * @return courses from courses.uet.vnu.edu.vn and courses from firebase
      */
-    public IStateLiveData<List<ICourse>> getFullCourses() {
+    public StateMediatorLiveData<List<ICourse>> getFullCourses() {
         updateMyCourses();
 
         return new MergeCourseLiveData(getCourses(), infoDAO.readAll());
@@ -110,7 +110,7 @@ public class CourseRepository {
             return commonCourseCache.get(otherId);
 
         } else {
-            StateLiveData<List<CourseInfo>> myCourses = infoDAO.readAll();
+            StateMediatorLiveData<List<ICourse>> myCourses = getFullCourses();
             StateLiveData<List<CourseInfo>> otherCourses = infoDAO.getParticipateCourses(otherId);
 
             IStateLiveData<List<ICourse>> commonCourses = new CommonCourseLiveData(myCourses, otherCourses);
@@ -199,12 +199,12 @@ public class CourseRepository {
 
     static class CommonCourseLiveData extends StateMediatorLiveData<List<ICourse>> {
 
-        private List<CourseInfo> myCourses;
+        private List<ICourse> myCourses;
         private List<CourseInfo> otherCourses;
         private boolean mySuccess;
         private boolean otherSuccess;
 
-        CommonCourseLiveData(@NonNull StateLiveData<List<CourseInfo>> my,
+        CommonCourseLiveData(@NonNull StateMediatorLiveData<List<ICourse>> my,
                              @NonNull StateLiveData<List<CourseInfo>> other) {
 
             // init with loading state
@@ -260,20 +260,23 @@ public class CourseRepository {
         private List<ICourse> combineData() {
             List<ICourse> commonCourses = new ArrayList<>();
 
-            for (CourseInfo course : myCourses) {
-                if (otherCourses.contains(course)) {
-                    commonCourses.add(course);
+            for (ICourse course : myCourses) {
+                for (CourseInfo otherCourse : otherCourses) {
+                    if (course.getCode().equals(otherCourse.getCode())) {
+                        commonCourses.add(course);
+                        break;
+                    }
                 }
             }
 
             return commonCourses;
         }
 
-        public void setMyCourses(List<CourseInfo> myCourses) {
+        private void setMyCourses(List<ICourse> myCourses) {
             this.myCourses = myCourses;
         }
 
-        public void setOtherCourses(List<CourseInfo> otherCourses) {
+        private void setOtherCourses(List<CourseInfo> otherCourses) {
             this.otherCourses = otherCourses;
         }
     }

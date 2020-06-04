@@ -66,24 +66,24 @@
             app:layout_constraintTop_toBottomOf="@+id/civAvatar" />
 
             <TextView
-            android:id="@+id/tvUserId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="17020845"
-            android:textSize="@dimen/font_size_page_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
+                android:id="@+id/tvUserId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="17020845"
+                android:textSize="@dimen/font_size_page_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
 
             <Button
-            android:id="@+id/btnChat"
-            style="@style/Button"
-            android:layout_width="200dp"
-            android:layout_marginTop="@dimen/margin_x3"
-            android:text="@string/title_chat"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvUserId" />
+                android:id="@+id/btnChat"
+                style="@style/Button"
+                android:layout_width="200dp"
+                android:layout_marginTop="@dimen/margin_x3"
+                android:text="@string/title_chat"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvUserId" />
 
             <LinearLayout
                 android:id="@+id/layoutDob"
@@ -119,7 +119,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|start"
-                        android:text="10/11/1999"
+                        android:text="@string/title_loading"
                         android:textSize="@dimen/font_size_item_title" />
 
                 </LinearLayout>
@@ -159,7 +159,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical|start"
-                        android:text="K62-C-CLC"
+                        android:text="@string/title_loading"
                         android:textSize="@dimen/font_size_item_title" />
 
                 </LinearLayout>

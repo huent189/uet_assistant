@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -56,6 +57,10 @@ public class FriendProfileFragment extends Fragment {
 
             TextView tvDob = root.findViewById(R.id.tvDoB);
             TextView tvClass = root.findViewById(R.id.tvClass);
+
+            Button btnChat = root.findViewById(R.id.btnChat);
+            boolean active = args.getBoolean("active");
+            if (!active) btnChat.setVisibility(View.GONE);
 
             mViewModel.getUserInfo(code).observe(getViewLifecycleOwner(), new Observer<StateModel<UserInfo>>() {
                 @Override
