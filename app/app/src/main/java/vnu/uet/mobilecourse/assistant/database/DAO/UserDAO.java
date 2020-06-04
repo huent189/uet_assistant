@@ -8,15 +8,13 @@ import vnu.uet.mobilecourse.assistant.model.firebase.User;
 
 public class UserDAO extends FirebaseDocReadOnlyDAO<User> {
 
-    private static final String USER_ID_FIELD_NAME = "id";
-
     private static final CollectionReference USER_COLLECTION_REF = FirebaseFirestore
             .getInstance()
             .collection(FirebaseCollectionName.USER);
 
 
     public UserDAO() {
-        super(USER_COLLECTION_REF, USER_ID_FIELD_NAME);
+        super(USER_COLLECTION_REF);
     }
 
     @Override

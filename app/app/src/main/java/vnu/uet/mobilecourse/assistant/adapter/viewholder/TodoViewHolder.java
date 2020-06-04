@@ -20,7 +20,7 @@ import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
-public abstract class TodoViewHolder extends EventViewHolder {
+public abstract class TodoViewHolder extends EventViewHolder implements ISwipeToDeleteHolder {
 
     private boolean mShowList;
     private LifecycleOwner mLifecycleOwner;

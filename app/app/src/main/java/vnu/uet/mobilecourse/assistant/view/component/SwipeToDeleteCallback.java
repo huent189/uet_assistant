@@ -14,8 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.adapter.viewholder.TodoViewHolder;
-import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.adapter.viewholder.ISwipeToDeleteHolder;
 
 public abstract class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
 
@@ -48,7 +47,7 @@ public abstract class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
 
         int swipeFlag = ItemTouchHelper.ACTION_STATE_IDLE;
 
-        if (viewHolder instanceof TodoViewHolder) {
+        if (viewHolder instanceof ISwipeToDeleteHolder) {
             swipeFlag = ItemTouchHelper.LEFT;
         }
 
