@@ -74,4 +74,13 @@ public class CourseInfo implements IFirebaseModel, ICourse {
     public String getTitle() {
         return name;
     }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj instanceof CourseInfo) {
+            return ((CourseInfo) obj).id.equals(id);
+        }
+
+        return false;
+    }
 }

@@ -66,4 +66,6 @@
 
     <string name="fab_title_add_todo">Thêm công việc</string>
     <string name="fab_title_add_list">Thêm danh sách</string>
+
+    <string name="title_loading">Đang tải</string>
 </resources>

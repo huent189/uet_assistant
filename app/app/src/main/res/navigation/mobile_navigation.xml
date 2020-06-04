@@ -72,7 +72,11 @@
         android:id="@+id/navigation_friend_profile"
         android:name="vnu.uet.mobilecourse.assistant.view.profile.FriendProfileFragment"
         android:label="fragment_friend_profile"
-        tools:layout="@layout/fragment_friend_profile" />
+        tools:layout="@layout/fragment_friend_profile" >
+        <action
+            android:id="@+id/action_navigation_friend_profile_to_navigation_explore_course"
+            app:destination="@id/navigation_explore_course" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_add_todo"

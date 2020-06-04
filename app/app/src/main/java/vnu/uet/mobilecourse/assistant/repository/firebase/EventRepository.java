@@ -7,12 +7,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import androidx.lifecycle.Observer;
+import vnu.uet.mobilecourse.assistant.model.Course;
 import vnu.uet.mobilecourse.assistant.model.event.CourseSessionEvent;
 import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
 import vnu.uet.mobilecourse.assistant.model.event.EventComparator;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
+import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.repository.cache.DailyEventCache;
 import vnu.uet.mobilecourse.assistant.repository.course.CourseRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
@@ -46,16 +48,21 @@ public class EventRepository {
     }
 
     public IStateLiveData<DailyEventList> getDailyEvent(Date date) {
+        String dateInString = DateTimeUtils.DATE_FORMAT.format(date);
+
         // check in cache first
-        if (cache.containsKey(date)) {
-            return cache.get(date);
+        if (cache.containsKey(dateInString)) {
+            return cache.get(dateInString);
         }
         // if not in cache, query in database
         else {
-            IStateLiveData<DailyEventList> liveData =
-                    new MergeDailyEventLiveData(date, todoRepo.getAllTodos(), courseRepo.getAllCourseInfos());
+            StateLiveData<List<Todo>> allTodos = todoRepo.getAllTodos();
+            StateLiveData<List<CourseInfo>> allCourseInfos = courseRepo.getAllCourseInfos();
 
-            cache.put(date, liveData);
+            IStateLiveData<DailyEventList> liveData =
+                    new MergeDailyEventLiveData(date, allTodos, allCourseInfos);
+
+            cache.put(dateInString, liveData);
             return liveData;
         }
     }

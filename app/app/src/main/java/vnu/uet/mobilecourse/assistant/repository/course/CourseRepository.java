@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
 import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.CoursesDAO;
@@ -21,10 +22,12 @@ import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
+import vnu.uet.mobilecourse.assistant.repository.cache.CommonCourseCache;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class CourseRepository {
     /**
@@ -39,6 +42,7 @@ public class CourseRepository {
     private MaterialDAO materialDAO;
     private GradeDAO gradeDAO;
     private CourseInfoDAO infoDAO;
+    private CommonCourseCache commonCourseCache;
 
     /**
      * Get singleton instance
@@ -47,13 +51,23 @@ public class CourseRepository {
     public static CourseRepository getInstance() {
         if (instance == null) {
             instance = new CourseRepository();
-            instance.coursesDAO = CoursesDatabase.getDatabase().coursesDAO();
-            instance.infoDAO = new CourseInfoDAO();
-            instance.materialDAO = CoursesDatabase.getDatabase().materialDAO();
-            instance.gradeDAO = CoursesDatabase.getDatabase().gradeDAO();
         }
 
         return instance;
+    }
+
+    private CourseRepository() {
+        coursesDAO = CoursesDatabase.getDatabase().coursesDAO();
+        materialDAO = CoursesDatabase.getDatabase().materialDAO();
+        gradeDAO = CoursesDatabase.getDatabase().gradeDAO();
+
+        infoDAO = new CourseInfoDAO();
+
+        commonCourseCache = new CommonCourseCache();
+    }
+
+    public StateMediatorLiveData<CourseInfo> getCourseInfo(String courseId) {
+        return infoDAO.read(courseId);
     }
 
     public StateLiveData<List<CourseInfo>> getAllCourseInfos() {
@@ -74,6 +88,22 @@ public class CourseRepository {
         updateMyCourses();
 
         return new MergeCourseLiveData(getCourses(), infoDAO.readAll());
+    }
+
+    public IStateLiveData<List<ICourse>> getCommonCourses(String otherId) {
+        if (commonCourseCache.containsKey(otherId)) {
+            return commonCourseCache.get(otherId);
+
+        } else {
+            StateLiveData<List<CourseInfo>> myCourses = infoDAO.readAll();
+            StateLiveData<List<CourseInfo>> otherCourses = infoDAO.getParticipateCourses(otherId);
+
+            IStateLiveData<List<ICourse>> commonCourses = new CommonCourseLiveData(myCourses, otherCourses);
+
+            commonCourseCache.put(otherId, commonCourses);
+
+            return commonCourses;
+        }
     }
 
     public void updateMyCourses(){
@@ -150,6 +180,87 @@ public class CourseRepository {
                         User.getInstance().setLastSynchonizedTime(System.currentTimeMillis() / 1000);
                     }
                 });
+    }
+
+    static class CommonCourseLiveData extends StateMediatorLiveData<List<ICourse>> {
+
+        private List<CourseInfo> myCourses;
+        private List<CourseInfo> otherCourses;
+        private boolean mySuccess;
+        private boolean otherSuccess;
+
+        CommonCourseLiveData(@NonNull StateLiveData<List<CourseInfo>> my,
+                             @NonNull StateLiveData<List<CourseInfo>> other) {
+
+            // init with loading state
+            postLoading();
+
+            addSource(my, stateModel -> {
+                switch (stateModel.getStatus()) {
+                    case ERROR:
+                        mySuccess = false;
+                        postError(stateModel.getError());
+                        break;
+
+                    case LOADING:
+                        mySuccess = false;
+                        postLoading();
+                        break;
+
+                    case SUCCESS:
+                        mySuccess = true;
+                        setMyCourses(stateModel.getData());
+
+                        if (mySuccess && otherSuccess) {
+                            List<ICourse> combineData = combineData();
+                            postSuccess(combineData);
+                        }
+                }
+            });
+
+            addSource(other, stateModel -> {
+                switch (stateModel.getStatus()) {
+                    case ERROR:
+                        otherSuccess = false;
+                        postError(stateModel.getError());
+                        break;
+
+                    case LOADING:
+                        otherSuccess = false;
+                        postLoading();
+                        break;
+
+                    case SUCCESS:
+                        otherSuccess = true;
+                        setOtherCourses(stateModel.getData());
+
+                        if (mySuccess && otherSuccess) {
+                            List<ICourse> combineData = combineData();
+                            postSuccess(combineData);
+                        }
+                }
+            });
+        }
+
+        private List<ICourse> combineData() {
+            List<ICourse> commonCourses = new ArrayList<>();
+
+            for (CourseInfo course : myCourses) {
+                if (otherCourses.contains(course)) {
+                    commonCourses.add(course);
+                }
+            }
+
+            return commonCourses;
+        }
+
+        public void setMyCourses(List<CourseInfo> myCourses) {
+            this.myCourses = myCourses;
+        }
+
+        public void setOtherCourses(List<CourseInfo> otherCourses) {
+            this.otherCourses = otherCourses;
+        }
     }
 
     static class MergeCourseLiveData extends StateMediatorLiveData<List<ICourse>> {

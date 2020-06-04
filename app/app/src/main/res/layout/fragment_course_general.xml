@@ -1,33 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background"
     tools:context=".view.course.CourseGeneralFragment">
 
     <LinearLayout
-        android:background="@color/background"
+        android:layout_marginVertical="@dimen/margin_x3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_marginEnd="@dimen/margin_x2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|start"
-                android:paddingHorizontal="12dp"
-                android:src="@drawable/ic_cake_32dp"
-                android:tint="@color/primaryDark" />
-
             <LinearLayout
-                android:background="@drawable/list_item_background"
+                android:layout_marginHorizontal="@dimen/margin_x2"
                 android:orientation="vertical"
-                android:paddingVertical="@dimen/margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -38,33 +26,19 @@
                     android:text="@string/title_course_title"/>
 
                 <TextView
+                    android:id="@+id/tvCourseTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|start"
-                    android:text="Phân tích thiết kế hướng đối tượng"
+                    android:text="@string/title_loading"
                     android:textSize="@dimen/font_size_item_title" />
 
             </LinearLayout>
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginEnd="@dimen/margin_x2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|start"
-                android:paddingHorizontal="12dp"
-                android:src="@drawable/ic_cake_32dp"
-                android:tint="@color/primaryDark" />
-
             <LinearLayout
-                android:background="@drawable/list_item_background"
+                android:layout_marginTop="@dimen/margin_x2"
+                android:layout_marginHorizontal="@dimen/margin_x2"
                 android:orientation="vertical"
-                android:paddingVertical="@dimen/margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -75,97 +49,105 @@
                     android:text="@string/title_course_code"/>
 
                 <TextView
+                    android:id="@+id/tvCourseId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical|start"
-                    android:text="INT3210 3"
+                    android:text="@string/title_loading"
                     android:textSize="@dimen/font_size_item_title" />
 
             </LinearLayout>
 
-        </LinearLayout>
-
         <LinearLayout
+            android:layout_marginHorizontal="@dimen/margin_x2"
             android:id="@+id/layout_common_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_x3"
             android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_marginEnd="@dimen/margin_x2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:layout_width="wrap_content"
+            <androidx.cardview.widget.CardView
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_marginEnd="@dimen/margin_x2"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|start"
-                    android:paddingHorizontal="12dp"
-                    android:src="@drawable/ic_cake_32dp"
-                    android:tint="@color/primaryDark" />
+                    app:contentPadding="@dimen/margin"
+                    app:cardCornerRadius="@dimen/small_radius"
+                    app:cardBackgroundColor="@color/primary">
 
-                <LinearLayout
-                    android:background="@drawable/list_item_background"
-                    android:orientation="vertical"
-                    android:paddingVertical="@dimen/margin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        style="@style/ListTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title_course_unit_number"/>
-
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|start"
-                        android:text="3"
-                        android:textSize="@dimen/font_size_item_title" />
+                        android:orientation="vertical">
 
-                </LinearLayout>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|start"
+                            android:layout_marginStart="@dimen/small_margin"
+                            android:src="@drawable/ic_widgets_black_32dp"
+                            android:tint="@color/white" />
 
-            </LinearLayout>
+                        <TextView
+                            style="@style/ListTitle"
+                            android:layout_marginHorizontal="@dimen/margin"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin"
+                            android:text="@string/title_course_unit_number"/>
 
-            <LinearLayout
-                android:layout_marginEnd="@dimen/margin_x2"
+                        <TextView
+                            android:id="@+id/tvCredits"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/margin"
+                            android:text="@string/title_loading"
+                            android:textSize="@dimen/font_size_page_title" />
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|start"
-                    android:paddingHorizontal="12dp"
-                    android:src="@drawable/ic_school_32dp"
-                    android:tint="@color/primaryDark" />
+                app:contentPadding="@dimen/margin"
+                app:cardCornerRadius="@dimen/small_radius"
+                app:cardBackgroundColor="@color/primary">
 
                 <LinearLayout
-                    android:background="@drawable/list_item_background"
-                    android:orientation="vertical"
-                    android:paddingVertical="@dimen/margin"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|start"
+                        android:layout_marginStart="@dimen/small_margin"
+                        android:src="@drawable/ic_school_32dp"
+                        android:tint="@color/white" />
 
                     <TextView
                         style="@style/ListTitle"
+                        android:layout_marginHorizontal="@dimen/margin"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin"
                         android:text="@string/title_student_size"/>
 
                     <TextView
+                        android:id="@+id/tvStudents"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|start"
-                        android:text="110"
-                        android:textSize="@dimen/font_size_item_title" />
+                        android:layout_marginHorizontal="@dimen/margin"
+                        android:text="@string/title_loading"
+                        android:textSize="@dimen/font_size_page_title" />
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
@@ -173,14 +155,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_x2"
-            android:layout_marginVertical="@dimen/margin"
+            android:layout_marginTop="@dimen/margin_x3"
+            android:layout_marginBottom="@dimen/margin"
             android:text="@string/title_schedule"
             android:textSize="@dimen/font_size_list_title"/>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSessions"
+            android:paddingHorizontal="@dimen/margin"
+            android:clipToPadding="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
     </LinearLayout>
 
-</FrameLayout>
+</androidx.core.widget.NestedScrollView>

@@ -23,12 +23,16 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <View
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
             android:id="@+id/view"
             android:layout_width="match_parent"
             android:layout_height="148dp"
@@ -37,8 +41,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-        <de.hdodenhof.circleimageview.CircleImageView
+            <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/civAvatar"
             android:layout_width="@dimen/big_img_avatar_size"
             android:layout_height="@dimen/big_img_avatar_size"
@@ -51,7 +54,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view" />
 
-        <TextView
+            <TextView
             android:id="@+id/tvUsername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -62,7 +65,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/civAvatar" />
 
-        <TextView
+            <TextView
             android:id="@+id/tvUserId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -72,7 +75,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
 
-        <Button
+            <Button
             android:id="@+id/btnChat"
             style="@style/Button"
             android:layout_width="200dp"
@@ -82,18 +85,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvUserId" />
 
-        <LinearLayout
-            android:id="@+id/layout_common_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_x4"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/btnChat">
-
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/layoutDob"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_marginTop="@dimen/margin_x4"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnChat">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -129,9 +127,11 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/layoutClass"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutDob">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -166,8 +166,6 @@
 
             </LinearLayout>
 
-        </LinearLayout>
-
             <TextView
                 android:id="@+id/tvCommonCourses"
                 android:layout_width="wrap_content"
@@ -177,8 +175,18 @@
                 android:text="@string/title_common_courses"
                 android:textSize="@dimen/font_size_list_title"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_common_info" />
+                app:layout_constraintTop_toBottomOf="@+id/layoutClass" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCommonCourses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvCommonCourses" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

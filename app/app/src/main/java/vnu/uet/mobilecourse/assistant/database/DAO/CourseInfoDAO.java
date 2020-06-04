@@ -24,6 +24,7 @@ import vnu.uet.mobilecourse.assistant.model.Course;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
@@ -60,6 +61,7 @@ public class CourseInfoDAO extends FirebaseDAO<CourseInfo> {
                         else {
                             List<CourseInfo> courses = new ArrayList<>();
 
+
                             for (QueryDocumentSnapshot snapshot : snapshots) {
                                 DocumentReference courseDocRef = snapshot.getReference().getParent().getParent();
 
@@ -69,8 +71,14 @@ public class CourseInfoDAO extends FirebaseDAO<CourseInfo> {
                                             @Override
                                             public void onSuccess(DocumentSnapshot snapshot) {
                                                 CourseInfo course = fromSnapshot(snapshot);
-                                                courses.add(course);
-                                                liveData.postSuccess(courses);
+
+                                                if (!courses.contains(course)) {
+                                                    courses.add(course);
+
+                                                    if (courses.size() == snapshots.size()) {
+                                                        liveData.postSuccess(courses);
+                                                    }
+                                                }
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
@@ -99,6 +107,31 @@ public class CourseInfoDAO extends FirebaseDAO<CourseInfo> {
         }
 
         return mDataList;
+    }
+
+    @Override
+    protected void handleDocumentNotFound(StateMediatorLiveData<CourseInfo> response, String id) {
+        mColReference.document(id)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+                        // catch an exception
+                        if (e != null) {
+                            Log.e(TAG, "Listen to data list failed.");
+                            response.postError(e);
+                        }
+                        // hasn't got snapshots yet
+                        else if (snapshot == null) {
+                            Log.d(TAG, "Listening to data list.");
+                            response.postLoading();
+                        }
+                        // query completed with snapshots
+                        else {
+                            CourseInfo course = fromSnapshot(snapshot);
+                            response.postSuccess(course);
+                        }
+                    }
+                });
     }
 
     private CourseInfo fromSnapshot(DocumentSnapshot snapshot) {

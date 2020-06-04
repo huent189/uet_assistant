@@ -94,7 +94,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
                     // in case can't not found document
                     // we will post loading state
                     // (or error state .-. idk)
-                    if (doc == null) response.postLoading();
+                    if (doc == null) handleDocumentNotFound(response, id);
                     // post success state when find the doc
                     else response.postSuccess(doc);
 
@@ -103,6 +103,16 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         });
 
         return response;
+    }
+
+    /**
+     * Handle document not found after filter read-all result by id
+     *
+     * @param response live data contains result
+     * @param id of needed document
+     */
+    protected void handleDocumentNotFound(StateMediatorLiveData<T> response, String id) {
+        response.postLoading();
     }
 
     /**

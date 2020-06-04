@@ -18,10 +18,17 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import java.util.Date;
+import java.util.List;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.adapter.AllCoursesAdapter;
+import vnu.uet.mobilecourse.assistant.adapter.RecentlyCoursesAdapter;
+import vnu.uet.mobilecourse.assistant.model.ICourse;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.view.course.CoursesFragment;
 import vnu.uet.mobilecourse.assistant.viewmodel.FriendProfileViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
@@ -61,12 +68,39 @@ public class FriendProfileFragment extends Fragment {
                             tvDob.setText(DateTimeUtils.DATE_FORMAT.format(dob));
 
                             tvClass.setText(userInfo.getUetClass());
+
+                            break;
                     }
                 }
             });
 
+            RecyclerView rvCommonCourses = initializeCommonCoursesView(root);
+            mViewModel.getCommonCourses(code).observe(getViewLifecycleOwner(), new Observer<StateModel<List<ICourse>>>() {
+                @Override
+                public void onChanged(StateModel<List<ICourse>> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case SUCCESS:
+                            List<ICourse> courses = stateModel.getData();
+
+                            AllCoursesAdapter adapter = new AllCoursesAdapter(courses, FriendProfileFragment.this);
+                            rvCommonCourses.setAdapter(adapter);
+
+                            break;
+                    }
+                }
+            });
         }
 
         return root;
+    }
+
+    private RecyclerView initializeCommonCoursesView(View root) {
+        RecyclerView rvCommonCourses = root.findViewById(R.id.rvCommonCourses);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
+
+        rvCommonCourses.setLayoutManager(layoutManager);
+
+        return rvCommonCourses;
     }
 }
