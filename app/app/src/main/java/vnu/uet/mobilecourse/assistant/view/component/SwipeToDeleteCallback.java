@@ -14,6 +14,8 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.adapter.viewholder.TodoViewHolder;
+import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
 
 public abstract class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
 
@@ -25,7 +27,6 @@ public abstract class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
 
     private int mIntrinsicWidth;
     private int mIntrinsicHeight;
-
 
     protected SwipeToDeleteCallback(Context context) {
         sBackgroundColor = ContextCompat.getColor(context, R.color.red);
@@ -44,7 +45,14 @@ public abstract class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView,
                                 @NonNull RecyclerView.ViewHolder viewHolder) {
-        return makeMovementFlags(0, ItemTouchHelper.LEFT);
+
+        int swipeFlag = ItemTouchHelper.ACTION_STATE_IDLE;
+
+        if (viewHolder instanceof TodoViewHolder) {
+            swipeFlag = ItemTouchHelper.LEFT;
+        }
+
+        return makeMovementFlags(0, swipeFlag);
     }
 
     @Override

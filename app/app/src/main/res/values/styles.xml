@@ -14,7 +14,13 @@
         <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem</item>
         <item name="radioButtonStyle">@style/RadioButton</item>
-<!--        <item name="android:textSize">@dimen/font_size_paragraph</item>-->
+    </style>
+
+    <style name="menu_labels_style">
+        <item name="android:background">@color/dark_fade</item>
+        <item name="android:padding">@dimen/small_margin</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/font_size_paragraph</item>
     </style>
 
     <style name="RadioGroup">

@@ -23,7 +23,7 @@ public class ExploreCourseFragment extends Fragment {
     private ViewPager mVpCourseContent;
     private FragmentPageAdapter mPageAdapter;
     private String mCourseTitle;
-    private int mCourseId;
+    private String mCourseCode;
     private TabLayout mTabLayout;
     private Toolbar mToolbar;
 
@@ -41,7 +41,7 @@ public class ExploreCourseFragment extends Fragment {
 
         if (args != null) {
             mCourseTitle = args.getString("courseTitle");
-            mCourseId = args.getInt("courseId");
+            mCourseCode = args.getString("courseCode");
         }
 
         initializeToolbar(root);
@@ -77,6 +77,13 @@ public class ExploreCourseFragment extends Fragment {
                 new CourseClassmateFragment()
         };
 
+        if (mCourseCode == null || mCourseCode.isEmpty()) {
+            pages = new Fragment[] {
+                    new CourseGeneralFragment(),
+                    new CourseProgressFragment()
+            };
+        }
+
         for (Fragment page : pages) {
             Bundle bundle = getArguments();
             page.setArguments(bundle);
@@ -92,6 +99,11 @@ public class ExploreCourseFragment extends Fragment {
         mVpCourseContent.setAdapter(mPageAdapter);
 
         mTabLayout = root.findViewById(R.id.tabLayout);
+
+        if (mCourseCode == null || mCourseCode.isEmpty()) {
+            mTabLayout.removeTabAt(2);
+            mTabLayout.removeTabAt(2);
+        }
 
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

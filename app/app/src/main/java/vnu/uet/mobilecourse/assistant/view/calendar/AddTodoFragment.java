@@ -49,6 +49,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarSharedViewModel;
+import vnu.uet.mobilecourse.assistant.work.RemindScheduler;
 import vnu.uet.mobilecourse.assistant.work.TodoReminder;
 
 public class AddTodoFragment extends Fragment {
@@ -226,7 +227,7 @@ public class AddTodoFragment extends Fragment {
 
                     default:
                         Toast.makeText(getContext(),"Tạo thành công", Toast.LENGTH_SHORT).show();
-                        scheduleReminder(todo);
+                        RemindScheduler.getInstance().enqueue(mActivity, todo);
                         mViewModel.clearHistory();
                         mNavController.navigateUp();
                 }
@@ -235,24 +236,6 @@ public class AddTodoFragment extends Fragment {
         } catch (ParseException e) {
             showFailureToast(e);
         }
-    }
-
-    private void scheduleReminder(Todo todo) {
-        long delayTime = todo.getDeadline() * 1000 - System.currentTimeMillis();
-
-        Data inputData = new Data.Builder()
-                .putString("id", todo.getId())
-                .putString("title", todo.getTitle())
-                .putString("description", todo.getDescription())
-                .build();
-
-        OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(TodoReminder.class)
-                .setInitialDelay(delayTime, TimeUnit.MILLISECONDS)
-                .setInputData(inputData)
-                .addTag(todo.getId())
-                .build();
-
-        WorkManager.getInstance(mActivity).enqueue(notificationWork);
     }
 
     private void showFailureToast(Exception e) {

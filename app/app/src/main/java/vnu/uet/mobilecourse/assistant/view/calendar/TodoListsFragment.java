@@ -3,7 +3,6 @@ package vnu.uet.mobilecourse.assistant.view.calendar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -13,15 +12,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.TodoListAdapter;
+import vnu.uet.mobilecourse.assistant.adapter.viewholder.TodoViewHolder;
+import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
-import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
-import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
+import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 import android.os.Parcelable;
 import android.view.LayoutInflater;
@@ -30,6 +30,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -99,7 +101,29 @@ public class TodoListsFragment extends Fragment {
             }
         });
 
+        enableSwipeToDelete();
+
+        setupFloatingActionButton(root);
+
         return root;
+    }
+
+    private void setupFloatingActionButton(View root) {
+        FloatingActionButton fabAddTodo = root.findViewById(R.id.fabAddTodo);
+        fabAddTodo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNavController.navigate(R.id.action_navigation_todo_lists_to_navigation_add_todo);
+            }
+        });
+
+        FloatingActionButton fabAddList = root.findViewById(R.id.fabAddList);
+        fabAddList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mNavController.navigate(R.id.action_navigation_todo_lists_to_navigation_add_todo_list);
+            }
+        });
     }
 
     private static final String KEY_RECYCLER_STATE = TodoListAdapter.class.getName();
@@ -139,6 +163,25 @@ public class TodoListsFragment extends Fragment {
             ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
             setHasOptionsMenu(true);
         }
+    }
+
+    private void enableSwipeToDelete() {
+        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(getContext()) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                final int position = viewHolder.getAdapterPosition();
+
+                if (viewHolder instanceof TodoViewHolder) {
+                    saveRecycleViewState();
+                    final Todo item = ((TodoViewHolder) viewHolder).getTodo();
+                    mViewModel.deleteTodo(item.getId());
+                    restoreRecycleViewState();
+                }
+            }
+        };
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(mRvTodoLists);
     }
 
     @Override

@@ -1,17 +1,23 @@
 package vnu.uet.mobilecourse.assistant.view;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
+import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.repository.FirebaseAuthenticationService;
 import vnu.uet.mobilecourse.assistant.repository.course.UserRepository;
+import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.work.RemindScheduler;
 
 
 public class LoginFirebaseActivity extends AppCompatActivity {
@@ -46,7 +52,7 @@ public class LoginFirebaseActivity extends AppCompatActivity {
                 switch (loginState.getStatus()) {
                     case SUCCESS:
                         showSuccessLayout();
-                        navigateToMyCourses();
+                        setupReminders();
                         break;
 
                     case ERROR:
@@ -58,7 +64,30 @@ public class LoginFirebaseActivity extends AppCompatActivity {
     }
 
     private void setupReminders() {
+        TodoRepository.getInstance().getAllTodos().observe(LoginFirebaseActivity.this, new Observer<StateModel<List<Todo>>>() {
+            @Override
+            public void onChanged(StateModel<List<Todo>> stateModel) {
+                switch (stateModel.getStatus()) {
+                    case SUCCESS:
+                        stateModel.getData().forEach(todo -> {
+                            long deadline = todo.getDeadline() * 1000;
 
+                            if (deadline > System.currentTimeMillis()) {
+                                RemindScheduler.getInstance().enqueue(getApplicationContext(), todo);
+                            }
+                        });
+
+                        navigateToMyCourses();
+
+                        break;
+
+                    case ERROR:
+                        showErrorLayout();
+                        break;
+                }
+
+            }
+        });
     }
 
     private void showSuccessLayout() {

@@ -17,7 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
+import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
+import vnu.uet.mobilecourse.assistant.repository.firebase.EventRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
@@ -91,11 +92,13 @@ public class CalendarGridAdapter extends ArrayAdapter {
         ImageView ivHaveTodo = convertView.findViewById(R.id.ivHaveTodo);
 
         if (mShowTodo && mLifecycleOwner != null) {
-            TodoRepository.getInstance()
-                    .getDailyTodoList(dateOfMonth)
+//            TodoRepository.getInstance()
+//                    .getDailyTodoList(dateOfMonth)
+            EventRepository.getInstance()
+                    .getDailyEvent(dateOfMonth)
                     .observe(mLifecycleOwner, stateModel -> {
                         if (stateModel.getStatus() == StateStatus.SUCCESS) {
-                            DailyTodoList dailyTodoList = stateModel.getData();
+                            DailyEventList dailyTodoList = stateModel.getData();
 
                             if (dailyTodoList != null && !dailyTodoList.isEmpty()) {
                                 ivHaveTodo.setVisibility(View.VISIBLE);

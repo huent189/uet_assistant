@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 
 @Entity
-public class Course {
+public class Course implements ICourse {
     @PrimaryKey
     @NonNull
     private int id;
@@ -32,6 +32,7 @@ public class Course {
         this.thumbnail = thumbnail;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }
@@ -40,6 +41,7 @@ public class Course {
         this.title = title;
     }
 
+    @Override
     public String getCode() {
         return code;
     }
@@ -55,9 +57,11 @@ public class Course {
     public void setId(int id) {
         this.id = id;
     }
-    public String getFirebasrId(){
+
+    public String getFirebaseId(){
         return code.replace("1920II_" , "").replace("_", " ");
     }
+
     public long getLastAccessTime() {
         return lastAccessTime;
     }

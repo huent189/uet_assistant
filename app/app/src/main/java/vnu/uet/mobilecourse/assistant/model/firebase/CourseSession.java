@@ -1,7 +1,5 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
-import com.google.firebase.firestore.Exclude;
-
 public class CourseSession {
     /**
      * Type of course session
@@ -10,12 +8,22 @@ public class CourseSession {
      */
     private int type;
 
+    private String courseName;
+
     private String classroom;
 
     private String teacherName;
 
-    @Exclude
-    private String time;
+    private int dayOfWeek;
+    private int start, end;
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
 
     public int getType() {
         return type;
@@ -41,12 +49,27 @@ public class CourseSession {
         this.teacherName = teacherName;
     }
 
-    @Exclude
-    public String getTime() {
-        return time;
+    public int getDayOfWeek() {
+        return dayOfWeek;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setDayOfWeek(int dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public void setStart(int start) {
+        this.start = start;
+    }
+
+    public int getEnd() {
+        return end;
+    }
+
+    public void setEnd(int end) {
+        this.end = end;
     }
 }

@@ -5,10 +5,12 @@ import com.google.firebase.firestore.Exclude;
 import java.util.ArrayList;
 import java.util.List;
 
+import vnu.uet.mobilecourse.assistant.model.IStudent;
+
 public class User implements IFirebaseModel {
 
     private String id;
-
+    private String name;
     private String avatar;
 
     @Exclude
@@ -50,5 +52,13 @@ public class User implements IFirebaseModel {
 
     public void setNotifications(List<Notification_UserSubCol> notifications) {
         this.notifications = notifications;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -1,159 +1,117 @@
 package vnu.uet.mobilecourse.assistant.adapter.viewholder;
 
-import android.graphics.Color;
-import android.text.SpannableString;
-import android.text.style.StrikethroughSpan;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.model.event.IEvent;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.view.calendar.CalendarFragment;
+import vnu.uet.mobilecourse.assistant.view.calendar.TodoListsFragment;
+import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
-public abstract class TodoViewHolder extends ChildViewHolder {
+public abstract class TodoViewHolder extends EventViewHolder {
 
-    private ImageView mIvAlarm;
-    private TextView mTvDeadline;
-    private TextView mTvTodoTitle;
-    private TextView mTvCategory;
-    private CheckBox mCbDone;
-    private StrikethroughSpan mStrikeSpan = new StrikethroughSpan();
-    private SpannableString mTitleText;
-    private TextView mLayoutDisable;
+    private boolean mShowList;
+    private LifecycleOwner mLifecycleOwner;
+    private CalendarViewModel mViewModel;
+    private Todo mTodo;
 
-    protected TodoViewHolder(@NonNull View itemView) {
+    private TodoViewHolder(@NonNull View itemView, boolean showList) {
         super(itemView);
 
-        mTvTodoTitle = itemView.findViewById(R.id.tvTodoTitle);
-        mIvAlarm = itemView.findViewById(R.id.ivAlarm);
-        mTvDeadline = itemView.findViewById(R.id.tvDeadline);
-        mCbDone = itemView.findViewById(R.id.cbDone);
-        mTvCategory = itemView.findViewById(R.id.tvCategory);
-        mLayoutDisable = itemView.findViewById(R.id.layout_disable);
+        mShowList = showList;
     }
 
-    public void bind(Todo todo, boolean showList, LifecycleOwner lifecycleOwner) {
-        // setup title text
-        String title = todo.getTitle();
-        mTitleText = new SpannableString(title);
-        mTvTodoTitle.setText(mTitleText);
+    protected TodoViewHolder(@NonNull View itemView, @NonNull TodoListsFragment owner) {
+        this(itemView, false);
 
-        // setup deadline text
-        Date deadline = DateTimeUtils.fromSecond(todo.getDeadline());
-        mTvDeadline.setText(DateTimeUtils.DATE_TIME_FORMAT.format(deadline));
+        mLifecycleOwner = owner.getViewLifecycleOwner();
+        mViewModel = owner.getViewModel();
+    }
 
-        // show category case
-        if (showList) {
-            TodoRepository.getInstance()
-                    .getShallowTodoLists()
-                    .observe(lifecycleOwner, stateModel -> {
-                        String todoListTitle = LOADING_TITLE;
+    protected TodoViewHolder(@NonNull View itemView, @NonNull CalendarFragment owner) {
+        this(itemView, true);
 
-                        switch (stateModel.getStatus()) {
-                            case SUCCESS:
+        mLifecycleOwner = owner.getViewLifecycleOwner();
+        mViewModel = owner.getViewModel();
+    }
+
+    public Todo getTodo() {
+        return mTodo;
+    }
+
+    @Override
+    public void bind(IEvent event) {
+        super.bind(event);
+
+        if (event instanceof Todo) {
+            Todo todo = (Todo) event;
+            mTodo = todo;
+
+            if (!mShowList) {
+                // setup deadline text
+                Date deadline = DateTimeUtils.fromSecond(todo.getDeadline());
+                mTvDeadline.setText(DateTimeUtils.DATE_TIME_FORMAT.format(deadline));
+
+                // hide category text
+                mTvCategory.setVisibility(View.GONE);
+            } else {
+                mViewModel.getShallowTodoLists()
+                        .observe(mLifecycleOwner, stateModel -> {
+                            if (stateModel.getStatus() == StateStatus.SUCCESS) {
                                 TodoList todoList = stateModel.getData().stream()
                                         .filter(Objects::nonNull)
                                         .filter(list -> list.getId().equals(todo.getTodoListId()))
                                         .findFirst()
                                         .orElse(null);
 
-                                if (todoList != null)
-                                    todoListTitle = todoList.getTitle();
+                                if (todoList != null) {
+                                    mTvCategory.setText(todoList.getTitle());
+                                }
+                            }
+                        });
+            }
 
-                                mTvCategory.setText(todoListTitle);
+            mCbDone.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                // mark as done
+                if (isChecked) {
+                    updateDoneEffect();
+
+                    onMarkAsDone(todo).observe(mLifecycleOwner, state -> {
+                        // recover in case catch a error
+                        if (state.getStatus() == StateStatus.ERROR) {
+                            updateDoingEffect(todo.getDeadline());
                         }
                     });
-        }
 
-        if (todo.isCompleted()) {
-            updateDoneEffect(title);
-        } else {
-            updateDoingEffect(todo.getDeadline());
-        }
+                }
+                // mark as doing
+                else {
+                    updateDoingEffect(todo.getDeadline());
 
-        mCbDone.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // mark as done
-            if (isChecked) {
-                updateDoneEffect(title);
-
-                onMarkAsDone(todo).observe(lifecycleOwner, state -> {
-                    // recover in case catch a error
-                    switch (state.getStatus()) {
-                        case ERROR:
-                            updateDoingEffect(todo.getDeadline());
-                            break;
-                    }
-                });
-
-            }
-            // mark as doing
-            else {
-                updateDoingEffect(todo.getDeadline());
-
-                onMarkAsDoing(todo).observe(lifecycleOwner, state -> {
-                    // recover in case catch a error
-                    switch (state.getStatus()) {
-                        case ERROR:
-                            updateDoneEffect(title);
-                            break;
-                    }
-                });
-            }
-        });
-
-        mTvCategory.setVisibility(showList ? View.VISIBLE : View.GONE);
-    }
-
-    private void updateDoneEffect(String title) {
-        mTitleText.setSpan(mStrikeSpan, 0, title.length() - 1, 0);
-        mTvTodoTitle.setText(mTitleText);
-
-        mLayoutDisable.setVisibility(View.VISIBLE);
-
-        mTvDeadline.setTextColor(Color.WHITE);
-        mIvAlarm.setColorFilter(Color.WHITE);
-
-        mCbDone.setChecked(true);
-    }
-
-    private void updateDoingEffect(long deadline) {
-        mTitleText.removeSpan(mStrikeSpan);
-        mTvTodoTitle.setText(mTitleText);
-
-        mLayoutDisable.setVisibility(View.GONE);
-
-        mCbDone.setChecked(false);
-
-        if (deadline - System.currentTimeMillis() < WARNING_BOUNDARY) {
-            mTvDeadline.setTextColor(RED_COLOR);
-            mIvAlarm.setColorFilter(RED_COLOR);
+                    onMarkAsDoing(todo).observe(mLifecycleOwner, state -> {
+                        // recover in case catch a error
+                        if (state.getStatus() == StateStatus.ERROR) {
+                            updateDoneEffect();
+                        }
+                    });
+                }
+            });
         }
     }
 
     protected abstract IStateLiveData<String> onMarkAsDone(Todo todo);
 
     protected abstract IStateLiveData<String> onMarkAsDoing(Todo todo);
-
-    private static final int WARNING_BOUNDARY = 60 * 60 * 1000; // 1 hour
-
-    private static final int RED_COLOR = Color.parseColor("#FFF44336");
-
-    private static final String LOADING_TITLE = "Đang tải";
 }

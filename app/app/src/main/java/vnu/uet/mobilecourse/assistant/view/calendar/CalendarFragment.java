@@ -29,8 +29,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.DailyEventAdapter;
+import vnu.uet.mobilecourse.assistant.model.event.IEvent;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
-import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
+import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.view.component.CustomCalendarView;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
@@ -83,6 +84,7 @@ public class CalendarFragment extends Fragment {
         mCalendarView.setOnDateChangeListener(this::updateDate);
 
         FloatingActionButton fabAddTodo = root.findViewById(R.id.fabAddTodo);
+
         fabAddTodo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +92,7 @@ public class CalendarFragment extends Fragment {
             }
         });
 
-        enableSwipeToDeleteAndUndo();
+        enableSwipeToDelete();
 
         return root;
     }
@@ -142,7 +144,7 @@ public class CalendarFragment extends Fragment {
         mViewModel.getDailyTodoList(date).observe(getViewLifecycleOwner(), stateModel -> {
             switch (stateModel.getStatus()) {
                 case SUCCESS:
-                    DailyTodoList dailyTodoList = stateModel.getData();
+                    DailyEventList dailyTodoList = stateModel.getData();
 
                     mDailyEventAdapter = new DailyEventAdapter(dailyTodoList, CalendarFragment.this);
                     mRvDailyTodoList.setAdapter(mDailyEventAdapter);
@@ -171,14 +173,17 @@ public class CalendarFragment extends Fragment {
         mNavController.navigate(R.id.action_navigation_calendar_to_addTodoFragment, bundle);
     }
 
-    private void enableSwipeToDeleteAndUndo() {
+    private void enableSwipeToDelete() {
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(getContext()) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int position = viewHolder.getAdapterPosition();
-                final Todo item = mDailyEventAdapter.getTodoList().get(position);
+                final IEvent item = mDailyEventAdapter.getTodoList().get(position);
 
-                mViewModel.deleteTodo(item.getId());
+                if (item instanceof Todo) {
+                    String id = ((Todo) item).getId();
+                    mViewModel.deleteTodo(id);
+                }
             }
         };
 
