@@ -6,12 +6,14 @@ import com.google.gson.GsonBuilder;
 import okhttp3.*;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import vnu.uet.mobilecourse.assistant.model.CourseContent;
+import vnu.uet.mobilecourse.assistant.model.CourseOverview;
 import vnu.uet.mobilecourse.assistant.model.Grade;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.network.deserializer.CourseContentDeserializer;
 import vnu.uet.mobilecourse.assistant.network.deserializer.CourseGradeDeserializer;
+import vnu.uet.mobilecourse.assistant.network.deserializer.PageContentDeseializer;
 import vnu.uet.mobilecourse.assistant.network.error_detector.ConnectivityInterceptor;
+import vnu.uet.mobilecourse.assistant.network.response.PageContentResponse;
 import vnu.uet.mobilecourse.assistant.view.MyApplication;
 
 import java.io.IOException;
@@ -37,7 +39,8 @@ public class HTTPClient {
                     }
                 }).build();
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(CourseContent[].class, new CourseContentDeserializer())
+        gsonBuilder.registerTypeAdapter(CourseOverview[].class, new CourseContentDeserializer())
+                    .registerTypeAdapter(PageContentResponse[].class, new PageContentDeseializer())
                     .registerTypeAdapter(Grade[].class, new CourseGradeDeserializer());
         gson = gsonBuilder.create();
         coursesClient = new retrofit2.Retrofit.Builder()

@@ -7,7 +7,7 @@ import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import vnu.uet.mobilecourse.assistant.model.CourseContent;
+import vnu.uet.mobilecourse.assistant.model.CourseOverview;
 import vnu.uet.mobilecourse.assistant.model.Material;
 
 public class ExpandableCourseContent extends ExpandableGroup<Material> {
@@ -19,14 +19,14 @@ public class ExpandableCourseContent extends ExpandableGroup<Material> {
         super(in);
     }
 
-    public static ExpandableCourseContent convert(CourseContent content) {
+    public static ExpandableCourseContent convert(CourseOverview content) {
         String title = content.getWeekInfo().getTitle();
         List<Material> items = content.getMaterials();
 
         return new ExpandableCourseContent(title, items);
     }
 
-    public static List<ExpandableCourseContent> convert(List<CourseContent> contents) {
+    public static List<ExpandableCourseContent> convert(List<CourseOverview> contents) {
         return contents.stream()
                 .map(ExpandableCourseContent::convert)
                 .collect(Collectors.toList());

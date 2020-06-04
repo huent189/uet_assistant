@@ -1,19 +1,17 @@
 package vnu.uet.mobilecourse.assistant.model;
 
-import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
-
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
 import java.util.List;
 
-public class CourseContent{
+public class CourseOverview {
     @Embedded
     private WeeklyMaterial weekInfo;
     @Relation(parentColumn = "id", entityColumn = "weekId")
     private List<Material> materials;
 
-    public CourseContent(WeeklyMaterial weekInfo, List<Material> materials) {
+    public CourseOverview(WeeklyMaterial weekInfo, List<Material> materials) {
         this.weekInfo = weekInfo;
         this.materials = materials;
     }
@@ -36,7 +34,7 @@ public class CourseContent{
 
     @Override
     public String toString() {
-        return "CourseContent{" +
+        return "CourseOverview{" +
                 "weekInfo=" + weekInfo +
                 ", materials=" + materials +
                 '}';

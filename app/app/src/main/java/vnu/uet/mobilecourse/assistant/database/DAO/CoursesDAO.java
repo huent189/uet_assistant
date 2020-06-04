@@ -10,6 +10,8 @@ import java.util.List;
 public interface CoursesDAO {
     @Query("SELECT * FROM course ORDER BY id ASC")
     LiveData<List<Course>> getMyCourses();
+    @Query("SELECT id FROM course ORDER BY id ASC")
+    int[] getCourseId();
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertCourse(Course... course);
     @Query("UPDATE Course SET lastAccessTime =:accessTime WHERE id = :id and lastAccessTime < :accessTime")

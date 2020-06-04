@@ -35,7 +35,7 @@ public class UserRepository {
         Log.d("LOGIN", "param: " + studentId + " " + password);
         call.enqueue(new CoursesResponseCallback<LoginResponse>(LoginResponse.class) {
             @Override
-            public void onSucess(LoginResponse response) {
+            public void onSuccess(LoginResponse response) {
                 User.getInstance().setToken(response.getToken());
                 User.getInstance().setEmail(studentId + CONST.VNU_EMAIL_DOMAIN);
                 userRequest.getUserId().enqueue(new Callback<JsonObject>() {
