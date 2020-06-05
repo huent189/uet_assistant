@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_navigation_courses_to_navigation_explore_course"
             app:destination="@id/navigation_explore_course" />
+        <action
+            android:id="@+id/action_navigation_courses_to_navigation_my_profile"
+            app:destination="@id/navigation_my_profile" />
     </fragment>
 
     <fragment
@@ -131,5 +134,10 @@
             android:id="@+id/action_navigation_search_student_to_navigation_chat_room"
             app:destination="@id/navigation_chat_room" />
     </fragment>
+    <fragment
+        android:id="@+id/navigation_my_profile"
+        android:name="vnu.uet.mobilecourse.assistant.view.profile.MyProfileFragment"
+        android:label="fragment_my_profile"
+        tools:layout="@layout/fragment_my_profile" />
 
 </navigation>
