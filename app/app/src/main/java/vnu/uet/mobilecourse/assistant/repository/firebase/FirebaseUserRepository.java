@@ -10,8 +10,8 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 public class FirebaseUserRepository {
 
     private static FirebaseUserRepository instance;
-    private UserDAO dao;
-    private FirebaseUserCache cache;
+    private UserDAO mDao;
+    private FirebaseUserCache mCache;
 
     public static FirebaseUserRepository getInstance() {
         if (instance == null) {
@@ -22,20 +22,20 @@ public class FirebaseUserRepository {
     }
 
     public FirebaseUserRepository() {
-        dao = new UserDAO();
-        cache = new FirebaseUserCache();
+        mDao = new UserDAO();
+        mCache = new FirebaseUserCache();
     }
 
     public StateLiveData<User> search(String id) {
         StateLiveData<User> liveData = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
 
-        if (cache.containsKey(id)) {
-            if (cache.get(id) instanceof StateLiveData) {
-                liveData = (StateLiveData<User>) cache.get(id);
+        if (mCache.containsKey(id)) {
+            if (mCache.get(id) instanceof StateLiveData) {
+                liveData = (StateLiveData<User>) mCache.get(id);
             }
         } else {
-            liveData = dao.read(id);
-            cache.put(id, liveData);
+            liveData = mDao.read(id);
+            mCache.put(id, liveData);
         }
 
         return liveData;

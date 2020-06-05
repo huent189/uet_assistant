@@ -19,11 +19,9 @@ public class ParticipantRepository {
 
     private static ParticipantRepository instance;
 
-    private ParticipantCache cache;
-
-    private ParticipantDAO dao;
-
-    private FirebaseUserRepository userRepo;
+    private ParticipantCache mCache;
+    private ParticipantDAO mDao;
+    private FirebaseUserRepository mUserRepo;
 
     public static ParticipantRepository getInstance() {
         if (instance == null) {
@@ -34,9 +32,9 @@ public class ParticipantRepository {
     }
 
     public ParticipantRepository() {
-        cache = new ParticipantCache();
-        dao = new ParticipantDAO();
-        userRepo = FirebaseUserRepository.getInstance();
+        mCache = new ParticipantCache();
+        mDao = new ParticipantDAO();
+        mUserRepo = FirebaseUserRepository.getInstance();
     }
 
     /**
@@ -47,15 +45,15 @@ public class ParticipantRepository {
      */
     public IStateLiveData<List<Participant_CourseSubCol>> getAllParticipants(String courseId) {
         // check in cache first
-        if (cache.containsKey(courseId)) {
-            return cache.get(courseId);
+        if (mCache.containsKey(courseId)) {
+            return mCache.get(courseId);
         }
         // if not in cache, query in database
         else {
             IStateLiveData<List<Participant_CourseSubCol>> liveData =
-                    new MergeParticipantLiveData(userRepo, dao.read(courseId));
+                    new MergeParticipantLiveData(mUserRepo, mDao.read(courseId));
 
-            cache.put(courseId, liveData);
+            mCache.put(courseId, liveData);
             return liveData;
         }
     }
