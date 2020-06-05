@@ -63,7 +63,7 @@
             <TextView
                 android:id="@+id/tvHtml"
                 android:textSize="@dimen/font_size_item_title"
-                android:text="Không có mô tả."
+                android:text="@string/title_material_no_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -94,26 +94,23 @@
                     style="@style/ListItemTitle"
                     android:textStyle="bold"
                     android:textColor="@color/accent"
-                    android:text="Không có tệp đính kèm"
+                    android:text="@string/title_material_no_attachment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
 
-
-
-
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/margin_x3"
-        android:layout_marginBottom="@dimen/margin_x3"
-        android:src="@drawable/ic_language_24dp"
-        android:tint="@color/white" />
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom|end"-->
+<!--        android:layout_marginEnd="@dimen/margin_x3"-->
+<!--        android:layout_marginBottom="@dimen/margin_x3"-->
+<!--        android:src="@drawable/ic_language_24dp"-->
+<!--        android:tint="@color/white" />-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
