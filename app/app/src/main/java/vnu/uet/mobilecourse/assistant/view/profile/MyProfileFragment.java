@@ -60,6 +60,8 @@ public class MyProfileFragment extends Fragment {
                     sflNameAndId.setVisibility(View.VISIBLE);
                     sflDobAndClass.setVisibility(View.VISIBLE);
 
+                    break;
+
                 case SUCCESS:
                     // get user info from state data
                     UserInfo userInfo = stateModel.getData();
