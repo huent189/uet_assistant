@@ -1,5 +1,7 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
+import java.util.Calendar;
+
 public class CourseSession {
     /**
      * Type of course session
@@ -49,7 +51,7 @@ public class CourseSession {
         this.teacherName = teacherName;
     }
 
-    public int getDayOfWeek() {
+    public final int getDayOfWeek() {
         return dayOfWeek;
     }
 
