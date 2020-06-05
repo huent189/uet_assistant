@@ -43,15 +43,15 @@ public class MyProfileFragment extends Fragment {
             public void onChanged(StateModel<UserInfo> stateModel) {
                 switch (stateModel.getStatus()) {
                     case SUCCESS:
-                        UserInfo userInfo = stateModel.getData();
+                        UserInfo user = stateModel.getData();
 
-                        tvUsername.setText(userInfo.getName());
-                        tvUserId.setText(userInfo.getId());
+                        tvUsername.setText(user.getName());
+                        tvUserId.setText(user.getId());
 
-                        Date dob = new Date(userInfo.getDOB());
+                        Date dob = new Date(user.getDOB());
                         tvDoB.setText(DateTimeUtils.DATE_FORMAT.format(dob));
 
-                        tvClass.setText(userInfo.getUetClass());
+                        tvClass.setText(user.getUetClass());
 
                         break;
                 }
