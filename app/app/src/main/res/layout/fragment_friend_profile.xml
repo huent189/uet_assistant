@@ -90,6 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_x4"
+                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btnChat">
 
@@ -130,6 +131,7 @@
                 android:id="@+id/layoutClass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/layoutDob">
 
@@ -166,6 +168,27 @@
 
             </LinearLayout>
 
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/sflDobAndClass"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_x4"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnChat">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/shimmer_profile_section" />
+
+                    <include layout="@layout/shimmer_profile_section" />
+
+                </LinearLayout>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
             <TextView
                 android:id="@+id/tvCommonCourses"
                 android:layout_width="wrap_content"
@@ -174,8 +197,26 @@
                 android:layout_marginTop="@dimen/margin_x2"
                 android:text="@string/title_common_courses"
                 android:textSize="@dimen/font_size_list_title"
+                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/layoutClass" />
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/sflCommonCourses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_x2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutClass">
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_x2"
+                    android:background="@color/backgroundLight"
+                    android:textSize="@dimen/font_size_list_title" />
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvCommonCourses"

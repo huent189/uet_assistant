@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -23,6 +24,9 @@ import java.util.List;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.facebook.shimmer.ShimmerFrameLayout;
+
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.AllCoursesAdapter;
 import vnu.uet.mobilecourse.assistant.adapter.RecentlyCoursesAdapter;
@@ -62,10 +66,26 @@ public class FriendProfileFragment extends Fragment {
             boolean active = args.getBoolean("active");
             if (!active) btnChat.setVisibility(View.GONE);
 
+            LinearLayout layoutDob = root.findViewById(R.id.layoutDob);
+            LinearLayout layoutClass = root.findViewById(R.id.layoutClass);
+
+            ShimmerFrameLayout sflDobAndClass = root.findViewById(R.id.sflDobAndClass);
+            sflDobAndClass.startShimmerAnimation();
+
             mViewModel.getUserInfo(code).observe(getViewLifecycleOwner(), new Observer<StateModel<UserInfo>>() {
                 @Override
                 public void onChanged(StateModel<UserInfo> stateModel) {
                     switch (stateModel.getStatus()) {
+                        case LOADING:
+                            // hide text
+                            layoutDob.setVisibility(View.INVISIBLE);
+                            layoutClass.setVisibility(View.INVISIBLE);
+
+                            // show shimmer layout
+                            sflDobAndClass.setVisibility(View.VISIBLE);
+
+                            break;
+
                         case SUCCESS:
                             UserInfo userInfo = stateModel.getData();
 
@@ -74,21 +94,50 @@ public class FriendProfileFragment extends Fragment {
 
                             tvClass.setText(userInfo.getUetClass());
 
+                            // show text
+                            layoutDob.setVisibility(View.VISIBLE);
+                            layoutClass.setVisibility(View.VISIBLE);
+
+                            // hide shimmer layout
+                            sflDobAndClass.setVisibility(View.GONE);
+
                             break;
                     }
                 }
             });
+
+            TextView tvCommonCourses = root.findViewById(R.id.tvCommonCourses);
+
+            ShimmerFrameLayout sflCommonCourses = root.findViewById(R.id.sflCommonCourses);
+            sflCommonCourses.startShimmerAnimation();
 
             RecyclerView rvCommonCourses = initializeCommonCoursesView(root);
             mViewModel.getCommonCourses(code).observe(getViewLifecycleOwner(), new Observer<StateModel<List<ICourse>>>() {
                 @Override
                 public void onChanged(StateModel<List<ICourse>> stateModel) {
                     switch (stateModel.getStatus()) {
+                        case LOADING:
+                            // hide
+                            tvCommonCourses.setVisibility(View.INVISIBLE);
+                            rvCommonCourses.setVisibility(View.GONE);
+
+                            // show
+                            sflCommonCourses.setVisibility(View.VISIBLE);
+
+                            break;
+
                         case SUCCESS:
                             List<ICourse> courses = stateModel.getData();
 
                             AllCoursesAdapter adapter = new AllCoursesAdapter(courses, FriendProfileFragment.this);
                             rvCommonCourses.setAdapter(adapter);
+
+                            // show
+                            tvCommonCourses.setVisibility(View.VISIBLE);
+                            rvCommonCourses.setVisibility(View.VISIBLE);
+
+                            // hide
+                            sflCommonCourses.setVisibility(View.GONE);
 
                             break;
                     }
