@@ -6,9 +6,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -34,6 +39,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.view.component.CustomCalendarView;
+import vnu.uet.mobilecourse.assistant.view.component.OnSwipeTouchListener;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
 
@@ -46,6 +52,8 @@ public class CalendarFragment extends Fragment {
     private RecyclerView mRvDailyTodoList;
     private Toolbar mToolbar;
     private CollapsingToolbarLayout mCollapsingToolbar;
+    private ShimmerFrameLayout mSflEvents;
+    private ImageView mIvEmpty;
 
     private NavController mNavController;
     private FragmentActivity mActivity;
@@ -72,6 +80,11 @@ public class CalendarFragment extends Fragment {
         initializeToolbar(root);
 
         mCollapsingToolbar = root.findViewById(R.id.col);
+
+        mSflEvents = root.findViewById(R.id.sflEvents);
+        mSflEvents.startShimmerAnimation();
+
+        mIvEmpty = root.findViewById(R.id.ivEmpty);
 
         mRvDailyTodoList = root.findViewById(R.id.rvDailyTodoList);
 
@@ -143,6 +156,13 @@ public class CalendarFragment extends Fragment {
 
         mViewModel.getDailyTodoList(date).observe(getViewLifecycleOwner(), stateModel -> {
             switch (stateModel.getStatus()) {
+                case LOADING:
+                    mRvDailyTodoList.setVisibility(View.GONE);
+                    mSflEvents.setVisibility(View.VISIBLE);
+                    mIvEmpty.setVisibility(View.GONE);
+
+                    break;
+
                 case SUCCESS:
                     DailyEventList dailyTodoList = stateModel.getData();
 
@@ -152,6 +172,17 @@ public class CalendarFragment extends Fragment {
                     mCalendarView.notifyTodoSetChanged(getViewLifecycleOwner());
 
                     restoreRecycleViewState();
+
+                    if (dailyTodoList.isEmpty()) {
+                        mIvEmpty.setVisibility(View.VISIBLE);
+//                        mRvDailyTodoList.setVisibility(View.GONE);
+
+                    } else {
+                        mIvEmpty.setVisibility(View.GONE);
+                    }
+
+                    mRvDailyTodoList.setVisibility(View.VISIBLE);
+                    mSflEvents.setVisibility(View.GONE);
 
                     break;
             }

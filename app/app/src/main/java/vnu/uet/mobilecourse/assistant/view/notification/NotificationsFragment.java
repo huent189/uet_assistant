@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,9 +62,9 @@ public class NotificationsFragment extends Fragment {
 
     private void initializeNotificationListView(View root) {
         mRvNotifications = root.findViewById(R.id.rvNotifications);
-
-        mRvNotifications.setAdapter(mNotificationAdapter);
         mRvNotifications.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
+        ImageView ivEmpty = root.findViewById(R.id.ivEmpty);
 
         mViewModel.getNotifications().observe(getViewLifecycleOwner(), new Observer<StateModel<List<Notification_UserSubCol>>>() {
             @Override
@@ -71,8 +72,17 @@ public class NotificationsFragment extends Fragment {
                 switch (stateModel.getStatus()) {
                     case SUCCESS:
                         List<Notification_UserSubCol> notifications = stateModel.getData();
-                        mNotificationAdapter = new NotificationAdapter(notifications, NotificationsFragment.this);
-                        mRvNotifications.setAdapter(mNotificationAdapter);
+
+                        if (notifications.isEmpty()) {
+                            ivEmpty.setVisibility(View.VISIBLE);
+                            mRvNotifications.setVisibility(View.GONE);
+                        } else {
+                            mNotificationAdapter = new NotificationAdapter(notifications, NotificationsFragment.this);
+                            mRvNotifications.setAdapter(mNotificationAdapter);
+
+                            ivEmpty.setVisibility(View.GONE);
+                            mRvNotifications.setVisibility(View.VISIBLE);
+                        }
 
                         break;
                 }

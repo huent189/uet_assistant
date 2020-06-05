@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
@@ -271,11 +272,11 @@ public class CourseRepository {
         }
 
         private void setMyCourses(List<ICourse> myCourses) {
-            this.mMyCourses = myCourses;
+            this.mMyCourses = myCourses.stream().filter(Objects::nonNull).collect(Collectors.toList());
         }
 
         private void setOtherCourses(List<CourseInfo> otherCourses) {
-            this.mOtherCourses = otherCourses;
+            this.mOtherCourses = otherCourses.stream().filter(Objects::nonNull).collect(Collectors.toList());
         }
     }
 

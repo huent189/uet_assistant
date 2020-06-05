@@ -88,7 +88,7 @@
                     android:id="@+id/svRgTodoListContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:maxHeight="100dp"
+                    app:maxHeight="160dp"
                     android:layout_marginTop="@dimen/margin"
                     app:layout_constraintTop_toBottomOf="@+id/tvTodoListTitle">
 
