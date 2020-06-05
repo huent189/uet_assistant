@@ -13,8 +13,8 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 public class StudentRepository {
 
     private static StudentRepository instance;
-    private FirebaseUserRepository userRepo;
-    private UserInfoDAO userInfoDAO;
+    private FirebaseUserRepository mUserRepo;
+    private UserInfoDAO mUserInfoDAO;
 
     public static StudentRepository getInstance() {
         if (instance == null) {
@@ -25,13 +25,13 @@ public class StudentRepository {
     }
 
     public StudentRepository() {
-        userRepo = FirebaseUserRepository.getInstance();
-        userInfoDAO = new UserInfoDAO();
+        mUserRepo = FirebaseUserRepository.getInstance();
+        mUserInfoDAO = new UserInfoDAO();
     }
 
     public IStateLiveData<UserInfo> getStudentById(String id) {
-        StateLiveData<User> userLiveData = userRepo.search(id);
-        StateLiveData<UserInfo> infoLiveData = userInfoDAO.read(id);
+        StateLiveData<User> userLiveData = mUserRepo.search(id);
+        StateLiveData<UserInfo> infoLiveData = mUserInfoDAO.read(id);
         return new MergeStudentStateLiveData(userLiveData, infoLiveData);
     }
 

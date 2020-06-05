@@ -70,4 +70,6 @@
     <string name="title_loading">Đang tải...</string>
     <string name="title_setting">Cài đặt</string>
     <string name="title_logout">Đăng xuất</string>
+    <string name="title_material_no_attachment">Không có tệp đính kèm</string>
+    <string name="title_material_no_desc">Không có mô tả.</string>
 </resources>
