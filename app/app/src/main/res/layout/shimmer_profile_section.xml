@@ -10,7 +10,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_gravity="center_vertical|start"
-        android:layout_marginHorizontal="@dimen/margin"
+        android:layout_marginHorizontal="12dp"
         android:background="@color/backgroundLight"
         android:tint="@color/primaryDark" />
 

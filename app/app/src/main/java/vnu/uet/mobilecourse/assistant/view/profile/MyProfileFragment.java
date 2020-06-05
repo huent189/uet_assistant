@@ -17,7 +17,10 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.Date;
 
@@ -38,10 +41,27 @@ public class MyProfileFragment extends Fragment {
         TextView tvUsername = root.findViewById(R.id.tvUsername);
         TextView tvUserId = root.findViewById(R.id.tvUserId);
 
+        LinearLayout layoutDob = root.findViewById(R.id.layoutDob);
+        LinearLayout layoutClass = root.findViewById(R.id.layoutClass);
+
+        ShimmerFrameLayout sflNameAndId = root.findViewById(R.id.sflNameAndId);
+        sflNameAndId.startShimmerAnimation();
+        ShimmerFrameLayout sflDobAndClass = root.findViewById(R.id.sflDobAndClass);
+        sflDobAndClass.startShimmerAnimation();
+
         mViewModel.getUserInfo().observe(getViewLifecycleOwner(), new Observer<StateModel<UserInfo>>() {
             @Override
             public void onChanged(StateModel<UserInfo> stateModel) {
                 switch (stateModel.getStatus()) {
+                    case LOADING:
+                        tvUsername.setVisibility(View.INVISIBLE);
+                        tvUserId.setVisibility(View.INVISIBLE);
+                        layoutDob.setVisibility(View.INVISIBLE);
+                        layoutClass.setVisibility(View.INVISIBLE);
+
+                        sflNameAndId.setVisibility(View.VISIBLE);
+                        sflDobAndClass.setVisibility(View.VISIBLE);
+
                     case SUCCESS:
                         UserInfo userInfo = stateModel.getData();
 
@@ -52,6 +72,14 @@ public class MyProfileFragment extends Fragment {
                         tvDoB.setText(DateTimeUtils.DATE_FORMAT.format(dob));
 
                         tvClass.setText(userInfo.getUetClass());
+
+                        tvUsername.setVisibility(View.VISIBLE);
+                        tvUserId.setVisibility(View.VISIBLE);
+                        layoutDob.setVisibility(View.VISIBLE);
+                        layoutClass.setVisibility(View.VISIBLE);
+
+                        sflNameAndId.setVisibility(View.INVISIBLE);
+                        sflDobAndClass.setVisibility(View.INVISIBLE);
 
                         break;
                 }
