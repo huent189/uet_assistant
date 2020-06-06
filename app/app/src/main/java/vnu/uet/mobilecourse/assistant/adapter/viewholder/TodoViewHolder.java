@@ -6,13 +6,9 @@ import java.util.Date;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
-import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.event.IEvent;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
-import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
-import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.view.calendar.CalendarFragment;
 import vnu.uet.mobilecourse.assistant.view.calendar.TodoListsFragment;
