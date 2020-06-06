@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.model;
+package vnu.uet.mobilecourse.assistant.model.material;
 
 import androidx.room.Entity;
 import androidx.room.Index;

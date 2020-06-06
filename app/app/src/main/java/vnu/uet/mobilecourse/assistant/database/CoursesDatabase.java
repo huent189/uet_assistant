@@ -10,6 +10,7 @@ import vnu.uet.mobilecourse.assistant.database.DAO.CoursesDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GradeDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.MaterialDAO;
 import vnu.uet.mobilecourse.assistant.model.*;
+import vnu.uet.mobilecourse.assistant.model.material.*;
 import vnu.uet.mobilecourse.assistant.view.MyApplication;
 
 import java.util.concurrent.ExecutorService;

@@ -6,7 +6,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
-import vnu.uet.mobilecourse.assistant.model.CourseConstant;
+import vnu.uet.mobilecourse.assistant.model.material.CourseConstant;
 import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;

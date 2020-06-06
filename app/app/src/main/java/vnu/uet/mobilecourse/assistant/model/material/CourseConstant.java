@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.model;
+package vnu.uet.mobilecourse.assistant.model.material;
 
 public class CourseConstant {
     public class MaterialType {

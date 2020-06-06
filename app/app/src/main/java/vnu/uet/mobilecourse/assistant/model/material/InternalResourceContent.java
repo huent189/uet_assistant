@@ -1,10 +1,14 @@
-package vnu.uet.mobilecourse.assistant.model;
+package vnu.uet.mobilecourse.assistant.model.material;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
 //@Entity(indices = {@Index("materialId"), @Index("courseId")})
 @Entity(inheritSuperIndices = true)
-public class PageContent extends MaterialContent {
+public class InternalResourceContent extends MaterialContent {
 //    @PrimaryKey
 //    @SerializedName("id")
 //    private int id;
@@ -14,12 +18,16 @@ public class PageContent extends MaterialContent {
 //    private int courseId;
 //    @SerializedName("name")
 //    private String name;
-//    //merge content vs intro
+//    @SerializedName("intro")
 //    private String intro;
     @SerializedName("revision")
     private int revision;
 //    @SerializedName("timemodified")
 //    private long timeModified;
+    @SerializedName("contentfiles")
+//    @Relation(entityColumn = "parentId", parentColumn = "id")
+    @Ignore
+    private List<InternalFile> files;
 
     public int getRevision() {
         return revision;
@@ -27,5 +35,13 @@ public class PageContent extends MaterialContent {
 
     public void setRevision(int revision) {
         this.revision = revision;
+    }
+
+    public List<InternalFile> getFiles() {
+        return files;
+    }
+
+    public void setFiles(List<InternalFile> files) {
+        this.files = files;
     }
 }
