@@ -18,6 +18,7 @@ import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.CourseOverview;
 import vnu.uet.mobilecourse.assistant.model.Material;
+import vnu.uet.mobilecourse.assistant.model.material.CourseConstant;
 import vnu.uet.mobilecourse.assistant.viewmodel.expandable.ExpandableCourseContent;
 
 import java.util.List;
@@ -102,6 +103,7 @@ public class CourseContentAdapter extends
     class MaterialViewHolder extends ChildViewHolder {
         private TextView mTvTaskTitle;
         private ImageView mIvTaskStatus;
+        private ImageView mIvMaterialIcon;
         private View mView;
 
         MaterialViewHolder(@NonNull View itemView) {
@@ -109,11 +111,38 @@ public class CourseContentAdapter extends
 
             mTvTaskTitle = itemView.findViewById(R.id.tvTaskTitle);
             mIvTaskStatus = itemView.findViewById(R.id.ivTaskStatus);
+            mIvMaterialIcon = itemView.findViewById(R.id.ivMaterialIcon);
             this.mView = itemView;
         }
 
         void bind(Material material) {
             mTvTaskTitle.setText(material.getTitle());
+
+            switch (material.getType()) {
+                case CourseConstant.MaterialType.PAGE:
+                    mIvMaterialIcon.setImageResource(R.drawable.ic_description_32dp);
+                    break;
+
+                case CourseConstant.MaterialType.ASSIGN:
+                    mIvMaterialIcon.setImageResource(R.drawable.ic_assignment_32dp);
+                    break;
+
+                case CourseConstant.MaterialType.QUIZ:
+                    mIvMaterialIcon.setImageResource(R.drawable.ic_format_list_bulleted_32dp);
+                    break;
+
+                case CourseConstant.MaterialType.URL:
+                    mIvMaterialIcon.setImageResource(R.drawable.ic_language_32dp);
+                    break;
+
+                case CourseConstant.MaterialType.RESOURCE:
+                    mIvMaterialIcon.setImageResource(R.drawable.ic_image_32dp);
+                    break;
+
+                default:
+                    mIvMaterialIcon.setImageResource(R.drawable.ic_school_32dp);
+                    break;
+            }
 
             if (material.getCompletion() == 1) {
                 mIvTaskStatus.setImageResource(R.drawable.ic_check_circle_24dp);

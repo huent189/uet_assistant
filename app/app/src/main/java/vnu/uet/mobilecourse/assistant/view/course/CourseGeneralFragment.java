@@ -68,17 +68,22 @@ public class CourseGeneralFragment extends Fragment {
                 }
             });
 
-            mViewModel.getParticipants(id).observe(getViewLifecycleOwner(), new Observer<StateModel<List<Participant_CourseSubCol>>>() {
-                @Override
-                public void onChanged(StateModel<List<Participant_CourseSubCol>> stateModel) {
-                    switch (stateModel.getStatus()) {
-                        case SUCCESS:
-                            int participants = stateModel.getData().size();
-                            tvStudents.setText(String.valueOf(participants));
-                            break;
+            if (id.isEmpty()) {
+                tvStudents.setText("???");
+
+            } else {
+                mViewModel.getParticipants(id).observe(getViewLifecycleOwner(), new Observer<StateModel<List<Participant_CourseSubCol>>>() {
+                    @Override
+                    public void onChanged(StateModel<List<Participant_CourseSubCol>> stateModel) {
+                        switch (stateModel.getStatus()) {
+                            case SUCCESS:
+                                int participants = stateModel.getData().size();
+                                tvStudents.setText(String.valueOf(participants));
+                                break;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         return root;

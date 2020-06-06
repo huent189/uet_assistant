@@ -64,7 +64,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return mNotifications.size();
     }
 
-    public static class NotificationHolder extends RecyclerView.ViewHolder implements ISwipeToDeleteHolder {
+    public static class NotificationHolder extends RecyclerView.ViewHolder {
 
         private ImageView mIvNotifyIcon;
         private TextView mTvNotifyTitle;
@@ -93,7 +93,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             Date notifyTime = DateTimeUtils.fromSecond(notification.getNotifyTime());
             String time = DateTimeUtils.DATE_TIME_FORMAT.format(notifyTime);
 
-            long diff = System.currentTimeMillis() - notifyTime.getTime();
+            long diff = Math.abs(System.currentTimeMillis() - notifyTime.getTime());
             // under 1 minute
             if (diff < 60 * 1000) {
                 time = String.format(Locale.ROOT, "%d giây trước", diff / 1000);

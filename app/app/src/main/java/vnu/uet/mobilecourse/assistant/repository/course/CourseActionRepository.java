@@ -43,7 +43,7 @@ public class CourseActionRepository {
             case CourseConstant.MaterialType.PAGE:
                 //TODO: trigger page view
                 break;
-            case CourseConstant.MaterialType.RESOURSE:
+            case CourseConstant.MaterialType.RESOURCE:
                 //TODO: trigger resource view
                 break;
         }
