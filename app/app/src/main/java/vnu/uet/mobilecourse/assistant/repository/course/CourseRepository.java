@@ -13,11 +13,7 @@ import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.CoursesDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GradeDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.MaterialDAO;
-import vnu.uet.mobilecourse.assistant.model.Course;
-import vnu.uet.mobilecourse.assistant.model.CourseContent;
-import vnu.uet.mobilecourse.assistant.model.Grade;
-import vnu.uet.mobilecourse.assistant.model.ICourse;
-import vnu.uet.mobilecourse.assistant.model.User;
+import vnu.uet.mobilecourse.assistant.model.*;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
@@ -27,6 +23,7 @@ import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class CourseRepository {
     /**
@@ -141,9 +138,9 @@ public class CourseRepository {
 
     public void updateCourseContent(int courseId){
         HTTPClient.getInstance().request(CourseRequest.class).getCourseContent(courseId + "")
-                .enqueue(new CoursesResponseCallback<CourseContent[]>(CourseContent[].class) {
+                .enqueue(new CoursesResponseCallback<CourseOverview[]>(CourseOverview[].class) {
                     @Override
-                    public void onSuccess(CourseContent[] response) {
+                    public void onSuccess(CourseOverview[] response) {
                         CoursesDatabase.databaseWriteExecutor.execute(()->{
                             materialDAO.insertCourseContent(courseId, response);
                         });
@@ -152,7 +149,7 @@ public class CourseRepository {
                 });
     }
 
-    public LiveData<List<CourseContent>> getContent(int courseId){
+    public LiveData<List<CourseOverview>> getContent(int courseId){
         updateCourseContent(courseId);
         new CourseActionRepository().triggerCourseView(courseId);
         return materialDAO.getCourseContent(courseId);

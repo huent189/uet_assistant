@@ -98,21 +98,27 @@ public class UserRepository {
         HTTPClient.getInstance().request(UserRequest.class).getUserId().enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.body().get("errorcode") == null) {
-                    Log.d("COURSES_DEBUG", response.toString());
-                    loginState.postSuccess("login successfully");
-                } else {
-                    Log.d("COURSES_DEBUG", "login failed");
-                    loginState.postError(new InvalidLoginException());
+                if(response.isSuccessful()){
+                    if (response.body().get("errorcode") == null) {
+                        Log.d("COURSES_DEBUG", response.toString());
+                        loginState.postSuccess("login successfully");
+                    } else {
+                        Log.d("COURSES_DEBUG", "login failed");
+                        loginState.postError(new InvalidLoginException());
+                    }
+                }
+                else {
+                    loginState.postError(new Exception(response.errorBody().toString()));
                 }
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable throwable) {
                 if(throwable instanceof NoConnectivityException){
-                    loginState.postSuccess("login successfully");
-                    Log.d("COURSE_DEBUG", "onFailure: no internet");
-                } else {
+                    loginState.postError(new NoConnectivityException());
+                }
+                //TODO: check when server down and throw exception
+                else {
                     loginState.postError(new Exception(throwable));
                 }
 

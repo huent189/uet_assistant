@@ -7,32 +7,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
-import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
-import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
-import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
-
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter;
+import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
+import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
+import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.model.CourseContent;
-import vnu.uet.mobilecourse.assistant.viewmodel.expandable.ExpandableCourseContent;
+import vnu.uet.mobilecourse.assistant.model.CourseOverview;
 import vnu.uet.mobilecourse.assistant.model.Material;
+import vnu.uet.mobilecourse.assistant.viewmodel.expandable.ExpandableCourseContent;
+
+import java.util.List;
 
 public class CourseContentAdapter extends
         ExpandableRecyclerViewAdapter<CourseContentAdapter.WeeklyMaterialViewHolder, CourseContentAdapter.MaterialViewHolder> {
 
-    private List<CourseContent> mContents;
+    private List<CourseOverview> mContents;
     private Fragment mOwner;
     private LayoutInflater mInflater;
     private NavController mNavController;
 
-    public CourseContentAdapter(List<CourseContent> contents, Fragment owner) {
+    public CourseContentAdapter(List<CourseOverview> contents, Fragment owner) {
         super(ExpandableCourseContent.convert(contents));
 
         this.mOwner = owner;

@@ -1,18 +1,18 @@
 package vnu.uet.mobilecourse.assistant.network.deserializer;
 
 import com.google.gson.*;
-import vnu.uet.mobilecourse.assistant.model.CourseContent;
+import vnu.uet.mobilecourse.assistant.model.CourseOverview;
 import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.WeeklyMaterial;
 
 import java.lang.reflect.Type;
 import java.util.LinkedList;
 
-public class CourseContentDeserializer implements JsonDeserializer<CourseContent[]> {
+public class CourseContentDeserializer implements JsonDeserializer<CourseOverview[]> {
     @Override
-    public CourseContent[] deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public CourseOverview[] deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         Gson gson = new Gson();
-        CourseContent[] response = new CourseContent[json.getAsJsonArray().size()];
+        CourseOverview[] response = new CourseOverview[json.getAsJsonArray().size()];
         int i = 0;
         for (JsonElement weeklyElement: json.getAsJsonArray()) {
             WeeklyMaterial weeklyMaterial = gson.fromJson(weeklyElement, WeeklyMaterial.class);
@@ -34,7 +34,7 @@ public class CourseContentDeserializer implements JsonDeserializer<CourseContent
                 }
                 materials.addLast(child);
             }
-            response[i++] = new CourseContent(weeklyMaterial, materials);
+            response[i++] = new CourseOverview(weeklyMaterial, materials);
         }
         return response;
     }
