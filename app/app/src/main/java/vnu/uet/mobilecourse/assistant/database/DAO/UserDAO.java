@@ -12,7 +12,6 @@ public class UserDAO extends FirebaseDocReadOnlyDAO<User> {
             .getInstance()
             .collection(FirebaseCollectionName.USER);
 
-
     public UserDAO() {
         super(USER_COLLECTION_REF);
     }
