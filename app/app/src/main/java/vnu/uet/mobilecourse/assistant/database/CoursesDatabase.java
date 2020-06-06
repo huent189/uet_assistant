@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 @Database(entities = {Course.class, Grade.class, WeeklyMaterial.class, Material.class, AssignmentContent.class,
                     ExternalResourceContent.class, InternalFile.class, InternalResourceContent.class,
                     MaterialContent.class, PageContent.class, QuizContent.class},
-        version = 2, exportSchema = true)
+        version = 3, exportSchema = true)
 public abstract class CoursesDatabase extends RoomDatabase {
     private static volatile CoursesDatabase instance;
     private static final int NUMBER_OF_THREADS = 4;
@@ -56,6 +56,11 @@ public abstract class CoursesDatabase extends RoomDatabase {
                                     supportSQLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS `QuizContent` (`timeOpen` INTEGER NOT NULL, `timeClose` INTEGER NOT NULL, `timeLimit` INTEGER NOT NULL, `maximumAttemp` INTEGER NOT NULL, `maximumGrade` INTEGER NOT NULL, `id` INTEGER NOT NULL, `materialId` INTEGER NOT NULL, `courseId` INTEGER NOT NULL, `name` TEXT, `intro` TEXT, `timeModified` INTEGER NOT NULL, PRIMARY KEY(`id`))");
                                     supportSQLiteDatabase.execSQL("CREATE INDEX IF NOT EXISTS `index_QuizContent_materialId` ON `QuizContent` (`materialId`)");
                                     supportSQLiteDatabase.execSQL("CREATE INDEX IF NOT EXISTS `index_QuizContent_courseId` ON `QuizContent` (`courseId`)");
+                                }
+                            }, new Migration(2, 3) {
+                                @Override
+                                public void migrate(@NonNull SupportSQLiteDatabase supportSQLiteDatabase) {
+                                    supportSQLiteDatabase.execSQL("ALTER TABLE `Course` ADD COLUMN `progress` REAL DEFAULT 0 NOT NULL");
                                 }
                             })
                             .build();

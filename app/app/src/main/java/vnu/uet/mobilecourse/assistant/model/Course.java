@@ -1,6 +1,5 @@
 package vnu.uet.mobilecourse.assistant.model;
 
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -9,7 +8,6 @@ import com.google.gson.annotations.SerializedName;
 @Entity
 public class Course implements ICourse {
     @PrimaryKey
-    @NonNull
     private int id;
     @Ignore
     private int thumbnail;
@@ -19,9 +17,19 @@ public class Course implements ICourse {
     private String code;
     @SerializedName("lastaccess")
     private long lastAccessTime;
+    @SerializedName("progress")
+    private double progress;
     public Course(String title, String code) {
         this.title = title;
         this.code = code;
+    }
+
+    public double getProgress() {
+        return progress;
+    }
+
+    public void setProgress(double progress) {
+        this.progress = progress;
     }
 
     public int getThumbnail() {
