@@ -48,8 +48,6 @@ public class MyCoursesActivity extends AppCompatActivity {
         });
     }
 
-
-
     private void hideBottomNavigator() {
         mNavView.setVisibility(View.GONE);
     }

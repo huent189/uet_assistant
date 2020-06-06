@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FragmentPageAdapter extends FragmentStatePagerAdapter {
+
     private List<Fragment> mFragments;
 
     private FragmentPageAdapter(@NonNull FragmentManager fm) {

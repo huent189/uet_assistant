@@ -2,6 +2,11 @@ package vnu.uet.mobilecourse.assistant.repository.course;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
 import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.CoursesDAO;
@@ -17,10 +22,7 @@ import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class CourseRepository {
     /**
@@ -80,7 +82,7 @@ public class CourseRepository {
             updateMyCourses();
         }
         else {
-            synchonizeAccessTime();
+            synchronizeAccessTime();
         }
         return coursesDAO.getMyCourses();
     }
@@ -175,14 +177,14 @@ public class CourseRepository {
                 });
     }
 
-    public void synchonizeAccessTime(){
+    public void synchronizeAccessTime(){
         HTTPClient.getInstance().request(CourseRequest.class).getMyCoures(User.getInstance().getUserId())
                 .enqueue(new CoursesResponseCallback<Course[]>(Course[].class) {
                     @Override
                     public void onSuccess(Course[] response) {
-                        for (Course couse :response) {
+                        for (Course course :response) {
                             CoursesDatabase.databaseWriteExecutor.execute(() -> {
-                                coursesDAO.updateLastAccessTime(couse.getId(), couse.getLastAccessTime());
+                                coursesDAO.updateLastAccessTime(course.getId(), course.getLastAccessTime());
                             });
                         }
                         User.getInstance().setLastSynchonizedTime(System.currentTimeMillis() / 1000);
@@ -192,10 +194,10 @@ public class CourseRepository {
 
     static class CommonCourseLiveData extends StateMediatorLiveData<List<ICourse>> {
 
-        private List<ICourse> myCourses;
-        private List<CourseInfo> otherCourses;
-        private boolean mySuccess;
-        private boolean otherSuccess;
+        private List<ICourse> mMyCourses;
+        private List<CourseInfo> mOtherCourses;
+        private boolean mMySuccess;
+        private boolean mOtherSuccess;
 
         CommonCourseLiveData(@NonNull StateMediatorLiveData<List<ICourse>> my,
                              @NonNull StateLiveData<List<CourseInfo>> other) {
@@ -206,20 +208,20 @@ public class CourseRepository {
             addSource(my, stateModel -> {
                 switch (stateModel.getStatus()) {
                     case ERROR:
-                        mySuccess = false;
+                        mMySuccess = false;
                         postError(stateModel.getError());
                         break;
 
                     case LOADING:
-                        mySuccess = false;
+                        mMySuccess = false;
                         postLoading();
                         break;
 
                     case SUCCESS:
-                        mySuccess = true;
+                        mMySuccess = true;
                         setMyCourses(stateModel.getData());
 
-                        if (mySuccess && otherSuccess) {
+                        if (mMySuccess && mOtherSuccess) {
                             List<ICourse> combineData = combineData();
                             postSuccess(combineData);
                         }
@@ -229,20 +231,20 @@ public class CourseRepository {
             addSource(other, stateModel -> {
                 switch (stateModel.getStatus()) {
                     case ERROR:
-                        otherSuccess = false;
+                        mOtherSuccess = false;
                         postError(stateModel.getError());
                         break;
 
                     case LOADING:
-                        otherSuccess = false;
+                        mOtherSuccess = false;
                         postLoading();
                         break;
 
                     case SUCCESS:
-                        otherSuccess = true;
+                        mOtherSuccess = true;
                         setOtherCourses(stateModel.getData());
 
-                        if (mySuccess && otherSuccess) {
+                        if (mMySuccess && mOtherSuccess) {
                             List<ICourse> combineData = combineData();
                             postSuccess(combineData);
                         }
@@ -253,8 +255,8 @@ public class CourseRepository {
         private List<ICourse> combineData() {
             List<ICourse> commonCourses = new ArrayList<>();
 
-            for (ICourse course : myCourses) {
-                for (CourseInfo otherCourse : otherCourses) {
+            for (ICourse course : mMyCourses) {
+                for (CourseInfo otherCourse : mOtherCourses) {
                     if (course.getCode().equals(otherCourse.getCode())) {
                         commonCourses.add(course);
                         break;
@@ -266,20 +268,20 @@ public class CourseRepository {
         }
 
         private void setMyCourses(List<ICourse> myCourses) {
-            this.myCourses = myCourses;
+            this.mMyCourses = myCourses;
         }
 
         private void setOtherCourses(List<CourseInfo> otherCourses) {
-            this.otherCourses = otherCourses;
+            this.mOtherCourses = otherCourses;
         }
     }
 
     static class MergeCourseLiveData extends StateMediatorLiveData<List<ICourse>> {
 
-        private List<Course> courses = new ArrayList<>();
-        private List<CourseInfo> fbCourses = new ArrayList<>();
-        private boolean coursesSuccess;
-        private boolean fbSuccess;
+        private List<Course> mCourses = new ArrayList<>();
+        private List<CourseInfo> mFbCourses = new ArrayList<>();
+        private boolean mCoursesSuccess;
+        private boolean mFirebaseSuccess;
 
         MergeCourseLiveData(@NonNull LiveData<List<Course>> coursesLiveData,
                             @NonNull StateLiveData<List<CourseInfo>> fbLiveData) {
@@ -289,13 +291,13 @@ public class CourseRepository {
 
             addSource(coursesLiveData, courses -> {
                 if (courses == null) {
-                    coursesSuccess = false;
+                    mCoursesSuccess = false;
                     postLoading();
                 } else {
-                    coursesSuccess = true;
+                    mCoursesSuccess = true;
                     setCourses(courses);
 
-                    if (coursesSuccess && fbSuccess) {
+                    if (mCoursesSuccess && mFirebaseSuccess) {
                         List<ICourse> combineData = combineData();
                         postSuccess(combineData);
                     }
@@ -305,20 +307,20 @@ public class CourseRepository {
             addSource(fbLiveData, stateModel -> {
                 switch (stateModel.getStatus()) {
                     case ERROR:
-                        fbSuccess = false;
+                        mFirebaseSuccess = false;
                         postError(stateModel.getError());
                         break;
 
                     case LOADING:
-                        fbSuccess = false;
+                        mFirebaseSuccess = false;
                         postLoading();
                         break;
 
                     case SUCCESS:
-                        fbSuccess = true;
+                        mFirebaseSuccess = true;
                         setFbCourses(stateModel.getData());
 
-                        if (coursesSuccess && fbSuccess) {
+                        if (mCoursesSuccess && mFirebaseSuccess) {
                             List<ICourse> combineData = combineData();
                             postSuccess(combineData);
                         }
@@ -327,17 +329,17 @@ public class CourseRepository {
         }
 
         private void setCourses(List<Course> courses) {
-            this.courses = courses;
+            this.mCourses = courses;
         }
 
         private void setFbCourses(List<CourseInfo> fbCourses) {
-            this.fbCourses = fbCourses;
+            this.mFbCourses = fbCourses;
         }
 
         private List<ICourse> combineData() {
-            List<ICourse> merged = new ArrayList<>(courses);
+            List<ICourse> merged = new ArrayList<>(mCourses);
 
-            List<CourseInfo> others = fbCourses.stream().filter(courseInfo -> {
+            List<CourseInfo> others = mFbCourses.stream().filter(courseInfo -> {
                 for (ICourse course : merged) {
                     if (course.getCode().equals(courseInfo.getCode()))
                         return false;

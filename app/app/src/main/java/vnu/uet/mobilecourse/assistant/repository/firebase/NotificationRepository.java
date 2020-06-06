@@ -8,14 +8,15 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 
 public class NotificationRepository {
+
     private static NotificationRepository instance;
 
-    private StateLiveData<List<Notification_UserSubCol>> liveData;
+    private StateLiveData<List<Notification_UserSubCol>> mListLiveData;
 
-    private NotificationDAO dao = new NotificationDAO();
+    private NotificationDAO mDao = new NotificationDAO();
 
     public NotificationRepository() {
-        liveData = dao.readAll();
+        mListLiveData = mDao.readAll();
     }
 
     public static NotificationRepository getInstance() {
@@ -27,14 +28,14 @@ public class NotificationRepository {
     }
 
     public StateLiveData<List<Notification_UserSubCol>> getAllNotifications() {
-        return liveData;
+        return mListLiveData;
     }
 
     public IStateLiveData<Notification_UserSubCol> add(Notification_UserSubCol notification) {
-        return dao.add(notification.getId(), notification);
+        return mDao.add(notification.getId(), notification);
     }
 
     public IStateLiveData<String> delete(Notification_UserSubCol notification) {
-        return dao.delete(notification.getId());
+        return mDao.delete(notification.getId());
     }
 }

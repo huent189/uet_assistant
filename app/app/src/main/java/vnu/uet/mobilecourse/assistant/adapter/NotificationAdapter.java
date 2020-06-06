@@ -16,6 +16,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.adapter.viewholder.ISwipeToDeleteHolder;
 import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
 import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
@@ -62,7 +63,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return mNotifications.size();
     }
 
-    public static class NotificationHolder extends RecyclerView.ViewHolder {
+    public static class NotificationHolder extends RecyclerView.ViewHolder implements ISwipeToDeleteHolder {
 
         private ImageView mIvNotifyIcon;
         private TextView mTvNotifyTitle;

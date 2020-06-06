@@ -17,9 +17,9 @@ public class ChatRepository implements IChatRepository {
 
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
-    private FirebaseFirestore db;
+    private FirebaseFirestore mDb;
 
-    private GroupChat_UserSubColDAO subColDAO;
+    private GroupChat_UserSubColDAO mGroupChatDAO;
 
     private static ChatRepository instance;
 
@@ -34,14 +34,14 @@ public class ChatRepository implements IChatRepository {
     public ChatRepository() {
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-        db = FirebaseFirestore.getInstance();
+        mDb = FirebaseFirestore.getInstance();
 
-        subColDAO = new GroupChat_UserSubColDAO();
+        mGroupChatDAO = new GroupChat_UserSubColDAO();
     }
 
     @Override
     public IStateLiveData<List<GroupChat_UserSubCol>> getAllUserGroupChats() {
-        return subColDAO.readAll();
+        return mGroupChatDAO.readAll();
     }
 
     @Override

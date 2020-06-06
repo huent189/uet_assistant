@@ -153,17 +153,27 @@ public class AddTodoFragment extends Fragment {
         Locale.setDefault(locale);
 
         mBtnDate.setOnClickListener(v -> {
+            if (mBtnDate.getText().length() == 0) {
+                Calendar current = Calendar.getInstance();
+
+                calendar.set(Calendar.YEAR, current.get(Calendar.YEAR));
+                calendar.set(Calendar.MONTH, current.get(Calendar.MONTH));
+                calendar.set(Calendar.DAY_OF_MONTH, current.get(Calendar.DAY_OF_MONTH));
+            }
+
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH);
             int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
             DatePickerDialog dialog = new DatePickerDialog(
                     getActivity(),
-                    new DatePickerDialog.OnDateSetListener() {
-                        @Override
-                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                    (view, year1, month1, dayOfMonth1) -> {
+                        calendar.set(Calendar.YEAR, year1);
+                        calendar.set(Calendar.MONTH, month1);
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth1);
 
-                        }
+                        String selectedTime = DateTimeUtils.SHORT_DATE_FORMAT.format(calendar.getTime());
+                        mBtnDate.setText(selectedTime);
                     }, year, month, dayOfMonth
             );
 
@@ -175,17 +185,23 @@ public class AddTodoFragment extends Fragment {
 
         mBtnTime = root.findViewById(R.id.btnTime);
         mBtnTime.setOnClickListener(v -> {
-            int HOUR = calendar.get(Calendar.HOUR);
+            if (mBtnTime.getText().length() == 0) {
+                Calendar current = Calendar.getInstance();
+
+                calendar.set(Calendar.HOUR_OF_DAY, current.get(Calendar.HOUR_OF_DAY));
+                calendar.set(Calendar.MINUTE, current.get(Calendar.MINUTE));
+            }
+
+            int HOUR = calendar.get(Calendar.HOUR_OF_DAY);
             int MINUTE = calendar.get(Calendar.MINUTE);
 
             TimePickerDialog dialog = new TimePickerDialog(
                     getContext(),
                     (view, hourOfDay, minute) -> {
-                        Calendar selected = Calendar.getInstance();
-                        selected.set(Calendar.HOUR, hourOfDay);
-                        selected.set(Calendar.MINUTE, minute);
+                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        calendar.set(Calendar.MINUTE, minute);
 
-                        String selectedTime = DateTimeUtils.TIME_12H_FORMAT.format(selected.getTime());
+                        String selectedTime = DateTimeUtils.TIME_12H_FORMAT.format(calendar.getTime());
                         mBtnTime.setText(selectedTime);
                     },
                     HOUR, MINUTE, false

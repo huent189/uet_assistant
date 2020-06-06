@@ -1,19 +1,16 @@
 package vnu.uet.mobilecourse.assistant.repository.firebase;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import androidx.annotation.NonNull;
 import vnu.uet.mobilecourse.assistant.database.DAO.TodoDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.TodoListDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
-import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
-import vnu.uet.mobilecourse.assistant.model.event.EventComparator;
-import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
@@ -21,19 +18,21 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class TodoRepository implements ITodoRepository {
+
     private static TodoRepository instance;
 
-    private StateLiveData<List<TodoList>> listLiveData;
+    private StateLiveData<List<TodoList>> mListLiveData;
+    private StateLiveData<List<Todo>> mTodoLiveData;
 
-    private StateLiveData<List<Todo>> todoLiveData;
-
-    private TodoDAO todoDAO = new TodoDAO();
-
-    private TodoListDAO todoListDAO = new TodoListDAO();
+    private TodoDAO mTodoDao;
+    private TodoListDAO mListDao;
 
     public TodoRepository() {
-        todoLiveData = todoDAO.readAll();
-        listLiveData = todoListDAO.readAll();
+        mTodoDao = new TodoDAO();
+        mListDao = new TodoListDAO();
+
+        mTodoLiveData = mTodoDao.readAll();
+        mListLiveData = mListDao.readAll();
     }
 
     public static TodoRepository getInstance() {
@@ -46,84 +45,46 @@ public class TodoRepository implements ITodoRepository {
 
     @Override
     public StateLiveData<List<Todo>> getAllTodos() {
-        return todoLiveData;
+        return mTodoLiveData;
     }
 
-//    @Override
-//    public StateMediatorLiveData<DailyEventList> getDailyTodoList(Date date) {
-//        // initialize state live data with loading state
-//        StateModel<DailyEventList> loadingState = new StateModel<>(StateStatus.LOADING);
-//        StateMediatorLiveData<DailyEventList> response = new StateMediatorLiveData<>(loadingState);
-//
-//        response.addSource(todoLiveData, stateModel -> {
-//            switch (stateModel.getStatus()) {
-//                case LOADING:
-//                    response.postLoading();
-//                    break;
-//
-//                case ERROR:
-//                    response.postError(stateModel.getError());
-//                    break;
-//
-//                case SUCCESS:
-//                    List<Todo> todos = stateModel.getData();
-//
-//                    DailyEventList dailyTodoList = new DailyEventList(date);
-//
-//                    List<Todo> todoByDay = todos.stream()
-//                            .filter(todo -> {
-//                                Date deadline = DateTimeUtils.fromSecond(todo.getDeadline());
-//                                return DateTimeUtils.isSameDate(date, deadline);
-//                            })
-//                            .sorted(new EventComparator())
-//                            .collect(Collectors.toList());
-//
-//                    dailyTodoList.addAll(todoByDay);
-//
-//                    response.postSuccess(dailyTodoList);
-//            }
-//        });
-//
-//        return response;
-//    }
-
     public IStateLiveData<List<TodoList>> getShallowTodoLists() {
-        return listLiveData;
+        return mListLiveData;
     }
 
     @Override
     public IStateLiveData<List<TodoList>> getAllTodoLists() {
-        return new DeepTodoListsStateLiveData(listLiveData, todoLiveData);
+        return new DeepTodoListsStateLiveData(mListLiveData, mTodoLiveData);
     }
 
     @Override
     public IStateLiveData<Todo> addTodo(Todo todo) {
-        return todoDAO.add(todo.getId(), todo);
+        return mTodoDao.add(todo.getId(), todo);
     }
 
     @Override
     public IStateLiveData<TodoList> addTodoList(TodoList todoList) {
-        return todoListDAO.add(todoList.getId(), todoList);
+        return mListDao.add(todoList.getId(), todoList);
     }
 
     @Override
     public IStateLiveData<String> deleteTodo(String id) {
-        return todoDAO.delete(id);
+        return mTodoDao.delete(id);
     }
 
     @Override
     public IStateLiveData<String> deleteTodoList(String id) {
-        return todoListDAO.delete(id);
+        return mListDao.delete(id);
     }
 
     @Override
     public IStateLiveData<String> modifyTodo(String id, Map<String, Object> changes) {
-        return todoDAO.update(id, changes);
+        return mTodoDao.update(id, changes);
     }
 
     @Override
     public IStateLiveData<String> modifyTodoList(String id, Map<String, Object> changes) {
-        return todoListDAO.update(id, changes);
+        return mListDao.update(id, changes);
     }
 
     static class DeepTodoListsStateLiveData extends StateMediatorLiveData<List<TodoList>> {

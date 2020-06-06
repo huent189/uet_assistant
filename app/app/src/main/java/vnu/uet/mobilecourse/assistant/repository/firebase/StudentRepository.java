@@ -4,6 +4,7 @@ import vnu.uet.mobilecourse.assistant.database.DAO.UserInfoDAO;
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
+import vnu.uet.mobilecourse.assistant.repository.cache.StudentCache;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
@@ -13,8 +14,9 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 public class StudentRepository {
 
     private static StudentRepository instance;
-    private FirebaseUserRepository userRepo;
-    private UserInfoDAO userInfoDAO;
+    private FirebaseUserRepository mUserRepo;
+    private UserInfoDAO mUserInfoDAO;
+    private StudentCache mCache;
 
     public static StudentRepository getInstance() {
         if (instance == null) {
@@ -24,27 +26,33 @@ public class StudentRepository {
         return instance;
     }
 
-    public StudentRepository() {
-        userRepo = FirebaseUserRepository.getInstance();
-        userInfoDAO = new UserInfoDAO();
+    private StudentRepository() {
+        mUserRepo = FirebaseUserRepository.getInstance();
+        mUserInfoDAO = new UserInfoDAO();
+        mCache = new StudentCache();
     }
 
     public IStateLiveData<UserInfo> getStudentById(String id) {
-        StateLiveData<User> userLiveData = userRepo.search(id);
-        StateLiveData<UserInfo> infoLiveData = userInfoDAO.read(id);
-        return new MergeStudentStateLiveData(userLiveData, infoLiveData);
+        if (mCache.containsKey(id)) {
+            return mCache.get(id);
+        } else {
+            StateLiveData<User> userLiveData = mUserRepo.search(id);
+            StateLiveData<UserInfo> infoLiveData = mUserInfoDAO.read(id);
+            IStateLiveData<UserInfo> liveData = new MergeStudentStateLiveData(userLiveData, infoLiveData);
+            mCache.put(id, liveData);
+            return liveData;
+        }
     }
 
-    public static class MergeStudentStateLiveData extends StateMediatorLiveData<UserInfo> {
+    static class MergeStudentStateLiveData extends StateMediatorLiveData<UserInfo> {
 
         private User userModel;
         private UserInfo infoModel;
         private boolean userDone;
         private boolean infoDone;
 
-        public MergeStudentStateLiveData(StateLiveData<User> user, StateLiveData<UserInfo> info) {
+        MergeStudentStateLiveData(StateLiveData<User> user, StateLiveData<UserInfo> info) {
             super(new StateModel<>(StateStatus.LOADING));
-
 
             addSource(info, stateModel -> {
                 switch (stateModel.getStatus()) {

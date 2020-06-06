@@ -20,7 +20,7 @@ import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
-public abstract class TodoViewHolder extends EventViewHolder {
+public abstract class TodoViewHolder extends EventViewHolder implements ISwipeToDeleteHolder {
 
     private boolean mShowList;
     private LifecycleOwner mLifecycleOwner;
@@ -70,15 +70,11 @@ public abstract class TodoViewHolder extends EventViewHolder {
                 mViewModel.getShallowTodoLists()
                         .observe(mLifecycleOwner, stateModel -> {
                             if (stateModel.getStatus() == StateStatus.SUCCESS) {
-                                TodoList todoList = stateModel.getData().stream()
+                                stateModel.getData().stream()
                                         .filter(Objects::nonNull)
                                         .filter(list -> list.getId().equals(todo.getTodoListId()))
                                         .findFirst()
-                                        .orElse(null);
-
-                                if (todoList != null) {
-                                    mTvCategory.setText(todoList.getTitle());
-                                }
+                                        .ifPresent(todoList -> mTvCategory.setText(todoList.getTitle()));
                             }
                         });
             }

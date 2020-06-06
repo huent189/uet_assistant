@@ -7,14 +7,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import androidx.lifecycle.Observer;
-import vnu.uet.mobilecourse.assistant.model.Course;
+
 import vnu.uet.mobilecourse.assistant.model.event.CourseSessionEvent;
 import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
 import vnu.uet.mobilecourse.assistant.model.event.EventComparator;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
-import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.repository.cache.DailyEventCache;
 import vnu.uet.mobilecourse.assistant.repository.course.CourseRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
@@ -28,15 +27,15 @@ public class EventRepository {
 
     private static EventRepository instance;
 
-    private TodoRepository todoRepo;
-    private CourseRepository courseRepo;
-    private DailyEventCache cache;
+    private TodoRepository mTodoRepo;
+    private CourseRepository mCourseRepo;
+    private DailyEventCache mCache;
 
     public EventRepository() {
-        todoRepo = TodoRepository.getInstance();
-        courseRepo = CourseRepository.getInstance();
+        mTodoRepo = TodoRepository.getInstance();
+        mCourseRepo = CourseRepository.getInstance();
 
-        cache = new DailyEventCache();
+        mCache = new DailyEventCache();
     }
 
     public static EventRepository getInstance() {
@@ -51,18 +50,18 @@ public class EventRepository {
         String dateInString = DateTimeUtils.DATE_FORMAT.format(date);
 
         // check in cache first
-        if (cache.containsKey(dateInString)) {
-            return cache.get(dateInString);
+        if (mCache.containsKey(dateInString)) {
+            return mCache.get(dateInString);
         }
         // if not in cache, query in database
         else {
-            StateLiveData<List<Todo>> allTodos = todoRepo.getAllTodos();
-            StateLiveData<List<CourseInfo>> allCourseInfos = courseRepo.getAllCourseInfos();
+            StateLiveData<List<Todo>> allTodos = mTodoRepo.getAllTodos();
+            StateLiveData<List<CourseInfo>> allCourseInfos = mCourseRepo.getAllCourseInfos();
 
             IStateLiveData<DailyEventList> liveData =
                     new MergeDailyEventLiveData(date, allTodos, allCourseInfos);
 
-            cache.put(dateInString, liveData);
+            mCache.put(dateInString, liveData);
             return liveData;
         }
     }
@@ -138,7 +137,9 @@ public class EventRepository {
                                     Calendar calendar = Calendar.getInstance();
                                     calendar.setTime(date);
 
-                                    if (session.getDayOfWeek() == calendar.get(Calendar.DAY_OF_WEEK)) {
+                                    int selectedDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+                                    if (session.getDayOfWeek() == selectedDayOfWeek) {
                                         CourseSessionEvent event = SessionConverter.toEvent(session, date);
                                         courseSessionEvents.add(event);
                                     }
