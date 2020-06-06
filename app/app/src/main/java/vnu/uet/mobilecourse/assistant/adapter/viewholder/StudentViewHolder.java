@@ -18,6 +18,8 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
     private TextView mTvId;
     private ImageButton mBtnChat;
 
+    private static final String USER_ID = User.getInstance().getStudentId();
+
     private View mView;
 
     public StudentViewHolder(@NonNull View view) {
@@ -34,7 +36,6 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
     public void bind(IStudent student) {
         mTvName.setText(student.getName());
         mTvId.setText(student.getCode());
-
         mBtnChat.setVisibility(View.VISIBLE);
 
         if (!student.isActive()) {
@@ -42,7 +43,7 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
             mBtnChat.setBackground(null);
             mBtnChat.setClickable(false);
             mBtnChat.setEnabled(false);
-        } else if (student.getCode().equals(User.getInstance().getStudentId())) {
+        } else if (student.getCode().equals(USER_ID)) {
             String name = student.getName() + " (tôi)";
             mTvName.setText(name);
             mBtnChat.setVisibility(View.GONE);
