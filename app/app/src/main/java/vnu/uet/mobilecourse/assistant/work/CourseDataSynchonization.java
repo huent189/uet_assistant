@@ -17,7 +17,7 @@ public class CourseDataSynchonization {
     CoursesDatabase database = CoursesDatabase.getDatabase();
     CourseRepository courseRepo = CourseRepository.getInstance();
     public void checkUpdate(long lastModifiedTime, boolean isAppRunning) throws IOException {
-        courseRepo.synchonizeAccessTime();
+        courseRepo.synchronizeAccessTime();
         checkPageContent(lastModifiedTime);
 
     }
