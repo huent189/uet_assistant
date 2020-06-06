@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -91,6 +92,21 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             Date notifyTime = DateTimeUtils.fromSecond(notification.getNotifyTime());
             String time = DateTimeUtils.DATE_TIME_FORMAT.format(notifyTime);
+
+            long diff = System.currentTimeMillis() - notifyTime.getTime();
+            // under 1 minute
+            if (diff < 60 * 1000) {
+                time = String.format(Locale.ROOT, "%d giây trước", diff / 1000);
+            }
+            // under 1 hour
+            else if (diff < 60 * 60 * 1000) {
+                time = String.format(Locale.ROOT, "%d phút trước", diff / 1000 / 60);
+            }
+            // under 1 day
+            else if (diff < 24 * 60 * 60 * 1000) {
+                time = String.format(Locale.ROOT, "%d giờ trước", diff / 1000 / 60 / 60);
+            }
+
             mTvNotifyTime.setText(time);
 
             switch (notification.getType()) {

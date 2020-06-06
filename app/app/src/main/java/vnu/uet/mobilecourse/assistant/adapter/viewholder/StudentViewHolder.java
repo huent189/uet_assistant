@@ -1,19 +1,15 @@
 package vnu.uet.mobilecourse.assistant.adapter.viewholder;
 
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
-import vnu.uet.mobilecourse.assistant.repository.course.UserRepository;
 
 public class StudentViewHolder extends RecyclerView.ViewHolder {
 
@@ -39,22 +35,22 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
         mTvName.setText(student.getName());
         mTvId.setText(student.getCode());
 
+        mBtnChat.setVisibility(View.VISIBLE);
+
         if (!student.isActive()) {
             mBtnChat.setImageResource(R.drawable.ic_warning_24dp);
             mBtnChat.setBackground(null);
             mBtnChat.setClickable(false);
             mBtnChat.setEnabled(false);
+        } else if (student.getCode().equals(User.getInstance().getStudentId())) {
+            String name = student.getName() + " (tôi)";
+            mTvName.setText(name);
+            mBtnChat.setVisibility(View.GONE);
         } else {
-            if (student.getCode().equals(User.getInstance().getStudentId())) {
-                String name = student.getName() + " (tôi)";
-                mTvName.setText(name);
-                mBtnChat.setVisibility(View.GONE);
-            } else {
-                mBtnChat.setImageResource(R.drawable.ic_chat_24dp);
-                mBtnChat.setBackgroundResource(R.drawable.primary_button_background);
-                mBtnChat.setClickable(true);
-                mBtnChat.setEnabled(true);
-            }
+            mBtnChat.setImageResource(R.drawable.ic_chat_24dp);
+            mBtnChat.setBackgroundResource(R.drawable.primary_button_background);
+            mBtnChat.setClickable(true);
+            mBtnChat.setEnabled(true);
         }
     }
 
