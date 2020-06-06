@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/list_item_background"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -18,11 +17,10 @@
             android:id="@+id/ivNotifyIcon"
             android:layout_width="@dimen/img_notification_icon_size"
             android:layout_height="@dimen/img_notification_icon_size"
-            android:src="@drawable/img_target"
+            android:background="@color/backgroundLight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <LinearLayout
@@ -38,10 +36,10 @@
             <TextView
                 style="@style/ListItemTitle"
                 android:id="@+id/tvNotifyTitle"
-                android:layout_width="match_parent"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="@string/title_loading"
+                android:background="@color/backgroundLight"
                 android:textColor="@color/primary" />
 
             <TextView
@@ -50,28 +48,26 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:textSize="@dimen/font_size_caption"
-                android:layout_marginTop="2dp"
-                android:text="@string/title_loading" />
+                android:layout_marginTop="@dimen/small_margin"
+                android:background="@color/backgroundLight" />
 
             <TextView
                 style="@style/SecondaryText"
                 android:id="@+id/tvNotifyTime"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_small"
-                android:layout_marginTop="2dp"
-                android:text="@string/title_loading" />
+                android:layout_marginTop="@dimen/small_margin"
+                android:background="@color/backgroundLight" />
 
         </LinearLayout>
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btnViewNotify"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/transparent_button_background"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_marginEnd="@dimen/margin"
-            android:padding="@dimen/margin"
-            android:src="@drawable/ic_chevron_right_24dp"
+            android:background="@color/backgroundLight"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

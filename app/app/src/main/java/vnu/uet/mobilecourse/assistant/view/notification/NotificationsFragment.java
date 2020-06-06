@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,26 +68,34 @@ public class NotificationsFragment extends Fragment {
 
         ImageView ivEmpty = root.findViewById(R.id.ivEmpty);
 
-        mViewModel.getNotifications().observe(getViewLifecycleOwner(), new Observer<StateModel<List<Notification_UserSubCol>>>() {
-            @Override
-            public void onChanged(StateModel<List<Notification_UserSubCol>> stateModel) {
-                switch (stateModel.getStatus()) {
-                    case SUCCESS:
-                        List<Notification_UserSubCol> notifications = stateModel.getData();
+        ShimmerFrameLayout sflNotifications = root.findViewById(R.id.sflNotifications);
+        sflNotifications.startShimmerAnimation();
 
-                        if (notifications.isEmpty()) {
-                            ivEmpty.setVisibility(View.VISIBLE);
-                            mRvNotifications.setVisibility(View.GONE);
-                        } else {
-                            mNotificationAdapter = new NotificationAdapter(notifications, NotificationsFragment.this);
-                            mRvNotifications.setAdapter(mNotificationAdapter);
+        mViewModel.getNotifications().observe(getViewLifecycleOwner(), stateModel -> {
+            switch (stateModel.getStatus()) {
+                case LOADING:
+                    sflNotifications.setVisibility(View.VISIBLE);
+                    ivEmpty.setVisibility(View.GONE);
+                    mRvNotifications.setVisibility(View.GONE);
+                    break;
 
-                            ivEmpty.setVisibility(View.GONE);
-                            mRvNotifications.setVisibility(View.VISIBLE);
-                        }
+                case SUCCESS:
+                    List<Notification_UserSubCol> notifications = stateModel.getData();
 
-                        break;
-                }
+                    if (notifications.isEmpty()) {
+                        ivEmpty.setVisibility(View.VISIBLE);
+                        mRvNotifications.setVisibility(View.GONE);
+                    } else {
+                        mNotificationAdapter = new NotificationAdapter(notifications, NotificationsFragment.this);
+                        mRvNotifications.setAdapter(mNotificationAdapter);
+
+                        ivEmpty.setVisibility(View.GONE);
+                        mRvNotifications.setVisibility(View.VISIBLE);
+                    }
+
+                    sflNotifications.setVisibility(View.GONE);
+
+                    break;
             }
         });
     }

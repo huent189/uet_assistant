@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
+import vnu.uet.mobilecourse.assistant.model.User;
+import vnu.uet.mobilecourse.assistant.repository.course.UserRepository;
 
 public class StudentViewHolder extends RecyclerView.ViewHolder {
 
@@ -47,6 +49,12 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
             mBtnChat.setBackgroundResource(R.drawable.primary_button_background);
             mBtnChat.setClickable(true);
             mBtnChat.setEnabled(true);
+        }
+
+        if (student.getCode().equals(User.getInstance().getStudentId())) {
+            String name = student.getName() + " (tôi)";
+            mTvName.setText(name);
+            mBtnChat.setVisibility(View.GONE);
         }
     }
 

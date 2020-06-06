@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.StudentViewHolder;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.Participant_CourseSubCol;
 
 public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> implements Filterable {
@@ -62,13 +63,18 @@ public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> im
         holder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("name", current.getName());
-                bundle.putString("code", current.getCode());
-                bundle.putString("avatar", current.getAvatar());
-                bundle.putBoolean("active", current.isActive());
+                if (current.getCode().equals(User.getInstance().getStudentId())) {
+                    mNavController.navigate(R.id.action_navigation_explore_course_to_navigation_my_profile);
 
-                mNavController.navigate(R.id.action_navigation_explore_course_to_navigation_friend_profile, bundle);
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("name", current.getName());
+                    bundle.putString("code", current.getCode());
+                    bundle.putString("avatar", current.getAvatar());
+                    bundle.putBoolean("active", current.isActive());
+
+                    mNavController.navigate(R.id.action_navigation_explore_course_to_navigation_friend_profile, bundle);
+                }
             }
         });
     }
