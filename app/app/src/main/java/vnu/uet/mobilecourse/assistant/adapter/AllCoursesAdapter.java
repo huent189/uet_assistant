@@ -5,9 +5,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -17,17 +21,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.Course;
 import vnu.uet.mobilecourse.assistant.model.ICourse;
-import vnu.uet.mobilecourse.assistant.view.course.CoursesFragment;
 import vnu.uet.mobilecourse.assistant.view.profile.FriendProfileFragment;
 
-public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.CourseViewHolder> {
+public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.CourseViewHolder> implements Filterable {
 
     private List<ICourse> mCourses;
+    private List<ICourse> mFullList;
     private Fragment mOwner;
+    private Filter mFilter;
 
     public AllCoursesAdapter(List<ICourse> courses, Fragment owner) {
-        this.mCourses = courses;
+        this.mFullList = courses;
+        this.mCourses = new ArrayList<>(courses);
         this.mOwner = owner;
+        this.mFilter = new CourseFilter();
     }
 
     @NonNull
@@ -50,6 +57,39 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Co
         return mCourses.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        return mFilter;
+    }
+
+    public class CourseFilter extends MyFilter<ICourse> {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<ICourse> filteredList;
+
+            if (constraint == null || constraint.length() == 0)
+                filteredList = new ArrayList<>(mFullList);
+            else {
+                final String filterPattern = constraint.toString().trim();
+
+                filteredList = mFullList.stream()
+                        .filter(i -> i.getCode().contains(filterPattern) || i.getTitle().contains(filterPattern))
+                        .collect(Collectors.toList());
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mCourses = getListFromResults(results);
+            notifyDataSetChanged();
+        }
+    }
+
     static class CourseViewHolder extends RecyclerView.ViewHolder {
         private TextView mTvCourseTitle;
         private TextView mTvCourseId;
@@ -69,7 +109,9 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Co
 
             mTvCourseTitle.setText(courseTitle);
 
-            if (!courseCode.isEmpty()) {
+            if (courseCode.isEmpty()) {
+                mTvCourseId.setText(R.string.course_code_error);
+            } else {
                 mTvCourseId.setText(courseCode);
             }
 

@@ -45,16 +45,16 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
             mBtnChat.setClickable(false);
             mBtnChat.setEnabled(false);
         } else {
-            mBtnChat.setImageResource(R.drawable.ic_chat_24dp);
-            mBtnChat.setBackgroundResource(R.drawable.primary_button_background);
-            mBtnChat.setClickable(true);
-            mBtnChat.setEnabled(true);
-        }
-
-        if (student.getCode().equals(User.getInstance().getStudentId())) {
-            String name = student.getName() + " (tôi)";
-            mTvName.setText(name);
-            mBtnChat.setVisibility(View.GONE);
+            if (student.getCode().equals(User.getInstance().getStudentId())) {
+                String name = student.getName() + " (tôi)";
+                mTvName.setText(name);
+                mBtnChat.setVisibility(View.GONE);
+            } else {
+                mBtnChat.setImageResource(R.drawable.ic_chat_24dp);
+                mBtnChat.setBackgroundResource(R.drawable.primary_button_background);
+                mBtnChat.setClickable(true);
+                mBtnChat.setEnabled(true);
+            }
         }
     }
 

@@ -39,7 +39,7 @@
     <dimen name="big_img_avatar_size">128dp</dimen>
     <dimen name="small_img_avatar_size">32dp</dimen>
 
-    <dimen name="img_notification_icon_size">72dp</dimen>
+    <dimen name="img_notification_icon_size">64dp</dimen>
 
     <!-- Calendar metrics -->
     <dimen name="calendar_cell_height">56dp</dimen>
