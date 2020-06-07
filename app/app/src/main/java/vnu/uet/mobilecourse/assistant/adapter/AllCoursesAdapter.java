@@ -130,6 +130,8 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Co
                 bundle.putString("courseTitle", courseTitle);
                 bundle.putString("courseCode", courseCode);
 
+                bundle.putParcelable("course", course);
+
                 int actionId = R.id.action_navigation_courses_to_navigation_explore_course;
 
                 if (owner instanceof FriendProfileFragment) {

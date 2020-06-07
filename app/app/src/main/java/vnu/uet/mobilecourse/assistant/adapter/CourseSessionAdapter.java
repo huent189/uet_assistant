@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,7 +31,8 @@ public class CourseSessionAdapter extends RecyclerView.Adapter<CourseSessionAdap
     private NavController mNavController;
 
     public CourseSessionAdapter(List<CourseSession> sessions, CourseGeneralFragment owner) {
-        this.mSessions = sessions;
+        this.mSessions = new ArrayList<>(sessions);
+        mSessions.addAll(sessions);
         this.mOwner = owner;
     }
 

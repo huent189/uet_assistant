@@ -1,5 +1,8 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.firestore.Exclude;
 
 import java.util.ArrayList;
@@ -22,6 +25,38 @@ public class CourseInfo implements IFirebaseModel, ICourse {
 
     @Exclude
     private List<Participant_CourseSubCol> participants = new ArrayList<>();
+
+    public CourseInfo() {}
+
+    protected CourseInfo(Parcel in) {
+        name = in.readString();
+        id = in.readString();
+        credits = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(id);
+        dest.writeInt(credits);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<CourseInfo> CREATOR = new Creator<CourseInfo>() {
+        @Override
+        public CourseInfo createFromParcel(Parcel in) {
+            return new CourseInfo(in);
+        }
+
+        @Override
+        public CourseInfo[] newArray(int size) {
+            return new CourseInfo[size];
+        }
+    };
 
     public String getName() {
         return name;

@@ -6,7 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.mikhaellopez.circularprogressbar.CircularProgressBar;
+
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.CourseSessionAdapter;
+import vnu.uet.mobilecourse.assistant.model.Course;
+import vnu.uet.mobilecourse.assistant.model.ICourse;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.Participant_CourseSubCol;
 import vnu.uet.mobilecourse.assistant.util.CONST;
@@ -49,6 +54,23 @@ public class CourseGeneralFragment extends Fragment {
             TextView tvCredits = root.findViewById(R.id.tvCredits);
             TextView tvStudents = root.findViewById(R.id.tvStudents);
 
+            CircularProgressBar cpbProgress = root.findViewById(R.id.cpbProgress);
+
+            TextView tvProgress = root.findViewById(R.id.tvProgress);
+
+            ICourse course = args.getParcelable("course");
+            if (course instanceof Course) {
+                float progress = (float) ((Course) course).getProgress();
+                tvProgress.setText(String.format(Locale.ROOT, "%.0f%%", progress));
+                cpbProgress.setProgressWithAnimation(progress);
+
+
+            }
+
+            assert course != null;
+            tvCourseId.setText(course.getCode());
+            tvCourseTitle.setText(course.getTitle());
+
             mViewModel.getCourseInfo(id).observe(getViewLifecycleOwner(), new Observer<StateModel<CourseInfo>>() {
                 @Override
                 public void onChanged(StateModel<CourseInfo> stateModel) {
@@ -56,8 +78,6 @@ public class CourseGeneralFragment extends Fragment {
                         case SUCCESS:
                             CourseInfo courseInfo = stateModel.getData();
 
-                            tvCourseId.setText(courseInfo.getCode());
-                            tvCourseTitle.setText(courseInfo.getTitle());
                             tvCredits.setText(String.valueOf(courseInfo.getCredits()));
 
                             CourseSessionAdapter adapter = new CourseSessionAdapter(courseInfo.getSessions(), CourseGeneralFragment.this);

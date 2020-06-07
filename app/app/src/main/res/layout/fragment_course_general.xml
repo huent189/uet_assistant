@@ -8,105 +8,147 @@
     tools:context=".view.course.CourseGeneralFragment">
 
     <LinearLayout
-        android:layout_marginVertical="@dimen/margin_x3"
+        android:layout_marginVertical="@dimen/margin_x4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_marginHorizontal="@dimen/margin_x2"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false">
+
             <LinearLayout
-                android:layout_marginHorizontal="@dimen/margin_x2"
                 android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
 
-                <TextView
-                    style="@style/ListTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/title_course_title"/>
-
-                <TextView
-                    android:id="@+id/tvCourseTitle"
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|start"
-                    android:text="@string/title_loading"
-                    android:textSize="@dimen/font_size_item_title" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="@style/ListTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_course_title"/>
+
+                    <TextView
+                        android:id="@+id/tvCourseTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|start"
+                        android:text="@string/title_loading"
+                        android:textSize="@dimen/font_size_item_title" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="@dimen/margin_x2"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="@style/ListTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/title_course_code"/>
+
+                    <TextView
+                        android:id="@+id/tvCourseId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|start"
+                        android:text="@string/title_loading"
+                        android:textSize="@dimen/font_size_item_title" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_marginTop="@dimen/margin_x2"
-                android:layout_marginHorizontal="@dimen/margin_x2"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
+            <FrameLayout
+                android:layout_marginStart="@dimen/margin"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
+                <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                    android:id="@+id/cpbProgress"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    app:background_progressbar_color="@color/backgroundLight"
+                    app:background_progressbar_width="6dp"
+                    android:layout_gravity="center"
+                    app:progressbar_color="@color/accent"
+                    app:progressbar_width="8dp" />
+
                 <TextView
-                    style="@style/ListTitle"
+                    android:id="@+id/tvProgress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/title_course_code"/>
+                    android:textSize="@dimen/font_size_page_title"
+                    android:layout_gravity="center"
+                    android:text="Nan" />
 
-                <TextView
-                    android:id="@+id/tvCourseId"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|start"
-                    android:text="@string/title_loading"
-                    android:textSize="@dimen/font_size_item_title" />
+            </FrameLayout>
 
-            </LinearLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_marginHorizontal="@dimen/margin_x2"
             android:id="@+id/layout_common_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_x3"
+            android:layout_marginTop="@dimen/margin_x4"
             android:orientation="horizontal">
 
             <androidx.cardview.widget.CardView
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_marginEnd="@dimen/margin_x2"
-                    android:layout_height="wrap_content"
-                    app:contentPadding="@dimen/margin"
-                    app:cardCornerRadius="@dimen/small_radius"
-                    app:cardBackgroundColor="@color/primary">
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_marginEnd="@dimen/margin_x2"
+                android:layout_height="wrap_content"
+                app:contentPadding="@dimen/margin"
+                app:cardCornerRadius="@dimen/small_radius"
+                app:cardBackgroundColor="@color/primary">
 
-                    <LinearLayout
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|start"
+                        android:layout_marginStart="@dimen/small_margin"
+                        android:src="@drawable/ic_widgets_black_32dp"
+                        android:tint="@color/white" />
+
+                    <TextView
+                        style="@style/ListTitle"
+                        android:layout_marginHorizontal="@dimen/margin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin"
+                        android:text="@string/title_course_unit_number"/>
+
+                    <TextView
+                        android:id="@+id/tvCredits"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:layout_marginHorizontal="@dimen/margin"
+                        android:text="@string/title_loading"
+                        android:textSize="@dimen/font_size_page_title" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical|start"
-                            android:layout_marginStart="@dimen/small_margin"
-                            android:src="@drawable/ic_widgets_black_32dp"
-                            android:tint="@color/white" />
+                </LinearLayout>
 
-                        <TextView
-                            style="@style/ListTitle"
-                            android:layout_marginHorizontal="@dimen/margin"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin"
-                            android:text="@string/title_course_unit_number"/>
-
-                        <TextView
-                            android:id="@+id/tvCredits"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/margin"
-                            android:text="@string/title_loading"
-                            android:textSize="@dimen/font_size_page_title" />
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:layout_weight="1"
@@ -155,7 +197,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_x2"
-            android:layout_marginTop="@dimen/margin_x3"
+            android:layout_marginTop="@dimen/margin_x4"
             android:layout_marginBottom="@dimen/margin"
             android:text="@string/title_schedule"
             android:textSize="@dimen/font_size_list_title"/>
