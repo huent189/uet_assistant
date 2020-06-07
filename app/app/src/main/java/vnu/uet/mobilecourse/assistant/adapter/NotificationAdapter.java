@@ -1,11 +1,13 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Date;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +23,10 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.ISwipeToDeleteHolder;
 import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
 import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
+import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotificationHolder> {
 
@@ -64,7 +70,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return mNotifications.size();
     }
 
-    public static class NotificationHolder extends RecyclerView.ViewHolder {
+    public class NotificationHolder extends RecyclerView.ViewHolder {
 
         private ImageView mIvNotifyIcon;
         private TextView mTvNotifyTitle;
@@ -112,10 +118,33 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             switch (notification.getType()) {
                 case NotificationType.TODO:
                     String todoId = notification.getReference();
+
                     mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // TODO: navigate to view todo info
+                            TodoRepository.getInstance()
+                                    .getTodoById(todoId)
+                                    .observe(mOwner.getViewLifecycleOwner(), new Observer<StateModel<Todo>>() {
+                                        @Override
+                                        public void onChanged(StateModel<Todo> stateModel) {
+                                            switch (stateModel.getStatus()) {
+                                                case SUCCESS:
+                                                    Todo todo = stateModel.getData();
+
+                                                    Bundle bundle = new Bundle();
+                                                    bundle.putParcelable("todo", todo);
+
+                                                    mNavController.navigate(R.id.action_navigation_notifications_to_navigation_modify_todo, bundle);
+
+                                                    break;
+
+                                                case ERROR:
+                                                    Toast.makeText(mOwner.getContext(), stateModel.getError().getMessage(), Toast.LENGTH_LONG).show();
+                                                    stateModel.getError().printStackTrace();
+                                                    break;
+                                            }
+                                        }
+                                    });
                         }
                     });
                     break;

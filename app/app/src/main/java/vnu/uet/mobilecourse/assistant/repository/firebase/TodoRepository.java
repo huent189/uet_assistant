@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.database.DAO.TodoDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.TodoListDAO;
-import vnu.uet.mobilecourse.assistant.exception.InvalidInputException;
+import vnu.uet.mobilecourse.assistant.exception.OverrideDocumentException;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
@@ -29,7 +29,7 @@ public class TodoRepository implements ITodoRepository {
     private TodoDAO mTodoDao;
     private TodoListDAO mListDao;
 
-    public TodoRepository() {
+    private TodoRepository() {
         mTodoDao = new TodoDAO();
         mListDao = new TodoListDAO();
 
@@ -59,9 +59,19 @@ public class TodoRepository implements ITodoRepository {
         return new DeepTodoListsStateLiveData(mListLiveData, mTodoLiveData);
     }
 
+    public IStateLiveData<Todo> getTodoById(String todoId) {
+        return mTodoDao.read(todoId);
+    }
+
     @Override
     public IStateLiveData<Todo> addTodo(Todo todo) {
-        return new ValidationAddTodoLiveData(todo);
+        return new ValidationTodoLiveData(todo) {
+
+            @Override
+            protected StateLiveData<Todo> onAccess() {
+                return mTodoDao.add(todo.getId(), todo);
+            }
+        };
     }
 
     @Override
@@ -91,80 +101,67 @@ public class TodoRepository implements ITodoRepository {
         return mListDao.update(id, changes);
     }
 
-    public class ValidationAddTodoLiveData extends StateMediatorLiveData<Todo> {
+    public abstract class ValidationTodoLiveData extends StateMediatorLiveData<Todo> {
 
-        public ValidationAddTodoLiveData(Todo todo) {
+        ValidationTodoLiveData(Todo todo) {
             postLoading();
 
-            if (shallowValidate(todo)) {
-                addSource(mTodoLiveData, new Observer<StateModel<List<Todo>>>() {
-                    @Override
-                    public void onChanged(StateModel<List<Todo>> stateModel) {
-                        switch (stateModel.getStatus()) {
-                            case ERROR:
-                                postError(stateModel.getError());
-                                break;
+            addSource(mTodoLiveData, new Observer<StateModel<List<Todo>>>() {
+                @Override
+                public void onChanged(StateModel<List<Todo>> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case ERROR:
+                            postError(stateModel.getError());
+                            break;
 
-                            case LOADING:
-                                postLoading();
-                                break;
+                        case LOADING:
+                            postLoading();
+                            break;
 
-                            case SUCCESS:
-                                removeSource(mTodoLiveData);
+                        case SUCCESS:
+                            removeSource(mTodoLiveData);
 
-                                boolean isExist = stateModel.getData()
-                                        .stream()
-                                        .filter(item -> item.getTodoListId().equals(todo.getTodoListId())
-                                                && !item.getId().equals(todo.getId()))
-                                        .anyMatch(item -> item.getTitle().equals(todo.getTitle()));
+                            String title = todo.getTitle();
+                            String todoListId = todo.getTodoListId();
+                            String todoId = todo.getId();
 
-                                if (!isExist) {
-                                    StateLiveData<Todo> addLiveData = mTodoDao.add(todo.getId(), todo);
+                            boolean isExist = stateModel.getData()
+                                    .stream()
+                                    .filter(item -> item.getTodoListId().equals(todoListId)
+                                            && !item.getId().equals(todoId))
+                                    .anyMatch(item -> item.getTitle().equals(title));
 
-                                    addSource(addLiveData, new Observer<StateModel<Todo>>() {
-                                        @Override
-                                        public void onChanged(StateModel<Todo> stateModel) {
-                                            switch (stateModel.getStatus()) {
-                                                case LOADING:
-                                                    postLoading();
-                                                    break;
+                            if (!isExist) {
+                                StateLiveData<Todo> addLiveData = onAccess();
 
-                                                case ERROR:
-                                                    postError(stateModel.getError());
-                                                    break;
+                                addSource(addLiveData, new Observer<StateModel<Todo>>() {
+                                    @Override
+                                    public void onChanged(StateModel<Todo> stateModel) {
+                                        switch (stateModel.getStatus()) {
+                                            case LOADING:
+                                                postLoading();
+                                                break;
 
-                                                case SUCCESS:
-                                                    postSuccess(stateModel.getData());
-                                                    break;
-                                            }
+                                            case ERROR:
+                                                postError(stateModel.getError());
+                                                break;
+
+                                            case SUCCESS:
+                                                postSuccess(stateModel.getData());
+                                                break;
                                         }
-                                    });
-                                } else {
-                                    postError(new Exception("Exist"));
-                                }
+                                    }
+                                });
+                            } else {
+                                postError(new OverrideDocumentException("Đã tồn tại công việc " + title + " trong danh sách"));
+                            }
 
-                        }
                     }
-                });
-            }
+                }
+            });
         }
 
-        private boolean shallowValidate(Todo todo) {
-            String title = todo.getTitle();
-            String description = todo.getDescription();
-
-//            if (title == null || title.length() < 10) {
-//                postError(new InvalidInputException("Tiêu đề công việc tối thiểu 10 ký tự"));
-//                return false;
-//
-//            } else if (description == null || description.length() < 20) {
-//                postError(new InvalidInputException("Mô tả công việc tối thiểu 20 ký tự"));
-//                return false;
-//
-//            }
-
-            return true;
-        }
+        protected abstract StateLiveData<Todo> onAccess();
     }
 
     static class DeepTodoListsStateLiveData extends StateMediatorLiveData<List<TodoList>> {
