@@ -64,6 +64,7 @@
     <string name="title_material_no_attachment">Không có tệp đính kèm</string>
     <string name="title_material_no_desc">Không có mô tả.</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_course_general_materials">Thông báo/Tài liệu chung</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string-array name="dayOfWeek">

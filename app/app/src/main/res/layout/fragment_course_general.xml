@@ -3,11 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.course.CourseGeneralFragment">
 
     <LinearLayout
-        android:layout_marginVertical="@dimen/margin_x4"
+        android:layout_marginTop="@dimen/margin_x4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -205,6 +206,21 @@
             android:id="@+id/rvSessions"
             android:paddingHorizontal="@dimen/margin"
             android:clipToPadding="false"
+            android:layout_marginBottom="@dimen/margin_x4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <TextView
+            android:id="@+id/tvGeneralMaterials"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_x2"
+            android:layout_marginBottom="@dimen/margin"
+            android:text="@string/title_course_general_materials"
+            android:textSize="@dimen/font_size_list_title"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvGeneralMaterials"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

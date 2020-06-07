@@ -2,7 +2,9 @@ package vnu.uet.mobilecourse.assistant.viewmodel;
 
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
+import vnu.uet.mobilecourse.assistant.model.CourseOverview;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.Participant_CourseSubCol;
 import vnu.uet.mobilecourse.assistant.repository.course.CourseRepository;
@@ -21,5 +23,9 @@ public class CourseGeneralViewModel extends ViewModel {
 
     public IStateLiveData<List<Participant_CourseSubCol>> getParticipants(String courseId) {
         return mParticipantRepo.getAllParticipants(courseId);
+    }
+
+    public LiveData<List<CourseOverview>> getContent(int courseId) {
+        return mCourseRepo.getContent(courseId);
     }
 }
