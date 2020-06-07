@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,14 +90,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         }
 
-        public void bind(Notification_UserSubCol notification) {
-            String title = notification.getTitle();
-            mTvNotifyTitle.setText(title);
-
-            String desc = notification.getDescription();
-            mTvNotifyDesc.setText(desc);
-
-            Date notifyTime = DateTimeUtils.fromSecond(notification.getNotifyTime());
+        private String generateTime(long seconds) {
+            Date notifyTime = DateTimeUtils.fromSecond(seconds);
             String time = DateTimeUtils.DATE_TIME_FORMAT.format(notifyTime);
 
             long diff = Math.abs(System.currentTimeMillis() - notifyTime.getTime());
@@ -113,6 +108,46 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 time = String.format(Locale.ROOT, "%d giờ trước", diff / 1000 / 60 / 60);
             }
 
+            return time;
+        }
+
+        private void navigateTodo(String id) {
+            TodoRepository.getInstance().getTodoById(id)
+                .observe(mOwner.getViewLifecycleOwner(), new Observer<StateModel<Todo>>() {
+                    @Override
+                    public void onChanged(StateModel<Todo> stateModel) {
+                        switch (stateModel.getStatus()) {
+                            case SUCCESS:
+                                Todo todo = stateModel.getData();
+
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelable("todo", todo);
+
+                                int actionId = R.id.action_navigation_notifications_to_navigation_modify_todo;
+                                mNavController.navigate(actionId, bundle);
+
+                                break;
+
+                            case ERROR:
+                                Context context = mOwner.getContext();
+                                final String TODO_NOT_FOUND_MSG = "Công việc không tồn tại";
+
+                                Toast.makeText(context, TODO_NOT_FOUND_MSG, Toast.LENGTH_SHORT).show();
+
+                                break;
+                        }
+                    }
+                });
+        }
+
+        public void bind(Notification_UserSubCol notification) {
+            String title = notification.getTitle();
+            mTvNotifyTitle.setText(title);
+
+            String desc = notification.getDescription();
+            mTvNotifyDesc.setText(desc);
+
+            String time = generateTime(notification.getNotifyTime());
             mTvNotifyTime.setText(time);
 
             switch (notification.getType()) {
@@ -122,31 +157,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            TodoRepository.getInstance()
-                                    .getTodoById(todoId)
-                                    .observe(mOwner.getViewLifecycleOwner(), new Observer<StateModel<Todo>>() {
-                                        @Override
-                                        public void onChanged(StateModel<Todo> stateModel) {
-                                            switch (stateModel.getStatus()) {
-                                                case SUCCESS:
-                                                    Todo todo = stateModel.getData();
-
-                                                    Bundle bundle = new Bundle();
-                                                    bundle.putParcelable("todo", todo);
-
-                                                    mNavController.navigate(R.id.action_navigation_notifications_to_navigation_modify_todo, bundle);
-
-                                                    break;
-
-                                                case ERROR:
-                                                    Toast.makeText(mOwner.getContext(), stateModel.getError().getMessage(), Toast.LENGTH_LONG).show();
-                                                    stateModel.getError().printStackTrace();
-                                                    break;
-                                            }
-                                        }
-                                    });
+                            navigateTodo(todoId);
                         }
                     });
+
                     break;
 
                 case NotificationType.MATERIAL:
