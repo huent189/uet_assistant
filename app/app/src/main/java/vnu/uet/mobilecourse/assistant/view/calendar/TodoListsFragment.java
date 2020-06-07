@@ -22,6 +22,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.expandable.ExpandableTodoList;
 
 import android.os.Parcelable;
 import android.view.LayoutInflater;
@@ -169,13 +170,12 @@ public class TodoListsFragment extends Fragment {
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(getContext()) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                final int position = viewHolder.getAdapterPosition();
-
                 if (viewHolder instanceof TodoViewHolder) {
-                    saveRecycleViewState();
                     final Todo item = ((TodoViewHolder) viewHolder).getTodo();
                     mViewModel.deleteTodo(item.getId());
-                    restoreRecycleViewState();
+                } else if (viewHolder instanceof TodoListAdapter.TodoListViewHolder) {
+                    final ExpandableTodoList todoList = ((TodoListAdapter.TodoListViewHolder) viewHolder).getTodoList();
+                    mViewModel.deleteTodoList(todoList.getId(), todoList.getItems());
                 }
             }
         };

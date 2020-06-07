@@ -57,6 +57,9 @@
         <action
             android:id="@+id/action_navigation_calendar_to_navigation_todo_lists"
             app:destination="@id/navigation_todo_lists" />
+        <action
+            android:id="@+id/action_navigation_calendar_to_navigation_modify_todo"
+            app:destination="@id/navigation_modify_todo" />
     </fragment>
     <fragment
         android:id="@+id/navigation_explore_course"
@@ -142,5 +145,14 @@
         android:name="vnu.uet.mobilecourse.assistant.view.profile.MyProfileFragment"
         android:label="fragment_my_profile"
         tools:layout="@layout/fragment_my_profile" />
+    <fragment
+        android:id="@+id/navigation_modify_todo"
+        android:name="vnu.uet.mobilecourse.assistant.view.calendar.ModifyTodoFragment"
+        android:label="fragment_modify_todo"
+        tools:layout="@layout/fragment_modify_todo" >
+        <action
+            android:id="@+id/action_navigation_modify_todo_to_navigation_add_todo_list"
+            app:destination="@id/navigation_add_todo_list" />
+    </fragment>
 
 </navigation>

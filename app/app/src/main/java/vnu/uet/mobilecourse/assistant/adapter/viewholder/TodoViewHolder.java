@@ -21,11 +21,13 @@ public abstract class TodoViewHolder extends EventViewHolder implements ISwipeTo
     private boolean mShowList;
     private LifecycleOwner mLifecycleOwner;
     private CalendarViewModel mViewModel;
+    private View mView;
     private Todo mTodo;
 
     private TodoViewHolder(@NonNull View itemView, boolean showList) {
         super(itemView);
 
+        mView = itemView;
         mShowList = showList;
     }
 
@@ -45,6 +47,10 @@ public abstract class TodoViewHolder extends EventViewHolder implements ISwipeTo
 
     public Todo getTodo() {
         return mTodo;
+    }
+
+    public void setOnClickListener(View.OnClickListener listener) {
+        mView.setOnClickListener(listener);
     }
 
     @Override

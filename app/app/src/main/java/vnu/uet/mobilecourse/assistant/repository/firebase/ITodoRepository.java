@@ -42,7 +42,7 @@ public interface ITodoRepository {
      * Delete an exist TodoList and its todo_s
      * @param id of todoList
      */
-    IStateLiveData<String> deleteTodoList(String id);
+    IStateLiveData<String> deleteTodoList(String id, List<Todo> todos);
 
     /**
      * Modify an exist todo_
