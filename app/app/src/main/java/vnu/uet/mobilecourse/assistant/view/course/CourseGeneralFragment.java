@@ -14,7 +14,6 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,15 +21,12 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.CourseGeneralMaterialAdapter;
 import vnu.uet.mobilecourse.assistant.adapter.CourseSessionAdapter;
 import vnu.uet.mobilecourse.assistant.model.Course;
-import vnu.uet.mobilecourse.assistant.model.CourseOverview;
 import vnu.uet.mobilecourse.assistant.model.ICourse;
 import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
-import vnu.uet.mobilecourse.assistant.model.firebase.Participant_CourseSubCol;
 import vnu.uet.mobilecourse.assistant.util.CONST;
 import vnu.uet.mobilecourse.assistant.viewmodel.CourseGeneralViewModel;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 import static vnu.uet.mobilecourse.assistant.model.material.CourseConstant.MaterialType.GENERAL;
 
@@ -79,6 +75,14 @@ public class CourseGeneralFragment extends Fragment {
             RecyclerView rvSessions = initializeSessionsView(root);
             mViewModel.getCourseInfo(courseCode).observe(getViewLifecycleOwner(), stateModel -> {
                 switch (stateModel.getStatus()) {
+                    case LOADING:
+                        tvCredits.setText(R.string.title_loading);
+                        break;
+
+                    case ERROR:
+                        tvCredits.setText(R.string.title_error);
+                        break;
+
                     case SUCCESS:
                         CourseInfo courseInfo = stateModel.getData();
 
@@ -106,24 +110,24 @@ public class CourseGeneralFragment extends Fragment {
 
         mViewModel.getContent(courseId).observe(getViewLifecycleOwner(), courseOverviews -> {
             if (courseOverviews != null && !courseOverviews.isEmpty()) {
-                CourseOverview courseOverview = courseOverviews.get(0);
+                courseOverviews.stream()
+                        .filter(item -> item.getWeekInfo().getTitle().equals(GENERAL))
+                        .findFirst()
+                        .ifPresent(courseOverview -> {
+                            List<Material> materials = courseOverview.getMaterials();
 
-                if (courseOverview.getWeekInfo().getTitle().equals(GENERAL)) {
-                    List<Material> materials = courseOverview.getMaterials();
+                            if (materials.isEmpty()) {
+                                tvGeneralMaterials.setVisibility(View.GONE);
 
-                    if (materials.isEmpty()) {
-                        tvGeneralMaterials.setVisibility(View.GONE);
+                            } else {
+                                tvGeneralMaterials.setVisibility(View.VISIBLE);
 
-                    } else {
-                        tvGeneralMaterials.setVisibility(View.VISIBLE);
+                                CourseGeneralMaterialAdapter adapter =
+                                        new CourseGeneralMaterialAdapter(materials, CourseGeneralFragment.this);
 
-                        CourseGeneralMaterialAdapter adapter =
-                                new CourseGeneralMaterialAdapter(materials, CourseGeneralFragment.this);
-
-                        rvGeneralMaterials.setAdapter(adapter);
-                    }
-                }
-
+                                rvGeneralMaterials.setAdapter(adapter);
+                            }
+                        });
             } else {
                 tvGeneralMaterials.setVisibility(View.GONE);
             }
@@ -134,11 +138,19 @@ public class CourseGeneralFragment extends Fragment {
         TextView tvStudents = root.findViewById(R.id.tvStudents);
 
         if (courseCode.isEmpty()) {
-            tvStudents.setText("???");
+            tvStudents.setText(R.string.title_error);
 
         } else {
             mViewModel.getParticipants(courseCode).observe(getViewLifecycleOwner(), stateModel -> {
                 switch (stateModel.getStatus()) {
+                    case LOADING:
+                        tvStudents.setText(R.string.title_loading);
+                        break;
+
+                    case ERROR:
+                        tvStudents.setText(R.string.title_error);
+                        break;
+
                     case SUCCESS:
                         int participants = stateModel.getData().size();
                         tvStudents.setText(String.valueOf(participants));
