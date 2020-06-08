@@ -2,11 +2,6 @@ package vnu.uet.mobilecourse.assistant.repository.course;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
 import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.CoursesDAO;
@@ -22,7 +17,10 @@ import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CourseRepository {
     /**
@@ -78,12 +76,7 @@ public class CourseRepository {
     }
 
     public LiveData<List<Course>> getCourses() {
-        if(User.getInstance().getLastSynchonizedTime() == -1){
-            updateMyCourses();
-        }
-        else {
-            synchronizeAccessTime();
-        }
+        updateMyCourses();
         return coursesDAO.getMyCourses();
     }
 
@@ -91,8 +84,6 @@ public class CourseRepository {
      * @return courses from courses.uet.vnu.edu.vn and courses from firebase
      */
     public StateMediatorLiveData<List<ICourse>> getFullCourses() {
-        updateMyCourses();
-
         return new MergeCourseLiveData(getCourses(), infoDAO.readAll());
     }
 
@@ -177,20 +168,20 @@ public class CourseRepository {
                 });
     }
 
-    public void synchronizeAccessTime(){
-        HTTPClient.getInstance().request(CourseRequest.class).getMyCoures(User.getInstance().getUserId())
-                .enqueue(new CoursesResponseCallback<Course[]>(Course[].class) {
-                    @Override
-                    public void onSuccess(Course[] response) {
-                        for (Course course :response) {
-                            CoursesDatabase.databaseWriteExecutor.execute(() -> {
-                                coursesDAO.updateLastAccessTime(course.getId(), course.getLastAccessTime());
-                            });
-                        }
-                        User.getInstance().setLastSynchonizedTime(System.currentTimeMillis() / 1000);
-                    }
-                });
-    }
+//    public void synchronizeAccessTime(){
+//        HTTPClient.getInstance().request(CourseRequest.class).getMyCoures(User.getInstance().getUserId())
+//                .enqueue(new CoursesResponseCallback<Course[]>(Course[].class) {
+//                    @Override
+//                    public void onSuccess(Course[] response) {
+//                        for (Course course :response) {
+//                            CoursesDatabase.databaseWriteExecutor.execute(() -> {
+//                                coursesDAO.updateLastAccessTime(course.getId(), course.getLastAccessTime());
+//                            });
+//                        }
+//                        User.getInstance().setLastSynchonizedTime(System.currentTimeMillis() / 1000);
+//                    }
+//                });
+//    }
 
     static class CommonCourseLiveData extends StateMediatorLiveData<List<ICourse>> {
 

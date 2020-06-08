@@ -4,9 +4,11 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
+import vnu.uet.mobilecourse.assistant.model.User;
+
 @Entity(indices = {@Index("parentId")})
 public class InternalFile {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private int id;
     private int parentId;
     @SerializedName("filename")
@@ -43,7 +45,7 @@ public class InternalFile {
     }
 
     public String getFileUrl() {
-        return fileUrl;
+        return fileUrl +"&token=" + User.getInstance().getToken();
     }
 
     public void setFileUrl(String fileUrl) {
@@ -64,5 +66,17 @@ public class InternalFile {
 
     public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
+    }
+
+    @Override
+    public String toString() {
+        return "InternalFile{" +
+                "id=" + id +
+                ", parentId=" + parentId +
+                ", fileName='" + fileName + '\'' +
+                ", fileUrl='" + fileUrl + '\'' +
+                ", mimeType='" + mimeType + '\'' +
+                ", fileSize=" + fileSize +
+                '}';
     }
 }

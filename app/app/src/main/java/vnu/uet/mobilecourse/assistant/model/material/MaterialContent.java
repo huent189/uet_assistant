@@ -9,7 +9,7 @@ public class MaterialContent {
     @PrimaryKey
     @SerializedName("id")
     private int id;
-    @SerializedName("coursemodule")
+    @SerializedName(value = "coursemodule", alternate = {"cmid"})
     private int materialId;
     @SerializedName("course")
     private int courseId;
@@ -65,5 +65,17 @@ public class MaterialContent {
 
     public void setTimeModified(long timeModified) {
         this.timeModified = timeModified;
+    }
+
+    @Override
+    public String toString() {
+        return "MaterialContent{" +
+                "id=" + id +
+                ", materialId=" + materialId +
+                ", courseId=" + courseId +
+                ", name='" + name + '\'' +
+                ", intro='" + intro + '\'' +
+                ", timeModified=" + timeModified +
+                '}';
     }
 }

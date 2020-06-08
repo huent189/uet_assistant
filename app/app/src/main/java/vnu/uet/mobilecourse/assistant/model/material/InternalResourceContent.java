@@ -6,26 +6,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-//@Entity(indices = {@Index("materialId"), @Index("courseId")})
 @Entity(inheritSuperIndices = true)
 public class InternalResourceContent extends MaterialContent {
-//    @PrimaryKey
-//    @SerializedName("id")
-//    private int id;
-//    @SerializedName("coursemodule")
-//    private int materialId;
-//    @SerializedName("course")
-//    private int courseId;
-//    @SerializedName("name")
-//    private String name;
-//    @SerializedName("intro")
-//    private String intro;
     @SerializedName("revision")
     private int revision;
-//    @SerializedName("timemodified")
-//    private long timeModified;
     @SerializedName("contentfiles")
-//    @Relation(entityColumn = "parentId", parentColumn = "id")
     @Ignore
     private List<InternalFile> files;
 
@@ -43,5 +28,13 @@ public class InternalResourceContent extends MaterialContent {
 
     public void setFiles(List<InternalFile> files) {
         this.files = files;
+    }
+
+    @Override
+    public String toString() {
+        return "InternalResourceContent{" +
+                "revision=" + revision +
+                ", files=" + files +
+                '}';
     }
 }

@@ -9,7 +9,7 @@ public class StringUtils {
         return formatted.replaceAll(regex, "");
     }
     public static String mergePageContent(String intro, String content) {
-        if(intro.equals(content) || content.equals("\"<p>Như mô tả</p>\"")){
+        if(intro.equals(content) || content.equals("<p>Như mô tả</p>")){
             return intro;
         }
         return intro + content;

@@ -12,9 +12,14 @@ import java.lang.reflect.Type;
 
 public abstract class CoursesResponseCallback<T> implements Callback<JsonElement> {
     private Type typeParameterClass;
-
+    private String deserializeElement;
     public CoursesResponseCallback(Class<T> typeParameterClass) {
         this.typeParameterClass = typeParameterClass;
+    }
+
+    public CoursesResponseCallback(Type typeParameterClass, String deserializeElement) {
+        this.typeParameterClass = typeParameterClass;
+        this.deserializeElement = deserializeElement;
     }
 
     @Override
@@ -26,9 +31,20 @@ public abstract class CoursesResponseCallback<T> implements Callback<JsonElement
             flag = (error == null);
         }
         if(flag){
-            T successReponse = HTTPClient.getInstance().getGson().fromJson(response.body(), typeParameterClass);
+            if(deserializeElement != null){
+                JsonElement realResponse = response.body().getAsJsonObject().get(deserializeElement);
+                if(realResponse != null){
+                    onSuccess(HTTPClient.getInstance().getGson()
+                            .fromJson(realResponse, typeParameterClass));
+                }
+                else {
+                    onError(call, new Exception("structure not match"));
+                }
+            } else {
+                onSuccess(HTTPClient.getInstance().getGson().fromJson(response.body(), typeParameterClass));
+            }
             Log.d("COURSES", "onResponse: " + call.request().url());
-            onSuccess(successReponse);
+
         } else {
             onError(call, errorCodeToException(error.getAsString()));
         }
