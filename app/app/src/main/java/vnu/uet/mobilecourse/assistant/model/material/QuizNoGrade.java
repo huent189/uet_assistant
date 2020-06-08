@@ -11,7 +11,7 @@ public class QuizNoGrade extends MaterialContent {
     @SerializedName("timelimit")
     private long timeLimit;
     @SerializedName("attempts")
-    private int maximumAttemp;
+    private int maximumAttempt;
     @SerializedName("grade")
     private int maximumGrade;
     //TODO: view grade field
@@ -40,12 +40,12 @@ public class QuizNoGrade extends MaterialContent {
         this.timeLimit = timeLimit;
     }
 
-    public int getMaximumAttemp() {
-        return maximumAttemp;
+    public int getMaximumAttempt() {
+        return maximumAttempt;
     }
 
-    public void setMaximumAttemp(int maximumAttemp) {
-        this.maximumAttemp = maximumAttemp;
+    public void setMaximumAttempt(int maximumAttempt) {
+        this.maximumAttempt = maximumAttempt;
     }
 
     public int getMaximumGrade() {
@@ -62,7 +62,7 @@ public class QuizNoGrade extends MaterialContent {
                 "timeOpen=" + timeOpen +
                 ", timeClose=" + timeClose +
                 ", timeLimit=" + timeLimit +
-                ", maximumAttemp=" + maximumAttemp +
+                ", maximumAttempt=" + maximumAttempt +
                 ", maximumGrade=" + maximumGrade +
                 '}';
     }
