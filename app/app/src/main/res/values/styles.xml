@@ -18,6 +18,15 @@
 
     </style>
 
+    <style name="ErrorText">
+        <item name="android:visibility">gone</item>
+        <item name="android:layout_marginTop">@dimen/small_margin_2</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/font_size_paragraph</item>
+        <item name="android:textColor">@color/red</item>
+    </style>
+
     <style name="menu_labels_style">
         <item name="android:background">@color/dark_fade</item>
         <item name="android:padding">@dimen/small_margin</item>
@@ -179,6 +188,7 @@
         <item name="queryHint">@string/title_search_hint</item>
         <item name="android:background">@drawable/edit_text_background</item>
         <item name="closeIcon">@drawable/ic_close_24dp</item>
+        <item name="android:layout_height">@dimen/edit_text_height</item>
     </style>
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">

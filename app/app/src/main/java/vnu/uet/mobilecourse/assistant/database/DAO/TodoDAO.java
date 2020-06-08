@@ -3,6 +3,7 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 import android.util.Log;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +32,8 @@ public class TodoDAO extends FirebaseDAO<Todo> {
             // listen data from firebase
             // query all document owned by current user
             mColReference.whereEqualTo("ownerId", STUDENT_ID)
+                    // order
+//                    .orderBy("deadline", Query.Direction.DESCENDING)
                     // listen for data change
                     .addSnapshotListener((snapshots, e) -> {
                         // catch an exception

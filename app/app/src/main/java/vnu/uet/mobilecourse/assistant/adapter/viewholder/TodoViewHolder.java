@@ -6,13 +6,9 @@ import java.util.Date;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
-import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.event.IEvent;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
-import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
-import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.view.calendar.CalendarFragment;
 import vnu.uet.mobilecourse.assistant.view.calendar.TodoListsFragment;
@@ -25,11 +21,13 @@ public abstract class TodoViewHolder extends EventViewHolder implements ISwipeTo
     private boolean mShowList;
     private LifecycleOwner mLifecycleOwner;
     private CalendarViewModel mViewModel;
+    private View mView;
     private Todo mTodo;
 
     private TodoViewHolder(@NonNull View itemView, boolean showList) {
         super(itemView);
 
+        mView = itemView;
         mShowList = showList;
     }
 
@@ -49,6 +47,10 @@ public abstract class TodoViewHolder extends EventViewHolder implements ISwipeTo
 
     public Todo getTodo() {
         return mTodo;
+    }
+
+    public void setOnClickListener(View.OnClickListener listener) {
+        mView.setOnClickListener(listener);
     }
 
     @Override

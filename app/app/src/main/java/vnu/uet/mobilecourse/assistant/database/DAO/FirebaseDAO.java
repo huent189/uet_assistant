@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.IFirebaseModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -112,7 +113,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
      * @param id of needed document
      */
     protected void handleDocumentNotFound(StateMediatorLiveData<T> response, String id) {
-        response.postLoading();
+        response.postError(new DocumentNotFoundException(id));
     }
 
     /**

@@ -3,6 +3,7 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 import android.util.Log;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.List;
 import java.util.Objects;
@@ -35,6 +36,7 @@ public class NotificationDAO extends FirebaseDAO<Notification_UserSubCol> {
             // listen data from firebase
             // query all document owned by current user
             mColReference
+                    .orderBy("notifyTime", Query.Direction.DESCENDING)
                     // listen for data change
                     .addSnapshotListener((snapshots, e) -> {
                         // catch an exception

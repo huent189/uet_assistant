@@ -31,150 +31,152 @@
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/background"
-        android:padding="@dimen/margin_x2">
+        <include layout="@layout/layout_todo_basic"/>
 
-        <EditText
-            android:id="@+id/etTodoTitle"
-            style="@style/EditText"
-            android:layout_width="0dp"
-            android:hint="Tên công việc"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:background="@color/background"-->
+<!--        android:padding="@dimen/margin_x2">-->
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cvTodoListPicker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_x2"
-            app:cardBackgroundColor="@color/transparent"
-            app:cardCornerRadius="@dimen/small_radius"
-            app:cardElevation="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etTodoTitle">
+<!--        <EditText-->
+<!--            android:id="@+id/etTodoTitle"-->
+<!--            style="@style/EditText"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:hint="Tên công việc"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:background="@drawable/edit_text_background"
-                android:paddingHorizontal="@dimen/margin_x2"
-                android:paddingVertical="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+<!--        <androidx.cardview.widget.CardView-->
+<!--            android:id="@+id/cvTodoListPicker"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="@dimen/margin_x2"-->
+<!--            app:cardBackgroundColor="@color/transparent"-->
+<!--            app:cardCornerRadius="@dimen/small_radius"-->
+<!--            app:cardElevation="0dp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/etTodoTitle">-->
 
-                <TextView
-                    android:id="@+id/tvTodoListTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:hint="Chọn danh sách"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                android:background="@drawable/edit_text_background"-->
+<!--                android:paddingHorizontal="@dimen/margin_x2"-->
+<!--                android:paddingVertical="10dp"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content">-->
 
-                <ImageButton
-                    android:id="@+id/btnExpand"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/transparent_button_background"
-                    android:src="@drawable/ic_keyboard_arrow_down_24dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/tvTodoListTitle"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tvTodoListTitle" />
+<!--                <TextView-->
+<!--                    android:id="@+id/tvTodoListTitle"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:hint="Chọn danh sách"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent" />-->
 
-                <vnu.uet.mobilecourse.assistant.view.component.MaxHeightNestedScrollView
-                    android:id="@+id/svRgTodoListContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:maxHeight="100dp"
-                    android:layout_marginTop="@dimen/margin"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTodoListTitle">
+<!--                <ImageButton-->
+<!--                    android:id="@+id/btnExpand"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:background="@drawable/transparent_button_background"-->
+<!--                    android:src="@drawable/ic_keyboard_arrow_down_24dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="@+id/tvTodoListTitle"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="@+id/tvTodoListTitle" />-->
 
-                    <RadioGroup
-                        style="@style/RadioGroup"
-                        android:id="@+id/rgTodoList"
-                        android:visibility="gone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+<!--                <vnu.uet.mobilecourse.assistant.view.component.MaxHeightNestedScrollView-->
+<!--                    android:id="@+id/svRgTodoListContainer"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:maxHeight="160dp"-->
+<!--                    android:layout_marginTop="@dimen/margin"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/tvTodoListTitle">-->
 
-                </vnu.uet.mobilecourse.assistant.view.component.MaxHeightNestedScrollView>
+<!--                    <RadioGroup-->
+<!--                        style="@style/RadioGroup"-->
+<!--                        android:id="@+id/rgTodoList"-->
+<!--                        android:visibility="gone"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"/>-->
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+<!--                </vnu.uet.mobilecourse.assistant.view.component.MaxHeightNestedScrollView>-->
 
-        </androidx.cardview.widget.CardView>
+<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
 
-        <EditText
-            android:id="@+id/etDescription"
-            style="@style/EditText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_x2"
-            android:hint="Mô tả"
-            android:inputType="textMultiLine"
-            android:gravity="top"
-            android:minHeight="100dp"
-            android:paddingVertical="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cvTodoListPicker" />
+<!--        </androidx.cardview.widget.CardView>-->
 
-        <LinearLayout
-            android:id="@+id/layoutDateTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_x2"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etDescription">
+<!--        <EditText-->
+<!--            android:id="@+id/etDescription"-->
+<!--            style="@style/EditText"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="@dimen/margin_x2"-->
+<!--            android:hint="Mô tả"-->
+<!--            android:inputType="textMultiLine"-->
+<!--            android:gravity="top"-->
+<!--            android:minHeight="100dp"-->
+<!--            android:paddingVertical="10dp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/cvTodoListPicker" />-->
 
-            <Button
-                style="@style/Button"
-                android:id="@+id/btnDate"
-                android:textSize="16sp"
-                android:textAlignment="viewStart"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:layout_marginEnd="@dimen/margin_x2"
-                android:background="@drawable/primary_button_background"
-                android:drawableTint="@color/background"
-                android:paddingStart="@dimen/margin_x2"
-                android:paddingEnd="@dimen/margin"
-                android:drawableEnd="@drawable/ic_calendar_24dp"
-                android:hint="Chọn ngày"/>
+<!--        <LinearLayout-->
+<!--            android:id="@+id/layoutDateTime"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="@dimen/margin_x2"-->
+<!--            android:orientation="horizontal"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/etDescription">-->
 
-            <Button
-                style="@style/Button"
-                android:id="@+id/btnTime"
-                android:textSize="16sp"
-                android:textAlignment="viewStart"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:background="@drawable/primary_button_background"
-                android:drawableTint="@color/background"
-                android:paddingStart="@dimen/margin_x2"
-                android:paddingEnd="@dimen/margin"
-                android:drawableEnd="@drawable/ic_alarm_24dp"
-                android:hint="Chọn giờ"/>
+<!--            <Button-->
+<!--                style="@style/Button"-->
+<!--                android:id="@+id/btnDate"-->
+<!--                android:textSize="16sp"-->
+<!--                android:textAlignment="viewStart"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_marginEnd="@dimen/margin_x2"-->
+<!--                android:background="@drawable/primary_button_background"-->
+<!--                android:drawableTint="@color/background"-->
+<!--                android:paddingStart="@dimen/margin_x2"-->
+<!--                android:paddingEnd="@dimen/margin"-->
+<!--                android:drawableEnd="@drawable/ic_calendar_24dp"-->
+<!--                android:hint="Chọn ngày"/>-->
 
-        </LinearLayout>
+<!--            <Button-->
+<!--                style="@style/Button"-->
+<!--                android:id="@+id/btnTime"-->
+<!--                android:textSize="16sp"-->
+<!--                android:textAlignment="viewStart"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:background="@drawable/primary_button_background"-->
+<!--                android:drawableTint="@color/background"-->
+<!--                android:paddingStart="@dimen/margin_x2"-->
+<!--                android:paddingEnd="@dimen/margin"-->
+<!--                android:drawableEnd="@drawable/ic_alarm_24dp"-->
+<!--                android:hint="Chọn giờ"/>-->
 
-        <Button
-            android:id="@+id/btnSave"
-            style="@style/Button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_x4"
-            android:text="Lưu công việc"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutDateTime" />
+<!--        </LinearLayout>-->
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--        <Button-->
+<!--            android:id="@+id/btnSave"-->
+<!--            style="@style/Button"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="@dimen/margin_x4"-->
+<!--            android:text="Lưu công việc"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/layoutDateTime" />-->
+
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
     </androidx.core.widget.NestedScrollView>
 

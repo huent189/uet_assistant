@@ -9,10 +9,12 @@ import java.util.Map;
 
 import androidx.lifecycle.ViewModel;
 
+import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
 import vnu.uet.mobilecourse.assistant.repository.firebase.EventRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
+import vnu.uet.mobilecourse.assistant.viewmodel.expandable.ExpandableTodoList;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
 public class CalendarViewModel extends ViewModel {
@@ -65,5 +67,9 @@ public class CalendarViewModel extends ViewModel {
 
     public IStateLiveData<String> deleteTodo(String id) {
         return mTodoRepo.deleteTodo(id);
+    }
+
+    public IStateLiveData<String> deleteTodoList(String id, List<Todo> todos) {
+        return mTodoRepo.deleteTodoList(id, todos);
     }
 }

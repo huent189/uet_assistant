@@ -11,7 +11,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/ivMaterialIcon"
             android:contentDescription="@string/material_description_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,10 +29,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingVertical="@dimen/margin_x2"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
+            app:layout_constraintBottom_toBottomOf="@+id/ivMaterialIcon"
             app:layout_constraintEnd_toStartOf="@+id/ivTaskStatus"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="@+id/imageView" />
+            app:layout_constraintStart_toEndOf="@+id/ivMaterialIcon"
+            app:layout_constraintTop_toTopOf="@+id/ivMaterialIcon" />
 
         <ImageView
             android:id="@+id/ivTaskStatus"

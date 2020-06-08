@@ -3,15 +3,10 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 import android.util.Log;
 
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
-import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
-import vnu.uet.mobilecourse.assistant.exception.MultipleDocumentsException;
 import vnu.uet.mobilecourse.assistant.model.firebase.IFirebaseModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;

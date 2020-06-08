@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.StrikethroughSpan;
 import android.view.View;
@@ -78,8 +79,6 @@ public class DailyEventAdapter extends RecyclerView.Adapter<EventViewHolder> {
                     }
                 };
 
-
-
                 break;
 
             default:
@@ -102,6 +101,21 @@ public class DailyEventAdapter extends RecyclerView.Adapter<EventViewHolder> {
         final IEvent event = mDailyList.get(position);
 
         holder.bind(event);
+
+        if (holder instanceof TodoViewHolder && event instanceof Todo) {
+            TodoViewHolder todoViewHolder = (TodoViewHolder) holder;
+            Todo todo = (Todo) event;
+
+            todoViewHolder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("todo", todo);
+
+                    mNavController.navigate(R.id.action_navigation_calendar_to_navigation_modify_todo, bundle);
+                }
+            });
+        }
     }
 
     @Override

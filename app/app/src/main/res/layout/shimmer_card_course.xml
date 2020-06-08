@@ -20,7 +20,7 @@
                 android:layout_width="340dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/margin"
-                android:src="@drawable/ic_image_56dp"
+                android:src="@drawable/ic_image_32dp"
                 android:tint="@color/background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

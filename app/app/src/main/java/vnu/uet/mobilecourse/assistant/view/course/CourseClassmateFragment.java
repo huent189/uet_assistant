@@ -92,7 +92,6 @@ public class CourseClassmateFragment extends Fragment {
         MenuItem searchItem = menu.findItem(R.id.action_search);
 
         SearchView searchView = (SearchView) searchItem.getActionView();
-
 //        Drawable background = ContextCompat.getDrawable(getActivity(), R.drawable.edit_text_background);
 //        searchView.setBackground(background);
 

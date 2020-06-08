@@ -110,7 +110,7 @@
 <!--        android:layout_gravity="bottom|end"-->
 <!--        android:layout_marginEnd="@dimen/margin_x3"-->
 <!--        android:layout_marginBottom="@dimen/margin_x3"-->
-<!--        android:src="@drawable/ic_language_24dp"-->
+<!--        android:src="@drawable/ic_language_32dp"-->
 <!--        android:tint="@color/white" />-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -35,6 +35,8 @@ public class CoursesFragment extends Fragment {
 
     private int mPrevCoursePositionForAll, mPrevCoursePositionForRecently;
 
+    private AllCoursesAdapter mCoursesAdapter;
+
     private LinearLayoutManager mAllLayoutManager, mRecentlyLayoutManager;
 
 
@@ -92,8 +94,8 @@ public class CoursesFragment extends Fragment {
                         rvAllCourses.setVisibility(View.VISIBLE);
                     }
 
-                    AllCoursesAdapter adapter = new AllCoursesAdapter(stateModel.getData(), CoursesFragment.this);
-                    rvAllCourses.setAdapter(adapter);
+                    mCoursesAdapter = new AllCoursesAdapter(stateModel.getData(), CoursesFragment.this);
+                    rvAllCourses.setAdapter(mCoursesAdapter);
 
                     // restore scroll position
                     mAllLayoutManager.scrollToPosition(mPrevCoursePositionForAll);
@@ -195,7 +197,7 @@ public class CoursesFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-//                adapter.getFilter().filter(newText);
+                mCoursesAdapter.getFilter().filter(newText);
                 return false;
             }
         });

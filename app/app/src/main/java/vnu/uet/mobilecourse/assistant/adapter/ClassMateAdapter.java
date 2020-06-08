@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.StudentViewHolder;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.Participant_CourseSubCol;
 
 public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> implements Filterable {
@@ -33,8 +34,8 @@ public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> im
     private Filter mFilter;
 
     public ClassMateAdapter(List<Participant_CourseSubCol> classMates, Fragment owner) {
-        this.mClassMates = classMates;
-        this.mFullList = new ArrayList<>(classMates);
+        this.mClassMates = new ArrayList<>(classMates);
+        this.mFullList = classMates;
         this.mOwner = owner;
         this.mFilter = new ClassMateFilter();
     }
@@ -62,13 +63,18 @@ public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> im
         holder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("name", current.getName());
-                bundle.putString("code", current.getCode());
-                bundle.putString("avatar", current.getAvatar());
-                bundle.putBoolean("active", current.isActive());
+                if (current.getCode().equals(User.getInstance().getStudentId())) {
+                    mNavController.navigate(R.id.action_navigation_explore_course_to_navigation_my_profile);
 
-                mNavController.navigate(R.id.action_navigation_explore_course_to_navigation_friend_profile, bundle);
+                } else {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("name", current.getName());
+                    bundle.putString("code", current.getCode());
+                    bundle.putString("avatar", current.getAvatar());
+                    bundle.putBoolean("active", current.isActive());
+
+                    mNavController.navigate(R.id.action_navigation_explore_course_to_navigation_friend_profile, bundle);
+                }
             }
         });
     }
@@ -83,46 +89,20 @@ public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> im
         return mFilter;
     }
 
-//    class ClassMateViewHolder extends RecyclerView.ViewHolder {
-//        private CircleImageView mCivAvatar;
-//        private TextView mTvClassMateName;
-//        private TextView mTvClassMateId;
-//        private Button mBtnChat;
-//
-//        ClassMateViewHolder(@NonNull View view) {
-//            super(view);
-//
-//            mCivAvatar = view.findViewById(R.id.civAvatar);
-//            mTvClassMateName = view.findViewById(R.id.tvName);
-//            mTvClassMateId = view.findViewById(R.id.tvId);
-//            mBtnChat = view.findViewById(R.id.btnChat);
-//
-//            view.setOnClickListener(v ->
-//                    mNavController.navigate(
-//                            R.id.action_navigation_explore_course_to_navigation_friend_profile
-//                    )
-//            );
-//        }
-//
-//        void bind(String classMate) {
-//            mTvClassMateName.setText(classMate);
-//        }
-//    }
-
-    public class ClassMateFilter extends Filter {
+    public class ClassMateFilter extends MyFilter<Participant_CourseSubCol> {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<String> filteredList = new ArrayList<>();
+            List<Participant_CourseSubCol> filteredList;
 
-//            if (constraint == null || constraint.length() == 0)
-//                filteredList = new ArrayList<>(mFullList);
-//            else {
-//                final String filterPattern = constraint.toString().toLowerCase().trim();
-//
-//                filteredList = mFullList.stream()
-//                        .filter(i -> i.toLowerCase().contains(filterPattern))
-//                        .collect(Collectors.toList());
-//            }
+            if (constraint == null || constraint.length() == 0)
+                filteredList = new ArrayList<>(mFullList);
+            else {
+                final String filterPattern = constraint.toString().trim();
+
+                filteredList = mFullList.stream()
+                        .filter(i -> i.getCode().contains(filterPattern) || i.getName().contains(filterPattern))
+                        .collect(Collectors.toList());
+            }
 
             FilterResults results = new FilterResults();
             results.values = filteredList;
@@ -132,18 +112,7 @@ public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> im
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            mClassMates = new ArrayList<>();
-
-//            if (results.values instanceof List) {
-//                List list = (List) results.values;
-//
-//                for (Object item : list) {
-//                    if (item instanceof String) {
-//                        mClassMates.add((String) item);
-//                    }
-//                }
-//            }
-
+            mClassMates = getListFromResults(results);
             notifyDataSetChanged();
         }
     }

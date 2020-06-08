@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,21 +64,38 @@ public class NotificationsFragment extends Fragment {
 
     private void initializeNotificationListView(View root) {
         mRvNotifications = root.findViewById(R.id.rvNotifications);
-
-        mRvNotifications.setAdapter(mNotificationAdapter);
         mRvNotifications.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        mViewModel.getNotifications().observe(getViewLifecycleOwner(), new Observer<StateModel<List<Notification_UserSubCol>>>() {
-            @Override
-            public void onChanged(StateModel<List<Notification_UserSubCol>> stateModel) {
-                switch (stateModel.getStatus()) {
-                    case SUCCESS:
-                        List<Notification_UserSubCol> notifications = stateModel.getData();
+        ImageView ivEmpty = root.findViewById(R.id.ivEmpty);
+
+        ShimmerFrameLayout sflNotifications = root.findViewById(R.id.sflNotifications);
+        sflNotifications.startShimmerAnimation();
+
+        mViewModel.getNotifications().observe(getViewLifecycleOwner(), stateModel -> {
+            switch (stateModel.getStatus()) {
+                case LOADING:
+                    sflNotifications.setVisibility(View.VISIBLE);
+                    ivEmpty.setVisibility(View.GONE);
+                    mRvNotifications.setVisibility(View.GONE);
+                    break;
+
+                case SUCCESS:
+                    List<Notification_UserSubCol> notifications = stateModel.getData();
+
+                    if (notifications.isEmpty()) {
+                        ivEmpty.setVisibility(View.VISIBLE);
+                        mRvNotifications.setVisibility(View.GONE);
+                    } else {
                         mNotificationAdapter = new NotificationAdapter(notifications, NotificationsFragment.this);
                         mRvNotifications.setAdapter(mNotificationAdapter);
 
-                        break;
-                }
+                        ivEmpty.setVisibility(View.GONE);
+                        mRvNotifications.setVisibility(View.VISIBLE);
+                    }
+
+                    sflNotifications.setVisibility(View.GONE);
+
+                    break;
             }
         });
     }

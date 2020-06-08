@@ -21,7 +21,7 @@ public class FirebaseUserRepository {
         return instance;
     }
 
-    public FirebaseUserRepository() {
+    private FirebaseUserRepository() {
         mDao = new UserDAO();
         mCache = new FirebaseUserCache();
     }

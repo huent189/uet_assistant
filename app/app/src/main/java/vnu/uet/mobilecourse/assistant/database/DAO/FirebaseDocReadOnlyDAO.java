@@ -14,7 +14,7 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 public abstract class FirebaseDocReadOnlyDAO<T extends IFirebaseModel> implements IFirebaseReadOnlyDAO<T> {
     protected static final String TAG = FirebaseDocReadOnlyDAO.class.getSimpleName();
 
-    private CollectionReference mColReference;
+    protected CollectionReference mColReference;
 
     /**
      * DAO usually interact in an collection/sub collection

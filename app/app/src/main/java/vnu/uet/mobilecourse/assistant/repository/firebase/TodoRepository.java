@@ -7,8 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.database.DAO.TodoDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.TodoListDAO;
+import vnu.uet.mobilecourse.assistant.exception.OverrideDocumentException;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
@@ -27,7 +29,7 @@ public class TodoRepository implements ITodoRepository {
     private TodoDAO mTodoDao;
     private TodoListDAO mListDao;
 
-    public TodoRepository() {
+    private TodoRepository() {
         mTodoDao = new TodoDAO();
         mListDao = new TodoListDAO();
 
@@ -57,9 +59,19 @@ public class TodoRepository implements ITodoRepository {
         return new DeepTodoListsStateLiveData(mListLiveData, mTodoLiveData);
     }
 
+    public IStateLiveData<Todo> getTodoById(String todoId) {
+        return mTodoDao.read(todoId);
+    }
+
     @Override
     public IStateLiveData<Todo> addTodo(Todo todo) {
-        return mTodoDao.add(todo.getId(), todo);
+        return new ValidationTodoLiveData(todo) {
+
+            @Override
+            protected StateLiveData<Todo> onAccess() {
+                return mTodoDao.add(todo.getId(), todo);
+            }
+        };
     }
 
     @Override
@@ -73,7 +85,9 @@ public class TodoRepository implements ITodoRepository {
     }
 
     @Override
-    public IStateLiveData<String> deleteTodoList(String id) {
+    public IStateLiveData<String> deleteTodoList(String id, List<Todo> todos) {
+        todos.forEach(todo -> deleteTodo(todo.getId()));
+
         return mListDao.delete(id);
     }
 
@@ -85,6 +99,69 @@ public class TodoRepository implements ITodoRepository {
     @Override
     public IStateLiveData<String> modifyTodoList(String id, Map<String, Object> changes) {
         return mListDao.update(id, changes);
+    }
+
+    public abstract class ValidationTodoLiveData extends StateMediatorLiveData<Todo> {
+
+        ValidationTodoLiveData(Todo todo) {
+            postLoading();
+
+            addSource(mTodoLiveData, new Observer<StateModel<List<Todo>>>() {
+                @Override
+                public void onChanged(StateModel<List<Todo>> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case ERROR:
+                            postError(stateModel.getError());
+                            break;
+
+                        case LOADING:
+                            postLoading();
+                            break;
+
+                        case SUCCESS:
+                            removeSource(mTodoLiveData);
+
+                            String title = todo.getTitle();
+                            String todoListId = todo.getTodoListId();
+                            String todoId = todo.getId();
+
+                            boolean isExist = stateModel.getData()
+                                    .stream()
+                                    .filter(item -> item.getTodoListId().equals(todoListId)
+                                            && !item.getId().equals(todoId))
+                                    .anyMatch(item -> item.getTitle().equals(title));
+
+                            if (!isExist) {
+                                StateLiveData<Todo> addLiveData = onAccess();
+
+                                addSource(addLiveData, new Observer<StateModel<Todo>>() {
+                                    @Override
+                                    public void onChanged(StateModel<Todo> stateModel) {
+                                        switch (stateModel.getStatus()) {
+                                            case LOADING:
+                                                postLoading();
+                                                break;
+
+                                            case ERROR:
+                                                postError(stateModel.getError());
+                                                break;
+
+                                            case SUCCESS:
+                                                postSuccess(stateModel.getData());
+                                                break;
+                                        }
+                                    }
+                                });
+                            } else {
+                                postError(new OverrideDocumentException("Đã tồn tại công việc " + title + " trong danh sách"));
+                            }
+
+                    }
+                }
+            });
+        }
+
+        protected abstract StateLiveData<Todo> onAccess();
     }
 
     static class DeepTodoListsStateLiveData extends StateMediatorLiveData<List<TodoList>> {

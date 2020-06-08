@@ -110,6 +110,7 @@ public class Todo implements Parcelable, IFirebaseModel, IEvent {
         dest.writeString(description);
         dest.writeLong(deadline);
         dest.writeInt(completed ? 1 : 0);
+        dest.writeString(category);
     }
 
     public Todo(Parcel in) {
@@ -120,6 +121,7 @@ public class Todo implements Parcelable, IFirebaseModel, IEvent {
         description = in.readString();
         deadline = in.readInt();
         completed = in.readInt() == 1;
+        category = in.readString();
     }
 
     public static final Creator<Todo> CREATOR = new Creator<Todo>() {

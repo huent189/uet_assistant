@@ -4,6 +4,6 @@ import java.io.IOException;
 
 public class NoConnectivityException extends IOException {
     public NoConnectivityException() {
-        super("Internet is unavalable");
+        super("Internet is unavailable");
     }
 }

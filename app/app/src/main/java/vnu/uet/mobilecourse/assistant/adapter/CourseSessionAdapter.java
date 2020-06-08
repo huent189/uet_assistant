@@ -1,36 +1,27 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.model.Course;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.view.course.CourseGeneralFragment;
-import vnu.uet.mobilecourse.assistant.view.course.CoursesFragment;
 
 public class CourseSessionAdapter extends RecyclerView.Adapter<CourseSessionAdapter.ViewHolder> {
 
     private List<CourseSession> mSessions;
     private CourseGeneralFragment mOwner;
-    private NavController mNavController;
 
     public CourseSessionAdapter(List<CourseSession> sessions, CourseGeneralFragment owner) {
-        this.mSessions = sessions;
+        this.mSessions = new ArrayList<>(sessions);
+        mSessions.addAll(sessions);
         this.mOwner = owner;
     }
 
@@ -40,16 +31,7 @@ public class CourseSessionAdapter extends RecyclerView.Adapter<CourseSessionAdap
         View view = mOwner.getLayoutInflater()
                 .inflate(R.layout.card_course_session, parent, false);
 
-        ViewHolder holder = new ViewHolder(view);
-
-        Activity activity = mOwner.getActivity();
-
-        if (activity != null) {
-            mNavController = Navigation
-                    .findNavController(activity, R.id.nav_host_fragment);
-        }
-
-        return holder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -63,7 +45,7 @@ public class CourseSessionAdapter extends RecyclerView.Adapter<CourseSessionAdap
         return mSessions.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView mTvDayOfWeek;
         private TextView mTvSessionTime;
