@@ -5,24 +5,10 @@ import com.google.gson.annotations.SerializedName;
 //@Entity(indices = {@Index("materialId"), @Index("courseId")})
 @Entity(inheritSuperIndices = true)
 public class ExternalResourceContent extends MaterialContent {
-//    @PrimaryKey
-//    @SerializedName("id")
-//    private int id;
-//    @SerializedName("coursemodule")
-//    private int materialId;
-//    @SerializedName("course")
-//    private int courseId;
-//    @SerializedName("name")
-//    private String name;
-//    @SerializedName("intro")
-//    private String intro;
     @SerializedName("externalurl")
     private String fileUrl;
     @SerializedName("revision")
     private int revision;
-//    @SerializedName("timemodified")
-//    private long timeModified;
-
     public String getFileUrl() {
         return fileUrl;
     }
@@ -37,5 +23,13 @@ public class ExternalResourceContent extends MaterialContent {
 
     public void setRevision(int revision) {
         this.revision = revision;
+    }
+
+    @Override
+    public String toString() {
+        return "ExternalResourceContent{" +
+                "fileUrl='" + fileUrl + '\'' +
+                ", revision=" + revision +
+                '}';
     }
 }

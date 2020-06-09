@@ -2,20 +2,8 @@ package vnu.uet.mobilecourse.assistant.model.material;
 
 import androidx.room.Entity;
 import com.google.gson.annotations.SerializedName;
-//@Entity(indices = {@Index("materialId"), @Index("courseId")})
 @Entity(inheritSuperIndices = true)
 public class AssignmentContent extends MaterialContent {
-//    @PrimaryKey
-//    @SerializedName("id")
-//    private int id;
-//    @SerializedName("coursemodule")
-//    private int materialId;
-//    @SerializedName("course")
-//    private int courseId;
-//    @SerializedName("name")
-//    private String name;
-//    @SerializedName("intro")
-//    private String intro;
     @SerializedName("duedate")
     private long deadline;
     @SerializedName("allowsubmissionsfromdate")
@@ -23,7 +11,7 @@ public class AssignmentContent extends MaterialContent {
     @SerializedName("grade")
     private int maximumGrade;
     @SerializedName("completionsubmit")
-    private boolean isCompleted;
+    private int isCompleted;
     @SerializedName("maxattempts")
     private int maxAttemptAllowed;
     //TODO: submission field
@@ -52,12 +40,12 @@ public class AssignmentContent extends MaterialContent {
         this.maximumGrade = maximumGrade;
     }
 
-    public boolean isCompleted() {
+    public int getIsCompleted() {
         return isCompleted;
     }
 
-    public void setCompleted(boolean completed) {
-        isCompleted = completed;
+    public void setIsCompleted(int isCompleted) {
+        this.isCompleted = isCompleted;
     }
 
     public int getMaxAttemptAllowed() {
@@ -66,5 +54,16 @@ public class AssignmentContent extends MaterialContent {
 
     public void setMaxAttemptAllowed(int maxAttemptAllowed) {
         this.maxAttemptAllowed = maxAttemptAllowed;
+    }
+
+    @Override
+    public String toString() {
+        return "AssignmentContent{" +
+                "deadline=" + deadline +
+                ", startDate=" + startDate +
+                ", maximumGrade=" + maximumGrade +
+                ", isCompleted=" + isCompleted +
+                ", maxAttemptAllowed=" + maxAttemptAllowed +
+                '}';
     }
 }

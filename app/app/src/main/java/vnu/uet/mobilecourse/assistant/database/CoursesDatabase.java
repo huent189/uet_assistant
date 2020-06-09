@@ -18,8 +18,8 @@ import java.util.concurrent.Executors;
 
 @Database(entities = {Course.class, Grade.class, WeeklyMaterial.class, Material.class, AssignmentContent.class,
                     ExternalResourceContent.class, InternalFile.class, InternalResourceContent.class,
-                    MaterialContent.class, PageContent.class, QuizContent.class},
-        version = 3, exportSchema = true)
+                    MaterialContent.class, PageContent.class, QuizNoGrade.class},
+        version = 6)
 public abstract class CoursesDatabase extends RoomDatabase {
     private static volatile CoursesDatabase instance;
     private static final int NUMBER_OF_THREADS = 4;
@@ -63,7 +63,14 @@ public abstract class CoursesDatabase extends RoomDatabase {
                                 public void migrate(@NonNull SupportSQLiteDatabase supportSQLiteDatabase) {
                                     supportSQLiteDatabase.execSQL("ALTER TABLE `Course` ADD COLUMN `progress` REAL DEFAULT 0 NOT NULL");
                                 }
+                            }, new Migration(3, 4) {
+                                @Override
+                                public void migrate(@NonNull SupportSQLiteDatabase supportSQLiteDatabase) {
+
+                                }
                             })
+                            .fallbackToDestructiveMigrationOnDowngrade()
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }

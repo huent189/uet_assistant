@@ -11,6 +11,7 @@ public class CourseConstant {
         public static final String QUIZ = "quiz";
         //TODO: create entity
         public static final String ONLINE_LEARNING = "bigbluebuttonbn";
+        public static final String LABEL = "label";
 
         public static final String GENERAL = "General";
     }

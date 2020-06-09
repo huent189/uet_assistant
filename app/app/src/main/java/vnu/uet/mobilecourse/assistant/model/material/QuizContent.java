@@ -1,69 +1,20 @@
 package vnu.uet.mobilecourse.assistant.model.material;
 
-import androidx.room.Entity;
-import com.google.gson.annotations.SerializedName;
-//@Entity(indices = {@Index("materialId"), @Index("courseId")})
-@Entity(inheritSuperIndices = true)
-public class QuizContent extends MaterialContent {
-//    @SerializedName("id")
-//    private int id;
-//    @SerializedName("coursemodule")
-//    private int materialId;
-//    @SerializedName("course")
-//    private int courseId;
-//    @SerializedName("name")
-//    private String name;
-//    @SerializedName("intro")
-//    private String intro;
-    @SerializedName("timeopen")
-    private long timeOpen;
-    @SerializedName("timeclose")
-    private long timeClose;
-    @SerializedName("timelimit")
-    private long timeLimit;
-    @SerializedName("attempts")
-    private int maximumAttempt;
-    @SerializedName("grade")
-    private int maximumGrade;
-    //TODO: view grade field
+public class QuizContent extends QuizNoGrade {
+    private int userGrade;
 
-    public long getTimeOpen() {
-        return timeOpen;
+    public int getUserGrade() {
+        return userGrade;
     }
 
-    public void setTimeOpen(long timeOpen) {
-        this.timeOpen = timeOpen;
+    public void setUserGrade(int userGrade) {
+        this.userGrade = userGrade;
     }
 
-    public long getTimeClose() {
-        return timeClose;
-    }
-
-    public void setTimeClose(long timeClose) {
-        this.timeClose = timeClose;
-    }
-
-    public long getTimeLimit() {
-        return timeLimit;
-    }
-
-    public void setTimeLimit(long timeLimit) {
-        this.timeLimit = timeLimit;
-    }
-
-    public int getMaximumAttempt() {
-        return maximumAttempt;
-    }
-
-    public void setMaximumAttempt(int maximumAttempt) {
-        this.maximumAttempt = maximumAttempt;
-    }
-
-    public int getMaximumGrade() {
-        return maximumGrade;
-    }
-
-    public void setMaximumGrade(int maximumGrade) {
-        this.maximumGrade = maximumGrade;
+    @Override
+    public String toString() {
+        return "QuizContent{" +
+                "userGrade=" + userGrade +
+                '}';
     }
 }
