@@ -74,6 +74,92 @@
                 android:textColor="@color/primary"
                 android:layout_marginTop="@dimen/margin_x4"
                 android:layout_marginBottom="@dimen/margin_x2"
+                android:text="Thời gian bắt đầu" />
+
+            <TextView
+                android:id="@+id/tvStartTime"
+                android:textSize="@dimen/font_size_item_title"
+                android:text="@string/title_loading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_size_list_title"
+                android:textColor="@color/primary"
+                android:layout_marginTop="@dimen/margin_x4"
+                android:layout_marginBottom="@dimen/margin_x2"
+                android:text="Thời gian kết thúc" />
+
+            <TextView
+                android:id="@+id/tvDeadline"
+                android:textSize="@dimen/font_size_item_title"
+                android:text="@string/title_loading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/margin_x4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_size_list_title"
+                        android:textColor="@color/primary"
+                        android:layout_marginBottom="@dimen/margin_x2"
+                        android:text="Thang điểm" />
+
+                    <TextView
+                        android:id="@+id/tvMaxGrade"
+                        android:textSize="@dimen/font_size_item_title"
+                        android:text="@string/title_loading"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_size_list_title"
+                        android:textColor="@color/primary"
+                        android:layout_marginBottom="@dimen/margin_x2"
+                        android:text="Số lần làm bài" />
+
+                    <TextView
+                        android:id="@+id/tvMaxAttempt"
+                        android:textSize="@dimen/font_size_item_title"
+                        android:text="@string/title_loading"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_size_list_title"
+                android:textColor="@color/primary"
+                android:layout_marginTop="@dimen/margin_x4"
+                android:layout_marginBottom="@dimen/margin_x2"
                 android:text="@string/material_attachment_title" />
 
             <LinearLayout
@@ -99,6 +185,22 @@
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_size_list_title"
+                android:textColor="@color/primary"
+                android:layout_marginTop="@dimen/margin_x4"
+                android:layout_marginBottom="@dimen/margin_x2"
+                android:text="@string/material_modify_time_title" />
+
+            <TextView
+                android:id="@+id/tvModifyTime"
+                android:textSize="@dimen/font_size_item_title"
+                android:text="@string/title_loading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 

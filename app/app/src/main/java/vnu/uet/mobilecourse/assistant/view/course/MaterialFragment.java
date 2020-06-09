@@ -13,17 +13,23 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import vnu.uet.mobilecourse.assistant.model.material.AssignmentContent;
 import vnu.uet.mobilecourse.assistant.model.material.MaterialContent;
+import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.MaterialViewModel;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.Material;
 
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.util.Date;
 
 public class MaterialFragment extends Fragment {
 
@@ -49,6 +55,13 @@ public class MaterialFragment extends Fragment {
 
         TextView tvStatus = root.findViewById(R.id.tvStatus);
 
+        TextView tvModifyTime = root.findViewById(R.id.tvModifyTime);
+
+        TextView tvStartTime = root.findViewById(R.id.tvStartTime);
+        TextView tvDeadline = root.findViewById(R.id.tvDeadline);
+        TextView tvMaxGrade = root.findViewById(R.id.tvMaxGrade);
+        TextView tvMaxAttempt = root.findViewById(R.id.tvMaxAttempt);
+
         Bundle args = getArguments();
         if (args != null && toolbar != null) {
             // get material from bundle arguments
@@ -62,8 +75,36 @@ public class MaterialFragment extends Fragment {
 
                 mViewModel.getDetailContent(materialId, type).observe(getViewLifecycleOwner(), new Observer<MaterialContent>() {
                     @Override
-                    public void onChanged(MaterialContent materialContent) {
-                        System.out.println();
+                    public void onChanged(MaterialContent content) {
+                        if (content != null) {
+                            Date modifyTime = DateTimeUtils.fromSecond(content.getTimeModified());
+                            tvModifyTime.setText(DateTimeUtils.DATE_TIME_FORMAT.format(modifyTime));
+
+                            String intro = content.getIntro();
+                            if (intro != null) {
+                                SpannableStringBuilder strBuilder = mViewModel.convertHtml(intro);
+                                tvHtml.setText(strBuilder);
+                                tvHtml.setLinksClickable(true);
+                                tvHtml.setMovementMethod(LinkMovementMethod.getInstance());
+                            }
+
+                            if (content instanceof AssignmentContent) {
+                                AssignmentContent assignmentContent = (AssignmentContent) content;
+
+                                Date startTime = DateTimeUtils.fromSecond(assignmentContent.getStartDate());
+                                tvStartTime.setText(DateTimeUtils.DATE_TIME_FORMAT.format(startTime));
+
+                                Date deadline = DateTimeUtils.fromSecond(assignmentContent.getDeadline());
+                                tvDeadline.setText(DateTimeUtils.DATE_TIME_FORMAT.format(deadline));
+
+                                String maxGrade = String.valueOf(assignmentContent.getMaximumGrade());
+                                tvMaxGrade.setText(maxGrade);
+
+                                int maxAttempt = assignmentContent.getMaxAttemptAllowed();
+                                if (maxAttempt <= 0) tvMaxAttempt.setText("Không thể làm bài");
+                                else tvMaxAttempt.setText(String.valueOf(maxAttempt));
+                            }
+                        }
                     }
                 });
 
@@ -89,13 +130,13 @@ public class MaterialFragment extends Fragment {
                 }
 
                 // setup html content description
-                String html = material.getDescription();
-                if (html != null) {
-                    SpannableStringBuilder strBuilder = mViewModel.convertHtml(html);
-                    tvHtml.setText(strBuilder);
-                    tvHtml.setLinksClickable(true);
-                    tvHtml.setMovementMethod(LinkMovementMethod.getInstance());
-                }
+//                String html = material.getDescription();
+//                if (html != null) {
+//                    SpannableStringBuilder strBuilder = mViewModel.convertHtml(html);
+//                    tvHtml.setText(strBuilder);
+//                    tvHtml.setLinksClickable(true);
+//                    tvHtml.setMovementMethod(LinkMovementMethod.getInstance());
+//                }
             }
         }
 

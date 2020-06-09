@@ -100,6 +100,8 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
                     bundle.putString("courseTitle", courseTitle);
                     bundle.putString("courseCode", courseCode);
 
+                    bundle.putParcelable("course", course);
+
                     navController
                             .navigate(R.id.action_navigation_courses_to_navigation_explore_course, bundle);
                 }
