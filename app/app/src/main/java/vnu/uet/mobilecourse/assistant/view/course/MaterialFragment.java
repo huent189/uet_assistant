@@ -6,8 +6,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -32,13 +30,13 @@ import vnu.uet.mobilecourse.assistant.model.Material;
 
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.Date;
 import java.util.List;
@@ -47,8 +45,15 @@ import java.util.Locale;
 public class MaterialFragment extends Fragment {
 
     private MaterialViewModel mViewModel;
-
     private FragmentActivity mActivity;
+
+    private TextView mTvStartTime, mTvStartTimeTitle;
+    private TextView mTvDeadline, mTvDeadlineTitle;
+    private TextView mTvLimitTime, mTvLimitTimeTitle;
+    private LinearLayout mLayoutGradeAndAttempt;
+    private TextView mTvAttachmentTitle;
+    private ShimmerFrameLayout mSflAttachments;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -64,22 +69,21 @@ public class MaterialFragment extends Fragment {
 
         TextView tvHtml = root.findViewById(R.id.tvHtml);
 
-        TextView tvAttachment = root.findViewById(R.id.tvAttachment);
-
         TextView tvStatus = root.findViewById(R.id.tvStatus);
 
         TextView tvModifyTime = root.findViewById(R.id.tvModifyTime);
 
-        TextView tvStartTime = root.findViewById(R.id.tvStartTime);
-        TextView tvStartTimeTitle = root.findViewById(R.id.tvStartTimeTitle);
+        mTvStartTime = root.findViewById(R.id.tvStartTime);
+        mTvStartTimeTitle = root.findViewById(R.id.tvStartTimeTitle);
 
-        TextView tvDeadline = root.findViewById(R.id.tvDeadline);
-        TextView tvDeadlineTitle = root.findViewById(R.id.tvDeadlineTitle);
+        mTvDeadline = root.findViewById(R.id.tvDeadline);
+        mTvDeadlineTitle = root.findViewById(R.id.tvDeadlineTitle);
 
-        TextView tvLimitTime = root.findViewById(R.id.tvLimitTime);
-        TextView tvLimitTimeTitle = root.findViewById(R.id.tvLimitTimeTitle);
+        mTvLimitTime = root.findViewById(R.id.tvLimitTime);
+        mTvLimitTimeTitle = root.findViewById(R.id.tvLimitTimeTitle);
 
-        LinearLayout layoutGradeAndAttempt = root.findViewById(R.id.layoutGradeAndAttempt);
+        mLayoutGradeAndAttempt = root.findViewById(R.id.layoutGradeAndAttempt);
+
         TextView tvMaxGrade = root.findViewById(R.id.tvMaxGrade);
         TextView tvMaxAttempt = root.findViewById(R.id.tvMaxAttempt);
 
@@ -92,6 +96,11 @@ public class MaterialFragment extends Fragment {
 
         rvAttachments.setLayoutManager(layoutManager);
 
+        mSflAttachments = root.findViewById(R.id.sflAttachments);
+        mSflAttachments.startShimmerAnimation();
+
+        mTvAttachmentTitle = root.findViewById(R.id.tvAttachmentTitle);
+
         Bundle args = getArguments();
         if (args != null && toolbar != null) {
             // get material from bundle arguments
@@ -102,31 +111,7 @@ public class MaterialFragment extends Fragment {
 
                 int materialId = material.getId();
                 String type = material.getType();
-
-                switch (type) {
-                    case CourseConstant.MaterialType.ASSIGN:
-                        tvStartTimeTitle.setVisibility(View.VISIBLE);
-                        tvStartTime.setVisibility(View.VISIBLE);
-
-                        tvDeadlineTitle.setVisibility(View.VISIBLE);
-                        tvDeadline.setVisibility(View.VISIBLE);
-
-                        layoutGradeAndAttempt.setVisibility(View.VISIBLE);
-                        break;
-
-                    case CourseConstant.MaterialType.QUIZ:
-                        tvStartTimeTitle.setVisibility(View.VISIBLE);
-                        tvStartTime.setVisibility(View.VISIBLE);
-
-                        tvDeadlineTitle.setVisibility(View.VISIBLE);
-                        tvDeadline.setVisibility(View.VISIBLE);
-
-                        tvLimitTime.setVisibility(View.VISIBLE);
-                        tvLimitTimeTitle.setVisibility(View.VISIBLE);
-
-                        layoutGradeAndAttempt.setVisibility(View.VISIBLE);
-                        break;
-                }
+                preprocessor(type);
 
                 mViewModel.getDetailContent(materialId, type).observe(getViewLifecycleOwner(), new Observer<MaterialContent>() {
                     @Override
@@ -150,10 +135,10 @@ public class MaterialFragment extends Fragment {
                                 AssignmentContent assignment = (AssignmentContent) content;
 
                                 Date startTime = DateTimeUtils.fromSecond(assignment.getStartDate());
-                                tvStartTime.setText(DateTimeUtils.DATE_TIME_FORMAT.format(startTime));
+                                mTvStartTime.setText(DateTimeUtils.DATE_TIME_FORMAT.format(startTime));
 
                                 Date deadline = DateTimeUtils.fromSecond(assignment.getDeadline());
-                                tvDeadline.setText(DateTimeUtils.DATE_TIME_FORMAT.format(deadline));
+                                mTvDeadline.setText(DateTimeUtils.DATE_TIME_FORMAT.format(deadline));
 
                                 String maxGrade = String.valueOf(assignment.getMaximumGrade());
                                 tvMaxGrade.setText(maxGrade);
@@ -169,13 +154,13 @@ public class MaterialFragment extends Fragment {
                                 QuizNoGrade quiz = (QuizNoGrade) content;
 
                                 Date startTime = DateTimeUtils.fromSecond(quiz.getTimeOpen());
-                                tvStartTime.setText(DateTimeUtils.DATE_TIME_FORMAT.format(startTime));
+                                mTvStartTime.setText(DateTimeUtils.DATE_TIME_FORMAT.format(startTime));
 
                                 Date deadline = DateTimeUtils.fromSecond(quiz.getTimeClose());
-                                tvDeadline.setText(DateTimeUtils.DATE_TIME_FORMAT.format(deadline));
+                                mTvDeadline.setText(DateTimeUtils.DATE_TIME_FORMAT.format(deadline));
 
                                 String limitTime = String.format(Locale.ROOT, "%d phút", quiz.getTimeLimit() / 60);
-                                tvLimitTime.setText(limitTime);
+                                mTvLimitTime.setText(limitTime);
 
                                 String maxGrade = String.valueOf(quiz.getMaximumGrade());
                                 tvMaxGrade.setText(maxGrade);
@@ -195,11 +180,17 @@ public class MaterialFragment extends Fragment {
                                 if (files != null) {
                                     InternalResourceAdapter adapter = new InternalResourceAdapter(files, MaterialFragment.this);
                                     rvAttachments.setAdapter(adapter);
+
+                                    rvAttachments.setVisibility(View.VISIBLE);
+                                    mSflAttachments.setVisibility(View.GONE);
                                 }
 
                             } else if (content instanceof ExternalResourceContent) {
                                 ExternalResourceAdapter adapter = new ExternalResourceAdapter(material, MaterialFragment.this);
                                 rvAttachments.setAdapter(adapter);
+
+                                rvAttachments.setVisibility(View.VISIBLE);
+                                mSflAttachments.setVisibility(View.GONE);
                             }
                         }
                     }
@@ -214,21 +205,44 @@ public class MaterialFragment extends Fragment {
                     tvStatus.setCompoundDrawablesWithIntrinsicBounds(0, 0,
                             R.drawable.ic_unchecked_circle_24dp, 0);
                 }
-
-                // get attachment
-                String attachment = material.getFileName();
-                if (attachment != null && !attachment.isEmpty()) {
-                    tvAttachment.setText(material.getFileName());
-                    tvAttachment.setOnClickListener(v -> {
-                        String fileUrl = material.getFileUrl();
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(fileUrl));
-                        mActivity.startActivity(intent);
-                    });
-                }
             }
         }
 
         return root;
+    }
+
+    private void preprocessor(String materialType) {
+        switch (materialType) {
+            case CourseConstant.MaterialType.ASSIGN:
+                mTvStartTimeTitle.setVisibility(View.VISIBLE);
+                mTvStartTime.setVisibility(View.VISIBLE);
+
+                mTvDeadlineTitle.setVisibility(View.VISIBLE);
+                mTvDeadline.setVisibility(View.VISIBLE);
+
+                mLayoutGradeAndAttempt.setVisibility(View.VISIBLE);
+                break;
+
+            case CourseConstant.MaterialType.QUIZ:
+                mTvStartTimeTitle.setVisibility(View.VISIBLE);
+                mTvStartTime.setVisibility(View.VISIBLE);
+
+                mTvDeadlineTitle.setVisibility(View.VISIBLE);
+                mTvDeadline.setVisibility(View.VISIBLE);
+
+                mTvLimitTime.setVisibility(View.VISIBLE);
+                mTvLimitTimeTitle.setVisibility(View.VISIBLE);
+
+                mLayoutGradeAndAttempt.setVisibility(View.VISIBLE);
+                break;
+
+            case CourseConstant.MaterialType.RESOURCE:
+            case CourseConstant.MaterialType.URL:
+                mTvAttachmentTitle.setVisibility(View.VISIBLE);
+                mSflAttachments.setVisibility(View.VISIBLE);
+                break;
+        }
+
     }
 
     private Toolbar initializeToolbar(View root) {

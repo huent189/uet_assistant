@@ -190,17 +190,31 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tvAttachmentTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_list_title"
+                android:visibility="gone"
                 android:paddingHorizontal="@dimen/margin_x2"
                 android:textColor="@color/primary"
                 android:layout_marginTop="@dimen/margin_x4"
                 android:layout_marginBottom="@dimen/margin_x2"
                 android:text="@string/material_attachment_title" />
 
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/sflAttachments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:paddingHorizontal="@dimen/margin">
+
+                <include layout="@layout/shimmer_card_attachment"/>
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvAttachments"
+                android:visibility="gone"
                 android:paddingHorizontal="@dimen/margin"
                 android:clipToPadding="false"
                 android:layout_width="match_parent"
