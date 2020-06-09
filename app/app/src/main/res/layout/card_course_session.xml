@@ -8,7 +8,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cvContainer"
         android:minWidth="220dp"
-        android:layout_width="wrap_content"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/background"
         app:cardCornerRadius="@dimen/small_radius">
@@ -16,7 +16,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="@drawable/edit_text_background"
             android:paddingVertical="@dimen/margin"
             android:paddingHorizontal="@dimen/margin_x2">

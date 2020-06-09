@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 
@@ -74,12 +75,21 @@ public class MaterialViewHolder extends ChildViewHolder {
         mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("material", material);
+                switch (material.getType()) {
+                    case CourseConstant.MaterialType.FORUM:
+                        Toast.makeText(mView.getContext(), "Chưa hỗ trợ", Toast.LENGTH_SHORT).show();
+                        break;
 
-                int actionId = R.id.action_navigation_explore_course_to_navigation_material;
+                    default:
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("material", material);
 
-                mNavController.navigate(actionId, bundle);
+                        int actionId = R.id.action_navigation_explore_course_to_navigation_material;
+
+                        mNavController.navigate(actionId, bundle);
+
+                        break;
+                }
             }
         });
     }
