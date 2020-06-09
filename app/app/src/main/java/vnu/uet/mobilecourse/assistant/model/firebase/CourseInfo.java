@@ -1,14 +1,11 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
 import com.google.firebase.firestore.Exclude;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import androidx.annotation.Nullable;
 import vnu.uet.mobilecourse.assistant.model.ICourse;
@@ -102,7 +99,7 @@ public class CourseInfo implements IFirebaseModel, ICourse {
 
     @Override
     public String getCode() {
-        return CONST.COURSE_PREFIX + CONST.UNDERSCORE + id.replace(CONST.SPACE, CONST.UNDERSCORE);
+        return CONST.COURSE_PREFIX + CONST.UNDERSCORE_CHAR + id.replace(CONST.SPACE_CHAR, CONST.UNDERSCORE_CHAR);
     }
 
     @Override

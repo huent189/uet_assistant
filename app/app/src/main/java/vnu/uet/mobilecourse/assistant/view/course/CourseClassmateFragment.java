@@ -63,8 +63,8 @@ public class CourseClassmateFragment extends Fragment {
             String id = args.getString("courseCode");
 
             if (id != null && !id.isEmpty()) {
-                id = id.replace(CONST.COURSE_PREFIX + CONST.UNDERSCORE, "")
-                        .replace(CONST.UNDERSCORE, CONST.SPACE);
+                id = id.replace(CONST.COURSE_PREFIX + CONST.UNDERSCORE_CHAR, "")
+                        .replace(CONST.UNDERSCORE_CHAR, CONST.SPACE_CHAR);
 
                 mViewModel.getClassMates(id).observe(getViewLifecycleOwner(), new Observer<StateModel<List<Participant_CourseSubCol>>>() {
                     @Override

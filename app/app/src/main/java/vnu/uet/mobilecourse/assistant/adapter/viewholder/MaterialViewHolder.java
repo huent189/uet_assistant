@@ -56,8 +56,12 @@ public class MaterialViewHolder extends ChildViewHolder {
                 mIvMaterialIcon.setImageResource(R.drawable.ic_image_32dp);
                 break;
 
+            case CourseConstant.MaterialType.LABEL:
+                mIvMaterialIcon.setImageResource(R.drawable.ic_text_fields_32dp);
+                break;
+
             default:
-                mIvMaterialIcon.setImageResource(R.drawable.ic_school_32dp);
+                mIvMaterialIcon.setImageResource(R.drawable.ic_widgets_32dp);
                 break;
         }
 

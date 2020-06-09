@@ -9,6 +9,7 @@ public interface CONST {
 
     String COURSE_PREFIX = "1920II";
 
-    char UNDERSCORE = '_';
-    char SPACE = ' ';
+    char LINE_BREAK_CHAR = '\n';
+    char UNDERSCORE_CHAR = '_';
+    char SPACE_CHAR = ' ';
 }

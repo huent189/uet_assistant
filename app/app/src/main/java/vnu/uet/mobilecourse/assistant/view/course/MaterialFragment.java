@@ -3,6 +3,7 @@ package vnu.uet.mobilecourse.assistant.view.course;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import vnu.uet.mobilecourse.assistant.model.material.MaterialContent;
 import vnu.uet.mobilecourse.assistant.viewmodel.MaterialViewModel;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.Material;
@@ -54,6 +56,16 @@ public class MaterialFragment extends Fragment {
 
             if (material != null) {
                 String title = material.getTitle();
+
+                int materialId = material.getId();
+                String type = material.getType();
+
+                mViewModel.getDetailContent(materialId, type).observe(getViewLifecycleOwner(), new Observer<MaterialContent>() {
+                    @Override
+                    public void onChanged(MaterialContent materialContent) {
+                        System.out.println();
+                    }
+                });
 
                 // setup toolbar title
                 toolbar.setTitle(title);

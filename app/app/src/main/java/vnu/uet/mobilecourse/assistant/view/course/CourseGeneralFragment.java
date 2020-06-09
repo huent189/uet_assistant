@@ -46,8 +46,8 @@ public class CourseGeneralFragment extends Fragment {
         if (args != null) {
             String courseCode = args.getString("courseCode");
             assert courseCode != null;
-            courseCode = courseCode.replace(CONST.COURSE_PREFIX + CONST.UNDERSCORE, "")
-                    .replace(CONST.UNDERSCORE, CONST.SPACE);
+            courseCode = courseCode.replace(CONST.COURSE_PREFIX + CONST.UNDERSCORE_CHAR, "")
+                    .replace(CONST.UNDERSCORE_CHAR, CONST.SPACE_CHAR);
 
             TextView tvCourseTitle = root.findViewById(R.id.tvCourseTitle);
             TextView tvCourseId = root.findViewById(R.id.tvCourseId);

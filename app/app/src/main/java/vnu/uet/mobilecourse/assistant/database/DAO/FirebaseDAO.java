@@ -66,7 +66,8 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
 
         // initialize output state live data with loading state
         StateModel<T> loadingState = new StateModel<>(StateStatus.LOADING);
-        StateMediatorLiveData<T> response = new StateMediatorLiveData<>(loadingState);
+        StateMediatorLiveData<T> response = new StateMediatorLiveData<>();
+        response.postLoading();
 
         // output state live data will bind with mDataList
         // when mDataList change, output from this function
