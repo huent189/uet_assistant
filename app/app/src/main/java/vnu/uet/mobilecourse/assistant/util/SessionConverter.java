@@ -7,7 +7,7 @@ import vnu.uet.mobilecourse.assistant.model.event.CourseSessionEvent;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 
 public class SessionConverter {
-    private static Date toTime(CourseSession session, Date date) {
+    public static Date toTime(CourseSession session, Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(Calendar.DAY_OF_WEEK, session.getDayOfWeek());

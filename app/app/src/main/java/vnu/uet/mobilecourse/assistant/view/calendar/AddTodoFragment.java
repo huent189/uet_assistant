@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.firestore.util.Util;
 
 import java.text.ParseException;
@@ -19,7 +18,6 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
-import vnu.uet.mobilecourse.assistant.work.RemindScheduler;
 
 public class AddTodoFragment extends TodoFragment {
 
@@ -58,7 +56,6 @@ public class AddTodoFragment extends TodoFragment {
 
                     default:
                         Toast.makeText(getContext(),"Tạo thành công", Toast.LENGTH_SHORT).show();
-                        RemindScheduler.getInstance().enqueue(mActivity, todo);
                         mNavController.navigateUp();
                 }
             });

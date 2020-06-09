@@ -51,12 +51,12 @@ public class NotificationDAO extends FirebaseDAO<Notification_UserSubCol> {
                         }
                         // query completed with snapshots
                         else {
-                            List<Notification_UserSubCol> allLists = snapshots.getDocuments().stream()
-                                    .map(snapshot -> snapshot.toObject(Notification_UserSubCol.class))
-                                    .filter(Objects::nonNull)
-                                    .collect(Collectors.toList());
+//                            List<Notification_UserSubCol> allLists = snapshots.getDocuments().stream()
+//                                    .map(snapshot -> snapshot.toObject(Notification_UserSubCol.class))
+//                                    .filter(Objects::nonNull)
+//                                    .collect(Collectors.toList());
 
-                            mDataList.postSuccess(allLists);
+//                            mDataList.postSuccess(allLists);
                         }
                     });
         }

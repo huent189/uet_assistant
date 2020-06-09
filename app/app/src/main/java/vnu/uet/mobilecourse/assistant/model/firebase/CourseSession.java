@@ -1,6 +1,6 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
-import java.util.Calendar;
+import vnu.uet.mobilecourse.assistant.util.CONST;
 
 public class CourseSession {
     /**
@@ -11,6 +11,7 @@ public class CourseSession {
     private int type;
 
     private String courseName;
+    private String courseCode;
 
     private String classroom;
 
@@ -18,6 +19,18 @@ public class CourseSession {
 
     private int dayOfWeek;
     private int start, end;
+
+    public String getId() {
+        return courseCode + CONST.UNDERSCORE_CHAR + type;
+    }
+
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
+    }
 
     public String getCourseName() {
         return courseName;
@@ -73,5 +86,18 @@ public class CourseSession {
 
     public void setEnd(int end) {
         this.end = end;
+    }
+
+    @Override
+    public String toString() {
+        return "CourseSession{" +
+                "type=" + type +
+                ", courseName='" + courseName + '\'' +
+                ", classroom='" + classroom + '\'' +
+                ", teacherName='" + teacherName + '\'' +
+                ", dayOfWeek=" + dayOfWeek +
+                ", start=" + start +
+                ", end=" + end +
+                '}';
     }
 }

@@ -6,12 +6,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -39,9 +36,9 @@ import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.view.component.CustomCalendarView;
-import vnu.uet.mobilecourse.assistant.view.component.OnSwipeTouchListener;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
+import vnu.uet.mobilecourse.assistant.work.remindHandler.TodoHandler;
 
 public class CalendarFragment extends Fragment {
 
@@ -212,8 +209,9 @@ public class CalendarFragment extends Fragment {
                 final IEvent item = mDailyEventAdapter.getTodoList().get(position);
 
                 if (item instanceof Todo) {
-                    String id = ((Todo) item).getId();
-                    mViewModel.deleteTodo(id);
+                    Todo todo = (Todo) item;
+                    mViewModel.deleteTodo(todo.getId());
+                    TodoHandler.getInstance().cancel(mActivity, todo);
                 }
             }
         };

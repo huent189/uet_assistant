@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -11,13 +12,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
+import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
+import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
+import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.repository.FirebaseAuthenticationService;
 import vnu.uet.mobilecourse.assistant.repository.course.UserRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
-import vnu.uet.mobilecourse.assistant.work.RemindScheduler;
+import vnu.uet.mobilecourse.assistant.work.remindHandler.CourseHandler;
+import vnu.uet.mobilecourse.assistant.work.remindHandler.TodoHandler;
 
 
 public class LoginFirebaseActivity extends AppCompatActivity {
@@ -25,6 +30,8 @@ public class LoginFirebaseActivity extends AppCompatActivity {
     private ViewGroup mLayoutVerifySuccess;
     private ViewGroup mLayoutVerifyFail;
     private ViewGroup mLayoutVerifying;
+
+    private boolean remindCourse = false, remindTodo = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +59,8 @@ public class LoginFirebaseActivity extends AppCompatActivity {
                 switch (loginState.getStatus()) {
                     case SUCCESS:
                         showSuccessLayout();
-                        setupReminders();
+                        setupTodoReminders();
+                        setupCourseReminders();
                         break;
 
                     case ERROR:
@@ -63,21 +71,60 @@ public class LoginFirebaseActivity extends AppCompatActivity {
         }
     }
 
-    private void setupReminders() {
+    private static final String TAG = LoginFirebaseActivity.class.getName();
+
+    private void setupCourseReminders() {
+        new CourseInfoDAO().readAll().observe(LoginFirebaseActivity.this, new Observer<StateModel<List<CourseInfo>>>() {
+            @Override
+            public void onChanged(StateModel<List<CourseInfo>> stateModel) {
+                switch (stateModel.getStatus()) {
+                    case SUCCESS:
+                        remindCourse = true;
+
+                        List<CourseInfo> courses = stateModel.getData();
+
+                        courses.forEach(course -> {
+                            List<CourseSession> sessions = course.getSessions();
+
+                            sessions.forEach(session -> {
+                                Log.d(TAG, session.toString());
+                                CourseHandler.getInstance().schedule(getApplicationContext(), session);
+                            });
+                        });
+
+                        if (remindTodo && remindCourse) {
+                            navigateToMyCourses();
+                        }
+
+                        break;
+
+                    case ERROR:
+                        showErrorLayout();
+                        break;
+                }
+            }
+        });
+    }
+
+    private void setupTodoReminders() {
         TodoRepository.getInstance().getAllTodos().observe(LoginFirebaseActivity.this, new Observer<StateModel<List<Todo>>>() {
             @Override
             public void onChanged(StateModel<List<Todo>> stateModel) {
                 switch (stateModel.getStatus()) {
                     case SUCCESS:
+                        remindTodo = true;
+
                         stateModel.getData().forEach(todo -> {
                             long deadline = todo.getDeadline() * 1000;
 
                             if (deadline > System.currentTimeMillis()) {
-                                RemindScheduler.getInstance().enqueue(getApplicationContext(), todo);
+                                TodoHandler.getInstance().schedule(getApplicationContext(), todo);
                             }
                         });
 
-                        navigateToMyCourses();
+                        if (remindTodo && remindCourse) {
+                            navigateToMyCourses();
+                        }
 
                         break;
 
