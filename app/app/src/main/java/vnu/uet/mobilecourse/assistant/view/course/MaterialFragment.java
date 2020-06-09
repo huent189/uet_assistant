@@ -83,9 +83,12 @@ public class MaterialFragment extends Fragment {
                             String intro = content.getIntro();
                             if (intro != null) {
                                 SpannableStringBuilder strBuilder = mViewModel.convertHtml(intro);
-                                tvHtml.setText(strBuilder);
-                                tvHtml.setLinksClickable(true);
-                                tvHtml.setMovementMethod(LinkMovementMethod.getInstance());
+
+                                if (strBuilder.length() > 0) {
+                                    tvHtml.setText(strBuilder);
+                                    tvHtml.setLinksClickable(true);
+                                    tvHtml.setMovementMethod(LinkMovementMethod.getInstance());
+                                }
                             }
 
                             if (content instanceof AssignmentContent) {
