@@ -10,11 +10,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthActionCodeException;
-import com.google.firebase.auth.FirebaseUser;
 
 
 import vnu.uet.mobilecourse.assistant.BuildConfig;
+import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 
 public class FirebaseAuthenticationService {
@@ -78,6 +77,9 @@ public class FirebaseAuthenticationService {
                                 // You can check if the user is new or existing:
                                 // result.getAdditionalUserInfo().isNewUser()
                                 // TODO: check new user
+                                if (loginViaMail.getResult().getAdditionalUserInfo().isNewUser()) {
+                                    createUser(email);
+                                }
                             } else {
                                 // TODO: error
                                 loginState.postError(loginViaMail.getException());
@@ -90,6 +92,11 @@ public class FirebaseAuthenticationService {
 
     public static boolean isFirebaseLoggedIn (){
         return FirebaseAuth.getInstance().getCurrentUser() != null;
+    }
+
+    private void createUser(String email) {
+        String studentId = email.substring(0,8);
+
     }
 
 }
