@@ -1,15 +1,16 @@
 package vnu.uet.mobilecourse.assistant.model;
 
-import androidx.annotation.NonNull;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 
 @Entity
-public class Course {
+public class Course implements ICourse {
     @PrimaryKey
-    @NonNull
     private int id;
     @Ignore
     private int thumbnail;
@@ -19,9 +20,39 @@ public class Course {
     private String code;
     @SerializedName("lastaccess")
     private long lastAccessTime;
+    @SerializedName("progress")
+    private double progress;
     public Course(String title, String code) {
         this.title = title;
         this.code = code;
+    }
+
+    protected Course(Parcel in) {
+        id = in.readInt();
+        title = in.readString();
+        code = in.readString();
+        lastAccessTime = in.readLong();
+        progress = in.readDouble();
+    }
+
+    public static final Creator<Course> CREATOR = new Creator<Course>() {
+        @Override
+        public Course createFromParcel(Parcel in) {
+            return new Course(in);
+        }
+
+        @Override
+        public Course[] newArray(int size) {
+            return new Course[size];
+        }
+    };
+
+    public double getProgress() {
+        return progress;
+    }
+
+    public void setProgress(double progress) {
+        this.progress = progress;
     }
 
     public int getThumbnail() {
@@ -32,6 +63,7 @@ public class Course {
         this.thumbnail = thumbnail;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }
@@ -40,6 +72,7 @@ public class Course {
         this.title = title;
     }
 
+    @Override
     public String getCode() {
         return code;
     }
@@ -54,6 +87,10 @@ public class Course {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getFirebaseId(){
+        return code.replace("1920II_" , "").replace("_", " ");
     }
 
     public long getLastAccessTime() {
@@ -72,5 +109,19 @@ public class Course {
                 ", code='" + code + '\'' +
                 ", lastAccessTime=" + lastAccessTime +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(title);
+        dest.writeString(code);
+        dest.writeLong(lastAccessTime);
+        dest.writeDouble(progress);
     }
 }

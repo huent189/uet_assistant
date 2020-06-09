@@ -13,20 +13,22 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.model.ICourse;
 import vnu.uet.mobilecourse.assistant.view.course.CoursesFragment;
 import vnu.uet.mobilecourse.assistant.model.Course;
 
 public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCoursesAdapter.ViewHolder> {
 
-    private List<Course> mCourses;
-    private CoursesFragment mOwner;
+    private List<? extends ICourse> mCourses;
+    private Fragment mOwner;
     private NavController mNavController;
 
-    public RecentlyCoursesAdapter(List<Course> courses, CoursesFragment owner) {
+    public RecentlyCoursesAdapter(List<? extends ICourse> courses, Fragment owner) {
         this.mCourses = courses;
         this.mOwner = owner;
     }
@@ -51,7 +53,7 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final Course course = mCourses.get(position);
+        final ICourse course = mCourses.get(position);
         holder.bind(course, mNavController);
     }
 
@@ -79,7 +81,7 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
             mCvCourseContainer.setCardBackgroundColor(cardColor);
         }
 
-        void bind(Course course, NavController navController) {
+        void bind(ICourse course, NavController navController) {
             String courseTitle = course.getTitle();
             String courseCode = course.getCode();
 
@@ -90,7 +92,11 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    bundle.putInt("courseId", course.getId());
+
+                    if (course instanceof Course) {
+                        bundle.putInt("courseId", ((Course) course).getId());
+                    }
+
                     bundle.putString("courseTitle", courseTitle);
                     bundle.putString("courseCode", courseCode);
 

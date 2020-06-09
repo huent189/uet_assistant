@@ -21,6 +21,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 
 public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.ChatViewHolder> {
+
     private List<GroupChat_UserSubCol> mChats;
     private NavController mNavController;
     private Fragment mOwner;
@@ -89,8 +90,6 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
             mTvLastMessageTime.setText(lastMessageTimeInStr);
 
             mIvNewMessageDot.setVisibility(chat.isSeen() ? View.GONE : View.VISIBLE);
-
-
         }
     }
 

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/margin">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvContainer"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/background"
+        app:cardCornerRadius="@dimen/small_radius">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/edit_text_background"
+            android:paddingVertical="@dimen/margin"
+            android:paddingHorizontal="@dimen/margin_x2">
+
+            <TextView
+                android:id="@+id/tvDayOfWeek"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thứ 2 (CL)"
+                android:textSize="@dimen/font_size_item_title"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvSessionTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tiết 1 - 3"
+                android:textSize="@dimen/font_size_caption"
+                app:layout_constraintStart_toStartOf="@+id/tvDayOfWeek"
+                app:layout_constraintTop_toBottomOf="@+id/tvDayOfWeek" />
+
+            <TextView
+                android:id="@+id/tvClassroom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/primary_button_background"
+                android:backgroundTint="@color/primaryDark"
+                android:paddingHorizontal="@dimen/margin"
+                android:text="Sân bãi ĐHNN"
+                android:textSize="@dimen/font_size_caption"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/tvSessionTime"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tvDayOfWeek" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civAvatar"
+                android:layout_width="@dimen/small_img_avatar_size"
+                android:layout_height="@dimen/small_img_avatar_size"
+                android:layout_marginTop="@dimen/margin_x2"
+                android:src="@drawable/avatar"
+                app:layout_constraintStart_toStartOf="@+id/tvSessionTime"
+                app:layout_constraintTop_toBottomOf="@+id/tvSessionTime" />
+
+
+            <TextView
+                android:id="@+id/tvTeacherName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin"
+                android:text="@string/card_course_desc"
+                android:textSize="@dimen/font_size_list_title"
+                app:layout_constraintStart_toStartOf="@+id/civAvatar"
+                app:layout_constraintTop_toBottomOf="@+id/civAvatar" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

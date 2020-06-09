@@ -11,10 +11,27 @@
         <item name="android:textColorHint">@color/whiteDisable</item>
         <item name="searchViewStyle">@style/SearchViewMy</item>
         <item name="android:timePickerStyle">@style/TimePicker</item>
+        <item name="android:datePickerDialogTheme">@style/DatePickerDialog</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem</item>
         <item name="radioButtonStyle">@style/RadioButton</item>
-<!--        <item name="android:textSize">@dimen/font_size_paragraph</item>-->
+
+    </style>
+
+    <style name="ErrorText">
+        <item name="android:visibility">gone</item>
+        <item name="android:layout_marginTop">@dimen/small_margin_2</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/font_size_paragraph</item>
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+    <style name="menu_labels_style">
+        <item name="android:background">@color/dark_fade</item>
+        <item name="android:padding">@dimen/small_margin</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/font_size_paragraph</item>
     </style>
 
     <style name="RadioGroup">
@@ -75,34 +92,11 @@
         <item name="android:textSize">@dimen/font_size_tab_title</item>
     </style>
 
-<!--    <style name="Text">-->
-<!--        <item name="android:background">@color/transparent</item>-->
-<!--    </style>-->
-
-<!--    <style name="Title" parent="Text">-->
-<!--        <item name="android:textSize">30sp</item>-->
-<!--        <item name="android:textStyle">bold</item>-->
-<!--    </style>-->
-
-<!--    <style name="Header1" parent="Text">-->
-<!--        <item name="android:textSize">@dimen/header1_size</item>-->
-<!--        <item name="android:textStyle">bold</item>-->
-<!--    </style>-->
-
-<!--    <style name="Header2" parent="Text">-->
-<!--        <item name="android:textSize">@dimen/header2_size</item>-->
-<!--        <item name="android:textStyle">bold</item>-->
-<!--    </style>-->
-
     <style name="ToolbarTitleText">
         <item name="android:textSize">@dimen/font_size_page_title</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textStyle">bold</item>
     </style>
-
-<!--    <style name="Subtitle" parent="Text">-->
-<!--        <item name="android:textSize">15sp</item>-->
-<!--    </style>-->
 
     <style name="Message">
         <item name="android:layout_width">wrap_content</item>
@@ -131,6 +125,30 @@
         <item name="android:numbersBackgroundColor">@color/background</item>
         <item name="android:numbersInnerTextColor">@color/whiteDisable</item>
         <item name="android:numbersTextColor">@color/white</item>
+    </style>
+
+    <style name="DatePickerDialog" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">@color/primary</item>
+        <item name="android:datePickerStyle">@style/DatePicker</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
+    <style name="DatePicker" parent="android:Widget.Material.Light.DatePicker">
+        <item name="dialogCornerRadius">@dimen/small_radius</item>
+<!--        <item name="android:descendantFocusability">blocksDescendants</item>-->
+        <item name="android:background">@color/background</item>
+        <item name="buttonBarButtonStyle">@style/Button</item>
+        <item name="android:headerBackground">@color/primary</item>
+        <item name="android:windowBackground">@color/background</item>
+        <!--        <item name="android:colorPrimaryDark">@color/backgroundLight</item>-->
+<!--        <item name="android:numbersBackgroundColor">@color/background</item>-->
+<!--        <item name="android:numbersInnerTextColor">@color/whiteDisable</item>-->
+        <item name="android:colorControlNormal">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:weekNumberColor">@color/white</item>
+        <item name="android:weekDayTextAppearance">@style/ListTitle</item>
     </style>
 
     <style name="EditText" parent="Widget.AppCompat.EditText">
@@ -170,6 +188,7 @@
         <item name="queryHint">@string/title_search_hint</item>
         <item name="android:background">@drawable/edit_text_background</item>
         <item name="closeIcon">@drawable/ic_close_24dp</item>
+        <item name="android:layout_height">@dimen/edit_text_height</item>
     </style>
 
     <style name="Toolbar" parent="Widget.AppCompat.Toolbar">

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/list_item_background"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingVertical="@dimen/margin"
+        android:paddingStart="@dimen/margin_x2"
+        android:paddingEnd="@dimen/margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivNotifyIcon"
+            android:layout_width="@dimen/img_notification_icon_size"
+            android:layout_height="@dimen/img_notification_icon_size"
+            android:background="@color/backgroundLight"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnViewNotify"
+            app:layout_constraintStart_toEndOf="@+id/ivNotifyIcon"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                style="@style/ListItemTitle"
+                android:id="@+id/tvNotifyTitle"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:background="@color/backgroundLight"
+                android:textColor="@color/primary" />
+
+            <TextView
+                android:id="@+id/tvNotifyDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textSize="@dimen/font_size_caption"
+                android:layout_marginTop="@dimen/small_margin"
+                android:background="@color/backgroundLight" />
+
+            <TextView
+                style="@style/SecondaryText"
+                android:id="@+id/tvNotifyTime"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/font_size_small"
+                android:layout_marginTop="@dimen/small_margin"
+                android:background="@color/backgroundLight" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btnViewNotify"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="@dimen/margin"
+            android:background="@color/backgroundLight"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

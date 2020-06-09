@@ -6,9 +6,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -29,10 +34,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.DailyEventAdapter;
+import vnu.uet.mobilecourse.assistant.model.event.IEvent;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
-import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
+import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.view.component.CustomCalendarView;
+import vnu.uet.mobilecourse.assistant.view.component.OnSwipeTouchListener;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
 
@@ -45,6 +52,8 @@ public class CalendarFragment extends Fragment {
     private RecyclerView mRvDailyTodoList;
     private Toolbar mToolbar;
     private CollapsingToolbarLayout mCollapsingToolbar;
+    private ShimmerFrameLayout mSflEvents;
+    private ImageView mIvEmpty;
 
     private NavController mNavController;
     private FragmentActivity mActivity;
@@ -72,6 +81,11 @@ public class CalendarFragment extends Fragment {
 
         mCollapsingToolbar = root.findViewById(R.id.col);
 
+        mSflEvents = root.findViewById(R.id.sflEvents);
+        mSflEvents.startShimmerAnimation();
+
+        mIvEmpty = root.findViewById(R.id.ivEmpty);
+
         mRvDailyTodoList = root.findViewById(R.id.rvDailyTodoList);
 
         mRvDailyTodoList.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -83,6 +97,7 @@ public class CalendarFragment extends Fragment {
         mCalendarView.setOnDateChangeListener(this::updateDate);
 
         FloatingActionButton fabAddTodo = root.findViewById(R.id.fabAddTodo);
+
         fabAddTodo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +105,7 @@ public class CalendarFragment extends Fragment {
             }
         });
 
-        enableSwipeToDeleteAndUndo();
+        enableSwipeToDelete();
 
         return root;
     }
@@ -141,8 +156,15 @@ public class CalendarFragment extends Fragment {
 
         mViewModel.getDailyTodoList(date).observe(getViewLifecycleOwner(), stateModel -> {
             switch (stateModel.getStatus()) {
+                case LOADING:
+                    mRvDailyTodoList.setVisibility(View.GONE);
+                    mSflEvents.setVisibility(View.VISIBLE);
+                    mIvEmpty.setVisibility(View.GONE);
+
+                    break;
+
                 case SUCCESS:
-                    DailyTodoList dailyTodoList = stateModel.getData();
+                    DailyEventList dailyTodoList = stateModel.getData();
 
                     mDailyEventAdapter = new DailyEventAdapter(dailyTodoList, CalendarFragment.this);
                     mRvDailyTodoList.setAdapter(mDailyEventAdapter);
@@ -150,6 +172,17 @@ public class CalendarFragment extends Fragment {
                     mCalendarView.notifyTodoSetChanged(getViewLifecycleOwner());
 
                     restoreRecycleViewState();
+
+                    if (dailyTodoList.isEmpty()) {
+                        mIvEmpty.setVisibility(View.VISIBLE);
+//                        mRvDailyTodoList.setVisibility(View.GONE);
+
+                    } else {
+                        mIvEmpty.setVisibility(View.GONE);
+                    }
+
+                    mRvDailyTodoList.setVisibility(View.VISIBLE);
+                    mSflEvents.setVisibility(View.GONE);
 
                     break;
             }
@@ -171,14 +204,17 @@ public class CalendarFragment extends Fragment {
         mNavController.navigate(R.id.action_navigation_calendar_to_addTodoFragment, bundle);
     }
 
-    private void enableSwipeToDeleteAndUndo() {
+    private void enableSwipeToDelete() {
         SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(getContext()) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int position = viewHolder.getAdapterPosition();
-                final Todo item = mDailyEventAdapter.getTodoList().get(position);
+                final IEvent item = mDailyEventAdapter.getTodoList().get(position);
 
-                mViewModel.deleteTodo(item.getId());
+                if (item instanceof Todo) {
+                    String id = ((Todo) item).getId();
+                    mViewModel.deleteTodo(id);
+                }
             }
         };
 

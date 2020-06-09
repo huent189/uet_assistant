@@ -12,12 +12,27 @@ import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 
 public class ExpandableTodoList extends ExpandableGroup<Todo> {
-    public ExpandableTodoList(String title, List<Todo> items) {
+
+    private String mId;
+
+    public ExpandableTodoList(String todoListId, String title, List<Todo> items) {
         super(title, items);
+        mId = todoListId;
+    }
+
+    public String getId() {
+        return mId;
     }
 
     protected ExpandableTodoList(Parcel in) {
         super(in);
+        mId = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(mId);
     }
 
     public static ExpandableTodoList convert(TodoList todoList) {
@@ -25,7 +40,7 @@ public class ExpandableTodoList extends ExpandableGroup<Todo> {
 
         List<Todo> items = new ArrayList<>(todoList.getTodos());
 
-        return new ExpandableTodoList(title, items);
+        return new ExpandableTodoList(todoList.getId(), title, items);
     }
 
     public static List<ExpandableTodoList> convert(List<TodoList> todoLists) {

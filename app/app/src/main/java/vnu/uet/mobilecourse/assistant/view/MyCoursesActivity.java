@@ -37,7 +37,7 @@ public class MyCoursesActivity extends AppCompatActivity {
         // hide bottom navigator in chat fragment
         mNavController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             switch (destination.getId()) {
-                case R.id.navigation_chat:
+                case R.id.navigation_chat_room:
                     hideBottomNavigator();
                     break;
 
@@ -47,8 +47,6 @@ public class MyCoursesActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     private void hideBottomNavigator() {
         mNavView.setVisibility(View.GONE);

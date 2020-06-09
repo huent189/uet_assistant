@@ -28,7 +28,7 @@ public abstract class CoursesResponseCallback<T> implements Callback<JsonElement
         if(flag){
             T successReponse = HTTPClient.getInstance().getGson().fromJson(response.body(), typeParameterClass);
             Log.d("COURSES", "onResponse: " + call.request().url());
-            onSucess(successReponse);
+            onSuccess(successReponse);
         } else {
             onError(call, errorCodeToException(error.getAsString()));
         }
@@ -38,7 +38,7 @@ public abstract class CoursesResponseCallback<T> implements Callback<JsonElement
     public void onFailure(Call<JsonElement> call, Throwable throwable) {
         onError(call, new Exception(throwable.getMessage()));
     }
-    public abstract void onSucess(T response);
+    public abstract void onSuccess(T response);
     public void onError(Call<JsonElement> call, Exception e){
         Log.e("COURSES", "onError: " + call.request().url() + " "
                 + e.getClass() +  " " + e.getMessage() );

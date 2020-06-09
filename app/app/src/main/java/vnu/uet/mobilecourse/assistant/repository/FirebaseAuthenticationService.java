@@ -50,7 +50,9 @@ public class FirebaseAuthenticationService {
                             validationState.postSuccess("Login Firebase Success");
                         } else {
                             // TODO sent fail
-                            validationState.postError(sendEmail.getException());
+                            Exception exception = sendEmail.getException();
+                            assert exception != null;
+                            validationState.postError(exception);
                         }
                     }
                 });
@@ -82,7 +84,9 @@ public class FirebaseAuthenticationService {
                                 }
                             } else {
                                 // TODO: error
-                                loginState.postError(loginViaMail.getException());
+                                Exception exception = loginViaMail.getException();
+                                assert exception != null;
+                                loginState.postError(exception);
                             }
                         }
                     });

@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.adapter.viewholder.ISwipeToDeleteHolder;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.TodoViewHolder;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
@@ -27,13 +28,10 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 public class TodoListAdapter extends
         ExpandableRecyclerViewAdapter<TodoListAdapter.TodoListViewHolder, TodoViewHolder> {
 
-    private static final boolean SHOW_LIST = false;
-
     private TodoListsFragment mOwner;
     private List<TodoList> mTodoLists;
     private LayoutInflater mInflater;
     private NavController mNavController;
-
 
     public TodoListAdapter(List<TodoList> todoLists, TodoListsFragment owner) {
         super(ExpandableTodoList.convert(todoLists));
@@ -62,7 +60,7 @@ public class TodoListAdapter extends
         View view = mInflater
                 .inflate(R.layout.layout_todo_item, parent, false);
 
-        return new TodoViewHolder(view) {
+        return new TodoViewHolder(view, mOwner) {
             @Override
             protected IStateLiveData<String> onMarkAsDone(Todo todo) {
                 mOwner.saveRecycleViewState();
@@ -84,7 +82,7 @@ public class TodoListAdapter extends
         if (group instanceof ExpandableTodoList) {
             ExpandableTodoList content = (ExpandableTodoList) group;
             final Todo todo = content.getItems().get(childIndex);
-            holder.bind(todo, SHOW_LIST, mOwner.getViewLifecycleOwner());
+            holder.bind(todo);
         }
     }
 
@@ -98,10 +96,12 @@ public class TodoListAdapter extends
         }
     }
 
-    static class TodoListViewHolder extends GroupViewHolder {
+    public static class TodoListViewHolder extends GroupViewHolder implements ISwipeToDeleteHolder {
 
         private TextView mTvTitle;
         private ImageView mIvExpandArrow;
+
+        private ExpandableTodoList mTodoList;
 
         TodoListViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -112,6 +112,12 @@ public class TodoListAdapter extends
 
         void bind(ExpandableTodoList content) {
             mTvTitle.setText(content.getTitle());
+
+            mTodoList = content;
+        }
+
+        public ExpandableTodoList getTodoList() {
+            return mTodoList;
         }
     }
 }

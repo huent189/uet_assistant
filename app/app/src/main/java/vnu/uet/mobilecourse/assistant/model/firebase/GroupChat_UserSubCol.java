@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
 public class GroupChat_UserSubCol implements IFirebaseModel {
+
     private String id;
     private String name;
     private String avatar;

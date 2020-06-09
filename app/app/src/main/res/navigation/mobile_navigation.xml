@@ -22,13 +22,20 @@
         <action
             android:id="@+id/action_navigation_courses_to_navigation_explore_course"
             app:destination="@id/navigation_explore_course" />
+        <action
+            android:id="@+id/action_navigation_courses_to_navigation_my_profile"
+            app:destination="@id/navigation_my_profile" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="vnu.uet.mobilecourse.assistant.view.notification.NotificationsFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_notifications" >
+        <action
+            android:id="@+id/action_navigation_notifications_to_navigation_modify_todo"
+            app:destination="@id/navigation_modify_todo" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_chat"
@@ -38,6 +45,9 @@
         <action
             android:id="@+id/action_navigation_chat_to_navigation_chat_room"
             app:destination="@id/navigation_chat_room" />
+        <action
+            android:id="@+id/action_navigation_chat_to_navigation_search_student"
+            app:destination="@id/navigation_search_student" />
     </fragment>
 
     <fragment
@@ -51,6 +61,9 @@
         <action
             android:id="@+id/action_navigation_calendar_to_navigation_todo_lists"
             app:destination="@id/navigation_todo_lists" />
+        <action
+            android:id="@+id/action_navigation_calendar_to_navigation_modify_todo"
+            app:destination="@id/navigation_modify_todo" />
     </fragment>
     <fragment
         android:id="@+id/navigation_explore_course"
@@ -63,13 +76,20 @@
         <action
             android:id="@+id/action_navigation_explore_course_to_navigation_material"
             app:destination="@id/navigation_material" />
+        <action
+            android:id="@+id/action_navigation_explore_course_to_navigation_my_profile"
+            app:destination="@id/navigation_my_profile" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_friend_profile"
         android:name="vnu.uet.mobilecourse.assistant.view.profile.FriendProfileFragment"
         android:label="fragment_friend_profile"
-        tools:layout="@layout/fragment_friend_profile" />
+        tools:layout="@layout/fragment_friend_profile" >
+        <action
+            android:id="@+id/action_navigation_friend_profile_to_navigation_explore_course"
+            app:destination="@id/navigation_explore_course" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_add_todo"
@@ -101,6 +121,12 @@
         <action
             android:id="@+id/action_navigation_todo_lists_to_navigation_calendar"
             app:destination="@id/navigation_calendar" />
+        <action
+            android:id="@+id/action_navigation_todo_lists_to_navigation_add_todo"
+            app:destination="@id/navigation_add_todo" />
+        <action
+            android:id="@+id/action_navigation_todo_lists_to_navigation_add_todo_list"
+            app:destination="@id/navigation_add_todo_list" />
     </fragment>
 
     <fragment
@@ -108,5 +134,29 @@
         android:name="vnu.uet.mobilecourse.assistant.view.chat.ChatRoomFragment"
         android:label="fragment_chat_room"
         tools:layout="@layout/fragment_chat_room" />
+
+    <fragment
+        android:id="@+id/navigation_search_student"
+        android:name="vnu.uet.mobilecourse.assistant.view.chat.SearchStudentFragment"
+        android:label="fragment_search_student"
+        tools:layout="@layout/fragment_search_student" >
+        <action
+            android:id="@+id/action_navigation_search_student_to_navigation_chat_room"
+            app:destination="@id/navigation_chat_room" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_my_profile"
+        android:name="vnu.uet.mobilecourse.assistant.view.profile.MyProfileFragment"
+        android:label="fragment_my_profile"
+        tools:layout="@layout/fragment_my_profile" />
+    <fragment
+        android:id="@+id/navigation_modify_todo"
+        android:name="vnu.uet.mobilecourse.assistant.view.calendar.ModifyTodoFragment"
+        android:label="fragment_modify_todo"
+        tools:layout="@layout/fragment_modify_todo" >
+        <action
+            android:id="@+id/action_navigation_modify_todo_to_navigation_add_todo_list"
+            app:destination="@id/navigation_add_todo_list" />
+    </fragment>
 
 </navigation>

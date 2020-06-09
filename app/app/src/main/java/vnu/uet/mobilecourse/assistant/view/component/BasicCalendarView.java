@@ -1,8 +1,10 @@
 package vnu.uet.mobilecourse.assistant.view.component;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -78,6 +80,20 @@ public class BasicCalendarView extends LinearLayout {
     protected final void navigateToPrevMonth() {
         calendar.add(Calendar.MONTH, -1);
         setupCalendar();
+    }
+
+    public final void navigateToNextDay() {
+        int index = dates.indexOf(selectedDate);
+        updateSelectedDate(index + 1);
+        setupCalendar();
+        onDateChangeListener.onDateChange(selectedDate);
+    }
+
+    public final void navigateToPrevDay() {
+        int index = dates.indexOf(selectedDate);
+        updateSelectedDate(index - 1);
+        setupCalendar();
+        onDateChangeListener.onDateChange(selectedDate);
     }
 
     public final void setOnDateChangeListener(CustomCalendarView.OnDateChangeListener listener) {
@@ -164,29 +180,34 @@ public class BasicCalendarView extends LinearLayout {
                 navigateToPrevMonth();
             });
 
-            gvDates.setOnSwipeListener(new CalendarDatesGridView.OnSwipeListener() {
-                @Override
-                public void onSwipeLeft() {
-                    // calculate next selected date
-                    Calendar nextMonthCalendar = (Calendar) calendar.clone();
-                    nextMonthCalendar.setTime(selectedDate);
-                    nextMonthCalendar.add(Calendar.MONTH, 1);
-                    selectedDate = nextMonthCalendar.getTime();
-
-                    navigateToNextMonth();
-                }
-
-                @Override
-                public void onSwipeRight() {
-                    // calculate previous selected date
-                    Calendar nextMonthCalendar = (Calendar) calendar.clone();
-                    nextMonthCalendar.setTime(selectedDate);
-                    nextMonthCalendar.add(Calendar.MONTH, -1);
-                    selectedDate = nextMonthCalendar.getTime();
-
-                    navigateToPrevMonth();
-                }
-            });
+//            setOnTouchListener(new OnSwipeTouchListener(getContext()) {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent event) {
+//                    return gestureDetector.onTouchEvent(event);
+//                }
+//
+//                @Override
+//                public void onSwipeLeft() {
+//                    // calculate next selected date
+//                    Calendar nextMonthCalendar = (Calendar) calendar.clone();
+//                    nextMonthCalendar.setTime(selectedDate);
+//                    nextMonthCalendar.add(Calendar.MONTH, 1);
+//                    selectedDate = nextMonthCalendar.getTime();
+//
+//                    navigateToNextMonth();
+//                }
+//
+//                @Override
+//                public void onSwipeRight() {
+//                    // calculate previous selected date
+//                    Calendar nextMonthCalendar = (Calendar) calendar.clone();
+//                    nextMonthCalendar.setTime(selectedDate);
+//                    nextMonthCalendar.add(Calendar.MONTH, -1);
+//                    selectedDate = nextMonthCalendar.getTime();
+//
+//                    navigateToPrevMonth();
+//                }
+//            });
         }
 
         setupCalendar();

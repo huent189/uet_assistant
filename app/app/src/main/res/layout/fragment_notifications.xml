@@ -28,6 +28,42 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/sflNotifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/shimmer_notification_item"/>
+            <include layout="@layout/shimmer_notification_item"/>
+            <include layout="@layout/shimmer_notification_item"/>
+            <include layout="@layout/shimmer_notification_item"/>
+            <include layout="@layout/shimmer_notification_item"/>
+            <include layout="@layout/shimmer_notification_item"/>
+            <include layout="@layout/shimmer_notification_item"/>
+            <include layout="@layout/shimmer_notification_item"/>
+            <include layout="@layout/shimmer_notification_item"/>
+
+        </LinearLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+    <ImageView
+        android:id="@+id/ivEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="@dimen/margin_x6"
+        android:alpha="0.85"
+        android:src="@drawable/img_empty"
+        android:paddingBottom="@dimen/margin_x6"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvNotifications"
         android:layout_width="match_parent"

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/list_item_background"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -15,21 +16,19 @@
 
         <ImageView
             android:id="@+id/ivNotifyIcon"
-            android:layout_width="@dimen/img_avatar_size"
-            android:layout_height="@dimen/img_avatar_size"
-            android:src="@drawable/ic_description_32dp"
-            android:tint="@color/nav_item"
-            android:rotation="15"
+            android:layout_width="@dimen/img_notification_icon_size"
+            android:layout_height="@dimen/img_notification_icon_size"
+            android:src="@drawable/img_target"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="@dimen/margin"
+            android:layout_marginHorizontal="@dimen/margin"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btnViewNotify"
@@ -37,49 +36,45 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
+                style="@style/ListItemTitle"
                 android:id="@+id/tvNotifyTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Bài kiểm tra 8a"
+                android:maxLines="1"
+                android:text="@string/title_loading"
                 android:textColor="@color/primary" />
 
             <TextView
                 android:id="@+id/tvNotifyDesc"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textSize="@dimen/font_size_caption"
                 android:layout_marginTop="2dp"
-                android:text="Đây là một thông mới được ví dụ" />
+                android:text="@string/title_loading" />
 
             <TextView
+                style="@style/SecondaryText"
                 android:id="@+id/tvNotifyTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/font_size_small"
                 android:layout_marginTop="2dp"
-                android:text="10 phút trước"
-                android:textColor="@color/whiteDisable" />
+                android:text="@string/title_loading" />
 
         </LinearLayout>
 
-        <Button
-            style="@style/CircleButton"
+        <ImageButton
             android:id="@+id/btnViewNotify"
-            android:layout_width="@dimen/button_size"
-            android:layout_height="@dimen/button_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/transparent_button_background"
+            android:layout_marginEnd="@dimen/margin"
+            android:padding="@dimen/margin"
+            android:src="@drawable/ic_chevron_right_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/title_chat"
-            android:src="@drawable/ic_chevron_right_24dp"
-            android:tint="@color/whiteDisable"
-            app:layout_constraintBottom_toBottomOf="@+id/btnViewNotify"
-            app:layout_constraintEnd_toEndOf="@+id/btnViewNotify"
-            app:layout_constraintStart_toStartOf="@+id/btnViewNotify"
-            app:layout_constraintTop_toTopOf="@+id/btnViewNotify" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

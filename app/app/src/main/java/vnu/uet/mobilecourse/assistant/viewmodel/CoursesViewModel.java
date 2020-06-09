@@ -1,40 +1,30 @@
 package vnu.uet.mobilecourse.assistant.viewmodel;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.ViewModel;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.ViewModel;
 import vnu.uet.mobilecourse.assistant.model.Course;
-import vnu.uet.mobilecourse.assistant.repository.CourseRepository;
+import vnu.uet.mobilecourse.assistant.model.ICourse;
+import vnu.uet.mobilecourse.assistant.repository.course.CourseRepository;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
 public class CoursesViewModel extends ViewModel {
 
-    private LiveData<List<Course>> mCourses;
-
-    private CourseRepository mCourseRepo;
-
-//    private CoursesFragment view;
+    private CourseRepository mCourseRepo = CourseRepository.getInstance();
 
     private static final int MAX_RECENTLY_INDEX = 4;
 
-    public void initialize() {
-        if (mCourses == null) {
-            mCourseRepo = CourseRepository.getInstance();
-            mCourses = mCourseRepo.getCourses();
-        }
-    }
-
-    public LiveData<List<Course>> getCourses() {
-        return mCourses;
+    public IStateLiveData<List<ICourse>> getCourses() {
+        return mCourseRepo.getFullCourses();
     }
 
     public LiveData<List<Course>> getRecentlyCourses() {
         MediatorLiveData<List<Course>> liveData = new MediatorLiveData<>();
 
-        liveData.addSource(mCourses, courses -> {
+        liveData.addSource(mCourseRepo.getCourses(), courses -> {
             if (courses == null) {
                 liveData.postValue(null);
                 return;
@@ -64,12 +54,4 @@ public class CoursesViewModel extends ViewModel {
 
         return liveData;
     }
-
-//    public void setView(CoursesFragment view) {
-//        this.view = view;
-//    }
-
-//    public CoursesFragment getView() {
-//        return view;
-//    }
 }

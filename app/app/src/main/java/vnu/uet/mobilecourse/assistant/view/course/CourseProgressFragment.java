@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 
+import java.util.stream.Collectors;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.CourseContentAdapter;
 import vnu.uet.mobilecourse.assistant.viewmodel.CourseProgressViewModel;
+
+import static vnu.uet.mobilecourse.assistant.model.material.CourseConstant.MaterialType.GENERAL;
 
 public class CourseProgressFragment extends Fragment {
 
@@ -54,8 +58,6 @@ public class CourseProgressFragment extends Fragment {
             // get course id from bundle
             int courseId = args.getInt("courseId");
 
-//            Fragment thisFragment = this;
-
             mViewModel.getContent(courseId).observe(getViewLifecycleOwner(), contents -> {
                 // contents haven't loaded yet
                 // then show shimmer layout & hide rvMaterials
@@ -72,6 +74,9 @@ public class CourseProgressFragment extends Fragment {
                     shimmerRvTasks.setVisibility(View.GONE);
 
                     // update new adapter with newest data
+                    contents = contents.stream()
+                            .filter(item -> !item.getWeekInfo().getTitle().equals(GENERAL))
+                            .collect(Collectors.toList());
                     mAdapter = new CourseContentAdapter(contents, CourseProgressFragment.this);
                     rvMaterials.setAdapter(mAdapter);
 

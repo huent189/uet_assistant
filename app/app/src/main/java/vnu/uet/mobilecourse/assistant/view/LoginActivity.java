@@ -11,7 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.repository.UserRepository;
+import vnu.uet.mobilecourse.assistant.repository.course.UserRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 
 public class LoginActivity extends AppCompatActivity {

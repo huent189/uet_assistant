@@ -9,9 +9,12 @@ import java.util.Map;
 
 import androidx.lifecycle.ViewModel;
 
+import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
-import vnu.uet.mobilecourse.assistant.model.todo.DailyTodoList;
+import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
+import vnu.uet.mobilecourse.assistant.repository.firebase.EventRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
+import vnu.uet.mobilecourse.assistant.viewmodel.expandable.ExpandableTodoList;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
 public class CalendarViewModel extends ViewModel {
@@ -36,8 +39,8 @@ public class CalendarViewModel extends ViewModel {
         this.mDailyListViewState = mDailyListViewState;
     }
 
-    public IStateLiveData<DailyTodoList> getDailyTodoList(Date date) {
-        return mTodoRepo.getDailyTodoList(date);
+    public IStateLiveData<DailyEventList> getDailyTodoList(Date date) {
+        return EventRepository.getInstance().getDailyEvent(date);
     }
 
     public IStateLiveData<String> markTodoAsDone(String id) {
@@ -54,11 +57,19 @@ public class CalendarViewModel extends ViewModel {
         return mTodoRepo.modifyTodo(id, changes);
     }
 
+    public IStateLiveData<List<TodoList>> getShallowTodoLists() {
+        return mTodoRepo.getShallowTodoLists();
+    }
+
     public IStateLiveData<List<TodoList>> getAllTodoLists() {
         return mTodoRepo.getAllTodoLists();
     }
 
     public IStateLiveData<String> deleteTodo(String id) {
         return mTodoRepo.deleteTodo(id);
+    }
+
+    public IStateLiveData<String> deleteTodoList(String id, List<Todo> todos) {
+        return mTodoRepo.deleteTodoList(id, todos);
     }
 }

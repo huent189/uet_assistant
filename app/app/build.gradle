@@ -12,7 +12,12 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
-
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+            }
+        }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -44,26 +49,33 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
-    implementation 'com.google.firebase:firebase-auth:16.0.5'
-    implementation 'com.google.firebase:firebase-firestore:17.1.2'
-    implementation 'com.google.firebase:firebase-invites:16.0.4'
+    implementation 'com.google.firebase:firebase-auth:19.3.1'
+    implementation 'com.google.firebase:firebase-firestore:21.4.3'
+    implementation 'com.google.firebase:firebase-invites:17.0.0'
     implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
     implementation 'com.github.sharish:ShimmerRecyclerView:v1.3'
-    implementation 'io.reactivex.rxjava2:rxjava:2.0.1'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation "androidx.room:room-runtime:2.2.5"
+
+    implementation 'com.mikhaellopez:circularprogressbar:1.0.0'
+
 
     def work_version = "2.3.4"
     implementation "androidx.work:work-runtime:$work_version"
     implementation "androidx.work:work-rxjava2:$work_version"
     implementation "androidx.work:work-gcm:$work_version"
 
-//    implementation "com.android.support:support-compat:28.0.0"
+    implementation 'com.getbase:floatingactionbutton:1.10.1'
 
     annotationProcessor "androidx.room:room-compiler:2.2.5"
     testImplementation 'junit:junit:4.13'
-    testImplementation 'android.arch.core:core-testing:1.0.0-alpha3'
+    testImplementation 'android.arch.core:core-testing:1.1.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     testImplementation "androidx.room:room-testing:2.2.5"
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
+
+    implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.6'
+    implementation 'com.google.guava:guava:27.0.1-android'
 }

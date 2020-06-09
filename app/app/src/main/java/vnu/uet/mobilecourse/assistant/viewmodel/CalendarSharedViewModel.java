@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.viewmodel;
 
 import java.util.List;
+import java.util.Map;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -24,6 +25,16 @@ public class CalendarSharedViewModel extends ViewModel {
     private MutableLiveData<String> mTodoTime = new MutableLiveData<>();
     private MutableLiveData<Boolean> mIsCardExpand = new MutableLiveData<>();
 
+    private String mTodoListId;
+
+    public void setTodoListId(String mTodoListId) {
+        this.mTodoListId = mTodoListId;
+    }
+
+    public String getTodoListId() {
+        return mTodoListId;
+    }
+
     public IStateLiveData<List<TodoList>> getShallowTodoLists() {
         return mTodoRepo.getShallowTodoLists();
     }
@@ -39,6 +50,7 @@ public class CalendarSharedViewModel extends ViewModel {
         mTodoDate.postValue(null);
         mTodoTime.postValue(null);
         mIsCardExpand.postValue(false);
+        mTodoListId = null;
     }
 
     public IStateLiveData<Todo> addTodo(Todo todo) {
@@ -47,6 +59,10 @@ public class CalendarSharedViewModel extends ViewModel {
 
     public IStateLiveData<TodoList> addTodoList(TodoList todoList) {
         return mTodoRepo.addTodoList(todoList);
+    }
+
+    public IStateLiveData<String> updateTodo(String id, Map<String, Object> changes) {
+        return mTodoRepo.modifyTodo(id, changes);
     }
 
     public MutableLiveData<Boolean> isCardExpand() {

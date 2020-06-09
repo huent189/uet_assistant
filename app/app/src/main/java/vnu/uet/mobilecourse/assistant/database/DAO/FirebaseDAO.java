@@ -3,34 +3,31 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 import android.util.Log;
 
 import com.google.firebase.firestore.CollectionReference;
-import com.google.android.gms.tasks.OnCanceledListener;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import androidx.annotation.NonNull;
-import vnu.uet.mobilecourse.assistant.model.firebase.IFirebaseModel;
+import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
 import vnu.uet.mobilecourse.assistant.model.User;
+import vnu.uet.mobilecourse.assistant.model.firebase.IFirebaseModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebaseDAO<T> {
-    private static final String TAG = FirebaseDAO.class.getSimpleName();
+    protected static final String TAG = FirebaseDAO.class.getSimpleName();
 
     /**
      * Student Id = Owner Id
      */
-    static final String OWNER_ID = User.getInstance().getStudentId();
+    protected static final String STUDENT_ID = User.getInstance().getStudentId();
 
-    private CollectionReference mColReference;
+    protected CollectionReference mColReference;
 
     /**
      * DAO usually interact in an collection/sub collection
@@ -47,52 +44,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
      * and we will listen for snapshot change
      * to update live data.
      */
-    private StateLiveData<List<T>> mDataList;
-
-    protected abstract T fromSnapshot(DocumentSnapshot snapshot);
-
-    /**
-     * Get all data in firestore db
-     * and update live data whenever a snapshot change
-     */
-    @Override
-    public StateLiveData<List<T>> readAll() {
-        // this live data will only initialize once
-        // data change will auto update by 'addSnapshotListener'
-        // to listen for data changes
-        if (mDataList == null) {
-            // initialize with loading state
-            mDataList = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
-
-            // listen data from firebase
-            // query all document owned by current user
-            mColReference.whereEqualTo("ownerId", OWNER_ID)
-                    // listen for data change
-                    .addSnapshotListener((snapshots, e) -> {
-                        // catch an exception
-                        if (e != null) {
-                            Log.e(TAG, "Listen to data list failed.");
-                            mDataList.postError(e);
-                        }
-                        // hasn't got snapshots yet
-                        else if (snapshots == null) {
-                            Log.d(TAG, "Listening to data list.");
-                            mDataList.postLoading();
-                        }
-                        // query completed with snapshots
-                        else {
-                            List<T> allLists = snapshots.getDocuments().stream()
-                                    .map(this::fromSnapshot)
-                                    .filter(Objects::nonNull)
-                                    .collect(Collectors.toList());
-
-                            mDataList.postSuccess(allLists);
-                        }
-                    });
-        }
-
-        return mDataList;
-    }
+    protected StateLiveData<List<T>> mDataList;
 
     /**
      * Get a document by id
@@ -143,7 +95,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
                     // in case can't not found document
                     // we will post loading state
                     // (or error state .-. idk)
-                    if (doc == null) response.postLoading();
+                    if (doc == null) handleDocumentNotFound(response, id);
                     // post success state when find the doc
                     else response.postSuccess(doc);
 
@@ -152,6 +104,16 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         });
 
         return response;
+    }
+
+    /**
+     * Handle document not found after filter read-all result by id
+     *
+     * @param response live data contains result
+     * @param id of needed document
+     */
+    protected void handleDocumentNotFound(StateMediatorLiveData<T> response, String id) {
+        response.postError(new DocumentNotFoundException(id));
     }
 
     /**

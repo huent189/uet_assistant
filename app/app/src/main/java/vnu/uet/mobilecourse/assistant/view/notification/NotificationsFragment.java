@@ -4,23 +4,33 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.NotificationAdapter;
+import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
+import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.NotificationsViewModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class NotificationsFragment extends Fragment {
 
     private NotificationsViewModel mViewModel;
 
+    private RecyclerView mRvNotifications;
     private NotificationAdapter mNotificationAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -32,21 +42,61 @@ public class NotificationsFragment extends Fragment {
 
         initializeNotificationListView(root);
 
+        enableSwipeToDelete();
+
         return root;
     }
 
+    private void enableSwipeToDelete() {
+        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(getContext()) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                final int position = viewHolder.getAdapterPosition();
+                final Notification_UserSubCol item = mNotificationAdapter.getNotifications().get(position);
+
+                mViewModel.deleteNotification(item);
+            }
+        };
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(mRvNotifications);
+    }
+
     private void initializeNotificationListView(View root) {
-        List<String> notifications = new ArrayList<>();
+        mRvNotifications = root.findViewById(R.id.rvNotifications);
+        mRvNotifications.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        for (int i = 1; i < 20; i++) {
-            notifications.add("Bài kiểm tra " + i);
-        }
+        ImageView ivEmpty = root.findViewById(R.id.ivEmpty);
 
-        mNotificationAdapter = new NotificationAdapter(notifications, this);
+        ShimmerFrameLayout sflNotifications = root.findViewById(R.id.sflNotifications);
+        sflNotifications.startShimmerAnimation();
 
-        RecyclerView rvNotifications = root.findViewById(R.id.rvNotifications);
+        mViewModel.getNotifications().observe(getViewLifecycleOwner(), stateModel -> {
+            switch (stateModel.getStatus()) {
+                case LOADING:
+                    sflNotifications.setVisibility(View.VISIBLE);
+                    ivEmpty.setVisibility(View.GONE);
+                    mRvNotifications.setVisibility(View.GONE);
+                    break;
 
-        rvNotifications.setAdapter(mNotificationAdapter);
-        rvNotifications.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                case SUCCESS:
+                    List<Notification_UserSubCol> notifications = stateModel.getData();
+
+                    if (notifications.isEmpty()) {
+                        ivEmpty.setVisibility(View.VISIBLE);
+                        mRvNotifications.setVisibility(View.GONE);
+                    } else {
+                        mNotificationAdapter = new NotificationAdapter(notifications, NotificationsFragment.this);
+                        mRvNotifications.setAdapter(mNotificationAdapter);
+
+                        ivEmpty.setVisibility(View.GONE);
+                        mRvNotifications.setVisibility(View.VISIBLE);
+                    }
+
+                    sflNotifications.setVisibility(View.GONE);
+
+                    break;
+            }
+        });
     }
 }
