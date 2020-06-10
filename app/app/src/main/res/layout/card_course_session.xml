@@ -7,7 +7,6 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cvContainer"
-        android:minWidth="220dp"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/background"
@@ -24,7 +23,6 @@
                 android:id="@+id/tvDayOfWeek"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Thứ 2 (CL)"
                 android:textSize="@dimen/font_size_item_title"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +32,6 @@
                 android:id="@+id/tvSessionTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tiết 1 - 3"
                 android:textSize="@dimen/font_size_caption"
                 app:layout_constraintStart_toStartOf="@+id/tvDayOfWeek"
                 app:layout_constraintTop_toBottomOf="@+id/tvDayOfWeek" />
@@ -46,7 +43,6 @@
                 android:background="@drawable/primary_button_background"
                 android:backgroundTint="@color/primaryDark"
                 android:paddingHorizontal="@dimen/margin"
-                android:text="Sân bãi ĐHNN"
                 android:textSize="@dimen/font_size_caption"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/tvSessionTime"
