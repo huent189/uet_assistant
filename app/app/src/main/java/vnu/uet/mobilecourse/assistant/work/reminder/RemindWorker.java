@@ -14,14 +14,15 @@ public abstract class RemindWorker<T> extends Worker {
 
     private Context mContext;
 
-    public RemindWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+    protected RemindWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
+        mContext = context;
     }
 
     /**
      * Generate firebase notification document
      *
-     * @param model
+     * @param model contains data of notification
      * @return notification doc
      */
     protected abstract Notification_UserSubCol generateNotification(T model);
@@ -29,8 +30,8 @@ public abstract class RemindWorker<T> extends Worker {
     /**
      * Push notification onto device
      *
-     * @param context
-     * @param model
+     * @param context app context
+     * @param model contains data of notification
      */
     protected abstract void pushNotification(Context context, T model);
 
