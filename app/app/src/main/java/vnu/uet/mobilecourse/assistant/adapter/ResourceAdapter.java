@@ -39,7 +39,6 @@ public abstract class ResourceAdapter extends RecyclerView.Adapter<ResourceAdapt
             mTvAttachmentName = itemView.findViewById(R.id.tvAttachmentName);
             mTvAttachmentName.setMovementMethod(new ScrollingMovementMethod());
 
-
             mTvAttachmentSize = itemView.findViewById(R.id.tvAttachmentSize);
         }
     }

@@ -31,7 +31,7 @@ public class LoginFirebaseActivity extends AppCompatActivity {
     private ViewGroup mLayoutVerifyFail;
     private ViewGroup mLayoutVerifying;
 
-    private boolean remindCourse = false, remindTodo = false;
+//    private boolean remindCourse = false, remindTodo = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +59,9 @@ public class LoginFirebaseActivity extends AppCompatActivity {
                 switch (loginState.getStatus()) {
                     case SUCCESS:
                         showSuccessLayout();
-                        setupTodoReminders();
-                        setupCourseReminders();
+                        navigateToMyCourses();
+//                        setupTodoReminders();
+//                        setupCourseReminders();
                         break;
 
                     case ERROR:
@@ -71,71 +72,71 @@ public class LoginFirebaseActivity extends AppCompatActivity {
         }
     }
 
-    private static final String TAG = LoginFirebaseActivity.class.getName();
-
-    private void setupCourseReminders() {
-        new CourseInfoDAO().readAll().observe(LoginFirebaseActivity.this, new Observer<StateModel<List<CourseInfo>>>() {
-            @Override
-            public void onChanged(StateModel<List<CourseInfo>> stateModel) {
-                switch (stateModel.getStatus()) {
-                    case SUCCESS:
-                        remindCourse = true;
-
-                        List<CourseInfo> courses = stateModel.getData();
-
-                        courses.forEach(course -> {
-                            List<CourseSession> sessions = course.getSessions();
-
-                            sessions.forEach(session -> {
-                                Log.d(TAG, session.toString());
-                                CourseHandler.getInstance().schedule(getApplicationContext(), session);
-                            });
-                        });
-
-                        if (remindTodo && remindCourse) {
-                            navigateToMyCourses();
-                        }
-
-                        break;
-
-                    case ERROR:
-                        showErrorLayout();
-                        break;
-                }
-            }
-        });
-    }
-
-    private void setupTodoReminders() {
-        TodoRepository.getInstance().getAllTodos().observe(LoginFirebaseActivity.this, new Observer<StateModel<List<Todo>>>() {
-            @Override
-            public void onChanged(StateModel<List<Todo>> stateModel) {
-                switch (stateModel.getStatus()) {
-                    case SUCCESS:
-                        remindTodo = true;
-
-                        stateModel.getData().forEach(todo -> {
-                            long deadline = todo.getDeadline() * 1000;
-
-                            if (deadline > System.currentTimeMillis()) {
-                                TodoHandler.getInstance().schedule(getApplicationContext(), todo);
-                            }
-                        });
-
-                        if (remindTodo && remindCourse) {
-                            navigateToMyCourses();
-                        }
-
-                        break;
-
-                    case ERROR:
-                        showErrorLayout();
-                        break;
-                }
-
-            }
-        });
-    }
+//    private static final String TAG = LoginFirebaseActivity.class.getName();
+//
+//    private void setupCourseReminders() {
+//        new CourseInfoDAO().readAll().observe(LoginFirebaseActivity.this, new Observer<StateModel<List<CourseInfo>>>() {
+//            @Override
+//            public void onChanged(StateModel<List<CourseInfo>> stateModel) {
+//                switch (stateModel.getStatus()) {
+//                    case SUCCESS:
+//                        remindCourse = true;
+//
+//                        List<CourseInfo> courses = stateModel.getData();
+//
+//                        courses.forEach(course -> {
+//                            List<CourseSession> sessions = course.getSessions();
+//
+//                            sessions.forEach(session -> {
+//                                Log.d(TAG, session.toString());
+//                                CourseHandler.getInstance().schedule(getApplicationContext(), session);
+//                            });
+//                        });
+//
+//                        if (remindTodo && remindCourse) {
+//                            navigateToMyCourses();
+//                        }
+//
+//                        break;
+//
+//                    case ERROR:
+//                        showErrorLayout();
+//                        break;
+//                }
+//            }
+//        });
+//    }
+//
+//    private void setupTodoReminders() {
+//        TodoRepository.getInstance().getAllTodos().observe(LoginFirebaseActivity.this, new Observer<StateModel<List<Todo>>>() {
+//            @Override
+//            public void onChanged(StateModel<List<Todo>> stateModel) {
+//                switch (stateModel.getStatus()) {
+//                    case SUCCESS:
+//                        remindTodo = true;
+//
+//                        stateModel.getData().forEach(todo -> {
+//                            long deadline = todo.getDeadline() * 1000;
+//
+//                            if (deadline > System.currentTimeMillis()) {
+//                                TodoHandler.getInstance().schedule(getApplicationContext(), todo);
+//                            }
+//                        });
+//
+//                        if (remindTodo && remindCourse) {
+//                            navigateToMyCourses();
+//                        }
+//
+//                        break;
+//
+//                    case ERROR:
+//                        showErrorLayout();
+//                        break;
+//                }
+//
+//            }
+//        });
+//    }
 
     private void showSuccessLayout() {
         mLayoutVerifySuccess.setVisibility(View.VISIBLE);

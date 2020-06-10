@@ -18,6 +18,7 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.work.remindHandler.TodoHandler;
 
 public class AddTodoFragment extends TodoFragment {
 
@@ -56,6 +57,7 @@ public class AddTodoFragment extends TodoFragment {
 
                     default:
                         Toast.makeText(getContext(),"Tạo thành công", Toast.LENGTH_SHORT).show();
+                        TodoHandler.getInstance().schedule(getContext(), todo);
                         mNavController.navigateUp();
                 }
             });

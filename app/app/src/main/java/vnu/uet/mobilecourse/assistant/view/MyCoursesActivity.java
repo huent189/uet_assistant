@@ -1,16 +1,29 @@
 package vnu.uet.mobilecourse.assistant.view;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.List;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
+import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
+import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
+import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
+import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.work.remindHandler.CourseHandler;
+import vnu.uet.mobilecourse.assistant.work.remindHandler.TodoHandler;
 
 public class MyCoursesActivity extends AppCompatActivity {
 
@@ -44,6 +57,62 @@ public class MyCoursesActivity extends AppCompatActivity {
                 default:
                     showBottomNavigator();
                     break;
+            }
+        });
+
+        setupCourseReminders();
+        setupTodoReminders();
+    }
+
+    private void setupCourseReminders() {
+        new CourseInfoDAO().readAll().observe(MyCoursesActivity.this, new Observer<StateModel<List<CourseInfo>>>() {
+            @Override
+            public void onChanged(StateModel<List<CourseInfo>> stateModel) {
+                switch (stateModel.getStatus()) {
+                    case SUCCESS:
+                        List<CourseInfo> courses = stateModel.getData();
+
+                        courses.forEach(course -> {
+                            List<CourseSession> sessions = course.getSessions();
+
+                            sessions.forEach(session -> {
+                                CourseHandler.getInstance().schedule(getApplicationContext(), session);
+                            });
+                        });
+
+                        break;
+
+                    case ERROR:
+                        final String msg = "Không thể lên lịch báo thức giờ học";
+                        Toast.makeText(MyCoursesActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
+    }
+
+    private void setupTodoReminders() {
+        TodoRepository.getInstance().getAllTodos().observe(MyCoursesActivity.this, new Observer<StateModel<List<Todo>>>() {
+            @Override
+            public void onChanged(StateModel<List<Todo>> stateModel) {
+                switch (stateModel.getStatus()) {
+                    case SUCCESS:
+                        stateModel.getData().forEach(todo -> {
+                            long deadline = todo.getDeadline() * 1000;
+
+                            if (deadline > System.currentTimeMillis()) {
+                                TodoHandler.getInstance().schedule(getApplicationContext(), todo);
+                            }
+                        });
+
+                        break;
+
+                    case ERROR:
+                        final String msg = "Không thể lên lịch báo thức công việc";
+                        Toast.makeText(MyCoursesActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        break;
+                }
+
             }
         });
     }

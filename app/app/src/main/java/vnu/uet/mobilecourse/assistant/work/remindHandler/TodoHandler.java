@@ -32,6 +32,11 @@ public class TodoHandler extends RemindHandler<Todo> {
     }
 
     @Override
+    protected String getWorkId(Todo todo) {
+        return todo.getId();
+    }
+
+    @Override
     public void cancel(Context context, Todo todo) {
         WorkManager.getInstance(context)
                 .cancelAllWorkByTag(todo.getId());
