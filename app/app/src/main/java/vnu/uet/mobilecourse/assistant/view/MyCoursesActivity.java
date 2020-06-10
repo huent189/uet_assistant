@@ -1,10 +1,14 @@
 package vnu.uet.mobilecourse.assistant.view;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
@@ -16,6 +20,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
@@ -31,6 +36,11 @@ public class MyCoursesActivity extends AppCompatActivity {
 
     private BottomNavigationView mNavView;
 
+    private SharedPreferences.OnSharedPreferenceChangeListener mOnSharedPrefChangeListener;
+
+    private View mNotificationBadge;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,12 +50,16 @@ public class MyCoursesActivity extends AppCompatActivity {
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-//        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-//                R.id.navigation_courses, R.id.navigation_explore_course, R.id.navigation_chat, R.id.navigation_calendar)
-//                .build();
         mNavController = Navigation.findNavController(this, R.id.nav_host_fragment);
-//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(mNavView, mNavController);
+
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) mNavView.getChildAt(0);
+        BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(1);
+
+        mNotificationBadge = LayoutInflater.from(this).inflate(R.layout.layout_bottom_nav_badge, menuView, false);
+        itemView.addView(mNotificationBadge);
+
+        updateNotificationBadge();
 
         // hide bottom navigator in chat fragment
         mNavController.addOnDestinationChangedListener((controller, destination, arguments) -> {
@@ -54,14 +68,46 @@ public class MyCoursesActivity extends AppCompatActivity {
                     hideBottomNavigator();
                     break;
 
+                case R.id.navigation_notifications:
+                    SharedPreferencesManager.setInt(SharedPreferencesManager.NEW_NOTIFICATION, 0);
+                    break;
+
                 default:
                     showBottomNavigator();
                     break;
             }
         });
 
+        mOnSharedPrefChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if (key.equals(SharedPreferencesManager.NEW_NOTIFICATION)) {
+                    updateNotificationBadge();
+                }
+            }
+        };
+
         setupCourseReminders();
         setupTodoReminders();
+    }
+
+    private void updateNotificationBadge() {
+        int counter = SharedPreferencesManager.getInt(SharedPreferencesManager.NEW_NOTIFICATION);
+
+        if (counter != 0) {
+            TextView tvCounter = mNotificationBadge.findViewById(R.id.tvCounter);
+            tvCounter.setText(String.valueOf(counter * 10));
+            mNotificationBadge.setVisibility(View.VISIBLE);
+        } else {
+            mNotificationBadge.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferencesManager.registerOnChangeListener(mOnSharedPrefChangeListener);
     }
 
     private void setupCourseReminders() {
