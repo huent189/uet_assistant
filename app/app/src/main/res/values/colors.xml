@@ -14,5 +14,5 @@
     <color name="dark_red">#b00020</color>
 
     <color name="cardColor1">@color/primary</color>
-    <color name="cardColor2">#FDEBDF</color>
+    <color name="cardColor2">#DCAE5F</color>
 </resources>
