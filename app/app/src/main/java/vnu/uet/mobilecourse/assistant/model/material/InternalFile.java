@@ -42,14 +42,20 @@ public class InternalFile {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+
     }
 
     public String getFileUrl() {
-        return fileUrl +"&token=" + User.getInstance().getToken();
+        return fileUrl;
     }
 
     public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
+        if(fileUrl.contains("token")){
+            this.fileUrl = fileUrl;
+        }
+        else {
+            this.fileUrl = fileUrl + "?token=" + User.getInstance().getToken();
+        }
     }
 
     public String getMimeType() {

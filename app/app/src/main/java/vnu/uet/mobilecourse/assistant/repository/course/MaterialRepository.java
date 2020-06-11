@@ -168,6 +168,7 @@ public class MaterialRepository {
                 updateList.addAll(Arrays.stream(response)
                         .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
                 materialDAO.insertInternalResource(Arrays.asList(response));
+//                materialDAO.insertInternalResource(updateList);
             }
         };
         handler.onResponse(call, call.execute());
