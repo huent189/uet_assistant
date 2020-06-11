@@ -1,6 +1,9 @@
-package vnu.uet.mobilecourse.assistant.model.firebase;
+package vnu.uet.mobilecourse.assistant.model.firebase.notification;
 
 import com.google.firebase.firestore.Exclude;
+
+import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
+import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 
 public class TodoNotification extends Notification_UserSubCol {
 

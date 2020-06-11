@@ -1,6 +1,8 @@
-package vnu.uet.mobilecourse.assistant.model.firebase;
+package vnu.uet.mobilecourse.assistant.model.firebase.notification;
 
 import com.google.firebase.firestore.DocumentSnapshot;
+
+import vnu.uet.mobilecourse.assistant.model.firebase.IFirebaseModel;
 
 public abstract class Notification_UserSubCol implements IFirebaseModel {
 

@@ -12,9 +12,9 @@ import com.google.firebase.firestore.util.Util;
 
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
-import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
-import vnu.uet.mobilecourse.assistant.model.firebase.TodoNotification;
+import vnu.uet.mobilecourse.assistant.model.firebase.notification.TodoNotification;
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
 
 public class TodoReminder extends RemindWorker<Todo> {

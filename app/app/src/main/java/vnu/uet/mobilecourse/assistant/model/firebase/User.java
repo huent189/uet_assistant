@@ -5,7 +5,7 @@ import com.google.firebase.firestore.Exclude;
 import java.util.ArrayList;
 import java.util.List;
 
-import vnu.uet.mobilecourse.assistant.model.IStudent;
+import vnu.uet.mobilecourse.assistant.model.firebase.notification.Notification_UserSubCol;
 
 public class User implements IFirebaseModel {
 

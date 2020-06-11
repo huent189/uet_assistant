@@ -11,9 +11,9 @@ import androidx.work.WorkerParameters;
 import com.google.firebase.firestore.util.Util;
 
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.model.firebase.CourseAttendantNotification;
+import vnu.uet.mobilecourse.assistant.model.firebase.notification.CourseAttendantNotification;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
-import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
 
 public class SessionReminder extends RemindWorker<CourseSession> {

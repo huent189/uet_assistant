@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import vnu.uet.mobilecourse.assistant.model.firebase.CourseAttendantNotification;
-import vnu.uet.mobilecourse.assistant.model.firebase.NewMaterialNotification;
+import vnu.uet.mobilecourse.assistant.model.firebase.notification.CourseAttendantNotification;
+import vnu.uet.mobilecourse.assistant.model.firebase.notification.NewMaterialNotification;
 import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
-import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
-import vnu.uet.mobilecourse.assistant.model.firebase.TodoNotification;
+import vnu.uet.mobilecourse.assistant.model.firebase.notification.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.notification.TodoNotification;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
