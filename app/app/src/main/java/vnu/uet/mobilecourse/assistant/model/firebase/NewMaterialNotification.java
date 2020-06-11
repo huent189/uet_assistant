@@ -10,6 +10,8 @@ public class NewMaterialNotification extends Notification_UserSubCol {
 
     private int materialId;
 
+    private String materialType;
+
     @Exclude
     private Material material;
 
@@ -40,5 +42,13 @@ public class NewMaterialNotification extends Notification_UserSubCol {
 
     public void setMaterial(Material material) {
         this.material = material;
+    }
+
+    public String getMaterialType() {
+        return materialType;
+    }
+
+    public void setMaterialType(String materialType) {
+        this.materialType = materialType;
     }
 }
