@@ -31,6 +31,11 @@ public class CourseHandler extends RemindHandler<CourseSession> {
     }
 
     @Override
+    protected String getWorkId(CourseSession session) {
+        return session.getId();
+    }
+
+    @Override
     public void cancel(Context context, CourseSession session) {
         WorkManager.getInstance(context)
                 .cancelAllWorkByTag(session.getId());

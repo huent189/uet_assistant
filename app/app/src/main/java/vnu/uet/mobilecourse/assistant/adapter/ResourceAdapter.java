@@ -14,7 +14,7 @@ public abstract class ResourceAdapter extends RecyclerView.Adapter<ResourceAdapt
 
     protected MaterialFragment mOwner;
 
-    public ResourceAdapter(MaterialFragment owner) {
+    protected ResourceAdapter(MaterialFragment owner) {
         this.mOwner = owner;
     }
 
@@ -30,15 +30,14 @@ public abstract class ResourceAdapter extends RecyclerView.Adapter<ResourceAdapt
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView mTvAttachmentName;
-        public TextView mTvAttachmentSize;
+        TextView mTvAttachmentName;
+        TextView mTvAttachmentSize;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             mTvAttachmentName = itemView.findViewById(R.id.tvAttachmentName);
             mTvAttachmentName.setMovementMethod(new ScrollingMovementMethod());
-
 
             mTvAttachmentSize = itemView.findViewById(R.id.tvAttachmentSize);
         }

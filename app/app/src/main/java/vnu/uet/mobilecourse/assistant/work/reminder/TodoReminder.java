@@ -11,6 +11,7 @@ import androidx.work.WorkerParameters;
 import com.google.firebase.firestore.util.Util;
 
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoNotification;
@@ -52,6 +53,9 @@ public class TodoReminder extends RemindWorker<Todo> {
                 .build(context, CHANNEL_ID, R.drawable.ic_check_circle_24dp, title, desc);
 
         NotificationHelper.getsInstance().notify(context, id, notification);
+
+        int counter = SharedPreferencesManager.getInt(SharedPreferencesManager.NEW_NOTIFICATION);
+        SharedPreferencesManager.setInt(SharedPreferencesManager.NEW_NOTIFICATION, counter + 1);
     }
 
     @Override

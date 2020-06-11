@@ -6,7 +6,11 @@ import android.os.Parcelable;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import vnu.uet.mobilecourse.assistant.R;
+
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Random;
 
 @Entity
 public class Course implements ICourse {
@@ -56,7 +60,13 @@ public class Course implements ICourse {
     }
 
     public int getThumbnail() {
-        return thumbnail;
+        int random = new Random().nextInt(2);
+
+        if (random == 0) {
+            return R.drawable.isometric_course_thumbnail;
+        } else {
+            return R.drawable.isomatric_idea_course;
+        }
     }
 
     public void setThumbnail(int thumbnail) {
