@@ -25,8 +25,12 @@ import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
+import vnu.uet.mobilecourse.assistant.model.firebase.User;
+import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
+import vnu.uet.mobilecourse.assistant.repository.firebase.NavigationBadgeRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 import vnu.uet.mobilecourse.assistant.work.remindHandler.CourseHandler;
 import vnu.uet.mobilecourse.assistant.work.remindHandler.TodoHandler;
 
@@ -36,9 +40,11 @@ public class MyCoursesActivity extends AppCompatActivity {
 
     private BottomNavigationView mNavView;
 
-    private SharedPreferences.OnSharedPreferenceChangeListener mOnSharedPrefChangeListener;
+//    private SharedPreferences.OnSharedPreferenceChangeListener mOnSharedPrefChangeListener;
 
     private View mNotificationBadge;
+
+    private NavigationBadgeRepository mNavigationBadgeRepo = NavigationBadgeRepository.getInstance();
 
 
     @Override
@@ -53,13 +59,7 @@ public class MyCoursesActivity extends AppCompatActivity {
         mNavController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(mNavView, mNavController);
 
-        BottomNavigationMenuView menuView = (BottomNavigationMenuView) mNavView.getChildAt(0);
-        BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(1);
-
-        mNotificationBadge = LayoutInflater.from(this).inflate(R.layout.layout_bottom_nav_badge, menuView, false);
-        itemView.addView(mNotificationBadge);
-
-        updateNotificationBadge();
+        setupNavigationBadges();
 
         // hide bottom navigator in chat fragment
         mNavController.addOnDestinationChangedListener((controller, destination, arguments) -> {
@@ -69,7 +69,8 @@ public class MyCoursesActivity extends AppCompatActivity {
                     break;
 
                 case R.id.navigation_notifications:
-                    SharedPreferencesManager.setInt(SharedPreferencesManager.NEW_NOTIFICATION, 0);
+//                    SharedPreferencesManager.setInt(SharedPreferencesManager.NEW_NOTIFICATION, 0);
+                    mNavigationBadgeRepo.seeAllNotifications();
                     break;
 
                 default:
@@ -78,21 +79,39 @@ public class MyCoursesActivity extends AppCompatActivity {
             }
         });
 
-        mOnSharedPrefChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                if (key.equals(SharedPreferencesManager.NEW_NOTIFICATION)) {
-                    updateNotificationBadge();
-                }
+//        mOnSharedPrefChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+//            @Override
+//            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+//                if (key.equals(SharedPreferencesManager.NEW_NOTIFICATION)) {
+//                    updateNotificationBadge();
+//                }
+//            }
+//        };
+
+        mNavigationBadgeRepo.getNewNotifications().observe(this, stateModel -> {
+            int counter = 0;
+
+            if (stateModel.getStatus() == StateStatus.SUCCESS) {
+                counter = stateModel.getData();
             }
-        };
+
+            updateNotificationBadge(counter);
+        });
 
         setupCourseReminders();
         setupTodoReminders();
     }
 
-    private void updateNotificationBadge() {
-        int counter = SharedPreferencesManager.getInt(SharedPreferencesManager.NEW_NOTIFICATION);
+    private void setupNavigationBadges() {
+        BottomNavigationMenuView menuView = (BottomNavigationMenuView) mNavView.getChildAt(0);
+        BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(1);
+
+        mNotificationBadge = LayoutInflater.from(this).inflate(R.layout.layout_bottom_nav_badge, menuView, false);
+        itemView.addView(mNotificationBadge);
+    }
+
+    private void updateNotificationBadge(int counter) {
+//        int counter = SharedPreferencesManager.getInt(SharedPreferencesManager.NEW_NOTIFICATION);
 
         if (counter != 0) {
             TextView tvCounter = mNotificationBadge.findViewById(R.id.tvCounter);
@@ -103,12 +122,12 @@ public class MyCoursesActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        SharedPreferencesManager.registerOnChangeListener(mOnSharedPrefChangeListener);
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//
+//        SharedPreferencesManager.registerOnChangeListener(mOnSharedPrefChangeListener);
+//    }
 
     private void setupCourseReminders() {
         new CourseInfoDAO().readAll().observe(MyCoursesActivity.this, new Observer<StateModel<List<CourseInfo>>>() {

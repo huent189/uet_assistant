@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GroupChat implements IFirebaseModel {
+
     private String id;
     private long createdTime;
     private String avatar;

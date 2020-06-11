@@ -11,7 +11,7 @@ public class SharedPreferencesManager {
     public static final String TOKEN = "TOKEN";
     public static final String REGISTER_EMAIL = "REGISTER_EMAIL";
     public static final String LAST_SYNCHONIZE_TIME = "LAST_SYNCHONIZE_TIME";
-    public static final String NEW_NOTIFICATION = "NEW_NOTIFICATION";
+//    public static final String NEW_NOTIFICATION = "NEW_NOTIFICATION";
     private static final String APP_SHARED_PREFS = "MySharedPrefs";
 
     private static void initPreference(){
