@@ -11,10 +11,10 @@ import androidx.work.WorkerParameters;
 import com.google.firebase.firestore.util.Util;
 
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.model.firebase.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.notification.TodoNotification;
+import vnu.uet.mobilecourse.assistant.repository.firebase.NavigationBadgeRepository;
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
 
 public class TodoReminder extends RemindWorker<Todo> {
@@ -54,8 +54,7 @@ public class TodoReminder extends RemindWorker<Todo> {
 
         NotificationHelper.getsInstance().notify(context, id, notification);
 
-        int counter = SharedPreferencesManager.getInt(SharedPreferencesManager.NEW_NOTIFICATION);
-        SharedPreferencesManager.setInt(SharedPreferencesManager.NEW_NOTIFICATION, counter + 1);
+        NavigationBadgeRepository.getInstance().increaseNewNotifications();
     }
 
     @Override

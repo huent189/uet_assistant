@@ -54,6 +54,56 @@ public class NavigationBadgeRepository {
         return counter;
     }
 
+    public StateMediatorLiveData<Integer> increaseNewNotifications() {
+        StateMediatorLiveData<Integer> liveData = new StateMediatorLiveData<>();
+        liveData.postLoading();
+
+        liveData.addSource(getNewNotifications(), new Observer<StateModel<Integer>>() {
+            @Override
+            public void onChanged(StateModel<Integer> stateModel) {
+                switch (stateModel.getStatus()) {
+                    case LOADING:
+                        liveData.postLoading();
+                        break;
+
+                    case ERROR:
+                        liveData.postError(stateModel.getError());
+                        break;
+
+                    case SUCCESS:
+                        int counter = stateModel.getData();
+
+                        Map<String, Object> changes = new HashMap<>();
+                        changes.put("newNotifications", ++counter);
+
+                        StateLiveData<String> modifyLiveData = mUserRepo.modify(changes);
+
+                        int finalCounter = counter;
+                        liveData.addSource(modifyLiveData, new Observer<StateModel<String>>() {
+                            @Override
+                            public void onChanged(StateModel<String> stateModel) {
+                                switch (stateModel.getStatus()) {
+                                    case LOADING:
+                                        liveData.postLoading();
+                                        break;
+
+                                    case ERROR:
+                                        liveData.postError(stateModel.getError());
+                                        break;
+
+                                    case SUCCESS:
+                                        liveData.postSuccess(finalCounter);
+                                        break;
+                                }
+                            }
+                        });
+                }
+            }
+        });
+
+        return liveData;
+    }
+
     public StateLiveData<String> seeAllNotifications() {
         Map<String, Object> changes = new HashMap<>();
         changes.put("newNotifications", 0);
