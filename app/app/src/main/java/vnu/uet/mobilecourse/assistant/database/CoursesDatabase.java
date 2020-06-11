@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 @Database(entities = {Course.class, Grade.class, WeeklyMaterial.class, Material.class, AssignmentContent.class,
                     ExternalResourceContent.class, InternalFile.class, InternalResourceContent.class,
                     MaterialContent.class, PageContent.class, QuizNoGrade.class},
-        version = 6)
+        version = 7)
 public abstract class CoursesDatabase extends RoomDatabase {
     private static volatile CoursesDatabase instance;
     private static final int NUMBER_OF_THREADS = 4;
