@@ -5,6 +5,7 @@ import java.util.Map;
 import vnu.uet.mobilecourse.assistant.database.DAO.UserDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.repository.cache.FirebaseUserCache;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
@@ -48,5 +49,9 @@ public class FirebaseUserRepository {
 
     public StateLiveData<String> modify(Map<String, Object> changes) {
         return mDao.update(STUDENT_ID, changes);
+    }
+
+    public IStateLiveData<User> add(User user) {
+        return mDao.add(user);
     }
 }

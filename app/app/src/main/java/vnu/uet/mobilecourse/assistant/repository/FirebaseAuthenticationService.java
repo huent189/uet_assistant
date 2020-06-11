@@ -15,6 +15,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 import vnu.uet.mobilecourse.assistant.BuildConfig;
+import vnu.uet.mobilecourse.assistant.model.firebase.User;
+import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
+import vnu.uet.mobilecourse.assistant.util.CONST;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 
 public class FirebaseAuthenticationService {
@@ -80,6 +83,18 @@ public class FirebaseAuthenticationService {
                                 // You can check if the user is new or existing:
                                 // result.getAdditionalUserInfo().isNewUser()
                                 // TODO: check new user
+                                AuthResult result = loginViaMail.getResult();
+                                if (result != null && result.getAdditionalUserInfo() != null) {
+                                    boolean isNewUser = result.getAdditionalUserInfo().isNewUser();
+
+                                    // create new user profile document
+                                    if (isNewUser) {
+                                        User user = createNewUserProfile(email);
+                                        FirebaseUserRepository.getInstance().add(user);
+
+                                    }
+                                }
+
                             } else {
                                 // TODO: error
                                 Exception exception = loginViaMail.getException();
@@ -90,6 +105,16 @@ public class FirebaseAuthenticationService {
                     });
         }
         return loginState;
+    }
+
+    private User createNewUserProfile(String email) {
+        User user = new User();
+        String id = email.replace(CONST.VNU_EMAIL_DOMAIN, CONST.EMPTY);
+        user.setId(id);
+        user.setAvatar(null);
+        user.setNewNotifications(0);
+
+        return user;
     }
 
     public static boolean isFirebaseLoggedIn (){

@@ -10,12 +10,14 @@ import vnu.uet.mobilecourse.assistant.model.firebase.notification.Notification_U
 public class User implements IFirebaseModel {
 
     private String id;
-    private String name;
     private String avatar;
     private int newNotifications;
 
     @Exclude
     private int unseenGroupChat;
+
+    @Exclude
+    private String name;
 
     @Exclude
     private List<GroupChat_UserSubCol> groupChats = new ArrayList<>();
@@ -58,6 +60,7 @@ public class User implements IFirebaseModel {
         this.notifications = notifications;
     }
 
+    @Exclude
     public String getName() {
         return name;
     }
