@@ -81,12 +81,6 @@ public class NotificationDAO extends FirebaseDAO<Notification_UserSubCol> {
                 case NotificationType.ADMIN:
                     notification = new AdminNotification();
 
-                    Object thumbnailObj = snapshot.get("thumbnail");
-                    if (thumbnailObj instanceof Long) {
-                        int thumbnail = ((Long) thumbnailObj).intValue();
-                        ((AdminNotification) notification).setThumbnail(thumbnail);
-                    }
-
                     break;
 
                 case NotificationType.TODO:

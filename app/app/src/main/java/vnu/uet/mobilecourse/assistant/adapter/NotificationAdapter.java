@@ -21,6 +21,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.model.notification.AdminNotification;
 import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.notification.TodoNotification;
@@ -154,6 +155,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             mTvNotifyTime.setText(time);
 
             if (notification instanceof TodoNotification) {
+                mIvNotifyIcon.setImageResource(R.drawable.img_target);
+
                 TodoNotification todoNotification = (TodoNotification) notification;
 
                 mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +165,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         navigateTodo(todoNotification);
                     }
                 });
-
+            } else if (notification instanceof AdminNotification) {
+                mIvNotifyIcon.setImageResource(R.drawable.img_admin_bot);
             }
         }
     }

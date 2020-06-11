@@ -54,7 +54,6 @@ public class TodoReminder extends RemindWorker<Todo> {
 
         NotificationHelper.getsInstance().notify(context, id, notification);
 
-        NavigationBadgeRepository.getInstance().increaseNewNotifications();
     }
 
     @Override

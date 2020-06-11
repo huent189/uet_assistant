@@ -18,8 +18,7 @@
             android:id="@+id/ivNotifyIcon"
             android:layout_width="@dimen/img_notification_icon_size"
             android:layout_height="@dimen/img_notification_icon_size"
-            android:src="@drawable/img_target"
-            android:layout_marginTop="@dimen/small_margin"
+            android:src="@drawable/img_admin_bot"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription" />
