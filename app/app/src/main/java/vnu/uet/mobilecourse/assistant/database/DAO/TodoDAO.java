@@ -3,12 +3,12 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 import android.util.Log;
 
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import vnu.uet.mobilecourse.assistant.model.event.EventComparator;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
@@ -51,6 +51,7 @@ public class TodoDAO extends FirebaseDAO<Todo> {
                             List<Todo> allLists = snapshots.getDocuments().stream()
                                     .map(snapshot -> snapshot.toObject(Todo.class))
                                     .filter(Objects::nonNull)
+                                    .sorted(new EventComparator())
                                     .collect(Collectors.toList());
 
                             mDataList.postSuccess(allLists);
