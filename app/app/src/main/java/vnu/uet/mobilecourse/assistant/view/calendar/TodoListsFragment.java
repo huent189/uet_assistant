@@ -23,6 +23,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.expandable.ExpandableTodoList;
+import vnu.uet.mobilecourse.assistant.work.remindHandler.TodoHandler;
 
 import android.os.Parcelable;
 import android.view.LayoutInflater;
@@ -173,9 +174,11 @@ public class TodoListsFragment extends Fragment {
                 if (viewHolder instanceof TodoViewHolder) {
                     final Todo item = ((TodoViewHolder) viewHolder).getTodo();
                     mViewModel.deleteTodo(item.getId());
+                    TodoHandler.getInstance().cancel(mActivity, item);
                 } else if (viewHolder instanceof TodoListAdapter.TodoListViewHolder) {
                     final ExpandableTodoList todoList = ((TodoListAdapter.TodoListViewHolder) viewHolder).getTodoList();
                     mViewModel.deleteTodoList(todoList.getId(), todoList.getItems());
+                    TodoHandler.getInstance().cancelByTodoList(mActivity, todoList.getId());
                 }
             }
         };

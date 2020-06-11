@@ -21,10 +21,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.adapter.viewholder.ISwipeToDeleteHolder;
-import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
-import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
+import vnu.uet.mobilecourse.assistant.model.firebase.notification.TodoNotification;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
@@ -111,14 +110,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             return time;
         }
 
-        private void navigateTodo(String id) {
-            TodoRepository.getInstance().getTodoById(id)
+        private void navigateTodo(TodoNotification todoNotification) {
+            String todoId = todoNotification.getTodoId();
+
+            TodoRepository.getInstance().getTodoById(todoId)
                 .observe(mOwner.getViewLifecycleOwner(), new Observer<StateModel<Todo>>() {
                     @Override
                     public void onChanged(StateModel<Todo> stateModel) {
                         switch (stateModel.getStatus()) {
                             case SUCCESS:
                                 Todo todo = stateModel.getData();
+
+                                todoNotification.setTodo(todo);
 
                                 Bundle bundle = new Bundle();
                                 bundle.putParcelable("todo", todo);
@@ -150,38 +153,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             String time = generateTime(notification.getNotifyTime());
             mTvNotifyTime.setText(time);
 
-            switch (notification.getType()) {
-                case NotificationType.TODO:
-                    String todoId = notification.getReference();
+            if (notification instanceof TodoNotification) {
+                TodoNotification todoNotification = (TodoNotification) notification;
 
-                    mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            navigateTodo(todoId);
-                        }
-                    });
+                mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        navigateTodo(todoNotification);
+                    }
+                });
 
-                    break;
-
-                case NotificationType.MATERIAL:
-                    String materialId = notification.getReference();
-                    mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // TODO: navigate to view material info
-                        }
-                    });
-                    break;
-
-                case NotificationType.ATTENDANCE:
-                    String courseId = notification.getReference();
-                    mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // TODO: navigate to view course info
-                        }
-                    });
-                    break;
             }
         }
     }

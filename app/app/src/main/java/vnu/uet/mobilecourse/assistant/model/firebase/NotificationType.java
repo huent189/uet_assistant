@@ -15,4 +15,9 @@ public interface NotificationType {
      * go to school now!!
      */
     int ATTENDANCE = 3;
+
+    /**
+     * admin notification
+     */
+    int ADMIN = 4;
 }

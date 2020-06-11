@@ -67,6 +67,11 @@
     <string name="title_material_no_desc">Không có mô tả.</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_course_general_materials">Thông báo/Tài liệu chung</string>
+    <string name="material_modify_time_title">Chỉnh sửa lần cuối</string>
+    <string name="material_assignment_no_attempt_title">Không thể làm bài</string>
+    <string name="material_start_time_title">Thời gian bắt đầu</string>
+    <string name="material_deadline_title">Thời gian kết thúc</string>
+    <string name="material_limit_time_title">Thời gian làm bài</string>
 
     <string-array name="dayOfWeek">
         <item>C.N</item>

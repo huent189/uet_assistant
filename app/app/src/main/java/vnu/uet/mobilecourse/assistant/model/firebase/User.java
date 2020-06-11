@@ -5,13 +5,19 @@ import com.google.firebase.firestore.Exclude;
 import java.util.ArrayList;
 import java.util.List;
 
-import vnu.uet.mobilecourse.assistant.model.IStudent;
+import vnu.uet.mobilecourse.assistant.model.firebase.notification.Notification_UserSubCol;
 
 public class User implements IFirebaseModel {
 
     private String id;
-    private String name;
     private String avatar;
+    private int newNotifications;
+
+    @Exclude
+    private int unseenGroupChat;
+
+    @Exclude
+    private String name;
 
     @Exclude
     private List<GroupChat_UserSubCol> groupChats = new ArrayList<>();
@@ -54,11 +60,29 @@ public class User implements IFirebaseModel {
         this.notifications = notifications;
     }
 
+    @Exclude
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getNewNotifications() {
+        return newNotifications;
+    }
+
+    public void setNewNotifications(int newNotifications) {
+        this.newNotifications = newNotifications;
+    }
+
+    @Exclude
+    public int getUnseenGroupChat() {
+        return unseenGroupChat;
+    }
+
+    public void setUnseenGroupChat(int unseenGroupChat) {
+        this.unseenGroupChat = unseenGroupChat;
     }
 }

@@ -24,11 +24,11 @@ import vnu.uet.mobilecourse.assistant.model.Course;
 
 public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCoursesAdapter.ViewHolder> {
 
-    private List<? extends ICourse> mCourses;
+    private List<Course> mCourses;
     private Fragment mOwner;
     private NavController mNavController;
 
-    public RecentlyCoursesAdapter(List<? extends ICourse> courses, Fragment owner) {
+    public RecentlyCoursesAdapter(List<Course> courses, Fragment owner) {
         this.mCourses = courses;
         this.mOwner = owner;
     }
@@ -53,7 +53,7 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final ICourse course = mCourses.get(position);
+        final Course course = mCourses.get(position);
         holder.bind(course, mNavController);
     }
 
@@ -77,28 +77,29 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
             mTvCourseId = itemView.findViewById(R.id.tvCourseId);
 
             mCvCourseContainer = itemView.findViewById(R.id.cvCourseContainer);
-            int cardColor = getBackgroundColor(R.drawable.isometric_course_thumbnail);
-            mCvCourseContainer.setCardBackgroundColor(cardColor);
         }
 
-        void bind(ICourse course, NavController navController) {
+        void bind(Course course, NavController navController) {
             String courseTitle = course.getTitle();
             String courseCode = course.getCode();
 
             mTvTitle.setText(courseTitle);
             mTvCourseId.setText(courseCode);
 
+            int thumbnailResId = course.getThumbnail();
+            mIvThumbnail.setImageResource(thumbnailResId);
+
+            int cardColor = getBackgroundColor(thumbnailResId);
+            mCvCourseContainer.setCardBackgroundColor(cardColor);
+
             mCvCourseContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-
-                    if (course instanceof Course) {
-                        bundle.putInt("courseId", ((Course) course).getId());
-                    }
-
+                    bundle.putInt("courseId", course.getId());
                     bundle.putString("courseTitle", courseTitle);
                     bundle.putString("courseCode", courseCode);
+                    bundle.putParcelable("course", course);
 
                     navController
                             .navigate(R.id.action_navigation_courses_to_navigation_explore_course, bundle);
@@ -114,7 +115,7 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
                     cardColor = R.color.cardColor1;
                     break;
 
-                case R.drawable.isometric_math_course_background:
+                case R.drawable.isomatric_idea_course:
                     cardColor = R.color.cardColor2;
                     break;
 

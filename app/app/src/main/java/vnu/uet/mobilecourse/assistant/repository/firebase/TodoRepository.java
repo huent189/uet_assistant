@@ -65,8 +65,8 @@ public class TodoRepository implements ITodoRepository {
 
     @Override
     public IStateLiveData<Todo> addTodo(Todo todo) {
-        return new ValidationTodoLiveData(todo) {
 
+        return new ValidationTodoLiveData(todo) {
             @Override
             protected StateLiveData<Todo> onAccess() {
                 return mTodoDao.add(todo.getId(), todo);

@@ -8,23 +8,19 @@ import android.widget.ImageView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.NotificationAdapter;
-import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
-import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
+import vnu.uet.mobilecourse.assistant.model.firebase.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.NotificationsViewModel;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class NotificationsFragment extends Fragment {
 

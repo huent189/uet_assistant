@@ -20,8 +20,6 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
 
     private static final String USER_ID = User.getInstance().getStudentId();
 
-    private View mView;
-
     public StudentViewHolder(@NonNull View view) {
         super(view);
 
@@ -29,8 +27,6 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
         mTvName = view.findViewById(R.id.tvName);
         mTvId = view.findViewById(R.id.tvId);
         mBtnChat = view.findViewById(R.id.btnChat);
-
-        mView = view;
     }
 
     public void bind(IStudent student) {
@@ -56,6 +52,6 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setOnClickListener(View.OnClickListener listener) {
-        mView.setOnClickListener(listener);
+        itemView.setOnClickListener(listener);
     }
 }

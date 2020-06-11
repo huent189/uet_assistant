@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 
@@ -18,7 +19,6 @@ public class MaterialViewHolder extends ChildViewHolder {
     private TextView mTvTaskTitle;
     private ImageView mIvTaskStatus;
     private ImageView mIvMaterialIcon;
-    private View mView;
     private NavController mNavController;
 
     public MaterialViewHolder(@NonNull View itemView, NavController navController) {
@@ -27,7 +27,6 @@ public class MaterialViewHolder extends ChildViewHolder {
         mTvTaskTitle = itemView.findViewById(R.id.tvTaskTitle);
         mIvTaskStatus = itemView.findViewById(R.id.ivTaskStatus);
         mIvMaterialIcon = itemView.findViewById(R.id.ivMaterialIcon);
-        mView = itemView;
 
         mNavController = navController;
     }
@@ -71,9 +70,10 @@ public class MaterialViewHolder extends ChildViewHolder {
             mIvTaskStatus.setImageResource(R.drawable.ic_unchecked_circle_24dp);
         }
 
-        mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        itemView.setOnClickListener(v -> {
+            if (CourseConstant.MaterialType.FORUM.equals(material.getType())) {
+                Toast.makeText(itemView.getContext(), "Chưa hỗ trợ", Toast.LENGTH_SHORT).show();
+            } else {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("material", material);
 

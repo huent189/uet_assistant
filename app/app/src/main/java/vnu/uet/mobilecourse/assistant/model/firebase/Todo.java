@@ -84,7 +84,7 @@ public class Todo implements Parcelable, IFirebaseModel, IEvent {
         return deadline;
     }
 
-    public void setDeadline(int deadline) {
+    public void setDeadline(long deadline) {
         this.deadline = deadline;
     }
 

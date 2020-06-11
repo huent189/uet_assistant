@@ -56,7 +56,9 @@ public class NotificationHelper {
         return false;
     }
 
-    private void createChannel(@NonNull NotificationManagerCompat notificationManager, @NonNull String id) throws Exception {
+    private void createChannel(@NonNull NotificationManagerCompat notificationManager,
+                               @NonNull String id) throws Exception {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(id, id, NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription(id);
