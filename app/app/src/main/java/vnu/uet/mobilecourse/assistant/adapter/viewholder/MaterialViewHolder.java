@@ -19,7 +19,6 @@ public class MaterialViewHolder extends ChildViewHolder {
     private TextView mTvTaskTitle;
     private ImageView mIvTaskStatus;
     private ImageView mIvMaterialIcon;
-    private View mView;
     private NavController mNavController;
 
     public MaterialViewHolder(@NonNull View itemView, NavController navController) {
@@ -28,7 +27,6 @@ public class MaterialViewHolder extends ChildViewHolder {
         mTvTaskTitle = itemView.findViewById(R.id.tvTaskTitle);
         mIvTaskStatus = itemView.findViewById(R.id.ivTaskStatus);
         mIvMaterialIcon = itemView.findViewById(R.id.ivMaterialIcon);
-        mView = itemView;
 
         mNavController = navController;
     }
@@ -72,24 +70,16 @@ public class MaterialViewHolder extends ChildViewHolder {
             mIvTaskStatus.setImageResource(R.drawable.ic_unchecked_circle_24dp);
         }
 
-        mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (material.getType()) {
-                    case CourseConstant.MaterialType.FORUM:
-                        Toast.makeText(mView.getContext(), "Chưa hỗ trợ", Toast.LENGTH_SHORT).show();
-                        break;
+        itemView.setOnClickListener(v -> {
+            if (CourseConstant.MaterialType.FORUM.equals(material.getType())) {
+                Toast.makeText(itemView.getContext(), "Chưa hỗ trợ", Toast.LENGTH_SHORT).show();
+            } else {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("material", material);
 
-                    default:
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelable("material", material);
+                int actionId = R.id.action_navigation_explore_course_to_navigation_material;
 
-                        int actionId = R.id.action_navigation_explore_course_to_navigation_material;
-
-                        mNavController.navigate(actionId, bundle);
-
-                        break;
-                }
+                mNavController.navigate(actionId, bundle);
             }
         });
     }
