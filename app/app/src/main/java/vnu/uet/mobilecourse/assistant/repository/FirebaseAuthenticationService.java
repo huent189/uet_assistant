@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.repository;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -12,11 +13,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthActionCodeException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.util.Util;
 
 
 import vnu.uet.mobilecourse.assistant.BuildConfig;
+import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
+import vnu.uet.mobilecourse.assistant.model.firebase.notification.AdminNotification;
 import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
+import vnu.uet.mobilecourse.assistant.repository.firebase.NotificationRepository;
 import vnu.uet.mobilecourse.assistant.util.CONST;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 
@@ -87,11 +92,14 @@ public class FirebaseAuthenticationService {
                                 if (result != null && result.getAdditionalUserInfo() != null) {
                                     boolean isNewUser = result.getAdditionalUserInfo().isNewUser();
 
-                                    // create new user profile document
                                     if (isNewUser) {
+                                        // create new user profile document
                                         User user = createNewUserProfile(email);
                                         FirebaseUserRepository.getInstance().add(user);
 
+                                        // welcome notification
+                                        AdminNotification notification = generateWelcomeNotification();
+                                        NotificationRepository.getInstance().add(notification);
                                     }
                                 }
 
@@ -112,9 +120,24 @@ public class FirebaseAuthenticationService {
         String id = email.replace(CONST.VNU_EMAIL_DOMAIN, CONST.EMPTY);
         user.setId(id);
         user.setAvatar(null);
-        user.setNewNotifications(0);
+        user.setNewNotifications(1);
 
         return user;
+    }
+
+    @SuppressLint("RestrictedApi")
+    private AdminNotification generateWelcomeNotification() {
+        AdminNotification notification = new AdminNotification();
+        notification.setId(Util.autoId());
+        notification.setTitle("Xin chào sinh viên!");
+        notification.setDescription(
+                "Khám phá những tính năng thú vị " +
+                "và tối ưu hóa hiệu suất học tập " +
+                "từ Trợ lý học tập Công nghệ."
+        );
+        notification.setNotifyTime(System.currentTimeMillis() / 1000);
+        notification.setType(NotificationType.ADMIN);
+        return notification;
     }
 
     public static boolean isFirebaseLoggedIn (){
