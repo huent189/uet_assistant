@@ -17,7 +17,7 @@ import java.util.Map;
 import vnu.uet.mobilecourse.assistant.BuildConfig;
 import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
-import vnu.uet.mobilecourse.assistant.model.firebase.notification.AdminNotification;
+import vnu.uet.mobilecourse.assistant.model.notification.AdminNotification;
 import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.NotificationRepository;
 import vnu.uet.mobilecourse.assistant.util.CONST;

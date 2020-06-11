@@ -7,7 +7,7 @@ import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import vnu.uet.mobilecourse.assistant.model.firebase.notification.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.repository.firebase.NotificationRepository;
 
 public abstract class RemindWorker<T> extends Worker {

@@ -11,9 +11,9 @@ import androidx.work.WorkerParameters;
 import com.google.firebase.firestore.util.Util;
 
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.model.firebase.notification.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
-import vnu.uet.mobilecourse.assistant.model.firebase.notification.TodoNotification;
+import vnu.uet.mobilecourse.assistant.model.notification.TodoNotification;
 import vnu.uet.mobilecourse.assistant.repository.firebase.NavigationBadgeRepository;
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
 
