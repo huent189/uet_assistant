@@ -71,34 +71,35 @@ public class CourseGeneralFragment extends Fragment {
                 cpbProgress.setProgressWithAnimation(progress);
             }
 
-            initializeGeneralMaterialsView(root, course);
+            if (!courseCode.isEmpty()) {
+                initializeGeneralMaterialsView(root, course);
 
+                RecyclerView rvSessions = initializeSessionsView(root);
+                mViewModel.getCourseInfo(courseCode).observe(getViewLifecycleOwner(), stateModel -> {
+                    switch (stateModel.getStatus()) {
+                        case LOADING:
+                            tvCredits.setText(R.string.title_loading);
+                            break;
 
-            RecyclerView rvSessions = initializeSessionsView(root);
-            mViewModel.getCourseInfo(courseCode).observe(getViewLifecycleOwner(), stateModel -> {
-                switch (stateModel.getStatus()) {
-                    case LOADING:
-                        tvCredits.setText(R.string.title_loading);
-                        break;
+                        case ERROR:
+                            tvCredits.setText(R.string.title_error);
+                            break;
 
-                    case ERROR:
-                        tvCredits.setText(R.string.title_error);
-                        break;
+                        case SUCCESS:
+                            CourseInfo courseInfo = stateModel.getData();
 
-                    case SUCCESS:
-                        CourseInfo courseInfo = stateModel.getData();
+                            tvCredits.setText(String.valueOf(courseInfo.getCredits()));
 
-                        tvCredits.setText(String.valueOf(courseInfo.getCredits()));
+                            List<CourseSession> sessions = courseInfo.getSessions();
+                            CourseSessionAdapter adapter = new CourseSessionAdapter(sessions, CourseGeneralFragment.this);
+                            rvSessions.setAdapter(adapter);
 
-                        List<CourseSession> sessions = courseInfo.getSessions();
-                        CourseSessionAdapter adapter = new CourseSessionAdapter(sessions, CourseGeneralFragment.this);
-                        rvSessions.setAdapter(adapter);
+                            break;
+                    }
+                });
 
-                        break;
-                }
-            });
-
-            initializeParticipantsView(root, courseCode);
+                initializeParticipantsView(root, courseCode);
+            }
         }
 
         return root;

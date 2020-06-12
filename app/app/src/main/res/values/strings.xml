@@ -72,6 +72,7 @@
     <string name="material_start_time_title">Thời gian bắt đầu</string>
     <string name="material_deadline_title">Thời gian kết thúc</string>
     <string name="material_limit_time_title">Thời gian làm bài</string>
+    <string name="title_course_enroll_error">Bạn chưa tham gia vào lớp học này\ntrên website môn học.</string>
 
     <string-array name="dayOfWeek">
         <item>C.N</item>

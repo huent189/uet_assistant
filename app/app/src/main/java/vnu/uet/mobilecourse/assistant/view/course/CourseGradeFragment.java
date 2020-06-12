@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -37,9 +38,25 @@ public class CourseGradeFragment extends Fragment {
 
         mViewModel = new ViewModelProvider(this).get(CourseGradeViewModel.class);
 
-        initializeGradeListView(root);
+        // get bundle from prev fragment
+        Bundle args = getArguments();
+        assert args != null;
+        ICourse course = args.getParcelable("course");
 
-        initializeSummaryView(root);
+        if (course instanceof Course) {
+            // get course id from bundle
+            mCourseId = ((Course) course).getId();
+
+            initializeGradeListView(root);
+            initializeSummaryView(root);
+
+        } else {
+            LinearLayout layoutContainer = root.findViewById(R.id.layoutContainer);
+            layoutContainer.setVisibility(View.GONE);
+
+            TextView tvEnrollError = root.findViewById(R.id.tvEnrollError);
+            tvEnrollError.setVisibility(View.VISIBLE);
+        }
 
         return root;
     }
@@ -87,35 +104,25 @@ public class CourseGradeFragment extends Fragment {
         RecyclerView rvGrades = root.findViewById(R.id.rvGrades);
         rvGrades.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        // get bundle from prev fragment
-        Bundle args = getArguments();
-        assert args != null;
-        ICourse course = args.getParcelable("course");
+        // shimmer layout for loading state
+        ShimmerFrameLayout shimmerRvGrades = root.findViewById(R.id.shimmerRvGrades);
+        shimmerRvGrades.startShimmerAnimation();
 
-        if (course instanceof Course) {
-            // get course id from bundle
-            mCourseId = ((Course) course).getId();
+        mViewModel.getCourseGrades(mCourseId).observe(getViewLifecycleOwner(), grades -> {
+            // grades not found -> loading state
+            if (grades == null) {
+                shimmerRvGrades.setVisibility(View.VISIBLE);
+                rvGrades.setVisibility(View.INVISIBLE);
 
-            // shimmer layout for loading state
-            ShimmerFrameLayout shimmerRvGrades = root.findViewById(R.id.shimmerRvGrades);
-            shimmerRvGrades.startShimmerAnimation();
+            }
+            // success state, update recycle view
+            else {
+                shimmerRvGrades.setVisibility(View.INVISIBLE);
+                rvGrades.setVisibility(View.VISIBLE);
 
-            mViewModel.getCourseGrades(mCourseId).observe(getViewLifecycleOwner(), grades -> {
-                // grades not found -> loading state
-                if (grades == null) {
-                    shimmerRvGrades.setVisibility(View.VISIBLE);
-                    rvGrades.setVisibility(View.INVISIBLE);
-
-                }
-                // success state, update recycle view
-                else {
-                    shimmerRvGrades.setVisibility(View.INVISIBLE);
-                    rvGrades.setVisibility(View.VISIBLE);
-
-                    mGradeAdapter = new GradeAdapter(grades, CourseGradeFragment.this);
-                    rvGrades.setAdapter(mGradeAdapter);
-                }
-            });
-        }
+                mGradeAdapter = new GradeAdapter(grades, CourseGradeFragment.this);
+                rvGrades.setAdapter(mGradeAdapter);
+            }
+        });
     }
 }
