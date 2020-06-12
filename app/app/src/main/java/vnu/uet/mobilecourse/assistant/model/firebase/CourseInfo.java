@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
+import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.ICourse;
 import vnu.uet.mobilecourse.assistant.util.CONST;
 
@@ -25,7 +26,7 @@ public class CourseInfo implements IFirebaseModel, ICourse {
 
     public CourseInfo() {}
 
-    protected CourseInfo(Parcel in) {
+    private CourseInfo(Parcel in) {
         name = in.readString();
         id = in.readString();
         credits = in.readInt();
@@ -100,6 +101,11 @@ public class CourseInfo implements IFirebaseModel, ICourse {
     @Override
     public String getCode() {
         return CONST.COURSE_PREFIX + CONST.UNDERSCORE_CHAR + id.replace(CONST.SPACE_CHAR, CONST.UNDERSCORE_CHAR);
+    }
+
+    @Override
+    public int getThumbnail() {
+        return R.drawable.isometric_course_thumbnail;
     }
 
     @Override

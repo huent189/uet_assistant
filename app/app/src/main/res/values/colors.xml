@@ -15,4 +15,6 @@
 
     <color name="cardColor1">@color/primary</color>
     <color name="cardColor2">#DCAE5F</color>
+    <color name="cardColor3">#A2D6FF</color>
+
 </resources>

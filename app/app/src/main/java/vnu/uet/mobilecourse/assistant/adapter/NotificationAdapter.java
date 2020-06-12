@@ -22,6 +22,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.notification.AdminNotification;
+import vnu.uet.mobilecourse.assistant.model.notification.CourseAttendantNotification;
 import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.notification.TodoNotification;
@@ -167,6 +168,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 });
             } else if (notification instanceof AdminNotification) {
                 mIvNotifyIcon.setImageResource(R.drawable.img_admin_bot);
+            } else if (notification instanceof CourseAttendantNotification) {
+                mIvNotifyIcon.setImageResource(R.drawable.img_bag_bell);
             }
         }
     }

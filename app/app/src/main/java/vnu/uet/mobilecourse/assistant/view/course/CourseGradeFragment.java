@@ -19,6 +19,8 @@ import java.util.Locale;
 
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.GradeAdapter;
+import vnu.uet.mobilecourse.assistant.model.Course;
+import vnu.uet.mobilecourse.assistant.model.ICourse;
 import vnu.uet.mobilecourse.assistant.viewmodel.CourseGradeViewModel;
 
 public class CourseGradeFragment extends Fragment {
@@ -87,12 +89,12 @@ public class CourseGradeFragment extends Fragment {
 
         // get bundle from prev fragment
         Bundle args = getArguments();
+        assert args != null;
+        ICourse course = args.getParcelable("course");
 
-        if (args != null) {
+        if (course instanceof Course) {
             // get course id from bundle
-            mCourseId = args.getInt("courseId");
-
-//            Fragment thisFragment = this;
+            mCourseId = ((Course) course).getId();
 
             // shimmer layout for loading state
             ShimmerFrameLayout shimmerRvGrades = root.findViewById(R.id.shimmerRvGrades);

@@ -44,33 +44,35 @@ public class CourseGeneralFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            String courseCode = args.getString("courseCode");
-            assert courseCode != null;
-            courseCode = courseCode.replace(CONST.COURSE_PREFIX + CONST.UNDERSCORE_CHAR, "")
+            ICourse course = args.getParcelable("course");
+            assert course != null;
+
+            String courseCode = course.getCode();
+            courseCode = courseCode
+                    .replace(CONST.COURSE_PREFIX + CONST.UNDERSCORE_CHAR, CONST.EMPTY)
                     .replace(CONST.UNDERSCORE_CHAR, CONST.SPACE_CHAR);
 
             TextView tvCourseTitle = root.findViewById(R.id.tvCourseTitle);
+            tvCourseTitle.setText(course.getTitle());
+
             TextView tvCourseId = root.findViewById(R.id.tvCourseId);
+            tvCourseId.setText(course.getCode());
+
             TextView tvCredits = root.findViewById(R.id.tvCredits);
 
             CircularProgressBar cpbProgress = root.findViewById(R.id.cpbProgress);
-
             TextView tvProgress = root.findViewById(R.id.tvProgress);
 
-            ICourse course = args.getParcelable("course");
-
             if (course instanceof Course) {
-                float progress = (float) ((Course) course).getProgress();
+                Course cast = (Course) course;
+
+                float progress = (float) cast.getProgress();
                 tvProgress.setText(String.format(Locale.ROOT, "%.0f%%", progress));
                 cpbProgress.setProgressWithAnimation(progress);
             }
 
-            assert course != null;
-            tvCourseId.setText(course.getCode());
-            tvCourseTitle.setText(course.getTitle());
+            initializeGeneralMaterialsView(root, course);
 
-            int courseId = args.getInt("courseId");
-            initializeGeneralMaterialsView(root, courseId);
 
             RecyclerView rvSessions = initializeSessionsView(root);
             mViewModel.getCourseInfo(courseCode).observe(getViewLifecycleOwner(), stateModel -> {
@@ -102,36 +104,42 @@ public class CourseGeneralFragment extends Fragment {
         return root;
     }
 
-    private void initializeGeneralMaterialsView(View root, int courseId) {
+    private void initializeGeneralMaterialsView(View root, ICourse course) {
         RecyclerView rvGeneralMaterials = root.findViewById(R.id.rvGeneralMaterials);
         rvGeneralMaterials.setLayoutManager(new LinearLayoutManager(getContext()));
 
         TextView tvGeneralMaterials = root.findViewById(R.id.tvGeneralMaterials);
 
-        mViewModel.getContent(courseId).observe(getViewLifecycleOwner(), courseOverviews -> {
-            if (courseOverviews != null && !courseOverviews.isEmpty()) {
-                courseOverviews.stream()
-                        .filter(item -> item.getWeekInfo().getTitle().equals(GENERAL))
-                        .findFirst()
-                        .ifPresent(courseOverview -> {
-                            List<Material> materials = courseOverview.getMaterials();
+        if (course instanceof Course) {
+            int courseId = ((Course) course).getId();
 
-                            if (materials.isEmpty()) {
-                                tvGeneralMaterials.setVisibility(View.GONE);
+            mViewModel.getContent(courseId).observe(getViewLifecycleOwner(), courseOverviews -> {
+                if (courseOverviews != null && !courseOverviews.isEmpty()) {
+                    courseOverviews.stream()
+                            .filter(item -> item.getWeekInfo().getTitle().equals(GENERAL))
+                            .findFirst()
+                            .ifPresent(courseOverview -> {
+                                List<Material> materials = courseOverview.getMaterials();
 
-                            } else {
-                                tvGeneralMaterials.setVisibility(View.VISIBLE);
+                                if (materials.isEmpty()) {
+                                    tvGeneralMaterials.setVisibility(View.GONE);
 
-                                CourseGeneralMaterialAdapter adapter =
-                                        new CourseGeneralMaterialAdapter(materials, CourseGeneralFragment.this);
+                                } else {
+                                    tvGeneralMaterials.setVisibility(View.VISIBLE);
 
-                                rvGeneralMaterials.setAdapter(adapter);
-                            }
-                        });
-            } else {
-                tvGeneralMaterials.setVisibility(View.GONE);
-            }
-        });
+                                    CourseGeneralMaterialAdapter adapter =
+                                            new CourseGeneralMaterialAdapter(materials,
+                                                    CourseGeneralFragment.this);
+
+                                    rvGeneralMaterials.setAdapter(adapter);
+                                }
+                            });
+                } else {
+                    tvGeneralMaterials.setVisibility(View.GONE);
+                }
+            });
+
+        } else tvGeneralMaterials.setVisibility(View.GONE);
     }
 
     private void initializeParticipantsView(View root, String courseCode) {
