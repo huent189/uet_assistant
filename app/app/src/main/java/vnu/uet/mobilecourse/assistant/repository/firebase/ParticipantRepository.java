@@ -31,7 +31,7 @@ public class ParticipantRepository {
         return instance;
     }
 
-    public ParticipantRepository() {
+    private ParticipantRepository() {
         mCache = new ParticipantCache();
         mDao = new ParticipantDAO();
         mUserRepo = FirebaseUserRepository.getInstance();
@@ -60,13 +60,15 @@ public class ParticipantRepository {
 
     public static class MergeParticipantLiveData extends StateMediatorLiveData<List<Participant_CourseSubCol>> {
 
-        private List<String> addedStudents = new ArrayList<>();
+        private static final int MINIMUM_PARTICIPANTS = 20;
 
-        public MergeParticipantLiveData(@NonNull FirebaseUserRepository userRepo,
-                                        @NonNull StateLiveData<List<Participant_CourseSubCol>> participant) {
+        private List<String> mAddedStudents = new ArrayList<>();
+
+        MergeParticipantLiveData(@NonNull FirebaseUserRepository userRepo,
+                                 @NonNull StateLiveData<List<Participant_CourseSubCol>> participantsLiveData) {
             super(new StateModel<>(StateStatus.LOADING));
 
-            addSource(participant, participantState -> {
+            addSource(participantsLiveData, participantState -> {
                 switch (participantState.getStatus()) {
                     case LOADING:
                         postLoading();
@@ -78,42 +80,45 @@ public class ParticipantRepository {
 
                     case SUCCESS:
                         List<Participant_CourseSubCol> participants = participantState.getData();
-                        postSuccess(participants);
 
-                        participants.forEach(participant1 -> {
-                            String id = participant1.getId();
+                        if (participants.size() >= MINIMUM_PARTICIPANTS) {
+                            postSuccess(participants);
 
-                            if (!addedStudents.contains(id)) {
-                                addedStudents.add(id);
+                            participants.forEach(participant -> {
+                                String id = participant.getId();
 
-                                addSource(userRepo.search(id), profileState -> {
-                                    switch (profileState.getStatus()) {
-                                        case ERROR:
-                                            Exception e = profileState.getError();
+                                if (!mAddedStudents.contains(id)) {
+                                    mAddedStudents.add(id);
 
-                                            if (e instanceof DocumentNotFoundException) {
-                                                participant1.setActive(false);
-                                                participant1.setAvatar(null);
+                                    addSource(userRepo.search(id), profileState -> {
+                                        switch (profileState.getStatus()) {
+                                            case ERROR:
+                                                Exception e = profileState.getError();
+
+                                                if (e instanceof DocumentNotFoundException) {
+                                                    participant.setActive(false);
+                                                    participant.setAvatar(null);
+                                                    postSuccess(participants);
+                                                } else {
+                                                    postError(profileState.getError());
+                                                }
+
+                                                break;
+
+                                            case LOADING:
+                                                postLoading();
+                                                break;
+
+                                            case SUCCESS:
+                                                User user = profileState.getData();
+                                                participant.setActive(true);
+                                                participant.setAvatar(user.getAvatar());
                                                 postSuccess(participants);
-                                            } else {
-                                                postError(profileState.getError());
-                                            }
-
-                                            break;
-
-                                        case LOADING:
-                                            postLoading();
-                                            break;
-
-                                        case SUCCESS:
-                                            User user = profileState.getData();
-                                            participant1.setActive(true);
-                                            participant1.setAvatar(user.getAvatar());
-                                            postSuccess(participants);
-                                    }
-                                });
-                            }
-                        });
+                                        }
+                                    });
+                                }
+                            });
+                        }
                 }
             });
         }

@@ -18,8 +18,7 @@
             android:id="@+id/ivNotifyIcon"
             android:layout_width="@dimen/img_notification_icon_size"
             android:layout_height="@dimen/img_notification_icon_size"
-            android:src="@drawable/img_target"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/img_admin_bot"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription" />
@@ -28,7 +27,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin"
+            android:layout_marginStart="@dimen/margin_x2"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btnViewNotify"
@@ -48,7 +47,6 @@
                 android:id="@+id/tvNotifyDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
                 android:textSize="@dimen/font_size_caption"
                 android:layout_marginTop="2dp"
                 android:text="@string/title_loading" />
@@ -69,7 +67,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/transparent_button_background"
-            android:layout_marginEnd="@dimen/margin"
             android:padding="@dimen/margin"
             android:src="@drawable/ic_chevron_right_24dp"
             app:layout_constraintBottom_toBottomOf="parent"

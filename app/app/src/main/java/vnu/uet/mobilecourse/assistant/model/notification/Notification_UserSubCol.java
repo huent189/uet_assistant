@@ -1,6 +1,4 @@
-package vnu.uet.mobilecourse.assistant.model.firebase.notification;
-
-import com.google.firebase.firestore.DocumentSnapshot;
+package vnu.uet.mobilecourse.assistant.model.notification;
 
 import vnu.uet.mobilecourse.assistant.model.firebase.IFirebaseModel;
 

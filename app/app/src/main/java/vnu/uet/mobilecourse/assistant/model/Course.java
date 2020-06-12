@@ -60,9 +60,9 @@ public class Course implements ICourse {
     }
 
     public int getThumbnail() {
-        int random = new Random().nextInt(2);
+//        int random = new Random().nextInt(2);
 
-        if (random == 0) {
+        if (id % 2 == 0) {
             return R.drawable.isometric_course_thumbnail;
         } else {
             return R.drawable.isomatric_idea_course;

@@ -1,25 +1,23 @@
 package vnu.uet.mobilecourse.assistant.repository;
 
 import android.annotation.SuppressLint;
-import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
+import com.google.firebase.auth.AdditionalUserInfo;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthActionCodeException;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.util.Util;
 
+import java.util.Map;
 
 import vnu.uet.mobilecourse.assistant.BuildConfig;
 import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
-import vnu.uet.mobilecourse.assistant.model.firebase.notification.AdminNotification;
+import vnu.uet.mobilecourse.assistant.model.notification.AdminNotification;
 import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.NotificationRepository;
 import vnu.uet.mobilecourse.assistant.util.CONST;
@@ -90,7 +88,8 @@ public class FirebaseAuthenticationService {
                                 // TODO: check new user
                                 AuthResult result = loginViaMail.getResult();
                                 if (result != null && result.getAdditionalUserInfo() != null) {
-                                    boolean isNewUser = result.getAdditionalUserInfo().isNewUser();
+                                    AdditionalUserInfo userInfo = result.getAdditionalUserInfo();
+                                    boolean isNewUser = userInfo.isNewUser();
 
                                     if (isNewUser) {
                                         // create new user profile document
@@ -100,6 +99,8 @@ public class FirebaseAuthenticationService {
                                         // welcome notification
                                         AdminNotification notification = generateWelcomeNotification();
                                         NotificationRepository.getInstance().add(notification);
+                                    } else {
+                                        Map<String, Object> profile = userInfo.getProfile();
                                     }
                                 }
 

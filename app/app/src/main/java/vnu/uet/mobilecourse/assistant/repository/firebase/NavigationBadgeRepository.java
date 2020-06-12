@@ -24,6 +24,8 @@ public class NavigationBadgeRepository {
     private static final String STUDENT_ID = vnu.uet.mobilecourse.assistant.model.User
             .getInstance().getStudentId();
 
+    private int mNewNotificationCounter;
+
     public static NavigationBadgeRepository getInstance() {
         if (instance == null) {
             instance = new NavigationBadgeRepository();
@@ -54,64 +56,23 @@ public class NavigationBadgeRepository {
         return counter;
     }
 
-    public StateMediatorLiveData<Integer> increaseNewNotifications() {
-        StateMediatorLiveData<Integer> liveData = new StateMediatorLiveData<>();
-        liveData.postLoading();
-
-        liveData.addSource(getNewNotifications(), new Observer<StateModel<Integer>>() {
-            @Override
-            public void onChanged(StateModel<Integer> stateModel) {
-                switch (stateModel.getStatus()) {
-                    case LOADING:
-                        liveData.postLoading();
-                        break;
-
-                    case ERROR:
-                        liveData.postError(stateModel.getError());
-                        break;
-
-                    case SUCCESS:
-                        int counter = stateModel.getData();
-
-                        Map<String, Object> changes = new HashMap<>();
-                        changes.put("newNotifications", ++counter);
-
-                        StateLiveData<String> modifyLiveData = mUserRepo.modify(changes);
-
-                        int finalCounter = counter;
-                        liveData.addSource(modifyLiveData, new Observer<StateModel<String>>() {
-                            @Override
-                            public void onChanged(StateModel<String> stateModel) {
-                                switch (stateModel.getStatus()) {
-                                    case LOADING:
-                                        liveData.postLoading();
-                                        break;
-
-                                    case ERROR:
-                                        liveData.postError(stateModel.getError());
-                                        break;
-
-                                    case SUCCESS:
-                                        liveData.postSuccess(finalCounter);
-                                        break;
-                                }
-                            }
-                        });
-                }
-            }
-        });
-
-        return liveData;
-    }
-
-    public StateLiveData<String> seeAllNotifications() {
+    public StateLiveData<String> increaseNewNotifications() {
         Map<String, Object> changes = new HashMap<>();
-        changes.put("newNotifications", 0);
+        changes.put("newNotifications", ++mNewNotificationCounter);
 
         return mUserRepo.modify(changes);
     }
 
-    public static class NewNotificationCounter extends StateMediatorLiveData<Integer> {
+    public StateLiveData<String> seeAllNotifications() {
+        mNewNotificationCounter = 0;
+
+        Map<String, Object> changes = new HashMap<>();
+        changes.put("newNotifications", mNewNotificationCounter);
+
+        return mUserRepo.modify(changes);
+    }
+
+    public class NewNotificationCounter extends StateMediatorLiveData<Integer> {
 
         public NewNotificationCounter(StateLiveData<User> userLiveData) {
             postLoading();
@@ -128,7 +89,10 @@ public class NavigationBadgeRepository {
 
                     case SUCCESS:
                         User user = stateModel.getData();
-                        postSuccess(user.getNewNotifications());
+                        int counter = user.getNewNotifications();
+                        postSuccess(counter);
+                        mNewNotificationCounter = counter;
+
                         break;
                 }
             });

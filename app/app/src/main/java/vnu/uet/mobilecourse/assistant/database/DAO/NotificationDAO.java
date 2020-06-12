@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import vnu.uet.mobilecourse.assistant.model.firebase.notification.AdminNotification;
-import vnu.uet.mobilecourse.assistant.model.firebase.notification.CourseAttendantNotification;
-import vnu.uet.mobilecourse.assistant.model.firebase.notification.NewMaterialNotification;
+import vnu.uet.mobilecourse.assistant.model.notification.AdminNotification;
+import vnu.uet.mobilecourse.assistant.model.notification.CourseAttendantNotification;
+import vnu.uet.mobilecourse.assistant.model.notification.NewMaterialNotification;
 import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
-import vnu.uet.mobilecourse.assistant.model.firebase.notification.Notification_UserSubCol;
-import vnu.uet.mobilecourse.assistant.model.firebase.notification.TodoNotification;
+import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.notification.TodoNotification;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
@@ -80,12 +80,6 @@ public class NotificationDAO extends FirebaseDAO<Notification_UserSubCol> {
             switch (type) {
                 case NotificationType.ADMIN:
                     notification = new AdminNotification();
-
-                    Object thumbnailObj = snapshot.get("thumbnail");
-                    if (thumbnailObj instanceof Long) {
-                        int thumbnail = ((Long) thumbnailObj).intValue();
-                        ((AdminNotification) notification).setThumbnail(thumbnail);
-                    }
 
                     break;
 

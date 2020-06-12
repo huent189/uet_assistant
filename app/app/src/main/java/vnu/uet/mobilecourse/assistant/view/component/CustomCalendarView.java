@@ -23,12 +23,12 @@ public class CustomCalendarView extends BasicCalendarView {
 
     @Override
     protected void prepareLayout() {
-        isShowTodo = true;
+        mShowTodo = true;
     }
 
     public void notifyTodoSetChanged(LifecycleOwner lifecycleOwner) {
-        gridAdapter = new CalendarGridAdapter(context, dates, calendar, selectedDate, isShowTodo);
-        gridAdapter.setLifecycleOwner(lifecycleOwner);
-        gvDates.setAdapter(gridAdapter);
+        mGridAdapter = new CalendarGridAdapter(mContext, mDates, mCalendar, mSelectedDate, mShowTodo);
+        mGridAdapter.setLifecycleOwner(lifecycleOwner);
+        mGvDates.setAdapter(mGridAdapter);
     }
 }
