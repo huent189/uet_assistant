@@ -245,6 +245,7 @@
 <!--            </LinearLayout>-->
 
             <TextView
+                android:id="@+id/tvModifyTimeTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/margin_x2"

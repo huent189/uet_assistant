@@ -30,6 +30,7 @@ import vnu.uet.mobilecourse.assistant.model.Material;
 
 import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,7 @@ public class MaterialFragment extends Fragment {
     private LinearLayout mLayoutGradeAndAttempt;
     private TextView mTvAttachmentTitle;
     private ShimmerFrameLayout mSflAttachments;
+    private TextView mTvModifyTime, mTvModifyTimeTitle;
 
 
     @Override
@@ -71,7 +73,8 @@ public class MaterialFragment extends Fragment {
 
         TextView tvStatus = root.findViewById(R.id.tvStatus);
 
-        TextView tvModifyTime = root.findViewById(R.id.tvModifyTime);
+        mTvModifyTime = root.findViewById(R.id.tvModifyTime);
+        mTvModifyTimeTitle = root.findViewById(R.id.tvModifyTimeTitle);
 
         mTvStartTime = root.findViewById(R.id.tvStartTime);
         mTvStartTimeTitle = root.findViewById(R.id.tvStartTimeTitle);
@@ -113,22 +116,21 @@ public class MaterialFragment extends Fragment {
                 String type = material.getType();
                 preprocessor(type);
 
+                String desc = material.getDescription();
+                if (desc != null) {
+                    setDescriptionView(tvHtml, desc);
+                }
+
                 mViewModel.getDetailContent(materialId, type).observe(getViewLifecycleOwner(), new Observer<MaterialContent>() {
                     @Override
                     public void onChanged(MaterialContent content) {
                         if (content != null) {
                             Date modifyTime = DateTimeUtils.fromSecond(content.getTimeModified());
-                            tvModifyTime.setText(DateTimeUtils.DATE_TIME_FORMAT.format(modifyTime));
+                            mTvModifyTime.setText(DateTimeUtils.DATE_TIME_FORMAT.format(modifyTime));
 
                             String intro = content.getIntro();
                             if (intro != null) {
-                                SpannableStringBuilder strBuilder = mViewModel.convertHtml(intro);
-
-                                if (strBuilder.length() > 0) {
-                                    tvHtml.setText(strBuilder);
-                                    tvHtml.setLinksClickable(true);
-                                    tvHtml.setMovementMethod(LinkMovementMethod.getInstance());
-                                }
+                                setDescriptionView(tvHtml, intro);
                             }
 
                             if (content instanceof AssignmentContent) {
@@ -211,6 +213,16 @@ public class MaterialFragment extends Fragment {
         return root;
     }
 
+    private void setDescriptionView(TextView tvDesc, @NonNull String rawContent) {
+        SpannableStringBuilder strBuilder = mViewModel.convertHtml(rawContent);
+
+        if (strBuilder.length() > 0) {
+            tvDesc.setText(strBuilder);
+            tvDesc.setLinksClickable(true);
+            tvDesc.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+    }
+
     private void preprocessor(String materialType) {
         switch (materialType) {
             case CourseConstant.MaterialType.ASSIGN:
@@ -241,6 +253,10 @@ public class MaterialFragment extends Fragment {
                 mTvAttachmentTitle.setVisibility(View.VISIBLE);
                 mSflAttachments.setVisibility(View.VISIBLE);
                 break;
+
+            case CourseConstant.MaterialType.QUESTIONNAIRE:
+                mTvModifyTime.setVisibility(View.GONE);
+                mTvModifyTimeTitle.setVisibility(View.GONE);
         }
 
     }

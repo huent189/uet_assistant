@@ -8,12 +8,13 @@
     tools:context=".view.course.CourseGeneralFragment">
 
     <LinearLayout
-        android:layout_marginTop="@dimen/margin_x4"
+        android:paddingTop="@dimen/margin_x4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/layout_basic_info"
             android:layout_marginHorizontal="@dimen/margin_x2"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -194,6 +195,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tvSessionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_x2"
@@ -222,7 +224,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvGeneralMaterials"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
