@@ -24,7 +24,9 @@ public class ExternalResourceContent extends MaterialContent {
     public void setRevision(int revision) {
         this.revision = revision;
     }
-
+    public String getType(){
+        return CourseConstant.MaterialType.URL;
+    }
     @Override
     public String toString() {
         return "ExternalResourceContent{" +

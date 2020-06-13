@@ -55,7 +55,9 @@ public class AssignmentContent extends MaterialContent {
     public void setMaxAttemptAllowed(int maxAttemptAllowed) {
         this.maxAttemptAllowed = maxAttemptAllowed;
     }
-
+    public String getType(){
+        return CourseConstant.MaterialType.ASSIGN;
+    }
     @Override
     public String toString() {
         return "AssignmentContent{" +

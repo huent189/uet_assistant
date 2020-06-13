@@ -102,9 +102,11 @@ public class UserRepository {
                     if (response.body().get("errorcode") == null) {
                         Log.d("COURSES_DEBUG", response.toString());
                         loginState.postSuccess("login successfully");
+                        User.getInstance().setEnableSyncNoti(true);
                     } else {
                         Log.d("COURSES_DEBUG", "login failed");
                         loginState.postError(new InvalidLoginException());
+                        User.getInstance().setEnableSyncNoti(false);
                     }
                 }
                 else {

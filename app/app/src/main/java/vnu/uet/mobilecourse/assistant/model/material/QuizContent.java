@@ -10,7 +10,9 @@ public class QuizContent extends QuizNoGrade {
     public void setUserGrade(int userGrade) {
         this.userGrade = userGrade;
     }
-
+    public String getType(){
+        return CourseConstant.MaterialType.QUIZ;
+    }
     @Override
     public String toString() {
         return "QuizContent{" +
