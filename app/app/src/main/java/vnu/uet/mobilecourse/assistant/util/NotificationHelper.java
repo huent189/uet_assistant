@@ -24,10 +24,10 @@ public class NotificationHelper {
     }
 
     public Notification build(@NonNull Context context, @NonNull String channelId,
-                              int icon, String title, String content) {
+                              int iconResId, String title, String content) {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
-                .setSmallIcon(icon)
+                .setSmallIcon(iconResId)
                 .setContentTitle(title)
                 .setContentText(content)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
@@ -35,7 +35,7 @@ public class NotificationHelper {
         return builder.build();
     }
 
-    public boolean notify(@NonNull Context context, String id, Notification notification) {
+    public boolean notify(@NonNull Context context, String notificationId, Notification notification) {
         NotificationManager notifyManager = context.getSystemService(NotificationManager.class);
 
         try {
@@ -45,7 +45,7 @@ public class NotificationHelper {
             if (notifyManager != null) {
                 NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
                 createChannel(notificationManager, channelId);
-                notificationManager.notify(id.hashCode(), notification);
+                notificationManager.notify(notificationId.hashCode(), notification);
                 return true;
             }
 

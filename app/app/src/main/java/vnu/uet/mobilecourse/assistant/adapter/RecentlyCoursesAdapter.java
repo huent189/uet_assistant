@@ -1,7 +1,6 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,14 +11,11 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.model.ICourse;
-import vnu.uet.mobilecourse.assistant.view.course.CoursesFragment;
 import vnu.uet.mobilecourse.assistant.model.Course;
 
 public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCoursesAdapter.ViewHolder> {
@@ -89,16 +85,10 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
             int thumbnailResId = course.getThumbnail();
             mIvThumbnail.setImageResource(thumbnailResId);
 
-            int cardColor = getBackgroundColor(thumbnailResId);
-            mCvCourseContainer.setCardBackgroundColor(cardColor);
-
             mCvCourseContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
-                    bundle.putInt("courseId", course.getId());
-                    bundle.putString("courseTitle", courseTitle);
-                    bundle.putString("courseCode", courseCode);
                     bundle.putParcelable("course", course);
 
                     navController
@@ -107,26 +97,6 @@ public class RecentlyCoursesAdapter extends RecyclerView.Adapter<RecentlyCourses
             });
         }
 
-        private int getBackgroundColor(int thumbnail) {
-            int cardColor;
 
-            switch (thumbnail) {
-                case R.drawable.isometric_course_thumbnail:
-                    cardColor = R.color.cardColor1;
-                    break;
-
-                case R.drawable.isomatric_idea_course:
-                    cardColor = R.color.cardColor2;
-                    break;
-
-                default:
-                    cardColor = R.color.cardColor1;
-                    break;
-            }
-
-            Context context = mOwner.requireContext();
-
-            return ContextCompat.getColor(context, cardColor);
-        }
     }
 }

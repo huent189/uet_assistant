@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -12,11 +15,9 @@ import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
-
-import com.google.android.material.tabs.TabLayout;
-
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.FragmentPageAdapter;
+import vnu.uet.mobilecourse.assistant.model.ICourse;
 
 public class ExploreCourseFragment extends Fragment {
 
@@ -24,8 +25,7 @@ public class ExploreCourseFragment extends Fragment {
     private FragmentPageAdapter mPageAdapter;
     private String mCourseTitle;
     private String mCourseCode;
-    private TabLayout mTabLayout;
-    private Toolbar mToolbar;
+    private int mThumbnail;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,8 +40,12 @@ public class ExploreCourseFragment extends Fragment {
         Bundle args = getArguments();
 
         if (args != null) {
-            mCourseTitle = args.getString("courseTitle");
-            mCourseCode = args.getString("courseCode");
+            ICourse course = args.getParcelable("course");
+
+            assert course != null;
+            mCourseTitle = course.getTitle();
+            mCourseCode = course.getCode();
+            mThumbnail = course.getThumbnail();
         }
 
         initializeToolbar(root);
@@ -56,12 +60,15 @@ public class ExploreCourseFragment extends Fragment {
     private void initializeToolbar(View root) {
         AppCompatActivity activity = (AppCompatActivity) getActivity();
 
+        ImageView ivThumbnail = root.findViewById(R.id.ivThumbnail);
+        ivThumbnail.setImageResource(mThumbnail);
+
         if (activity != null) {
-            mToolbar = root.findViewById(R.id.toolbar);
+            Toolbar toolbar = root.findViewById(R.id.toolbar);
 
-            mToolbar.setTitle(mCourseTitle);
+            toolbar.setTitle(mCourseTitle);
 
-            activity.setSupportActionBar(mToolbar);
+            activity.setSupportActionBar(toolbar);
 
             setHasOptionsMenu(true);
         }
@@ -98,32 +105,28 @@ public class ExploreCourseFragment extends Fragment {
         mVpCourseContent.setOffscreenPageLimit(mPageAdapter.getCount());
         mVpCourseContent.setAdapter(mPageAdapter);
 
-        mTabLayout = root.findViewById(R.id.tabLayout);
+        TabLayout tabLayout = root.findViewById(R.id.tabLayout);
 
         if (mCourseCode == null || mCourseCode.isEmpty()) {
-            mTabLayout.removeTabAt(2);
-            mTabLayout.removeTabAt(2);
+            tabLayout.removeTabAt(2);
+            tabLayout.removeTabAt(2);
         }
 
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 mVpCourseContent.setCurrentItem(tab.getPosition());
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabUnselected(TabLayout.Tab tab) {}
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
 
         ViewPager.OnPageChangeListener onPageChangeListener =
-                new TabLayout.TabLayoutOnPageChangeListener(mTabLayout);
+                new TabLayout.TabLayoutOnPageChangeListener(tabLayout);
 
         mVpCourseContent.addOnPageChangeListener(onPageChangeListener);
     }

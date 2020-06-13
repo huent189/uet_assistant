@@ -32,9 +32,9 @@ public abstract class RemindWorker<T> extends Worker {
      * Push notification onto device
      *
      * @param context app context
-     * @param model contains data of notification
+     * @param notificationDoc contains data of notification
      */
-    protected abstract void pushNotification(Context context, T model);
+    protected abstract void pushNotification(Context context, Notification_UserSubCol notificationDoc);
 
     protected abstract T build(Data data);
 
@@ -55,7 +55,7 @@ public abstract class RemindWorker<T> extends Worker {
         NavigationBadgeRepository.getInstance().increaseNewNotifications();
 
         // push notification onto device
-        pushNotification(mContext, model);
+        pushNotification(mContext, notificationDoc);
 
         // (Returning RETRY tells WorkManager to try this task again
         // later; FAILURE says not to try again.)
