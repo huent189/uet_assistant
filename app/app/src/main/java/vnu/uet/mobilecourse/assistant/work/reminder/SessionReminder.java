@@ -42,16 +42,15 @@ public class SessionReminder extends RemindWorker<CourseSession> {
     }
 
     @Override
-    protected void pushNotification(Context context, CourseSession session) {
-        String title = "Đi học " + session.getCourseName();
-        String desc = "Tại phòng " + session.getClassroom();
-        String courseCode = session.getCourseCode();
+    protected void pushNotification(Context context, Notification_UserSubCol notificationDoc) {
+        String title = notificationDoc.getTitle();
+        String desc = notificationDoc.getDescription();
+        String notificationId = notificationDoc.getId();
 
         Notification notification = NotificationHelper.getsInstance()
                 .build(context, CHANNEL_ID, R.drawable.ic_check_circle_24dp, title, desc);
 
-        NotificationHelper.getsInstance().notify(context, courseCode, notification);
-
+        NotificationHelper.getsInstance().notify(context, notificationId, notification);
     }
 
     @Override

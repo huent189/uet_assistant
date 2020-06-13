@@ -11,10 +11,9 @@ import androidx.work.WorkerParameters;
 import com.google.firebase.firestore.util.Util;
 
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
+import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.notification.TodoNotification;
-import vnu.uet.mobilecourse.assistant.repository.firebase.NavigationBadgeRepository;
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
 
 public class TodoReminder extends RemindWorker<Todo> {
@@ -44,16 +43,15 @@ public class TodoReminder extends RemindWorker<Todo> {
     }
 
     @Override
-    protected void pushNotification(Context context, Todo todo) {
-        String title = "Đến hạn: " + todo.getTitle();
-        String desc = todo.getDescription();
-        String id = todo.getId();
+    protected void pushNotification(Context context, Notification_UserSubCol notificationDoc) {
+        String title = notificationDoc.getTitle();
+        String desc = notificationDoc.getDescription();
+        String notificationId = notificationDoc.getId();
 
         Notification notification = NotificationHelper.getsInstance()
                 .build(context, CHANNEL_ID, R.drawable.ic_check_circle_24dp, title, desc);
 
-        NotificationHelper.getsInstance().notify(context, id, notification);
-
+        NotificationHelper.getsInstance().notify(context, notificationId, notification);
     }
 
     @Override
