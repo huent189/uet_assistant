@@ -96,7 +96,7 @@ public class MyCoursesActivity extends AppCompatActivity {
     private void updateNotificationBadge(int counter) {
         if (counter != 0) {
             TextView tvCounter = mNotificationBadge.findViewById(R.id.tvCounter);
-            tvCounter.setText(String.valueOf(counter * 10));
+            tvCounter.setText(String.valueOf(counter));
             mNotificationBadge.setVisibility(View.VISIBLE);
         } else {
             mNotificationBadge.setVisibility(View.GONE);

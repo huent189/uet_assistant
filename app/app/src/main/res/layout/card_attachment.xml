@@ -33,8 +33,6 @@
                 android:maxLines="2"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:scrollbars="vertical"
-                android:text="Thứ 2 (CL)"
                 android:layout_marginTop="@dimen/margin"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
