@@ -86,8 +86,7 @@ public class ExploreCourseFragment extends Fragment {
 
         if (mCourseCode == null || mCourseCode.isEmpty()) {
             pages = new Fragment[] {
-                    new CourseGeneralFragment(),
-                    new CourseProgressFragment()
+                    new CourseGeneralFragment()
             };
         }
 
@@ -108,8 +107,9 @@ public class ExploreCourseFragment extends Fragment {
         TabLayout tabLayout = root.findViewById(R.id.tabLayout);
 
         if (mCourseCode == null || mCourseCode.isEmpty()) {
-            tabLayout.removeTabAt(2);
-            tabLayout.removeTabAt(2);
+            while (tabLayout.getTabCount() > 1) {
+                tabLayout.removeTabAt(1);
+            }
         }
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
