@@ -66,7 +66,9 @@ public class MaterialContent {
     public void setTimeModified(long timeModified) {
         this.timeModified = timeModified;
     }
-
+    public String getType(){
+        return CourseConstant.MaterialType.LABEL;
+    }
     @Override
     public String toString() {
         return "MaterialContent{" +

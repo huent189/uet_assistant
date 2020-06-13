@@ -179,7 +179,7 @@ public class CourseRepository {
 //                                coursesDAO.updateLastAccessTime(course.getId(), course.getLastAccessTime());
 //                            });
 //                        }
-//                        User.getInstance().setLastSynchonizedTime(System.currentTimeMillis() / 1000);
+//                        User.getInstance().setEnableSyncNoti(System.currentTimeMillis() / 1000);
 //                    }
 //                });
 //    }

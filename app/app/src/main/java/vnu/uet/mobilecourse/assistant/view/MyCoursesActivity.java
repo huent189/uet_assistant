@@ -5,18 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import java.util.List;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
@@ -24,8 +20,11 @@ import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.repository.firebase.NavigationBadgeRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
+import vnu.uet.mobilecourse.assistant.work.courses.CourseDataSynchronization;
 import vnu.uet.mobilecourse.assistant.work.remindHandler.CourseHandler;
 import vnu.uet.mobilecourse.assistant.work.remindHandler.TodoHandler;
+
+import java.util.List;
 
 public class MyCoursesActivity extends AppCompatActivity {
 
@@ -81,6 +80,7 @@ public class MyCoursesActivity extends AppCompatActivity {
 
         setupCourseReminders();
         setupTodoReminders();
+        CourseDataSynchronization.start();
     }
 
     private void setupNavigationBadges() {

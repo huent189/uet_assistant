@@ -10,7 +10,7 @@ public class SharedPreferencesManager {
     public static final String USER_ID = "USER_ID";
     public static final String TOKEN = "TOKEN";
     public static final String REGISTER_EMAIL = "REGISTER_EMAIL";
-    public static final String LAST_SYNCHONIZE_TIME = "LAST_SYNCHONIZE_TIME";
+    public static final String ENABLE_SYNC_NOTI = "ENABLE_SYNC_NOTI";
 //    public static final String NEW_NOTIFICATION = "NEW_NOTIFICATION";
     private static final String APP_SHARED_PREFS = "MySharedPrefs";
 
@@ -45,7 +45,14 @@ public class SharedPreferencesManager {
         initPreference();
         preferences.edit().putLong(key, value).apply();
     }
-
+    public static void setBoolean(String key, boolean value){
+        initPreference();
+        preferences.edit().putBoolean(key, value).apply();
+    }
+    public static boolean getBooleanValue(String key){
+        initPreference();
+        return preferences.getBoolean(key, false);
+    }
     public static void setInt(String key, int value){
         initPreference();
         preferences.edit().putInt(key, value).apply();
