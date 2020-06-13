@@ -21,11 +21,17 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.model.CourseOverview;
+import vnu.uet.mobilecourse.assistant.model.ICourse;
+import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.notification.AdminNotification;
 import vnu.uet.mobilecourse.assistant.model.notification.CourseAttendantNotification;
+import vnu.uet.mobilecourse.assistant.model.notification.NewMaterialNotification;
 import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.notification.TodoNotification;
+import vnu.uet.mobilecourse.assistant.repository.course.CourseRepository;
+import vnu.uet.mobilecourse.assistant.repository.course.MaterialRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
@@ -112,6 +118,65 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             return time;
         }
 
+        private void navigateMaterial(NewMaterialNotification notification) {
+            int courseId = notification.getCourseId();
+            int materialId = notification.getMaterialId();
+
+            CourseRepository.getInstance()
+                    .getContent(courseId).observe(mOwner.getViewLifecycleOwner(), new Observer<List<CourseOverview>>() {
+                        @Override
+                        public void onChanged(List<CourseOverview> courseOverviews) {
+                            if (courseOverviews != null && !courseOverviews.isEmpty()) {
+                                Material foundMaterial = null;
+
+                                for (CourseOverview overview : courseOverviews) {
+                                    for (Material material : overview.getMaterials()) {
+                                        if (material.getId() == materialId) {
+                                            foundMaterial = material;
+                                            break;
+                                        }
+                                    }
+
+                                    if (foundMaterial != null) break;
+                                }
+
+                                if (foundMaterial != null) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putParcelable("material", foundMaterial);
+                                    mNavController.navigate(R.id.action_navigation_notifications_to_navigation_material, bundle);
+                                }
+                            }
+                        }
+                    });
+        }
+
+        private void navigateCourse(CourseAttendantNotification notification) {
+            String courseCode = notification.getCourseCode();
+
+            CourseRepository.getInstance().getFullCourses().observe(mOwner.getViewLifecycleOwner(), new Observer<StateModel<List<ICourse>>>() {
+                @Override
+                public void onChanged(StateModel<List<ICourse>> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case SUCCESS:
+                            List<ICourse> courses = stateModel.getData();
+
+                            courses.stream()
+                                    .filter(course -> course.getCode().equals(courseCode))
+                                    .findFirst()
+                                    .ifPresent(course -> {
+                                        Bundle bundle = new Bundle();
+                                        bundle.putParcelable("course", course);
+
+                                        mNavController.navigate(R.id.action_navigation_notifications_to_navigation_explore_course, bundle);
+                                    });
+
+                            break;
+                    }
+                }
+            });
+        }
+
+
         private void navigateTodo(TodoNotification todoNotification) {
             String todoId = todoNotification.getTodoId();
 
@@ -170,6 +235,25 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 mIvNotifyIcon.setImageResource(R.drawable.img_admin_bot);
             } else if (notification instanceof CourseAttendantNotification) {
                 mIvNotifyIcon.setImageResource(R.drawable.img_bag_bell);
+
+                CourseAttendantNotification cast = (CourseAttendantNotification) notification;
+
+                mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        navigateCourse(cast);
+                    }
+                });
+
+            } else if (notification instanceof NewMaterialNotification) {
+                NewMaterialNotification cast = (NewMaterialNotification) notification;
+
+                mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        navigateMaterial(cast);
+                    }
+                });
             }
         }
     }

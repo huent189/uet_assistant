@@ -35,6 +35,12 @@
         <action
             android:id="@+id/action_navigation_notifications_to_navigation_modify_todo"
             app:destination="@id/navigation_modify_todo" />
+        <action
+            android:id="@+id/action_navigation_notifications_to_navigation_material"
+            app:destination="@id/navigation_material" />
+        <action
+            android:id="@+id/action_navigation_notifications_to_navigation_explore_course"
+            app:destination="@id/navigation_explore_course" />
     </fragment>
 
     <fragment

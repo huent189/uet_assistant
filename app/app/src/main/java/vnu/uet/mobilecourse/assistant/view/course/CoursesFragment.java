@@ -187,7 +187,13 @@ public class CoursesFragment extends Fragment {
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
 
+//        View searchViewContainer = searchItem.getActionView();
         SearchView searchView = (SearchView) searchItem.getActionView();
+//        SearchView searchView = searchViewContainer.findViewById(R.id.searchView);
+
+//        ViewGroup.LayoutParams params = searchView.getLayoutParams();
+//        params.height = 42;
+//        searchView.requestLayout();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
