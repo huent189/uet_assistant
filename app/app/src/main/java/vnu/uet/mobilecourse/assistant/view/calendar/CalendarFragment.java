@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.DailyEventAdapter;
+import vnu.uet.mobilecourse.assistant.alarm.scheduler.TodoScheduler;
 import vnu.uet.mobilecourse.assistant.model.event.IEvent;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
@@ -211,7 +212,8 @@ public class CalendarFragment extends Fragment {
                 if (item instanceof Todo) {
                     Todo todo = (Todo) item;
                     mViewModel.deleteTodo(todo.getId());
-                    TodoHandler.getInstance().cancel(mActivity, todo);
+                    TodoScheduler.getInstance(mActivity).cancel(todo);
+//                    TodoHandler.getInstance().cancel(mActivity, todo);
                 }
             }
         };

@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.work.reminder.TodoReminder;
 
+@Deprecated
 public class TodoHandler extends RemindHandler<Todo> {
 
     private static TodoHandler instance;

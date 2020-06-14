@@ -144,6 +144,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                     Bundle bundle = new Bundle();
                                     bundle.putParcelable("material", foundMaterial);
                                     mNavController.navigate(R.id.action_navigation_notifications_to_navigation_material, bundle);
+                                } else {
+                                    Context context = mOwner.getContext();
+                                    final String MATERIAL_NOT_FOUND_MSG = "Không tìm thấy tài liệu";
+
+                                    Toast.makeText(context, MATERIAL_NOT_FOUND_MSG, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -171,6 +176,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                     });
 
                             break;
+
+                        case ERROR:
+                            Context context = mOwner.getContext();
+                            final String COURSE_NOT_FOUND_MSG = "Không tìm thấy khóa học";
+
+                            Toast.makeText(context, COURSE_NOT_FOUND_MSG, Toast.LENGTH_SHORT).show();
+                            break;
+
                     }
                 }
             });
@@ -246,6 +259,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 });
 
             } else if (notification instanceof NewMaterialNotification) {
+                mIvNotifyIcon.setImageResource(R.drawable.img_material);
+
                 NewMaterialNotification cast = (NewMaterialNotification) notification;
 
                 mBtnViewNotify.setOnClickListener(new View.OnClickListener() {

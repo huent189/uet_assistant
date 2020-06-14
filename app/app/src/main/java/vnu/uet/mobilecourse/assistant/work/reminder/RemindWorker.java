@@ -11,6 +11,7 @@ import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol
 import vnu.uet.mobilecourse.assistant.repository.firebase.NavigationBadgeRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.NotificationRepository;
 
+@Deprecated
 public abstract class RemindWorker<T> extends Worker {
 
     private Context mContext;

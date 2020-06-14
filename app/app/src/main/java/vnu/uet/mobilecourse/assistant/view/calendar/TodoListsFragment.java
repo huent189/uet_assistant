@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.TodoListAdapter;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.TodoViewHolder;
+import vnu.uet.mobilecourse.assistant.alarm.scheduler.TodoScheduler;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
@@ -174,11 +175,18 @@ public class TodoListsFragment extends Fragment {
                 if (viewHolder instanceof TodoViewHolder) {
                     final Todo item = ((TodoViewHolder) viewHolder).getTodo();
                     mViewModel.deleteTodo(item.getId());
-                    TodoHandler.getInstance().cancel(mActivity, item);
+
+                    TodoScheduler.getInstance(mActivity).cancel(item);
+//                    TodoHandler.getInstance().cancel(mActivity, item);
                 } else if (viewHolder instanceof TodoListAdapter.TodoListViewHolder) {
                     final ExpandableTodoList todoList = ((TodoListAdapter.TodoListViewHolder) viewHolder).getTodoList();
-                    mViewModel.deleteTodoList(todoList.getId(), todoList.getItems());
-                    TodoHandler.getInstance().cancelByTodoList(mActivity, todoList.getId());
+                    List<Todo> todos = todoList.getItems();
+
+                    todos.forEach(todo -> TodoScheduler.getInstance(mActivity).cancel(todo));
+
+                    mViewModel.deleteTodoList(todoList.getId(), todos);
+
+//                    TodoHandler.getInstance().cancelByTodoList(mActivity, todoList.getId());
                 }
             }
         };
