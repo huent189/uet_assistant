@@ -8,7 +8,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -39,7 +38,6 @@ import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.view.component.CustomCalendarView;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
-import vnu.uet.mobilecourse.assistant.work.remindHandler.TodoHandler;
 
 public class CalendarFragment extends Fragment {
 
@@ -51,7 +49,7 @@ public class CalendarFragment extends Fragment {
     private Toolbar mToolbar;
     private CollapsingToolbarLayout mCollapsingToolbar;
     private ShimmerFrameLayout mSflEvents;
-    private ImageView mIvEmpty;
+    private View mLayoutEmpty;
 
     private NavController mNavController;
     private FragmentActivity mActivity;
@@ -82,7 +80,7 @@ public class CalendarFragment extends Fragment {
         mSflEvents = root.findViewById(R.id.sflEvents);
         mSflEvents.startShimmerAnimation();
 
-        mIvEmpty = root.findViewById(R.id.ivEmpty);
+        mLayoutEmpty = root.findViewById(R.id.layoutEmpty);
 
         mRvDailyTodoList = root.findViewById(R.id.rvDailyTodoList);
 
@@ -157,7 +155,7 @@ public class CalendarFragment extends Fragment {
                 case LOADING:
                     mRvDailyTodoList.setVisibility(View.GONE);
                     mSflEvents.setVisibility(View.VISIBLE);
-                    mIvEmpty.setVisibility(View.GONE);
+                    mLayoutEmpty.setVisibility(View.GONE);
 
                     break;
 
@@ -172,11 +170,11 @@ public class CalendarFragment extends Fragment {
                     restoreRecycleViewState();
 
                     if (dailyTodoList.isEmpty()) {
-                        mIvEmpty.setVisibility(View.VISIBLE);
+                        mLayoutEmpty.setVisibility(View.VISIBLE);
 //                        mRvDailyTodoList.setVisibility(View.GONE);
 
                     } else {
-                        mIvEmpty.setVisibility(View.GONE);
+                        mLayoutEmpty.setVisibility(View.GONE);
                     }
 
                     mRvDailyTodoList.setVisibility(View.VISIBLE);

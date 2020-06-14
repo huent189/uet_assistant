@@ -73,6 +73,7 @@
     <string name="material_deadline_title">Thời gian kết thúc</string>
     <string name="material_limit_time_title">Thời gian làm bài</string>
     <string name="title_course_enroll_error">Bạn chưa tham gia vào lớp học này\ntrên website môn học.</string>
+    <string name="title_calendar_empty_event">Không có hoạt động nào được ghi nhận.\nBạn có thể thêm công việc mới</string>
 
     <string-array name="dayOfWeek">
         <item>C.N</item>

@@ -86,15 +86,31 @@
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
-    <ImageView
-        android:id="@+id/ivEmpty"
+    <LinearLayout
+        android:id="@+id/layoutEmpty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingHorizontal="@dimen/margin_x6"
-        android:alpha="0.85"
-        android:src="@drawable/img_empty"
-        android:paddingBottom="@dimen/margin_x6"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <ImageView
+            android:id="@+id/ivEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="120dp"
+            android:alpha="0.2"
+            android:src="@drawable/img_admin_bot" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            style="@style/SecondaryText"
+            android:text="@string/title_calendar_empty_event"/>
+
+    </LinearLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDailyTodoList"
