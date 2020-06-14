@@ -25,6 +25,8 @@ import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.repository.firebase.NavigationBadgeRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
+import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
+import vnu.uet.mobilecourse.assistant.view.notification.NotificationsFragment;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 import vnu.uet.mobilecourse.assistant.work.courses.CourseDataSynchronization;
 
@@ -83,6 +85,23 @@ public class MyCoursesActivity extends AppCompatActivity {
         setupCourseReminders();
         setupTodoReminders();
         CourseDataSynchronization.start();
+
+        checkIfOpenByNotification();
+    }
+
+    private void checkIfOpenByNotification() {
+        if (NotificationHelper.ACTION_OPEN.equals(getIntent().getAction())) {
+
+            String menuFragment = getIntent().getStringExtra("fragment");
+
+            // If menuFragment is defined, then this activity was launched with a fragment selection
+            if (menuFragment != null) {
+                // Here we can decide what do to -- perhaps load other parameters from the intent extras such as IDs, etc
+                if (menuFragment.equals(NotificationsFragment.class.getName())) {
+                    mNavController.navigate(R.id.action_navigation_courses_to_navigation_notifications);
+                }
+            }
+        }
     }
 
     private void setupNavigationBadges() {
