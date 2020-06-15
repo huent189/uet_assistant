@@ -1,132 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinator_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background"
-    tools:context=".view.calendar.CalendarFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/aplThumbnail"
+    <data>
+        <variable name="content" type="java.lang.String"/>
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/background">
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        tools:context=".view.calendar.CalendarFragment">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/col"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/aplThumbnail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            app:collapsedTitleTextAppearance="@style/ToolbarTitleText"
-            app:expandedTitleTextAppearance="@style/ToolbarTitleText"
-            app:expandedTitleMarginStart="@dimen/margin_x2">
+            android:background="@color/background">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/col"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="?attr/actionBarSize">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+                app:collapsedTitleTextAppearance="@style/ToolbarTitleText"
+                app:expandedTitleTextAppearance="@style/ToolbarTitleText"
+                app:expandedTitleMarginStart="@dimen/margin_x2">
 
-                <vnu.uet.mobilecourse.assistant.view.component.CustomCalendarView
-                    android:id="@+id/calendar_view"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/margin_x2"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+                    android:paddingBottom="?attr/actionBarSize">
 
-                <TextView
-                    android:id="@+id/tvTitle"
-                    style="@style/ToolbarTitleText"
+                    <vnu.uet.mobilecourse.assistant.view.component.CustomCalendarView
+                        android:id="@+id/calendar_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/margin_x2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+                    <TextView
+                        android:id="@+id/tvTitle"
+                        style="@style/ToolbarTitleText"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        android:background="@drawable/list_item_background"
+                        android:gravity="center_vertical"
+                        android:paddingEnd="0dp"
+                        android:paddingStart="@dimen/margin_x2"
+                        android:text="@string/title_calendar"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.appcompat.widget.Toolbar
+                    style="@style/Toolbar"
+                    android:layout_gravity="top"
+                    android:id="@+id/toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:background="@drawable/list_item_background"
-                    android:gravity="center_vertical"
-                    android:paddingEnd="0dp"
-                    android:paddingStart="@dimen/margin_x2"
-                    android:text="@string/title_calendar"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:title="@string/title_calendar"
+                    app:menu="@menu/calendar_toolbar_menu">
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.appcompat.widget.Toolbar>
 
-            <androidx.appcompat.widget.Toolbar
-                style="@style/Toolbar"
-                android:layout_gravity="top"
-                android:id="@+id/toolbar"
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/sflEvents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                app:title="@string/title_calendar"
-                app:menu="@menu/calendar_toolbar_menu">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            </androidx.appcompat.widget.Toolbar>
+                <include layout="@layout/shimmer_todo_item" />
 
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
+                <include layout="@layout/shimmer_todo_item" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+            </LinearLayout>
 
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/sflEvents"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
-        <LinearLayout
+        <include layout="@layout/layout_empty" app:content="@string/title_calendar_empty_event" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDailyTodoList"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAddTodo"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="end|bottom"
+            android:background="@drawable/circle"
+            android:backgroundTint="@color/accent"
+            android:layout_margin="@dimen/margin_x2"
+            android:src="@drawable/ic_add_24dp"
+            android:tint="@color/white" />
 
-            <include layout="@layout/shimmer_todo_item" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-            <include layout="@layout/shimmer_todo_item" />
-
-        </LinearLayout>
-
-    </com.facebook.shimmer.ShimmerFrameLayout>
-
-    <LinearLayout
-        android:id="@+id/layoutEmpty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <ImageView
-            android:id="@+id/ivEmpty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="120dp"
-            android:alpha="0.2"
-            android:src="@drawable/img_admin_bot" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            style="@style/SecondaryText"
-            android:text="@string/title_calendar_empty_event"/>
-
-    </LinearLayout>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvDailyTodoList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddTodo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:background="@drawable/circle"
-        android:backgroundTint="@color/accent"
-        android:layout_margin="@dimen/margin_x2"
-        android:src="@drawable/ic_add_24dp"
-        android:tint="@color/white" />
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
