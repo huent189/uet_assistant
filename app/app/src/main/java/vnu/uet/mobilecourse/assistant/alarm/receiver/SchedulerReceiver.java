@@ -55,6 +55,7 @@ public abstract class SchedulerReceiver<T extends Parcelable> extends BroadcastR
                 Notification_UserSubCol notificationDoc = generateNotification(model);
                 NotificationRepository.getInstance().add(notificationDoc);
 
+                // increase new notifications counter
                 NavigationBadgeRepository.getInstance().increaseNewNotifications();
 
                 // push notification onto device

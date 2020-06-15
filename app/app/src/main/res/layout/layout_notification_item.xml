@@ -8,6 +8,7 @@
     android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutContainer"
         android:paddingVertical="@dimen/margin"
         android:paddingStart="@dimen/margin_x2"
         android:paddingEnd="@dimen/margin"

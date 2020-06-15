@@ -40,7 +40,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     private List<Notification_UserSubCol> mNotifications;
     private Fragment mOwner;
-    private NavController mNavController;
 
     public NotificationAdapter(List<Notification_UserSubCol> notifications, Fragment owner) {
         this.mNotifications = notifications;
@@ -53,20 +52,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         View view = mOwner.getLayoutInflater()
                 .inflate(R.layout.layout_notification_item, parent, false);
 
-        Activity activity = mOwner.getActivity();
-
-        if (activity != null) {
-            mNavController = Navigation
-                    .findNavController(activity, R.id.nav_host_fragment);
-        }
-
         return new NotificationHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull NotificationHolder holder, int position) {
         final Notification_UserSubCol notification = mNotifications.get(position);
-        holder.bind(notification);
+        holder.bind(notification, mOwner);
     }
 
     public List<Notification_UserSubCol> getNotifications() {
@@ -78,13 +70,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return mNotifications.size();
     }
 
-    public class NotificationHolder extends RecyclerView.ViewHolder {
+    static class NotificationHolder extends RecyclerView.ViewHolder {
 
         private ImageView mIvNotifyIcon;
         private TextView mTvNotifyTitle;
         private TextView mTvNotifyDesc;
         private TextView mTvNotifyTime;
         private ImageButton mBtnViewNotify;
+
+        private Fragment mOwner;
+        private NavController mNavController;
 
         public NotificationHolder(@NonNull View view) {
             super(view);
@@ -223,7 +218,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 });
         }
 
-        public void bind(Notification_UserSubCol notification) {
+        public void bind(Notification_UserSubCol notification, Fragment owner) {
+            mOwner = owner;
+
+            Activity activity = mOwner.getActivity();
+
+            if (activity != null) {
+                mNavController = Navigation
+                        .findNavController(activity, R.id.nav_host_fragment);
+            }
+
             String title = notification.getTitle();
             mTvNotifyTitle.setText(title);
 

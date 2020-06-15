@@ -20,6 +20,11 @@
             android:enabled="true"
             android:exported="true">
         </receiver>
+        <receiver
+            android:name=".alarm.receiver.SessionReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
 
         <activity android:name=".view.LoginFirebaseActivity">
             <intent-filter>
