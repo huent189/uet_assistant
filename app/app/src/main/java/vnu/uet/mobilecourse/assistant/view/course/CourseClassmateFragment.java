@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.ClassMateAdapter;
 import vnu.uet.mobilecourse.assistant.model.ICourse;
-import vnu.uet.mobilecourse.assistant.util.CONST;
+import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.viewmodel.CourseClassmateViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
@@ -59,8 +59,8 @@ public class CourseClassmateFragment extends Fragment {
 
             if (courseCode != null && !courseCode.isEmpty()) {
                 courseCode = courseCode
-                        .replace(CONST.COURSE_PREFIX + CONST.UNDERSCORE_CHAR, CONST.EMPTY)
-                        .replace(CONST.UNDERSCORE_CHAR, CONST.SPACE_CHAR);
+                        .replace(StringConst.COURSE_PREFIX + StringConst.UNDERSCORE_CHAR, StringConst.EMPTY)
+                        .replace(StringConst.UNDERSCORE_CHAR, StringConst.SPACE_CHAR);
 
                 mViewModel.getClassMates(courseCode).observe(getViewLifecycleOwner(), stateModel -> {
                     if (stateModel.getStatus() == StateStatus.SUCCESS) {

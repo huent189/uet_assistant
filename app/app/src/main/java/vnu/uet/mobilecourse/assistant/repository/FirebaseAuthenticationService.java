@@ -20,7 +20,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.model.notification.AdminNotification;
 import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.NotificationRepository;
-import vnu.uet.mobilecourse.assistant.util.CONST;
+import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 
 public class FirebaseAuthenticationService {
@@ -118,7 +118,7 @@ public class FirebaseAuthenticationService {
 
     private User createNewUserProfile(String email) {
         User user = new User();
-        String id = email.replace(CONST.VNU_EMAIL_DOMAIN, CONST.EMPTY);
+        String id = email.replace(StringConst.VNU_EMAIL_DOMAIN, StringConst.EMPTY);
         user.setId(id);
         user.setAvatar(null);
         user.setNewNotifications(1);

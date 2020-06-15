@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.util;
 
-public interface CONST {
+public interface StringConst {
+
     String VNU_DOMAIN = "vnu.edu.vn";
 
     String VNU_EMAIL_DOMAIN = "@vnu.edu.vn";

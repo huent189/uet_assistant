@@ -3,7 +3,7 @@ package vnu.uet.mobilecourse.assistant.model.firebase;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import vnu.uet.mobilecourse.assistant.util.CONST;
+import vnu.uet.mobilecourse.assistant.util.StringConst;
 
 public class CourseSession implements Parcelable {
     /**
@@ -68,7 +68,7 @@ public class CourseSession implements Parcelable {
     };
 
     public String getId() {
-        return courseCode + CONST.UNDERSCORE_CHAR + type;
+        return courseCode + StringConst.UNDERSCORE_CHAR + type;
     }
 
     public String getCourseCode() {

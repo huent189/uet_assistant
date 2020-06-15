@@ -117,15 +117,20 @@ public class CalendarFragment extends Fragment {
     private static final String KEY_RECYCLER_STATE = DailyEventAdapter.class.getName();
 
     public void saveRecycleViewState() {
-        mRecyclerViewState = new Bundle();
-        Parcelable onSaveInstanceState = mRvDailyTodoList.getLayoutManager().onSaveInstanceState();
-        mRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, onSaveInstanceState);
+        RecyclerView.LayoutManager layoutManager = mRvDailyTodoList.getLayoutManager();
+        if (layoutManager != null) {
+            mRecyclerViewState = new Bundle();
+            Parcelable onSaveInstanceState = layoutManager.onSaveInstanceState();
+            mRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, onSaveInstanceState);
+        }
     }
 
-    public void restoreRecycleViewState() {
-        if (mRecyclerViewState != null) {
+    private void restoreRecycleViewState() {
+        RecyclerView.LayoutManager layoutManager = mRvDailyTodoList.getLayoutManager();
+
+        if (mRecyclerViewState != null && layoutManager != null) {
             Parcelable onSaveInstanceState = mRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
-            mRvDailyTodoList.getLayoutManager().onRestoreInstanceState(onSaveInstanceState);
+            layoutManager.onRestoreInstanceState(onSaveInstanceState);
         }
     }
 

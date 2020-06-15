@@ -26,7 +26,7 @@ import vnu.uet.mobilecourse.assistant.model.ICourse;
 import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
-import vnu.uet.mobilecourse.assistant.util.CONST;
+import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.viewmodel.CourseGeneralViewModel;
 
 import static vnu.uet.mobilecourse.assistant.model.material.CourseConstant.MaterialType.GENERAL;
@@ -50,8 +50,8 @@ public class CourseGeneralFragment extends Fragment {
 
             String courseCode = course.getCode();
             courseCode = courseCode
-                    .replace(CONST.COURSE_PREFIX + CONST.UNDERSCORE_CHAR, CONST.EMPTY)
-                    .replace(CONST.UNDERSCORE_CHAR, CONST.SPACE_CHAR);
+                    .replace(StringConst.COURSE_PREFIX + StringConst.UNDERSCORE_CHAR, StringConst.EMPTY)
+                    .replace(StringConst.UNDERSCORE_CHAR, StringConst.SPACE_CHAR);
 
             TextView tvCourseTitle = root.findViewById(R.id.tvCourseTitle);
             tvCourseTitle.setText(course.getTitle());

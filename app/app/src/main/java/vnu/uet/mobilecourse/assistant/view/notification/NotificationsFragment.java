@@ -41,7 +41,7 @@ public class NotificationsFragment extends Fragment {
         RecyclerView rvNotifications = root.findViewById(R.id.rvNotifications);
         rvNotifications.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        ImageView ivEmpty = root.findViewById(R.id.ivEmpty);
+        View layoutEmpty = root.findViewById(R.id.layoutEmpty);
 
         ShimmerFrameLayout sflNotifications = root.findViewById(R.id.sflNotifications);
         sflNotifications.startShimmerAnimation();
@@ -50,7 +50,7 @@ public class NotificationsFragment extends Fragment {
             switch (stateModel.getStatus()) {
                 case LOADING:
                     sflNotifications.setVisibility(View.VISIBLE);
-                    ivEmpty.setVisibility(View.GONE);
+                    layoutEmpty.setVisibility(View.GONE);
                     rvNotifications.setVisibility(View.GONE);
                     break;
 
@@ -58,14 +58,14 @@ public class NotificationsFragment extends Fragment {
                     List<Notification_UserSubCol> notifications = stateModel.getData();
 
                     if (notifications.isEmpty()) {
-                        ivEmpty.setVisibility(View.VISIBLE);
+                        layoutEmpty.setVisibility(View.VISIBLE);
                         rvNotifications.setVisibility(View.GONE);
                     } else {
                         NotificationAdapter adapter = new NotificationAdapter(notifications,
                                 NotificationsFragment.this);
                         rvNotifications.setAdapter(adapter);
 
-                        ivEmpty.setVisibility(View.GONE);
+                        layoutEmpty.setVisibility(View.GONE);
                         rvNotifications.setVisibility(View.VISIBLE);
                     }
 
