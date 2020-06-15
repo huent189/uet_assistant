@@ -48,7 +48,7 @@ public class MaterialRepository {
                     }
                 }).start();
                 return materialDAO.getQuiz(materialId);
-            case CourseConstant.MaterialType.RESOURSE:
+            case CourseConstant.MaterialType.RESOURCE:
                 new Thread(() -> {
                     try {
                         updateInternalResources();
