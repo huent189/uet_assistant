@@ -40,7 +40,6 @@
                 android:id="@+id/tvNotifyTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
                 android:text="@string/title_loading"
                 android:textColor="@color/primary" />
 
