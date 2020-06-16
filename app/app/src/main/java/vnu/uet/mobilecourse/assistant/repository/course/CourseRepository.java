@@ -13,6 +13,7 @@ import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
 import vnu.uet.mobilecourse.assistant.repository.cache.CommonCourseCache;
+import vnu.uet.mobilecourse.assistant.util.FbAndCourseMap;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -333,7 +334,8 @@ public class CourseRepository {
 
             List<CourseInfo> others = mFbCourses.stream().filter(courseInfo -> {
                 for (ICourse course : merged) {
-                    if (course.getCode().equals(courseInfo.getCode()))
+                    if (FbAndCourseMap.equals(course, courseInfo))
+//                    if (course.getCode().equals(courseInfo.getCode()))
                         return false;
                 }
 

@@ -29,6 +29,8 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
+import static vnu.uet.mobilecourse.assistant.util.FbAndCourseMap.DELIMITER_POS;
+
 public class CourseInfoDAO extends FirebaseDAO<CourseInfo> {
 
     public CourseInfoDAO() {
@@ -136,15 +138,13 @@ public class CourseInfoDAO extends FirebaseDAO<CourseInfo> {
                 });
     }
 
-    private static final int POS = 3;
-
     private void retryWithAnotherCode(StateMediatorLiveData<CourseInfo> response, String id) {
         StringBuilder builder = new StringBuilder(id);
 
-        if (builder.charAt(POS) == StringConst.SPACE_CHAR) {
-            builder.deleteCharAt(POS);
+        if (builder.charAt(DELIMITER_POS) == StringConst.SPACE_CHAR) {
+            builder.deleteCharAt(DELIMITER_POS);
         } else {
-            builder.insert(POS, StringConst.SPACE_CHAR);
+            builder.insert(DELIMITER_POS, StringConst.SPACE_CHAR);
         }
 
         String code = builder.toString();
