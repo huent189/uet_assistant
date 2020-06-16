@@ -18,7 +18,9 @@ import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.alarm.scheduler.Scheduler;
 import vnu.uet.mobilecourse.assistant.alarm.scheduler.SessionScheduler;
+import vnu.uet.mobilecourse.assistant.alarm.scheduler.TestScheduler;
 import vnu.uet.mobilecourse.assistant.alarm.scheduler.TodoScheduler;
 import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
@@ -148,6 +150,8 @@ public class MyCoursesActivity extends AppCompatActivity {
                     break;
             }
         });
+
+        TestScheduler.getInstance(MyCoursesActivity.this).schedule("TESTTTTTTTTTTTTT");
     }
 
     private void setupTodoReminders() {

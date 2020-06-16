@@ -12,7 +12,7 @@ import vnu.uet.mobilecourse.assistant.repository.firebase.NavigationBadgeReposit
 import vnu.uet.mobilecourse.assistant.repository.firebase.NotificationRepository;
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
 
-public abstract class SchedulerReceiver<T extends Parcelable> extends BroadcastReceiver {
+public abstract class SchedulerReceiver<T> extends BroadcastReceiver {
 
     /**
      * Generate firebase notification document
