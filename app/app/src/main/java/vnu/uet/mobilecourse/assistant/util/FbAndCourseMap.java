@@ -23,6 +23,9 @@ public class FbAndCourseMap {
     }
 
     private static String cleanCode(String code) {
+        if (code.length() < DELIMITER_POS)
+            return code;
+
         // E.g: 1920II_INT2206_21 (lớp tự nguyên)
         String cleanCode = code
                 // convert "1920II_INT2206_21 (lớp tự nguyên)" --> "_INT2206_21 (lớp tự nguyên)"
