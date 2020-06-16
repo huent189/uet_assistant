@@ -149,8 +149,6 @@ public class MyCoursesActivity extends AppCompatActivity {
                     break;
             }
         });
-
-        TestScheduler.getInstance(MyCoursesActivity.this).schedule(Util.autoId());
     }
 
     private void setupTodoReminders() {
