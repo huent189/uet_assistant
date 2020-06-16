@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.util.Util;
 
 import java.util.List;
 
@@ -18,9 +19,7 @@ import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.alarm.scheduler.Scheduler;
 import vnu.uet.mobilecourse.assistant.alarm.scheduler.SessionScheduler;
-import vnu.uet.mobilecourse.assistant.alarm.scheduler.TestScheduler;
 import vnu.uet.mobilecourse.assistant.alarm.scheduler.TodoScheduler;
 import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
@@ -151,7 +150,7 @@ public class MyCoursesActivity extends AppCompatActivity {
             }
         });
 
-        TestScheduler.getInstance(MyCoursesActivity.this).schedule("TESTTTTTTTTTTTTT");
+        TestScheduler.getInstance(MyCoursesActivity.this).schedule(Util.autoId());
     }
 
     private void setupTodoReminders() {

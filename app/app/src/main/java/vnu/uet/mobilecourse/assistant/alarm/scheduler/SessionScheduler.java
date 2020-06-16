@@ -7,6 +7,7 @@ import android.content.Intent;
 import java.util.Calendar;
 import java.util.Date;
 
+import vnu.uet.mobilecourse.assistant.alarm.receiver.SessionReceiver;
 import vnu.uet.mobilecourse.assistant.alarm.receiver.TodoReceiver;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.util.ParcelableUtils;
@@ -32,7 +33,7 @@ public class SessionScheduler extends Scheduler<CourseSession> {
 
     @Override
     protected Intent buildIntent(CourseSession session) {
-        Intent intent = new Intent(mContext, TodoReceiver.class);
+        Intent intent = new Intent(mContext, SessionReceiver.class);
         intent.setAction(ACTION);
         intent.putExtra("session", ParcelableUtils.toByteArray(session));
         return intent;
