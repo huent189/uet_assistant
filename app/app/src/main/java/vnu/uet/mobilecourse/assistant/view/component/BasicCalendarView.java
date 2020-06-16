@@ -101,21 +101,6 @@ public class BasicCalendarView extends LinearLayout {
         }
     }
 
-//    @Deprecated
-//    private void updateItemView(View itemView, ItemState state) {
-//        ImageView ivSelectedCircle = itemView.findViewById(R.id.ivSelectedCircle);
-//
-//        switch (state) {
-//            case SELECTED:
-//                ivSelectedCircle.setVisibility(View.VISIBLE);
-//                break;
-//
-//            case UNSELECTED:
-//                ivSelectedCircle.setVisibility(View.INVISIBLE);
-//                break;
-//        }
-//    }
-
     private void initializeLayout() {
         prepareLayout();
 

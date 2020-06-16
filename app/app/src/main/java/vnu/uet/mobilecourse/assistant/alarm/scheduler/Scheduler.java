@@ -2,15 +2,16 @@ package vnu.uet.mobilecourse.assistant.alarm.scheduler;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.util.Log;
 
 import static android.app.PendingIntent.FLAG_CANCEL_CURRENT;
-import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 
 public abstract class Scheduler<T extends Parcelable> {
+
+    private static final String TAG = Scheduler.class.getName();
 
     protected Context mContext;
 
@@ -42,31 +43,37 @@ public abstract class Scheduler<T extends Parcelable> {
 
     protected void scheduleOneTime(T model) {
         Intent intent = buildIntent(model);
+        Log.d(TAG, "Build intent success: " + intent);
 
         int requestCode = getRequestCode(model);
         PendingIntent pendingIntent = PendingIntent
                 .getBroadcast(mContext, requestCode, intent, FLAG_CANCEL_CURRENT);
+        Log.d(TAG, "Extract pending intent success: " + pendingIntent + " with request code " + requestCode);
 
         long time = getTimeInMillis(model);
 
         // schedule if after current time
         if (time > System.currentTimeMillis()) {
             mAlarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+            Log.d(TAG, "schedule one time start at " + time + " millis");
         }
     }
 
     protected void scheduleInterval(T model, long interval) {
         Intent intent = buildIntent(model);
+        Log.d(TAG, "Build intent success: " + intent);
 
         int requestCode = getRequestCode(model);
         PendingIntent pendingIntent = PendingIntent
                 .getBroadcast(mContext, requestCode, intent, FLAG_CANCEL_CURRENT);
+        Log.d(TAG, "Extract pending intent success: " + pendingIntent + " with request code " + requestCode);
 
         long time = getTimeInMillis(model);
 
         // schedule if after current time
         if (time > System.currentTimeMillis()) {
             mAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, interval, pendingIntent);
+            Log.d(TAG, "schedule repeat start at " + time + " millis and interval " + interval);
         }
     }
 }
