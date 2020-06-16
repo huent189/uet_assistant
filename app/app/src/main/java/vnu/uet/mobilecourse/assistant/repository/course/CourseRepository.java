@@ -250,7 +250,8 @@ public class CourseRepository {
 
             for (ICourse course : mMyCourses) {
                 for (CourseInfo otherCourse : mOtherCourses) {
-                    if (course.getCode().equals(otherCourse.getCode())) {
+                    if (FbAndCourseMap.equals(course, otherCourse)) {
+//                    if (course.getCode().equals(otherCourse.getCode())) {
                         commonCourses.add(course);
                         break;
                     }
