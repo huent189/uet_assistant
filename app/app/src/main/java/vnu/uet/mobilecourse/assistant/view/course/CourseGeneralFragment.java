@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
@@ -25,7 +26,7 @@ import vnu.uet.mobilecourse.assistant.model.ICourse;
 import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
-import vnu.uet.mobilecourse.assistant.util.CONST;
+import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.viewmodel.CourseGeneralViewModel;
 
 import static vnu.uet.mobilecourse.assistant.model.material.CourseConstant.MaterialType.GENERAL;
@@ -44,94 +45,119 @@ public class CourseGeneralFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            String courseCode = args.getString("courseCode");
-            assert courseCode != null;
-            courseCode = courseCode.replace(CONST.COURSE_PREFIX + CONST.UNDERSCORE, "")
-                    .replace(CONST.UNDERSCORE, CONST.SPACE);
+            ICourse course = args.getParcelable("course");
+            assert course != null;
+
+            String courseCode = course.getCode();
+            courseCode = courseCode
+                    .replace(StringConst.COURSE_PREFIX + StringConst.UNDERSCORE_CHAR, StringConst.EMPTY)
+                    .replace(StringConst.UNDERSCORE_CHAR, StringConst.SPACE_CHAR);
 
             TextView tvCourseTitle = root.findViewById(R.id.tvCourseTitle);
+            tvCourseTitle.setText(course.getTitle());
+
             TextView tvCourseId = root.findViewById(R.id.tvCourseId);
+            tvCourseId.setText(course.getCode());
+
             TextView tvCredits = root.findViewById(R.id.tvCredits);
 
             CircularProgressBar cpbProgress = root.findViewById(R.id.cpbProgress);
-
             TextView tvProgress = root.findViewById(R.id.tvProgress);
 
-            ICourse course = args.getParcelable("course");
-
             if (course instanceof Course) {
-                float progress = (float) ((Course) course).getProgress();
+                Course cast = (Course) course;
+
+                float progress = (float) cast.getProgress();
                 tvProgress.setText(String.format(Locale.ROOT, "%.0f%%", progress));
                 cpbProgress.setProgressWithAnimation(progress);
             }
 
-            assert course != null;
-            tvCourseId.setText(course.getCode());
-            tvCourseTitle.setText(course.getTitle());
+            initializeGeneralMaterialsView(root, course);
 
-            int courseId = args.getInt("courseId");
-            initializeGeneralMaterialsView(root, courseId);
+            RecyclerView rvSessions = root.findViewById(R.id.rvSessions);
 
-            RecyclerView rvSessions = initializeSessionsView(root);
-            mViewModel.getCourseInfo(courseCode).observe(getViewLifecycleOwner(), stateModel -> {
-                switch (stateModel.getStatus()) {
-                    case LOADING:
-                        tvCredits.setText(R.string.title_loading);
-                        break;
+            if (!courseCode.isEmpty()) {
+                initializeSessionsView(rvSessions);
+                mViewModel.getCourseInfo(courseCode).observe(getViewLifecycleOwner(), stateModel -> {
+                    switch (stateModel.getStatus()) {
+                        case LOADING:
+                            tvCredits.setText(R.string.title_loading);
+                            break;
 
-                    case ERROR:
-                        tvCredits.setText(R.string.title_error);
-                        break;
+                        case ERROR:
+                            tvCredits.setText(R.string.title_error);
+                            break;
 
-                    case SUCCESS:
-                        CourseInfo courseInfo = stateModel.getData();
+                        case SUCCESS:
+                            CourseInfo courseInfo = stateModel.getData();
 
-                        tvCredits.setText(String.valueOf(courseInfo.getCredits()));
+                            tvCredits.setText(String.valueOf(courseInfo.getCredits()));
 
-                        List<CourseSession> sessions = courseInfo.getSessions();
-                        CourseSessionAdapter adapter = new CourseSessionAdapter(sessions, CourseGeneralFragment.this);
-                        rvSessions.setAdapter(adapter);
+                            List<CourseSession> sessions = courseInfo.getSessions();
+                            CourseSessionAdapter adapter = new CourseSessionAdapter(sessions, CourseGeneralFragment.this);
+                            rvSessions.setAdapter(adapter);
 
-                        break;
-                }
-            });
+                            break;
+                    }
+                });
 
-            initializeParticipantsView(root, courseCode);
+                initializeParticipantsView(root, courseCode);
+            } else {
+                LinearLayout layoutContainerTop = root.findViewById(R.id.layout_basic_info);
+                layoutContainerTop.setVisibility(View.GONE);
+
+                LinearLayout layoutContainerBottom = root.findViewById(R.id.layout_common_info);
+                layoutContainerBottom.setVisibility(View.GONE);
+
+                TextView tvSessionTitle = root.findViewById(R.id.tvSessionTitle);
+                tvSessionTitle.setVisibility(View.GONE);
+
+                rvSessions.setVisibility(View.GONE);
+            }
         }
 
         return root;
     }
 
-    private void initializeGeneralMaterialsView(View root, int courseId) {
+    private void initializeGeneralMaterialsView(View root, ICourse course) {
         RecyclerView rvGeneralMaterials = root.findViewById(R.id.rvGeneralMaterials);
         rvGeneralMaterials.setLayoutManager(new LinearLayoutManager(getContext()));
 
         TextView tvGeneralMaterials = root.findViewById(R.id.tvGeneralMaterials);
 
-        mViewModel.getContent(courseId).observe(getViewLifecycleOwner(), courseOverviews -> {
-            if (courseOverviews != null && !courseOverviews.isEmpty()) {
-                courseOverviews.stream()
-                        .filter(item -> item.getWeekInfo().getTitle().equals(GENERAL))
-                        .findFirst()
-                        .ifPresent(courseOverview -> {
-                            List<Material> materials = courseOverview.getMaterials();
+        if (course instanceof Course) {
+            int courseId = ((Course) course).getId();
 
-                            if (materials.isEmpty()) {
-                                tvGeneralMaterials.setVisibility(View.GONE);
+            mViewModel.getContent(courseId).observe(getViewLifecycleOwner(), courseOverviews -> {
+                if (courseOverviews != null && !courseOverviews.isEmpty()) {
+                    courseOverviews.stream()
+                            .filter(item -> item.getWeekInfo().getTitle().equals(GENERAL))
+                            .findFirst()
+                            .ifPresent(courseOverview -> {
+                                List<Material> materials = courseOverview.getMaterials();
 
-                            } else {
-                                tvGeneralMaterials.setVisibility(View.VISIBLE);
+                                if (materials.isEmpty()) {
+                                    tvGeneralMaterials.setVisibility(View.GONE);
 
-                                CourseGeneralMaterialAdapter adapter =
-                                        new CourseGeneralMaterialAdapter(materials, CourseGeneralFragment.this);
+                                } else {
+                                    tvGeneralMaterials.setVisibility(View.VISIBLE);
 
-                                rvGeneralMaterials.setAdapter(adapter);
-                            }
-                        });
-            } else {
-                tvGeneralMaterials.setVisibility(View.GONE);
-            }
-        });
+                                    CourseGeneralMaterialAdapter adapter =
+                                            new CourseGeneralMaterialAdapter(materials,
+                                                    CourseGeneralFragment.this);
+
+                                    rvGeneralMaterials.setAdapter(adapter);
+                                }
+                            });
+                } else {
+                    tvGeneralMaterials.setVisibility(View.GONE);
+                }
+            });
+
+        } else {
+            tvGeneralMaterials.setVisibility(View.GONE);
+            rvGeneralMaterials.setVisibility(View.GONE);
+        }
     }
 
     private void initializeParticipantsView(View root, String courseCode) {
@@ -160,16 +186,12 @@ public class CourseGeneralFragment extends Fragment {
         }
     }
 
-    private RecyclerView initializeSessionsView(View root) {
-        RecyclerView rvSessions = root.findViewById(R.id.rvSessions);
-
+    private void initializeSessionsView(RecyclerView rvSessions) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 getContext(),
                 LinearLayoutManager.HORIZONTAL,
                 false);
 
         rvSessions.setLayoutManager(layoutManager);
-
-        return rvSessions;
     }
 }

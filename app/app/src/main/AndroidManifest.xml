@@ -15,6 +15,17 @@
         android:theme="@style/DarkTheme"
         android:windowSoftInputMode="adjustPan">
 
+        <receiver
+            android:name=".alarm.receiver.TodoReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+        <receiver
+            android:name=".alarm.receiver.SessionReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+
         <activity android:name=".view.LoginFirebaseActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -28,6 +39,7 @@
         </activity>
         <activity
             android:name=".view.MyCoursesActivity"
+            android:launchMode="singleTask"
             android:label="@string/title_activity_my_courses" />
         <activity
             android:name=".view.LoginActivity"

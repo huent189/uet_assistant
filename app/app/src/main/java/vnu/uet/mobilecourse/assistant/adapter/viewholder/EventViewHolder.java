@@ -8,21 +8,17 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Objects;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LifecycleOwner;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.event.IEvent;
-import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
-import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
-import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
 public abstract class EventViewHolder extends ChildViewHolder {
 
@@ -87,12 +83,12 @@ public abstract class EventViewHolder extends ChildViewHolder {
         mCbDone.setChecked(false);
 
         if (deadline - System.currentTimeMillis() < WARNING_BOUNDARY) {
-            mTvDeadline.setTextColor(RED_COLOR);
-            mIvAlarm.setColorFilter(RED_COLOR);
+            int redColor = ContextCompat.getColor(itemView.getContext(), R.color.red);
+
+            mTvDeadline.setTextColor(redColor);
+            mIvAlarm.setColorFilter(redColor);
         }
     }
 
     protected static final int WARNING_BOUNDARY = 60 * 60 * 1000; // 1 hour
-
-    protected static final int RED_COLOR = Color.parseColor("#FFF44336");
 }

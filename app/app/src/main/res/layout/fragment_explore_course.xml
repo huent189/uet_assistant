@@ -21,33 +21,34 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:contentScrim="@color/primary"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
             app:collapsedTitleTextAppearance="@style/ToolbarTitleText"
             app:expandedTitleTextAppearance="@style/ToolbarTitleText"
+            app:contentScrim="@color/primary"
             app:expandedTitleMarginBottom="@dimen/margin_x2"
             app:expandedTitleMarginStart="60dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/collapsing_toolbar_height">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/margin_x6"
-                    android:layout_marginStart="@dimen/margin_x2"
+                    android:id="@+id/ivThumbnail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
                     android:contentDescription="@string/app_name"
-                    android:src="@drawable/isometric_course_thumbnail"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:src="@drawable/isomatric_idea_course"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
 
             <androidx.appcompat.widget.Toolbar
                 style="@style/Toolbar"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
+                android:background="@drawable/primary_fade_background"
                 android:paddingTop="4dp"
                 app:navigationIcon="@drawable/ic_arrow_back_24dp"
                 app:title="@string/app_name" />
@@ -58,7 +59,6 @@
             android:id="@+id/tabLayout"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/tab_height"
-            android:background="@color/primary"
             app:tabBackground="@drawable/tab_item"
             app:tabIndicator="@null"
             android:layout_gravity="center_horizontal"

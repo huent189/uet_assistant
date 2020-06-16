@@ -122,14 +122,6 @@ public class AllCoursesAdapter extends RecyclerView.Adapter<AllCoursesAdapter.Co
 
             mBtnAccessCourse.setOnClickListener(view -> {
                 Bundle bundle = new Bundle();
-
-                if (course instanceof Course) {
-                    bundle.putInt("courseId", ((Course) course).getId());
-                }
-
-                bundle.putString("courseTitle", courseTitle);
-                bundle.putString("courseCode", courseCode);
-
                 bundle.putParcelable("course", course);
 
                 int actionId = R.id.action_navigation_courses_to_navigation_explore_course;

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
-import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.repository.firebase.NotificationRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 

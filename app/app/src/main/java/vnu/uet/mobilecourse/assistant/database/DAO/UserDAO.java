@@ -6,6 +6,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Map;
+
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -39,6 +41,29 @@ public class UserDAO extends FirebaseDocReadOnlyDAO<User> {
                 .addOnFailureListener(e -> {
                     response.postError(e);
                     Log.e(TAG, "Failed to add todo list: " + user.getId());
+                });
+
+        return response;
+    }
+
+    public StateLiveData<String> update(String id, Map<String, Object> changes) {
+        // initialize output state live data with loading state
+        StateModel<String> loadingState = new StateModel<>(StateStatus.LOADING);
+        StateLiveData<String> response = new StateLiveData<>(loadingState);
+
+        // update document into firestore db
+        // *note: if this operation executed without internet connection
+        // state of the response won't change (still loading)
+        mColReference.document(id)
+                .update(changes)
+                .addOnSuccessListener(aVoid -> {
+                    // response post success with id of updated document
+                    response.postSuccess(id);
+                    Log.d(TAG, "Change document: " + id);
+                })
+                .addOnFailureListener(e -> {
+                    response.postError(e);
+                    Log.e(TAG, "Failed to change document: " + id);
                 });
 
         return response;

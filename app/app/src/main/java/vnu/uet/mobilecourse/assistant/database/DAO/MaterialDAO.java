@@ -46,12 +46,12 @@ public abstract class MaterialDAO {
     public abstract  void insertQuizzes(List<QuizNoGrade> contents);
     public  void insertInternalResource(List<InternalResourceContent> contents){
         insertInternalResourceParent(contents);
-        for (int i = 0; i < contents.size(); i++) {
-            int parentId = contents.get(i).getMaterialId();
-            for (int j = 0; j < contents.get(i).getFiles().size(); j++) {
-                contents.get(i).getFiles().get(j).setId(parentId * 100 + j);
-                contents.get(i).getFiles().get(j).setParentId(parentId);
-                insertInternalFiles(contents.get(i).getFiles());
+        for (InternalResourceContent content : contents) {
+            int parentId = content.getMaterialId();
+            for (int j = 0; j < content.getFiles().size(); j++) {
+                content.getFiles().get(j).setId(parentId * 100 + j);
+                content.getFiles().get(j).setParentId(parentId);
+                insertInternalFiles(content.getFiles());
             }
         }
     }
@@ -80,8 +80,8 @@ public abstract class MaterialDAO {
     public LiveData<InternalResourceContent> getInternalResource(int id){
         LiveData<InternalResourceContent> parent = getInternalResourceParent(id);
         LiveData<List<InternalFile>> childrent = getInternalFile(id);
-        MediatorLiveData<InternalResourceContent> merger = new MediatorLiveData();
-        merger.postValue(parent.getValue());
+        MediatorLiveData<InternalResourceContent> merger = new MediatorLiveData<>();
+//        merger.postValue(parent.getValue());
         merger.addSource(parent, internalResourceContent -> {
             InternalResourceContent old = merger.getValue();
             if(old != null) {

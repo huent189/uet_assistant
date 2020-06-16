@@ -13,7 +13,9 @@ public class PageContent extends MaterialContent {
     public void setRevision(int revision) {
         this.revision = revision;
     }
-
+    public String getType(){
+        return CourseConstant.MaterialType.PAGE;
+    }
     @Override
     public String toString() {
         return "PageContent{" +

@@ -6,14 +6,16 @@ import android.os.Parcelable;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+import vnu.uet.mobilecourse.assistant.R;
+
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Random;
 
 @Entity
 public class Course implements ICourse {
     @PrimaryKey
     private int id;
-    @Ignore
-    private int thumbnail;
     @SerializedName("displayname")
     private String title;
     @SerializedName("idnumber")
@@ -22,6 +24,7 @@ public class Course implements ICourse {
     private long lastAccessTime;
     @SerializedName("progress")
     private double progress;
+
     public Course(String title, String code) {
         this.title = title;
         this.code = code;
@@ -56,11 +59,15 @@ public class Course implements ICourse {
     }
 
     public int getThumbnail() {
-        return thumbnail;
-    }
+        int random = id % 3;
 
-    public void setThumbnail(int thumbnail) {
-        this.thumbnail = thumbnail;
+        if (random == 2) {
+            return R.drawable.isometric_course_thumbnail;
+        } else if (random == 1) {
+            return R.drawable.isomatric_idea_course;
+        } else {
+            return R.drawable.isomatric_course_online;
+        }
     }
 
     @Override

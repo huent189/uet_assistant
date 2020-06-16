@@ -94,6 +94,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     static class ReceiveMessageViewHolder extends MessageViewHolder {
+
         private CircleImageView mCivAvatar;
 
         ReceiveMessageViewHolder(@NonNull View itemView) {

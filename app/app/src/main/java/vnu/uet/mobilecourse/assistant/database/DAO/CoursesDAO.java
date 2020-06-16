@@ -3,6 +3,7 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 import androidx.lifecycle.LiveData;
 import androidx.room.*;
 import androidx.sqlite.db.SupportSQLiteQuery;
+import vnu.uet.mobilecourse.assistant.database.querymodel.IdNamePair;
 import vnu.uet.mobilecourse.assistant.model.Course;
 
 import java.util.List;
@@ -35,5 +36,7 @@ public abstract class CoursesDAO {
     public abstract int rawQueryExceute(SupportSQLiteQuery query);
     @Query("DELETE FROM Course")
     public abstract void deleteAll();
+    @Query("SELECT id, title as name FROM course")
+    public abstract List<IdNamePair> getAllCourseName();
     //TODO: clear all table
 }

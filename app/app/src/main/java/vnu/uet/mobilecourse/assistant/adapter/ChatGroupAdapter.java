@@ -50,7 +50,7 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         final GroupChat_UserSubCol current = mChats.get(position);
-        holder.bind(current);
+        holder.bind(current, mNavController);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
         return mChats.size();
     }
 
-    class ChatViewHolder extends RecyclerView.ViewHolder {
+    static class ChatViewHolder extends RecyclerView.ViewHolder {
         private CircleImageView mCivAvatar;
         private TextView mTvChatGroupTitle;
         private TextView mTvLastMessage;
@@ -73,15 +73,9 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
             mTvLastMessage = view.findViewById(R.id.tvLastMessage);
             mTvLastMessageTime = view.findViewById(R.id.tvLastMessageTime);
             mIvNewMessageDot = view.findViewById(R.id.ivNewMessageDot);
-
-            view.setOnClickListener(v ->
-                    mNavController.navigate(
-                            R.id.action_navigation_explore_course_to_navigation_friend_profile
-                    )
-            );
         }
 
-        void bind(GroupChat_UserSubCol chat) {
+        void bind(GroupChat_UserSubCol chat, NavController navController) {
             mTvChatGroupTitle.setText(chat.getName());
             mTvLastMessage.setText(chat.getLastMessage());
 
@@ -90,6 +84,12 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
             mTvLastMessageTime.setText(lastMessageTimeInStr);
 
             mIvNewMessageDot.setVisibility(chat.isSeen() ? View.GONE : View.VISIBLE);
+
+            itemView.setOnClickListener(v ->
+                    navController.navigate(
+                            R.id.action_navigation_explore_course_to_navigation_friend_profile
+                    )
+            );
         }
     }
 

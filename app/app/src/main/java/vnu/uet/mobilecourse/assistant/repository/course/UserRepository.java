@@ -21,7 +21,7 @@ import vnu.uet.mobilecourse.assistant.network.request.UserRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
 import vnu.uet.mobilecourse.assistant.network.response.LoginResponse;
 import vnu.uet.mobilecourse.assistant.repository.FirebaseAuthenticationService;
-import vnu.uet.mobilecourse.assistant.util.CONST;
+import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
@@ -37,7 +37,7 @@ public class UserRepository {
             @Override
             public void onSuccess(LoginResponse response) {
                 User.getInstance().setToken(response.getToken());
-                User.getInstance().setEmail(studentId + CONST.VNU_EMAIL_DOMAIN);
+                User.getInstance().setEmail(studentId + StringConst.VNU_EMAIL_DOMAIN);
                 userRequest.getUserId().enqueue(new Callback<JsonObject>() {
                     @Override
                     public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -102,9 +102,11 @@ public class UserRepository {
                     if (response.body().get("errorcode") == null) {
                         Log.d("COURSES_DEBUG", response.toString());
                         loginState.postSuccess("login successfully");
+                        User.getInstance().setEnableSyncNoti(true);
                     } else {
                         Log.d("COURSES_DEBUG", "login failed");
                         loginState.postError(new InvalidLoginException());
+                        User.getInstance().setEnableSyncNoti(false);
                     }
                 }
                 else {

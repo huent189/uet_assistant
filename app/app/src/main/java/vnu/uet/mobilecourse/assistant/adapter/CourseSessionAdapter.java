@@ -21,7 +21,6 @@ public class CourseSessionAdapter extends RecyclerView.Adapter<CourseSessionAdap
 
     public CourseSessionAdapter(List<CourseSession> sessions, CourseGeneralFragment owner) {
         this.mSessions = new ArrayList<>(sessions);
-        mSessions.addAll(sessions);
         this.mOwner = owner;
     }
 

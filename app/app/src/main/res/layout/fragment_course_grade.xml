@@ -7,106 +7,125 @@
     android:layout_height="match_parent"
     tools:context=".view.course.CourseGradeFragment">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <FrameLayout
+        <LinearLayout
+            android:id="@+id/layoutContainer"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmerTvGradeProgress"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="wrap_content">
 
-                <LinearLayout
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerTvGradeProgress"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent" >
 
-                    <TextView
-                        android:textSize="@dimen/font_size_large_title"
-                        android:textStyle="bold"
-                        android:layout_width="140dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_x4"
-                        android:background="@drawable/primary_button_background"
-                        android:backgroundTint="@color/backgroundLight"
-                        android:layout_gravity="center_horizontal"
-                        android:paddingHorizontal="@dimen/margin_x2" />
+                        android:orientation="vertical">
 
-                </LinearLayout>
+                        <TextView
+                            android:textSize="@dimen/font_size_large_title"
+                            android:textStyle="bold"
+                            android:layout_width="140dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_x4"
+                            android:background="@drawable/primary_button_background"
+                            android:backgroundTint="@color/backgroundLight"
+                            android:layout_gravity="center_horizontal"
+                            android:paddingHorizontal="@dimen/margin_x2" />
 
-            </com.facebook.shimmer.ShimmerFrameLayout>
+                    </LinearLayout>
 
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+                <TextView
+                android:id="@+id/tvGradeProgress"
+                android:textSize="@dimen/font_size_large_title"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_x4"
+                android:background="@drawable/primary_button_background"
+                android:backgroundTint="@color/primary"
+                android:layout_gravity="center_horizontal"
+                android:paddingHorizontal="@dimen/margin_x2"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            </FrameLayout>
 
             <TextView
-            android:id="@+id/tvGradeProgress"
-            android:textSize="@dimen/font_size_large_title"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_x4"
-            android:background="@drawable/primary_button_background"
-            android:backgroundTint="@color/primary"
-            android:layout_gravity="center_horizontal"
-            android:paddingHorizontal="@dimen/margin_x2"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_x2"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/desc_average_grade"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvGradeProgress" />
 
-        </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shimmerRvGrades"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <include layout="@layout/shimmer_grade_item" />
+                        <include layout="@layout/shimmer_grade_item" />
+                        <include layout="@layout/shimmer_grade_item" />
+                        <include layout="@layout/shimmer_grade_item" />
+                        <include layout="@layout/shimmer_grade_item" />
+                        <include layout="@layout/shimmer_grade_item" />
+
+                    </LinearLayout>
+
+                </com.facebook.shimmer.ShimmerFrameLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvGrades"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_x2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            </FrameLayout>
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_x2"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/desc_average_grade"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvGradeProgress" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/shimmerRvGrades"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <include layout="@layout/shimmer_grade_item" />
-                    <include layout="@layout/shimmer_grade_item" />
-                    <include layout="@layout/shimmer_grade_item" />
-                    <include layout="@layout/shimmer_grade_item" />
-                    <include layout="@layout/shimmer_grade_item" />
-                    <include layout="@layout/shimmer_grade_item" />
-
-                </LinearLayout>
-
-            </com.facebook.shimmer.ShimmerFrameLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvGrades"
+            android:id="@+id/tvEnrollError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_x2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textAlignment="center"
+            android:paddingVertical="@dimen/margin_x6"
+            android:paddingHorizontal="@dimen/margin_x2"
+            android:visibility="gone"
+            android:textColor="@color/accent"
+            android:text="@string/title_course_enroll_error"
+            android:textSize="@dimen/font_size_item_title"/>
 
-        </FrameLayout>
-
-    </LinearLayout>
+    </FrameLayout>
 
 </androidx.core.widget.NestedScrollView>

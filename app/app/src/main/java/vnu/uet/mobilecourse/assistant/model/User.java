@@ -1,21 +1,21 @@
 package vnu.uet.mobilecourse.assistant.model;
 
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
-import vnu.uet.mobilecourse.assistant.util.CONST;
+import vnu.uet.mobilecourse.assistant.util.StringConst;
 
 public class User {
     private static User user;
     private String token;
     private String userId;
     private String email;
-    private long lastSynchonizedTime;
+    private boolean enableSyncNoti;
     public static User getInstance(){
         if(user == null){
             user = new User();
             user.token = SharedPreferencesManager.getStringValue(SharedPreferencesManager.TOKEN);
             user.email = SharedPreferencesManager.getStringValue(SharedPreferencesManager.REGISTER_EMAIL);
             user.userId = SharedPreferencesManager.getStringValue(SharedPreferencesManager.USER_ID);
-            user.lastSynchonizedTime = SharedPreferencesManager.getLongValue(SharedPreferencesManager.LAST_SYNCHONIZE_TIME);
+            user.enableSyncNoti = SharedPreferencesManager.getBooleanValue(SharedPreferencesManager.ENABLE_SYNC_NOTI);
         }
         return user;
     }
@@ -43,7 +43,7 @@ public class User {
     }
 
     public String getStudentId() {
-        return email.replace(CONST.VNU_EMAIL_DOMAIN, CONST.EMPTY);
+        return email.replace(StringConst.VNU_EMAIL_DOMAIN, StringConst.EMPTY);
     }
 
     public void setEmail(String email) {
@@ -51,12 +51,12 @@ public class User {
         SharedPreferencesManager.setString(SharedPreferencesManager.REGISTER_EMAIL, email);
     }
 
-    public long getLastSynchonizedTime() {
-        return lastSynchonizedTime;
+    public boolean getEnableSyncNoti() {
+        return enableSyncNoti;
     }
 
-    public void setLastSynchonizedTime(long lastSynchonizedTime) {
-        this.lastSynchonizedTime = lastSynchonizedTime;
-        SharedPreferencesManager.setLong(SharedPreferencesManager.LAST_SYNCHONIZE_TIME, lastSynchonizedTime);
+    public void setEnableSyncNoti(boolean enableSyncNoti) {
+        this.enableSyncNoti = enableSyncNoti;
+        SharedPreferencesManager.setBoolean(SharedPreferencesManager.ENABLE_SYNC_NOTI, enableSyncNoti);
     }
 }

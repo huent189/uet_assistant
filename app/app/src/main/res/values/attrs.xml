@@ -4,4 +4,8 @@
         <attr name="maxHeight" format="dimension"/>
     </declare-styleable>
 
+    <declare-styleable name="EmptyView">
+        <attr name="textContent" format="string"/>
+    </declare-styleable>
+
 </resources>

@@ -21,10 +21,17 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.adapter.viewholder.ISwipeToDeleteHolder;
-import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
-import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.CourseOverview;
+import vnu.uet.mobilecourse.assistant.model.ICourse;
+import vnu.uet.mobilecourse.assistant.model.Material;
+import vnu.uet.mobilecourse.assistant.model.notification.AdminNotification;
+import vnu.uet.mobilecourse.assistant.model.notification.CourseAttendantNotification;
+import vnu.uet.mobilecourse.assistant.model.notification.NewMaterialNotification;
+import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
+import vnu.uet.mobilecourse.assistant.model.notification.TodoNotification;
+import vnu.uet.mobilecourse.assistant.repository.course.CourseRepository;
+import vnu.uet.mobilecourse.assistant.repository.course.MaterialRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
@@ -33,7 +40,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     private List<Notification_UserSubCol> mNotifications;
     private Fragment mOwner;
-    private NavController mNavController;
 
     public NotificationAdapter(List<Notification_UserSubCol> notifications, Fragment owner) {
         this.mNotifications = notifications;
@@ -46,20 +52,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         View view = mOwner.getLayoutInflater()
                 .inflate(R.layout.layout_notification_item, parent, false);
 
-        Activity activity = mOwner.getActivity();
-
-        if (activity != null) {
-            mNavController = Navigation
-                    .findNavController(activity, R.id.nav_host_fragment);
-        }
-
         return new NotificationHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull NotificationHolder holder, int position) {
         final Notification_UserSubCol notification = mNotifications.get(position);
-        holder.bind(notification);
+        holder.bind(notification, mOwner);
     }
 
     public List<Notification_UserSubCol> getNotifications() {
@@ -71,13 +70,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return mNotifications.size();
     }
 
-    public class NotificationHolder extends RecyclerView.ViewHolder {
+    static class NotificationHolder extends RecyclerView.ViewHolder {
 
         private ImageView mIvNotifyIcon;
         private TextView mTvNotifyTitle;
         private TextView mTvNotifyDesc;
         private TextView mTvNotifyTime;
         private ImageButton mBtnViewNotify;
+
+        private Fragment mOwner;
+        private NavController mNavController;
 
         public NotificationHolder(@NonNull View view) {
             super(view);
@@ -111,14 +113,90 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             return time;
         }
 
-        private void navigateTodo(String id) {
-            TodoRepository.getInstance().getTodoById(id)
+        private void navigateMaterial(NewMaterialNotification notification) {
+            int courseId = notification.getCourseId();
+            int materialId = notification.getMaterialId();
+
+            CourseRepository.getInstance()
+                    .getContent(courseId).observe(mOwner.getViewLifecycleOwner(), new Observer<List<CourseOverview>>() {
+                        @Override
+                        public void onChanged(List<CourseOverview> courseOverviews) {
+                            if (courseOverviews != null && !courseOverviews.isEmpty()) {
+                                Material foundMaterial = null;
+
+                                for (CourseOverview overview : courseOverviews) {
+                                    for (Material material : overview.getMaterials()) {
+                                        if (material.getId() == materialId) {
+                                            foundMaterial = material;
+                                            break;
+                                        }
+                                    }
+
+                                    if (foundMaterial != null) break;
+                                }
+
+                                if (foundMaterial != null) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putParcelable("material", foundMaterial);
+                                    mNavController.navigate(R.id.action_navigation_notifications_to_navigation_material, bundle);
+                                } else {
+                                    Context context = mOwner.getContext();
+                                    final String MATERIAL_NOT_FOUND_MSG = "Không tìm thấy tài liệu";
+
+                                    Toast.makeText(context, MATERIAL_NOT_FOUND_MSG, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    });
+        }
+
+        private void navigateCourse(CourseAttendantNotification notification) {
+            String courseCode = notification.getCourseCode();
+
+            CourseRepository.getInstance().getFullCourses().observe(mOwner.getViewLifecycleOwner(), new Observer<StateModel<List<ICourse>>>() {
+                @Override
+                public void onChanged(StateModel<List<ICourse>> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case SUCCESS:
+                            List<ICourse> courses = stateModel.getData();
+
+                            courses.stream()
+                                    .filter(course -> course.getCode().equals(courseCode))
+                                    .findFirst()
+                                    .ifPresent(course -> {
+                                        Bundle bundle = new Bundle();
+                                        bundle.putParcelable("course", course);
+
+                                        mNavController.navigate(R.id.action_navigation_notifications_to_navigation_explore_course, bundle);
+                                    });
+
+                            break;
+
+                        case ERROR:
+                            Context context = mOwner.getContext();
+                            final String COURSE_NOT_FOUND_MSG = "Không tìm thấy khóa học";
+
+                            Toast.makeText(context, COURSE_NOT_FOUND_MSG, Toast.LENGTH_SHORT).show();
+                            break;
+
+                    }
+                }
+            });
+        }
+
+
+        private void navigateTodo(TodoNotification todoNotification) {
+            String todoId = todoNotification.getTodoId();
+
+            TodoRepository.getInstance().getTodoById(todoId)
                 .observe(mOwner.getViewLifecycleOwner(), new Observer<StateModel<Todo>>() {
                     @Override
                     public void onChanged(StateModel<Todo> stateModel) {
                         switch (stateModel.getStatus()) {
                             case SUCCESS:
                                 Todo todo = stateModel.getData();
+
+                                todoNotification.setTodo(todo);
 
                                 Bundle bundle = new Bundle();
                                 bundle.putParcelable("todo", todo);
@@ -140,7 +218,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 });
         }
 
-        public void bind(Notification_UserSubCol notification) {
+        public void bind(Notification_UserSubCol notification, Fragment owner) {
+            mOwner = owner;
+
+            Activity activity = mOwner.getActivity();
+
+            if (activity != null) {
+                mNavController = Navigation
+                        .findNavController(activity, R.id.nav_host_fragment);
+            }
+
             String title = notification.getTitle();
             mTvNotifyTitle.setText(title);
 
@@ -150,38 +237,42 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             String time = generateTime(notification.getNotifyTime());
             mTvNotifyTime.setText(time);
 
-            switch (notification.getType()) {
-                case NotificationType.TODO:
-                    String todoId = notification.getReference();
+            if (notification instanceof TodoNotification) {
+                mIvNotifyIcon.setImageResource(R.drawable.img_target);
 
-                    mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            navigateTodo(todoId);
-                        }
-                    });
+                TodoNotification todoNotification = (TodoNotification) notification;
 
-                    break;
+                mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        navigateTodo(todoNotification);
+                    }
+                });
+            } else if (notification instanceof AdminNotification) {
+                mIvNotifyIcon.setImageResource(R.drawable.img_admin_bot);
+            } else if (notification instanceof CourseAttendantNotification) {
+                mIvNotifyIcon.setImageResource(R.drawable.img_bag_bell);
 
-                case NotificationType.MATERIAL:
-                    String materialId = notification.getReference();
-                    mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // TODO: navigate to view material info
-                        }
-                    });
-                    break;
+                CourseAttendantNotification cast = (CourseAttendantNotification) notification;
 
-                case NotificationType.ATTENDANCE:
-                    String courseId = notification.getReference();
-                    mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // TODO: navigate to view course info
-                        }
-                    });
-                    break;
+                mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        navigateCourse(cast);
+                    }
+                });
+
+            } else if (notification instanceof NewMaterialNotification) {
+                mIvNotifyIcon.setImageResource(R.drawable.img_material);
+
+                NewMaterialNotification cast = (NewMaterialNotification) notification;
+
+                mBtnViewNotify.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        navigateMaterial(cast);
+                    }
+                });
             }
         }
     }

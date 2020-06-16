@@ -13,6 +13,7 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.alarm.scheduler.TodoScheduler;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
@@ -63,8 +64,9 @@ public class ModifyTodoFragment extends TodoFragment {
                         showFailureToast(stateModel.getError());
                         break;
 
-                    default:
+                    case LOADING:
                         Toast.makeText(getContext(),"Lưu thành công", Toast.LENGTH_SHORT).show();
+                        TodoScheduler.getInstance(getContext()).schedule(todo);
                         mNavController.navigateUp();
                 }
             });

@@ -1,14 +1,24 @@
-package vnu.uet.mobilecourse.assistant.model.firebase;
+package vnu.uet.mobilecourse.assistant.model.notification;
 
-public class Notification_UserSubCol implements IFirebaseModel {
+import vnu.uet.mobilecourse.assistant.model.firebase.IFirebaseModel;
+
+public abstract class Notification_UserSubCol implements IFirebaseModel {
 
     private String id;
-    private String category;
+//    private String category;
     private String title;
     private String description;
     private long notifyTime;
     private int type;
-    private String reference;
+//    private String reference;
+
+    public Notification_UserSubCol() {
+
+    }
+
+    public Notification_UserSubCol(int type) {
+        this.type = type;
+    }
 
     @Override
     public String getId() {
@@ -35,21 +45,21 @@ public class Notification_UserSubCol implements IFirebaseModel {
         this.type = type;
     }
 
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(String reference) {
-        this.reference = reference;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
+//    public String getReference() {
+//        return reference;
+//    }
+//
+//    public void setReference(String reference) {
+//        this.reference = reference;
+//    }
+//
+//    public String getCategory() {
+//        return category;
+//    }
+//
+//    public void setCategory(String category) {
+//        this.category = category;
+//    }
 
     public String getTitle() {
         return title;

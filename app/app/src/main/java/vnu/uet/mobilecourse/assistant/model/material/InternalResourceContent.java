@@ -29,10 +29,12 @@ public class InternalResourceContent extends MaterialContent {
     public void setFiles(List<InternalFile> files) {
         this.files = files;
     }
-
+    public String getType(){
+        return CourseConstant.MaterialType.RESOURCE;
+    }
     @Override
     public String toString() {
-        return "InternalResourceContent{" +
+        return super.toString() + "InternalResourceContent{" +
                 "revision=" + revision +
                 ", files=" + files +
                 '}';

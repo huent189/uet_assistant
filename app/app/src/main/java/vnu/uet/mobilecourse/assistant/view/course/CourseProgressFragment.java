@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 
@@ -17,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.CourseContentAdapter;
+import vnu.uet.mobilecourse.assistant.model.Course;
+import vnu.uet.mobilecourse.assistant.model.ICourse;
 import vnu.uet.mobilecourse.assistant.viewmodel.CourseProgressViewModel;
 
 import static vnu.uet.mobilecourse.assistant.model.material.CourseConstant.MaterialType.GENERAL;
@@ -53,10 +56,12 @@ public class CourseProgressFragment extends Fragment {
 
         // get bundle from prev fragment
         Bundle args = getArguments();
+        assert args != null;
+        ICourse course = args.getParcelable("course");
 
-        if (args != null) {
+        if (course instanceof Course) {
             // get course id from bundle
-            int courseId = args.getInt("courseId");
+            int courseId = ((Course) course).getId();
 
             mViewModel.getContent(courseId).observe(getViewLifecycleOwner(), contents -> {
                 // contents haven't loaded yet
@@ -87,6 +92,11 @@ public class CourseProgressFragment extends Fragment {
                     mLayoutManager.scrollToPosition(mPrevTopItemPosition);
                 }
             });
+        } else {
+            TextView tvEnrollError = root.findViewById(R.id.tvEnrollError);
+            tvEnrollError.setVisibility(View.VISIBLE);
+            rvMaterials.setVisibility(View.GONE);
+            shimmerRvTasks.setVisibility(View.GONE);
         }
 
         return root;
@@ -98,8 +108,9 @@ public class CourseProgressFragment extends Fragment {
 
         // save expandable state
         Bundle savedInstanceState = getArguments();
-        if (savedInstanceState != null)
+        if (savedInstanceState != null && mAdapter != null) {
             mAdapter.onSaveInstanceState(savedInstanceState);
+        }
 
         mPrevTopItemPosition = mLayoutManager.findFirstCompletelyVisibleItemPosition();
     }

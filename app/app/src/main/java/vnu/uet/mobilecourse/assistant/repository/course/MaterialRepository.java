@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.repository.course;
 
+import android.util.Log;
 import androidx.lifecycle.LiveData;
 import com.google.gson.JsonElement;
 import retrofit2.Call;
@@ -17,9 +18,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MaterialRepository {
-    private CourseRequest sender = HTTPClient.getInstance().request(CourseRequest.class);
-    private MaterialDAO materialDAO = CoursesDatabase.getDatabase().materialDAO();
-    public LiveData getDetails(int materialId, String type){
+
+    private static MaterialRepository instance;
+
+    private CourseRequest sender;
+    private MaterialDAO materialDAO;
+
+    private MaterialRepository() {
+        sender = HTTPClient.getInstance().request(CourseRequest.class);
+        materialDAO = CoursesDatabase.getDatabase().materialDAO();
+    }
+
+    public static MaterialRepository getInstance() {
+        if (instance == null) {
+            instance = new MaterialRepository();
+        }
+
+        return instance;
+    }
+
+    public LiveData<? extends MaterialContent> getDetails(int materialId, String type){
         switch (type){
             case CourseConstant.MaterialType.ASSIGN:
                 new Thread(() -> {
@@ -78,6 +96,7 @@ public class MaterialRepository {
                 return materialDAO.getMaterialContent(materialId);
         }
     }
+
     public List<MaterialContent> updateAll() throws IOException {
         ArrayList<MaterialContent> updateList = new ArrayList<>();
         updateList.addAll(updateAssignments());
@@ -88,6 +107,7 @@ public class MaterialRepository {
         updateList.addAll(updateQuizzes());
         return updateList;
     }
+
     private List<PageContent> updatePageContents() throws IOException {
         Call<JsonElement> call = sender.getPagesByCourses(null);
         final ArrayList<PageContent> updateList = new ArrayList<>();
@@ -95,6 +115,7 @@ public class MaterialRepository {
             @Override
             public void onSuccess(PageContent[] response) {
                 long lastTime = materialDAO.getLastUpdateTime(PageContent.class);
+                Log.d("REPO_UPDATE", "onSuccess: " + lastTime);
                 updateList.addAll(Arrays.stream(response)
                         .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
                 materialDAO.insertPageContent(Arrays.asList(response));
@@ -103,6 +124,7 @@ public class MaterialRepository {
         handler.onResponse(call, call.execute());
         return updateList;
     }
+
     private List<ExternalResourceContent> updateExternalResources() throws IOException {
         Call<JsonElement> call = sender.getURLsByCourses(null);
         final ArrayList<ExternalResourceContent> updateList = new ArrayList<>();
@@ -111,6 +133,7 @@ public class MaterialRepository {
             @Override
             public void onSuccess(ExternalResourceContent[] response) {
                 long lastTime = materialDAO.getLastUpdateTime(ExternalResourceContent.class);
+                Log.d("REPO_UPDATE", "onSuccess: " + lastTime);
                 updateList.addAll(Arrays.stream(response)
                         .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
                 materialDAO.insertExternalResourceContent(Arrays.asList(response));
@@ -119,6 +142,7 @@ public class MaterialRepository {
         handler.onResponse(call, call.execute());
         return updateList;
     }
+
     private List<MaterialContent> updateLabels() throws IOException {
         Call<JsonElement> call = sender.getLabelByCourses(null);
         final ArrayList<MaterialContent> updateList = new ArrayList<>();
@@ -127,6 +151,7 @@ public class MaterialRepository {
             @Override
             public void onSuccess(MaterialContent[] response) {
                 long lastTime = materialDAO.getLastUpdateTime(MaterialContent.class);
+                Log.d("REPO_UPDATE", "onSuccess: " + lastTime);
                 updateList.addAll(Arrays.stream(response)
                         .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
                 materialDAO.insertMaterialContent(Arrays.asList(response));
@@ -144,9 +169,11 @@ public class MaterialRepository {
             @Override
             public void onSuccess(InternalResourceContent[] response) {
                 long lastTime = materialDAO.getLastUpdateTime(InternalResourceContent.class);
+                Log.d("REPO_UPDATE", "onSuccess: " + lastTime);
                 updateList.addAll(Arrays.stream(response)
                         .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
                 materialDAO.insertInternalResource(Arrays.asList(response));
+//                materialDAO.insertInternalResource(updateList);
             }
         };
         handler.onResponse(call, call.execute());
@@ -160,6 +187,7 @@ public class MaterialRepository {
             @Override
             public void onSuccess(AssignmentContent[] response) {
                 long lastTime = materialDAO.getLastUpdateTime(AssignmentContent.class);
+                Log.d("REPO_UPDATE", "onSuccess: " + lastTime);
                 updateList.addAll(Arrays.stream(response)
                         .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
                 materialDAO.insertAssignments(Arrays.asList(response));

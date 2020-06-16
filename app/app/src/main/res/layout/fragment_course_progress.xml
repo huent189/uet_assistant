@@ -15,17 +15,17 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
 
         </LinearLayout>
 
@@ -36,5 +36,17 @@
         android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/tvEnrollError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:paddingVertical="@dimen/margin_x6"
+        android:paddingHorizontal="@dimen/margin_x2"
+        android:visibility="gone"
+        android:textColor="@color/accent"
+        android:text="@string/title_course_enroll_error"
+        android:textSize="@dimen/font_size_item_title"/>
 
 </FrameLayout>

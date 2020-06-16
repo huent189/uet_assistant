@@ -7,7 +7,7 @@ import vnu.uet.mobilecourse.assistant.model.event.CourseSessionEvent;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 
 public class SessionConverter {
-    private static Date toTime(CourseSession session, Date date) {
+    public static Date toTime(CourseSession session, Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(Calendar.DAY_OF_WEEK, session.getDayOfWeek());
@@ -19,6 +19,7 @@ public class SessionConverter {
     }
 
     private static int OPEN_HOUR = 7;
+
     private static String TITLE_PREFIX = "Đi học ";
 
     public static CourseSessionEvent toEvent(CourseSession session, Date date) {

@@ -145,6 +145,7 @@ public class CourseInfoDAO extends FirebaseDAO<CourseInfo> {
                 CourseSession session = new CourseSession();
 
                 session.setCourseName(courseInfo.getName());
+                session.setCourseCode(courseInfo.getCode());
 
                 Map.Entry entry = (Map.Entry) o2;
 

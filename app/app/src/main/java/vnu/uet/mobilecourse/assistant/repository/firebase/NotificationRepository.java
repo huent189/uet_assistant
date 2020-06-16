@@ -3,7 +3,7 @@ package vnu.uet.mobilecourse.assistant.repository.firebase;
 import java.util.List;
 
 import vnu.uet.mobilecourse.assistant.database.DAO.NotificationDAO;
-import vnu.uet.mobilecourse.assistant.model.firebase.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 

@@ -1,18 +1,16 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
 import com.google.firebase.firestore.Exclude;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import androidx.annotation.Nullable;
+import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.ICourse;
-import vnu.uet.mobilecourse.assistant.util.CONST;
+import vnu.uet.mobilecourse.assistant.util.StringConst;
 
 public class CourseInfo implements IFirebaseModel, ICourse {
 
@@ -28,7 +26,7 @@ public class CourseInfo implements IFirebaseModel, ICourse {
 
     public CourseInfo() {}
 
-    protected CourseInfo(Parcel in) {
+    private CourseInfo(Parcel in) {
         name = in.readString();
         id = in.readString();
         credits = in.readInt();
@@ -102,7 +100,12 @@ public class CourseInfo implements IFirebaseModel, ICourse {
 
     @Override
     public String getCode() {
-        return CONST.COURSE_PREFIX + CONST.UNDERSCORE + id.replace(CONST.SPACE, CONST.UNDERSCORE);
+        return StringConst.COURSE_PREFIX + StringConst.UNDERSCORE_CHAR + id.replace(StringConst.SPACE_CHAR, StringConst.UNDERSCORE_CHAR);
+    }
+
+    @Override
+    public int getThumbnail() {
+        return R.drawable.isometric_course_thumbnail;
     }
 
     @Override

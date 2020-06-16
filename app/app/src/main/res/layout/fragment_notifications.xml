@@ -53,16 +53,21 @@
 
     </com.facebook.shimmer.ShimmerFrameLayout>
 
-
-    <ImageView
-        android:id="@+id/ivEmpty"
+    <vnu.uet.mobilecourse.assistant.view.component.EmptyView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingHorizontal="@dimen/margin_x6"
-        android:alpha="0.85"
-        android:src="@drawable/img_empty"
-        android:paddingBottom="@dimen/margin_x6"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:textContent="@string/title_notification_empty"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+<!--        <ImageView-->
+<!--            android:id="@+id/ivEmpty"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:paddingHorizontal="@dimen/margin_x6"-->
+<!--            android:alpha="0.85"-->
+<!--            android:src="@drawable/img_empty"-->
+<!--            android:paddingBottom="@dimen/margin_x6"-->
+<!--            app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvNotifications"
