@@ -87,10 +87,6 @@ public class FirebaseAuthenticationService {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> loginViaMail) {
                             if (loginViaMail.isSuccessful()) {
-                                // check new user
-                                if (loginViaMail.getResult().getAdditionalUserInfo().isNewUser()) {
-                                    createUser(email, loginState);
-                                }
 
                                 AuthResult result = loginViaMail.getResult();
                                 if (result != null && result.getAdditionalUserInfo() != null) {
@@ -151,36 +147,5 @@ public class FirebaseAuthenticationService {
         return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
 
-    private StateLiveData<String> createUser(String email, StateLiveData loginState) {
-        String studentId = email.substring(0,8);
-        FirebaseFirestore.getInstance().collection(FirebaseCollectionName.USER_INFO).document(studentId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> fbUserInfo) {
-                if (fbUserInfo.isSuccessful()) {
-                    UserInfo userInfo = fbUserInfo.getResult().toObject(UserInfo.class);
-                    User user = new User();
-                    user.setAvatar("");
-                    user.setId(studentId);
-                    user.setName(userInfo.getName());
-
-                    FirebaseFirestore.getInstance().collection(FirebaseCollectionName.USER).document(user.getId()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            loginState.postSuccess("create user success");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            loginState.postError(e);
-                        }
-                    });
-                } else {
-                    loginState.postError(fbUserInfo.getException());
-                }
-            }
-        });
-
-        return loginState;
-    }
 
 }

@@ -1,12 +1,9 @@
 package vnu.uet.mobilecourse.assistant.repository.firebase;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
@@ -17,6 +14,7 @@ import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChat_UserSubColDAO;
+import vnu.uet.mobilecourse.assistant.database.DAO.Message_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
@@ -28,11 +26,10 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class ChatRepository implements IChatRepository {
 
-    private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
     private FirebaseFirestore db;
 
-    private GroupChat_UserSubColDAO mGroupChatDAO;
+    private GroupChat_UserSubColDAO mUserGroupChatDAO;
+    private Message_GroupChatSubColDAO mMessageDAO;
 
     private static ChatRepository instance;
 
@@ -45,27 +42,28 @@ public class ChatRepository implements IChatRepository {
     }
 
     public ChatRepository() {
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
 
-        mGroupChatDAO = new GroupChat_UserSubColDAO();
+        mUserGroupChatDAO = new GroupChat_UserSubColDAO();
+
     }
 
     @Override
     public IStateLiveData<List<GroupChat_UserSubCol>> getAllUserGroupChats() {
-        return mGroupChatDAO.readAll();
+        return mUserGroupChatDAO.readAll();
     }
 
     @Override
-    public IStateLiveData<GroupChat> getGroupChatInfo(String id) {
+    public IStateLiveData<GroupChat> getGroupChatInfo(String groupId) {
         return null;
     }
 
     @Override
-    public IStateLiveData<List<Message_GroupChatSubCol>> getMessages(String id) {
-        return null;
+    public IStateLiveData<List<Message_GroupChatSubCol>> getMessages(String groupId) {
+        mMessageDAO = new Message_GroupChatSubColDAO(groupId);
+        return mMessageDAO.readAll();
     }
+
 
     @Override
     public IStateLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message) {

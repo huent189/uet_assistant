@@ -21,19 +21,19 @@ public interface IChatRepository {
      * and its sub collection members info,
      * such as student name, student id, avatar
      *
-     * @param id of given group chat
+     * @param groupId of given group chat
      * @return state live data interface contains all above info
      */
-    IStateLiveData<GroupChat> getGroupChatInfo(String id);
+    IStateLiveData<GroupChat> getGroupChatInfo(String groupId);
 
     /**
      * Retrieve all messages belong to given group chat
      *
-     * @param id of given group chat
+     * @param groupId of given group chat
      * @return state live data interface
      *      contains all messages in group chat
      */
-    IStateLiveData<List<Message_GroupChatSubCol>> getMessages(String id);
+    IStateLiveData<List<Message_GroupChatSubCol>> getMessages(String groupId);
 
     /**
      * Send a message in given group chat
