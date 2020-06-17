@@ -1,8 +1,11 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
-import vnu.uet.mobilecourse.assistant.util.CONST;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class CourseSession {
+import vnu.uet.mobilecourse.assistant.util.StringConst;
+
+public class CourseSession implements Parcelable {
     /**
      * Type of course session
      * 0 - CL
@@ -20,8 +23,52 @@ public class CourseSession {
     private int dayOfWeek;
     private int start, end;
 
+    public CourseSession() {
+
+    }
+
+    protected CourseSession(Parcel in) {
+        type = in.readInt();
+        courseName = in.readString();
+        courseCode = in.readString();
+        classroom = in.readString();
+        teacherName = in.readString();
+        dayOfWeek = in.readInt();
+        start = in.readInt();
+        end = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(type);
+        dest.writeString(courseName);
+        dest.writeString(courseCode);
+        dest.writeString(classroom);
+        dest.writeString(teacherName);
+        dest.writeInt(dayOfWeek);
+        dest.writeInt(start);
+        dest.writeInt(end);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<CourseSession> CREATOR = new Creator<CourseSession>() {
+        @Override
+        public CourseSession createFromParcel(Parcel in) {
+            return new CourseSession(in);
+        }
+
+        @Override
+        public CourseSession[] newArray(int size) {
+            return new CourseSession[size];
+        }
+    };
+
     public String getId() {
-        return courseCode + CONST.UNDERSCORE_CHAR + type;
+        return courseCode + StringConst.UNDERSCORE_CHAR + type;
     }
 
     public String getCourseCode() {

@@ -1,6 +1,10 @@
 package vnu.uet.mobilecourse.assistant.view.calendar;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +19,11 @@ import java.util.Date;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.alarm.receiver.TodoReceiver;
+import vnu.uet.mobilecourse.assistant.alarm.scheduler.TodoScheduler;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
-import vnu.uet.mobilecourse.assistant.work.remindHandler.TodoHandler;
 
 public class AddTodoFragment extends TodoFragment {
 
@@ -55,9 +60,23 @@ public class AddTodoFragment extends TodoFragment {
                         showFailureToast(stateModel.getError());
                         break;
 
-                    default:
+                    case LOADING:
                         Toast.makeText(getContext(),"Tạo thành công", Toast.LENGTH_SHORT).show();
-                        TodoHandler.getInstance().schedule(getContext(), todo);
+                        TodoScheduler.getInstance(getContext()).schedule(todo);
+
+//                        Context mContext = getContext().getApplicationContext();
+//
+//                        Intent intent = new Intent(mContext, TodoReceiver.class);
+//                        intent.setAction(TodoScheduler.ACTION);
+//                        intent.putExtra("???", "???");
+//                        PendingIntent pendingIntent = PendingIntent
+//                                .getBroadcast(mContext, 0, intent, 0);
+//
+//                        AlarmManager mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+//                        long time = todo.getDeadline() * 1000;
+//                        mAlarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+
+//                        TodoHandler.getInstance().schedule(getContext(), todo);
                         mNavController.navigateUp();
                 }
             });

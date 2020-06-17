@@ -77,17 +77,18 @@ public class ExploreCourseFragment extends Fragment {
     private void initializePageAdapter() {
         FragmentManager fragmentManager = getChildFragmentManager();
 
-        Fragment[] pages = new Fragment[] {
-                new CourseGeneralFragment(),
-                new CourseProgressFragment(),
-                new CourseGradeFragment(),
-                new CourseClassmateFragment()
-        };
+        Fragment[] pages;
 
         if (mCourseCode == null || mCourseCode.isEmpty()) {
             pages = new Fragment[] {
+                    new CourseGeneralFragment()
+            };
+        } else  {
+            pages = new Fragment[] {
                     new CourseGeneralFragment(),
-                    new CourseProgressFragment()
+                    new CourseProgressFragment(),
+                    new CourseGradeFragment(),
+                    new CourseClassmateFragment()
             };
         }
 
@@ -108,8 +109,11 @@ public class ExploreCourseFragment extends Fragment {
         TabLayout tabLayout = root.findViewById(R.id.tabLayout);
 
         if (mCourseCode == null || mCourseCode.isEmpty()) {
-            tabLayout.removeTabAt(2);
-            tabLayout.removeTabAt(2);
+            while (tabLayout.getTabCount() > 1) {
+                tabLayout.removeTabAt(1);
+            }
+
+            tabLayout.setVisibility(View.GONE);
         }
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

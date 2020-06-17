@@ -24,6 +24,7 @@
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
             app:collapsedTitleTextAppearance="@style/ToolbarTitleText"
             app:expandedTitleTextAppearance="@style/ToolbarTitleText"
+            app:contentScrim="@color/primary"
             app:expandedTitleMarginBottom="@dimen/margin_x2"
             app:expandedTitleMarginStart="60dp">
 

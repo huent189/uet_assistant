@@ -16,6 +16,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
 
+@Deprecated
 public class SessionReminder extends RemindWorker<CourseSession> {
 
     private static final String CHANNEL_ID = SessionReminder.class.getName();

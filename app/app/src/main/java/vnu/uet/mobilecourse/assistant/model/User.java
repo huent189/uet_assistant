@@ -1,7 +1,7 @@
 package vnu.uet.mobilecourse.assistant.model;
 
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
-import vnu.uet.mobilecourse.assistant.util.CONST;
+import vnu.uet.mobilecourse.assistant.util.StringConst;
 
 public class User {
     private static User user;
@@ -43,7 +43,7 @@ public class User {
     }
 
     public String getStudentId() {
-        return email.replace(CONST.VNU_EMAIL_DOMAIN, CONST.EMPTY);
+        return email.replace(StringConst.VNU_EMAIL_DOMAIN, StringConst.EMPTY);
     }
 
     public void setEmail(String email) {

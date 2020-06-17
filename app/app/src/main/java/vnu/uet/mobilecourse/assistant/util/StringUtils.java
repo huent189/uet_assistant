@@ -19,7 +19,7 @@ public class StringUtils {
     }
 
     public static SpannableStringBuilder removeExtraLineBreak(SpannableStringBuilder builder) {
-        while (builder.length() > 0 && builder.charAt(builder.length() - 1) == CONST.LINE_BREAK_CHAR) {
+        while (builder.length() > 0 && builder.charAt(builder.length() - 1) == StringConst.LINE_BREAK_CHAR) {
             CharSequence subSequence = builder.subSequence(0, builder.length() - 1);
 
             if (subSequence instanceof SpannableStringBuilder) {

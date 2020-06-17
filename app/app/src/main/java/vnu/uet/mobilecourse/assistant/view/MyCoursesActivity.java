@@ -5,26 +5,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.util.Util;
+
+import java.util.List;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.alarm.scheduler.SessionScheduler;
+import vnu.uet.mobilecourse.assistant.alarm.scheduler.TodoScheduler;
 import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.repository.firebase.NavigationBadgeRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
+import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
+import vnu.uet.mobilecourse.assistant.view.notification.NotificationsFragment;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 import vnu.uet.mobilecourse.assistant.work.courses.CourseDataSynchronization;
-import vnu.uet.mobilecourse.assistant.work.remindHandler.CourseHandler;
-import vnu.uet.mobilecourse.assistant.work.remindHandler.TodoHandler;
-
-import java.util.List;
 
 public class MyCoursesActivity extends AppCompatActivity {
 
@@ -81,6 +86,23 @@ public class MyCoursesActivity extends AppCompatActivity {
         setupCourseReminders();
         setupTodoReminders();
         CourseDataSynchronization.start();
+
+        checkIfOpenByNotification();
+    }
+
+    private void checkIfOpenByNotification() {
+        if (NotificationHelper.ACTION_OPEN.equals(getIntent().getAction())) {
+
+            String menuFragment = getIntent().getStringExtra("fragment");
+
+            // If menuFragment is defined, then this activity was launched with a fragment selection
+            if (menuFragment != null) {
+                // Here we can decide what do to -- perhaps load other parameters from the intent extras such as IDs, etc
+                if (menuFragment.equals(NotificationsFragment.class.getName())) {
+                    mNavController.navigate(R.id.action_navigation_courses_to_navigation_notifications);
+                }
+            }
+        }
     }
 
     private void setupNavigationBadges() {
@@ -96,7 +118,7 @@ public class MyCoursesActivity extends AppCompatActivity {
     private void updateNotificationBadge(int counter) {
         if (counter != 0) {
             TextView tvCounter = mNotificationBadge.findViewById(R.id.tvCounter);
-            tvCounter.setText(String.valueOf(counter * 10));
+            tvCounter.setText(String.valueOf(counter));
             mNotificationBadge.setVisibility(View.VISIBLE);
         } else {
             mNotificationBadge.setVisibility(View.GONE);
@@ -113,8 +135,10 @@ public class MyCoursesActivity extends AppCompatActivity {
                         List<CourseSession> sessions = course.getSessions();
 
                         sessions.forEach(session ->
-                                CourseHandler.getInstance()
-                                        .schedule(getApplicationContext(), session));
+                                SessionScheduler
+                                        .getInstance(MyCoursesActivity.this).schedule(session));
+//                                CourseHandler.getInstance()
+//                                        .schedule(getApplicationContext(), session));
                     });
 
                     break;
@@ -135,7 +159,8 @@ public class MyCoursesActivity extends AppCompatActivity {
                         long deadline = todo.getDeadline() * 1000;
 
                         if (deadline > System.currentTimeMillis()) {
-                            TodoHandler.getInstance().schedule(getApplicationContext(), todo);
+                            TodoScheduler.getInstance(MyCoursesActivity.this).schedule(todo);
+//                            TodoHandler.getInstance().schedule(getApplicationContext(), todo);
                         }
                     });
 

@@ -19,6 +19,7 @@ public class SessionConverter {
     }
 
     private static int OPEN_HOUR = 7;
+
     private static String TITLE_PREFIX = "Đi học ";
 
     public static CourseSessionEvent toEvent(CourseSession session, Date date) {

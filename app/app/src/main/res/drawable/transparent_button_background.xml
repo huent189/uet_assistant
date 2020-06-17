@@ -13,14 +13,14 @@
     android:color="@color/backgroundLight">
     <item android:id="@android:id/mask">
         <shape>
-            <solid android:color="@color/background" />
+            <solid android:color="@color/transparent" />
             <corners android:radius="@dimen/large_radius" />
         </shape>
     </item>
 
     <item android:id="@android:id/background">
         <shape>
-            <solid android:color="@color/background" />
+            <solid android:color="@color/transparent" />
             <corners android:radius="@dimen/large_radius" />
         </shape>
     </item>

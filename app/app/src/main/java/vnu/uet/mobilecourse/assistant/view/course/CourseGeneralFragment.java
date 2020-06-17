@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
@@ -25,7 +26,7 @@ import vnu.uet.mobilecourse.assistant.model.ICourse;
 import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
-import vnu.uet.mobilecourse.assistant.util.CONST;
+import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.viewmodel.CourseGeneralViewModel;
 
 import static vnu.uet.mobilecourse.assistant.model.material.CourseConstant.MaterialType.GENERAL;
@@ -49,8 +50,8 @@ public class CourseGeneralFragment extends Fragment {
 
             String courseCode = course.getCode();
             courseCode = courseCode
-                    .replace(CONST.COURSE_PREFIX + CONST.UNDERSCORE_CHAR, CONST.EMPTY)
-                    .replace(CONST.UNDERSCORE_CHAR, CONST.SPACE_CHAR);
+                    .replace(StringConst.COURSE_PREFIX + StringConst.UNDERSCORE_CHAR, StringConst.EMPTY)
+                    .replace(StringConst.UNDERSCORE_CHAR, StringConst.SPACE_CHAR);
 
             TextView tvCourseTitle = root.findViewById(R.id.tvCourseTitle);
             tvCourseTitle.setText(course.getTitle());
@@ -71,10 +72,12 @@ public class CourseGeneralFragment extends Fragment {
                 cpbProgress.setProgressWithAnimation(progress);
             }
 
-            if (!courseCode.isEmpty()) {
-                initializeGeneralMaterialsView(root, course);
+            initializeGeneralMaterialsView(root, course);
 
-                RecyclerView rvSessions = initializeSessionsView(root);
+            RecyclerView rvSessions = root.findViewById(R.id.rvSessions);
+
+            if (!courseCode.isEmpty()) {
+                initializeSessionsView(rvSessions);
                 mViewModel.getCourseInfo(courseCode).observe(getViewLifecycleOwner(), stateModel -> {
                     switch (stateModel.getStatus()) {
                         case LOADING:
@@ -99,6 +102,17 @@ public class CourseGeneralFragment extends Fragment {
                 });
 
                 initializeParticipantsView(root, courseCode);
+            } else {
+                LinearLayout layoutContainerTop = root.findViewById(R.id.layout_basic_info);
+                layoutContainerTop.setVisibility(View.GONE);
+
+                LinearLayout layoutContainerBottom = root.findViewById(R.id.layout_common_info);
+                layoutContainerBottom.setVisibility(View.GONE);
+
+                TextView tvSessionTitle = root.findViewById(R.id.tvSessionTitle);
+                tvSessionTitle.setVisibility(View.GONE);
+
+                rvSessions.setVisibility(View.GONE);
             }
         }
 
@@ -140,7 +154,10 @@ public class CourseGeneralFragment extends Fragment {
                 }
             });
 
-        } else tvGeneralMaterials.setVisibility(View.GONE);
+        } else {
+            tvGeneralMaterials.setVisibility(View.GONE);
+            rvGeneralMaterials.setVisibility(View.GONE);
+        }
     }
 
     private void initializeParticipantsView(View root, String courseCode) {
@@ -169,16 +186,12 @@ public class CourseGeneralFragment extends Fragment {
         }
     }
 
-    private RecyclerView initializeSessionsView(View root) {
-        RecyclerView rvSessions = root.findViewById(R.id.rvSessions);
-
+    private void initializeSessionsView(RecyclerView rvSessions) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 getContext(),
                 LinearLayoutManager.HORIZONTAL,
                 false);
 
         rvSessions.setLayoutManager(layoutManager);
-
-        return rvSessions;
     }
 }

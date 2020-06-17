@@ -24,7 +24,7 @@
             android:paddingVertical="@dimen/margin_x2"
             android:layout_gravity="center_vertical|start"
             android:textSize="@dimen/font_size_item_title"
-            android:text="Bài kiểm tra 5a" />
+            android:text="@string/title_loading" />
 
         <TextView
             android:id="@+id/tvGrade"
@@ -36,6 +36,6 @@
             android:paddingHorizontal="@dimen/margin"
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="@dimen/margin_x2"
-            android:text="8/10" />
+            android:text="@string/title_loading" />
 
 </LinearLayout>

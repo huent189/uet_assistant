@@ -23,10 +23,13 @@ import androidx.annotation.Nullable;
 import vnu.uet.mobilecourse.assistant.model.Course;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
+import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
+
+import static vnu.uet.mobilecourse.assistant.util.FbAndCourseMap.DELIMITER_POS;
 
 public class CourseInfoDAO extends FirebaseDAO<CourseInfo> {
 
@@ -112,6 +115,41 @@ public class CourseInfoDAO extends FirebaseDAO<CourseInfo> {
     @Override
     protected void handleDocumentNotFound(StateMediatorLiveData<CourseInfo> response, String id) {
         mColReference.document(id)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+                        // catch an exception
+                        if (e != null) {
+                            Log.e(TAG, "Listen to data list failed.");
+                            response.postError(e);
+                        }
+                        // hasn't got snapshots yet
+                        else if (snapshot == null) {
+                            Log.d(TAG, "Listening to data list.");
+//                            response.postLoading();
+                            retryWithAnotherCode(response, id);
+                        }
+                        // query completed with snapshots
+                        else {
+                            CourseInfo course = fromSnapshot(snapshot);
+                            response.postSuccess(course);
+                        }
+                    }
+                });
+    }
+
+    private void retryWithAnotherCode(StateMediatorLiveData<CourseInfo> response, String id) {
+        StringBuilder builder = new StringBuilder(id);
+
+        if (builder.charAt(DELIMITER_POS) == StringConst.SPACE_CHAR) {
+            builder.deleteCharAt(DELIMITER_POS);
+        } else {
+            builder.insert(DELIMITER_POS, StringConst.SPACE_CHAR);
+        }
+
+        String code = builder.toString();
+
+        mColReference.document(code)
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {

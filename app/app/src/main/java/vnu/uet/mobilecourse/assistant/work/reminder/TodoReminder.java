@@ -16,6 +16,7 @@ import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol
 import vnu.uet.mobilecourse.assistant.model.notification.TodoNotification;
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
 
+@Deprecated
 public class TodoReminder extends RemindWorker<Todo> {
 
     private static final String CHANNEL_ID = TodoReminder.class.getName();

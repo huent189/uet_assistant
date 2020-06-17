@@ -8,7 +8,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -31,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.DailyEventAdapter;
+import vnu.uet.mobilecourse.assistant.alarm.scheduler.TodoScheduler;
 import vnu.uet.mobilecourse.assistant.model.event.IEvent;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
@@ -38,7 +38,6 @@ import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.view.component.CustomCalendarView;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
-import vnu.uet.mobilecourse.assistant.work.remindHandler.TodoHandler;
 
 public class CalendarFragment extends Fragment {
 
@@ -50,7 +49,7 @@ public class CalendarFragment extends Fragment {
     private Toolbar mToolbar;
     private CollapsingToolbarLayout mCollapsingToolbar;
     private ShimmerFrameLayout mSflEvents;
-    private ImageView mIvEmpty;
+    private View mLayoutEmpty;
 
     private NavController mNavController;
     private FragmentActivity mActivity;
@@ -81,7 +80,7 @@ public class CalendarFragment extends Fragment {
         mSflEvents = root.findViewById(R.id.sflEvents);
         mSflEvents.startShimmerAnimation();
 
-        mIvEmpty = root.findViewById(R.id.ivEmpty);
+        mLayoutEmpty = root.findViewById(R.id.layoutEmpty);
 
         mRvDailyTodoList = root.findViewById(R.id.rvDailyTodoList);
 
@@ -118,15 +117,20 @@ public class CalendarFragment extends Fragment {
     private static final String KEY_RECYCLER_STATE = DailyEventAdapter.class.getName();
 
     public void saveRecycleViewState() {
-        mRecyclerViewState = new Bundle();
-        Parcelable onSaveInstanceState = mRvDailyTodoList.getLayoutManager().onSaveInstanceState();
-        mRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, onSaveInstanceState);
+        RecyclerView.LayoutManager layoutManager = mRvDailyTodoList.getLayoutManager();
+        if (layoutManager != null) {
+            mRecyclerViewState = new Bundle();
+            Parcelable onSaveInstanceState = layoutManager.onSaveInstanceState();
+            mRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, onSaveInstanceState);
+        }
     }
 
-    public void restoreRecycleViewState() {
-        if (mRecyclerViewState != null) {
+    private void restoreRecycleViewState() {
+        RecyclerView.LayoutManager layoutManager = mRvDailyTodoList.getLayoutManager();
+
+        if (mRecyclerViewState != null && layoutManager != null) {
             Parcelable onSaveInstanceState = mRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
-            mRvDailyTodoList.getLayoutManager().onRestoreInstanceState(onSaveInstanceState);
+            layoutManager.onRestoreInstanceState(onSaveInstanceState);
         }
     }
 
@@ -156,7 +160,7 @@ public class CalendarFragment extends Fragment {
                 case LOADING:
                     mRvDailyTodoList.setVisibility(View.GONE);
                     mSflEvents.setVisibility(View.VISIBLE);
-                    mIvEmpty.setVisibility(View.GONE);
+                    mLayoutEmpty.setVisibility(View.GONE);
 
                     break;
 
@@ -171,11 +175,11 @@ public class CalendarFragment extends Fragment {
                     restoreRecycleViewState();
 
                     if (dailyTodoList.isEmpty()) {
-                        mIvEmpty.setVisibility(View.VISIBLE);
+                        mLayoutEmpty.setVisibility(View.VISIBLE);
 //                        mRvDailyTodoList.setVisibility(View.GONE);
 
                     } else {
-                        mIvEmpty.setVisibility(View.GONE);
+                        mLayoutEmpty.setVisibility(View.GONE);
                     }
 
                     mRvDailyTodoList.setVisibility(View.VISIBLE);
@@ -211,7 +215,8 @@ public class CalendarFragment extends Fragment {
                 if (item instanceof Todo) {
                     Todo todo = (Todo) item;
                     mViewModel.deleteTodo(todo.getId());
-                    TodoHandler.getInstance().cancel(mActivity, todo);
+                    TodoScheduler.getInstance(mActivity).cancel(todo);
+//                    TodoHandler.getInstance().cancel(mActivity, todo);
                 }
             }
         };

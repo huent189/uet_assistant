@@ -16,6 +16,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.util.SessionConverter;
 import vnu.uet.mobilecourse.assistant.work.reminder.SessionReminder;
 
+@Deprecated
 public class CourseHandler extends RemindHandler<CourseSession> {
 
     private static CourseHandler instance;

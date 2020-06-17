@@ -10,6 +10,7 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
+@Deprecated
 public abstract class RemindHandler<T> {
 
     public void schedule(Context context, T item) {

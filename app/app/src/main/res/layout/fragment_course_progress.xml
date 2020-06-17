@@ -15,17 +15,17 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
-            <include layout="@layout/shimmer_weekly_material_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
+            <include layout="@layout/shimmer_expandable_parent_item" />
 
         </LinearLayout>
 

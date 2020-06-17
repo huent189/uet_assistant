@@ -91,8 +91,6 @@ public class CalendarGridAdapter extends ArrayAdapter<Date> {
         ImageView ivHaveTodo = convertView.findViewById(R.id.ivHaveTodo);
 
         if (mShowTodo && mLifecycleOwner != null) {
-//            TodoRepository.getInstance()
-//                    .getDailyTodoList(dateOfMonth)
             EventRepository.getInstance()
                     .getDailyEvent(dateOfMonth)
                     .observe(mLifecycleOwner, stateModel -> {

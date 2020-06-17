@@ -10,7 +10,7 @@ import java.util.List;
 import androidx.annotation.Nullable;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.ICourse;
-import vnu.uet.mobilecourse.assistant.util.CONST;
+import vnu.uet.mobilecourse.assistant.util.StringConst;
 
 public class CourseInfo implements IFirebaseModel, ICourse {
 
@@ -100,7 +100,7 @@ public class CourseInfo implements IFirebaseModel, ICourse {
 
     @Override
     public String getCode() {
-        return CONST.COURSE_PREFIX + CONST.UNDERSCORE_CHAR + id.replace(CONST.SPACE_CHAR, CONST.UNDERSCORE_CHAR);
+        return StringConst.COURSE_PREFIX + StringConst.UNDERSCORE_CHAR + id.replace(StringConst.SPACE_CHAR, StringConst.UNDERSCORE_CHAR);
     }
 
     @Override
