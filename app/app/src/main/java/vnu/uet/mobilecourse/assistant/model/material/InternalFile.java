@@ -10,10 +10,11 @@ import vnu.uet.mobilecourse.assistant.model.User;
 public class InternalFile {
     @PrimaryKey
     private int id;
+    @SerializedName("itemid")
     private int parentId;
     @SerializedName("filename")
     private String fileName;
-    @SerializedName("fileurl")
+    @SerializedName(value = "fileurl", alternate = "url")
     private String fileUrl;
     @SerializedName("mimetype")
     private String mimeType;

@@ -25,10 +25,20 @@ public class Material implements Parcelable {
     private String type;
     @SerializedName("description")
     private String description;
+    @SerializedName("instance")
+    private int instanceId;
     private int completion;
     private String fileName;
     private String fileUrl;
     private long lastModified;
+
+    public int getInstanceId() {
+        return instanceId;
+    }
+
+    public void setInstanceId(int instanceId) {
+        this.instanceId = instanceId;
+    }
 
     public Material() {
 

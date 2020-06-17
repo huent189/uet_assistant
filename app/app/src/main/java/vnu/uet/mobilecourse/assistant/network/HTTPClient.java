@@ -9,12 +9,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import vnu.uet.mobilecourse.assistant.model.CourseOverview;
 import vnu.uet.mobilecourse.assistant.model.Grade;
 import vnu.uet.mobilecourse.assistant.model.User;
+import vnu.uet.mobilecourse.assistant.model.forum.Post;
 import vnu.uet.mobilecourse.assistant.model.material.AssignmentContent;
 import vnu.uet.mobilecourse.assistant.model.material.PageContent;
-import vnu.uet.mobilecourse.assistant.network.deserializer.AssignmentDeserializer;
-import vnu.uet.mobilecourse.assistant.network.deserializer.CourseContentDeserializer;
-import vnu.uet.mobilecourse.assistant.network.deserializer.CourseGradeDeserializer;
-import vnu.uet.mobilecourse.assistant.network.deserializer.PageContentDeseializer;
+import vnu.uet.mobilecourse.assistant.network.deserializer.*;
 import vnu.uet.mobilecourse.assistant.network.error_detector.ConnectivityInterceptor;
 import vnu.uet.mobilecourse.assistant.view.MyApplication;
 
@@ -44,6 +42,7 @@ public class HTTPClient {
         gsonBuilder.registerTypeAdapter(CourseOverview[].class, new CourseContentDeserializer())
                     .registerTypeAdapter(AssignmentContent[].class, new AssignmentDeserializer())
                     .registerTypeAdapter(PageContent[].class, new PageContentDeseializer())
+                    .registerTypeAdapter(Post.class, new ForumPostDeserializer())
                     .registerTypeAdapter(Grade[].class, new CourseGradeDeserializer());
         gson = gsonBuilder.create();
         coursesClient = new retrofit2.Retrofit.Builder()
