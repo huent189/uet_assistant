@@ -46,4 +46,10 @@ public interface CourseRequest {
     @FormUrlEncoded
     @POST("webservice/rest/server.php?wsfunction=mod_quiz_get_quizzes_by_courses")
     Call<JsonElement> getQuizzesByCourses(@Field("courseids[]") int[] courseIds);
+    @FormUrlEncoded
+    @POST("webservice/rest/server.php?wsfunction=mod_forum_get_discussion_posts&sortdirection=ASC")
+    Call<JsonElement> getDiscussionDetail(@Field("discussionid") int dicussionId);
+    @FormUrlEncoded
+    @POST("webservice/rest/server.php?wsfunction=mod_forum_get_forums_by_courses")
+    Call<JsonElement> getForumByCourses(@Field("courseids[]") int[] courseIds);
 }

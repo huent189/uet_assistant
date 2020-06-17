@@ -7,9 +7,12 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import vnu.uet.mobilecourse.assistant.database.DAO.CoursesDAO;
+import vnu.uet.mobilecourse.assistant.database.DAO.ForumDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GradeDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.MaterialDAO;
 import vnu.uet.mobilecourse.assistant.model.*;
+import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
+import vnu.uet.mobilecourse.assistant.model.forum.Post;
 import vnu.uet.mobilecourse.assistant.model.material.*;
 import vnu.uet.mobilecourse.assistant.view.MyApplication;
 
@@ -18,8 +21,9 @@ import java.util.concurrent.Executors;
 
 @Database(entities = {Course.class, Grade.class, WeeklyMaterial.class, Material.class, AssignmentContent.class,
                     ExternalResourceContent.class, InternalFile.class, InternalResourceContent.class,
-                    MaterialContent.class, PageContent.class, QuizNoGrade.class},
-        version = 7)
+                    MaterialContent.class, PageContent.class, QuizNoGrade.class, Discussion.class, Post.class
+},
+        version = 8)
 public abstract class CoursesDatabase extends RoomDatabase {
     private static volatile CoursesDatabase instance;
     private static final int NUMBER_OF_THREADS = 4;
@@ -28,6 +32,7 @@ public abstract class CoursesDatabase extends RoomDatabase {
     public abstract CoursesDAO coursesDAO();
     public abstract GradeDAO gradeDAO();
     public abstract MaterialDAO materialDAO();
+    public abstract ForumDAO forumDAO();
     public static CoursesDatabase getDatabase() {
         if (instance == null) {
             synchronized (CoursesDatabase.class) {
@@ -67,6 +72,13 @@ public abstract class CoursesDatabase extends RoomDatabase {
                                 @Override
                                 public void migrate(@NonNull SupportSQLiteDatabase supportSQLiteDatabase) {
 
+                                }
+                            }, new Migration(7, 8) {
+                                @Override
+                                public void migrate(@NonNull SupportSQLiteDatabase supportSQLiteDatabase) {
+                                    supportSQLiteDatabase.execSQL("ALTER TABLE `Material` ADD COLUMN `instanceId` INTEGER DEFAULT 0 NOT NULL");
+                                    supportSQLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS `Discussion` (`id` INTEGER NOT NULL, `forumId` INTEGER NOT NULL, `name` TEXT, `timeCreated` INTEGER NOT NULL, `timeModified` INTEGER NOT NULL, `authorName` TEXT, `authorId` TEXT, `isPinned` INTEGER NOT NULL, `isLocked` INTEGER NOT NULL, `isStarred` INTEGER NOT NULL, `numberReplies` INTEGER NOT NULL, PRIMARY KEY(`id`))");
+                                    supportSQLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS `Post` (`id` INTEGER NOT NULL, `discussionId` INTEGER NOT NULL, `subject` TEXT, `message` TEXT, `authorId` INTEGER NOT NULL, `authorName` TEXT, `isReply` INTEGER NOT NULL, `parentId` INTEGER NOT NULL, `timeCreated` INTEGER NOT NULL, PRIMARY KEY(`id`))");
                                 }
                             })
                             .fallbackToDestructiveMigrationOnDowngrade()
