@@ -1,5 +1,8 @@
 package vnu.uet.mobilecourse.assistant.database.DAO;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
