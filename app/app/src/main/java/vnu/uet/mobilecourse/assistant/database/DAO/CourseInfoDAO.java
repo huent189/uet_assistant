@@ -132,7 +132,11 @@ public class CourseInfoDAO extends FirebaseDAO<CourseInfo> {
                         // query completed with snapshots
                         else {
                             CourseInfo course = fromSnapshot(snapshot);
-                            response.postSuccess(course);
+                            if (course == null) {
+                                retryWithAnotherCode(response, id);
+                            } else {
+                                response.postSuccess(course);
+                            }
                         }
                     }
                 });
@@ -222,15 +226,15 @@ public class CourseInfoDAO extends FirebaseDAO<CourseInfo> {
                                 session.setType(0);
                                 break;
 
-                            case "N1":
+                            case "1":
                                 session.setType(1);
                                 break;
 
-                            case "N2":
+                            case "2":
                                 session.setType(2);
                                 break;
 
-                            case "N3":
+                            case "3":
                                 session.setType(3);
                                 break;
                         }
