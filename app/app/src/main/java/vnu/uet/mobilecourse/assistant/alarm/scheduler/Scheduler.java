@@ -9,7 +9,7 @@ import android.util.Log;
 
 import static android.app.PendingIntent.FLAG_CANCEL_CURRENT;
 
-public abstract class Scheduler<T extends Parcelable> {
+public abstract class Scheduler<T> {
 
     private static final String TAG = Scheduler.class.getName();
 

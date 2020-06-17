@@ -15,7 +15,12 @@
         <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem</item>
         <item name="radioButtonStyle">@style/RadioButton</item>
+        <item name="checkboxStyle">@style/CheckBox</item>
+    </style>
 
+
+    <style name="CheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/selector_check</item>
     </style>
 
     <style name="ErrorText">

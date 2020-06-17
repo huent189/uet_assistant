@@ -34,6 +34,19 @@
             app:layout_constraintStart_toEndOf="@+id/ivMaterialIcon"
             app:layout_constraintTop_toTopOf="@+id/ivMaterialIcon" />
 
+        <CheckBox
+            android:id="@+id/cbDone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/primary"
+            android:layout_marginEnd="20dp"
+            android:checked="true"
+            android:scaleX="0.75"
+            android:scaleY="0.75"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/ivTaskStatus"
             android:contentDescription="@string/material_status_complete"
@@ -41,6 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
             android:paddingEnd="20dp"
+            android:visibility="gone"
             android:paddingStart="@dimen/margin_x3"
             android:scaleX="0.75"
             android:scaleY="0.75"

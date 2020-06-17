@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:paddingVertical="@dimen/margin_x2"
     android:paddingHorizontal="@dimen/margin_x2"
@@ -12,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_x4"
-        android:text="Tuần 1"
+        android:text="@string/title_loading"
         android:layout_gravity="center_vertical"
         android:textSize="@dimen/font_size_list_title" />
     
@@ -23,6 +24,6 @@
         android:layout_gravity="center_vertical|end"
         android:layout_marginEnd="4dp"
         android:src="@drawable/ic_keyboard_arrow_down_24dp"
-        android:contentDescription="expand" />
+        tools:ignore="ContentDescription" />
 
 </FrameLayout>

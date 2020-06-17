@@ -59,13 +59,15 @@ public class CourseSyncDataWorker extends Worker {
     }
     private void pushNotification(Context context, Notification_UserSubCol instance){
         NotificationHelper helper = NotificationHelper.getsInstance();
-        Notification notification = helper.build(context, CHANNEL_ID, R.drawable.ic_check_circle_24dp, instance.getTitle(), instance.getDescription());
+        Notification notification = helper.build(context, CHANNEL_ID,
+                R.drawable.ic_check_circle_24dp, instance.getTitle(), instance.getDescription());
         helper.notify(context, instance.getId(), notification);
     }
     private void pushEmptyNotification(Context context){
         NotificationHelper helper = NotificationHelper.getsInstance();
-        Notification notification = helper.build(context, CHANNEL_ID, R.drawable.ic_check_circle_24dp,
-                "FOR_TEST", "Ê m không có thông báo gì mới đâu, t đang test thôi :v");
+        Notification notification = helper.build(context, CHANNEL_ID,
+                R.drawable.ic_check_circle_24dp, "FOR_TEST",
+                "Ê m không có thông báo gì mới đâu, t đang test thôi :v");
         helper.notify(context, ((int) (Math.random() * 1000000000)) + "", notification);
     }
     @NonNull
