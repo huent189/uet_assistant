@@ -5,23 +5,32 @@ import android.annotation.SuppressLint;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.ActionCodeSettings;
 import com.google.firebase.auth.AdditionalUserInfo;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.util.Util;
-
 import java.util.Map;
-
 import vnu.uet.mobilecourse.assistant.BuildConfig;
+import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
+import vnu.uet.mobilecourse.assistant.model.firebase.User;
+import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
+
 import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.model.notification.AdminNotification;
 import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.NotificationRepository;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
+
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class FirebaseAuthenticationService {
 
@@ -78,14 +87,7 @@ public class FirebaseAuthenticationService {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> loginViaMail) {
                             if (loginViaMail.isSuccessful()) {
-                                // TODO: validate success
-                                loginState.postSuccess("login Firebase succeeds");
-                                // You can access the new user via result.getUser()
-                                // Additional user info profile *not* available via:
-                                // result.getAdditionalUserInfo().getProfile() == null
-                                // You can check if the user is new or existing:
-                                // result.getAdditionalUserInfo().isNewUser()
-                                // TODO: check new user
+
                                 AuthResult result = loginViaMail.getResult();
                                 if (result != null && result.getAdditionalUserInfo() != null) {
                                     AdditionalUserInfo userInfo = result.getAdditionalUserInfo();
@@ -144,5 +146,6 @@ public class FirebaseAuthenticationService {
     public static boolean isFirebaseLoggedIn (){
         return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
+
 
 }

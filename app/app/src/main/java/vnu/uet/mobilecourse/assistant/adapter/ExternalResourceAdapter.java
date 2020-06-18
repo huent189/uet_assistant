@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
@@ -14,8 +15,8 @@ public class ExternalResourceAdapter extends ResourceAdapter {
     private String mAttachmentName;
     private String mAttachmentUrl;
 
-    public ExternalResourceAdapter(Material material, MaterialFragment owner) {
-        super(owner);
+    public ExternalResourceAdapter(Material material, Context context) {
+        super(context);
 
         mAttachmentName = material.getFileName();
         mAttachmentUrl = material.getFileUrl();
@@ -26,12 +27,12 @@ public class ExternalResourceAdapter extends ResourceAdapter {
         holder.mTvAttachmentName.setText(mAttachmentName);
         holder.mTvAttachmentSize.setVisibility(View.INVISIBLE);
 
-        Activity activity = mOwner.getActivity();
+//        Activity activity = mOwner.getActivity();
 
-        if (activity != null) {
+        if (mContext != null) {
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mAttachmentUrl));
-                activity.startActivity(intent);
+                mContext.startActivity(intent);
             });
         }
     }

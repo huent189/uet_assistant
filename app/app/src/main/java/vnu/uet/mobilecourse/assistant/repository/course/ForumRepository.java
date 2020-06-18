@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.repository.course;
 
 import android.util.Log;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
 import com.google.gson.JsonElement;
 import retrofit2.Call;
@@ -12,6 +13,7 @@ import vnu.uet.mobilecourse.assistant.model.forum.Post;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ public class ForumRepository {
         sender = HTTPClient.getInstance().request(CourseRequest.class);
         forumDAO = CoursesDatabase.getDatabase().forumDAO();
     }
-    public LiveData<Discussion> getDiscussionsByForum(int forumInstanceId){
+    public LiveData<List<Discussion>> getDiscussionsByForum(int forumInstanceId){
         new Thread(() -> {
             try {
                 updateDiscussionByForum(forumInstanceId);
@@ -103,6 +105,28 @@ public class ForumRepository {
             return postList.stream().filter(post -> !post.getIsReply()).findFirst().orElse(null);
         });
         return hierarchicalPost;
+    }
+
+    public static class MergeDiscussion extends StateMediatorLiveData<List<Discussion>> {
+
+        public MergeDiscussion(LiveData<List<Discussion>> liveData) {
+            postLoading();
+
+            addSource(liveData, new Observer<List<Discussion>>() {
+                @Override
+                public void onChanged(List<Discussion> discussions) {
+                    if (discussions == null) {
+                        postLoading();
+                    }
+                    else {
+                        discussions.forEach(discussion -> {
+//                            d
+                        });
+                    }
+                }
+            });
+        }
+
     }
 }
 
