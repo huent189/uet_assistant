@@ -13,7 +13,11 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import vnu.uet.mobilecourse.assistant.adapter.InternalResourceAdapter;
 import vnu.uet.mobilecourse.assistant.model.forum.InterestedDiscussion;
+import vnu.uet.mobilecourse.assistant.model.material.InternalFile;
 import vnu.uet.mobilecourse.assistant.viewmodel.DiscussionViewModel;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
@@ -25,6 +29,7 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 import android.text.SpannableStringBuilder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +37,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.facebook.shimmer.ShimmerFrameLayout;
+
+import java.util.List;
 
 public class DiscussionFragment extends Fragment {
 
@@ -97,27 +106,63 @@ public class DiscussionFragment extends Fragment {
         View layoutEmpty = root.findViewById(R.id.layoutEmpty);
         RepliesView repliesView = root.findViewById(R.id.repliesView);
 
-        if (discussion.getNumberReplies() == 0) {
-            layoutEmpty.setVisibility(View.VISIBLE);
-            repliesView.setVisibility(View.GONE);
-            root.setBackgroundResource(R.color.backgroundLight);
-        } else {
-            repliesView.setVisibility(View.VISIBLE);
-            layoutEmpty.setVisibility(View.GONE);
-        }
+        View layoutContainer = root.findViewById(R.id.layoutContainer);
+
+        ShimmerFrameLayout sflReplies = root.findViewById(R.id.sflReplies);
+        sflReplies.startShimmerAnimation();
+
+//        if (discussion.getNumberReplies() == 0) {
+//            layoutEmpty.setVisibility(View.VISIBLE);
+//            repliesView.setVisibility(View.GONE);
+//            root.setBackgroundResource(R.color.backgroundLight);
+//        } else {
+//            repliesView.setVisibility(View.VISIBLE);
+//            layoutEmpty.setVisibility(View.GONE);
+//        }
 
         TextView tvContent = root.findViewById(R.id.tvContent);
+
+        RecyclerView rvAttachments = root.findViewById(R.id.rvAttachments);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(
+                getContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false);
+        rvAttachments.setLayoutManager(layoutManager);
 
         mViewModel.getDiscussionDetail(discussion.getId()).observe(getViewLifecycleOwner(), new Observer<Post>() {
             @Override
             public void onChanged(Post post) {
                 if (post != null) {
+                    layoutContainer.setVisibility(View.VISIBLE);
+                    sflReplies.setVisibility(View.GONE);
+
                     SpannableStringBuilder rootContent = StringUtils.convertHtml(post.getMessage());
                     tvContent.setText(rootContent);
 
                     repliesView.setRootPost(post);
 
                     root.setBackgroundResource(R.color.backgroundLight);
+
+                    List<InternalFile> files = post.getAttachments();
+                    Log.d(getClass().getSimpleName(), "attachments: " + (files == null ? "null" : files.size()));
+                    if (files != null && !files.isEmpty()) {
+                        InternalResourceAdapter adapter = new InternalResourceAdapter(files, mActivity);
+                        rvAttachments.setAdapter(adapter);
+                    }
+
+                    if (discussion.getNumberReplies() == 0) {
+                        layoutEmpty.setVisibility(View.VISIBLE);
+                        repliesView.setVisibility(View.GONE);
+                    } else {
+                        repliesView.setVisibility(View.VISIBLE);
+                        layoutEmpty.setVisibility(View.GONE);
+                    }
+
+                } else {
+                    repliesView.setVisibility(View.GONE);
+                    layoutContainer.setVisibility(View.GONE);
+                    layoutEmpty.setVisibility(View.GONE);
+                    sflReplies.setVisibility(View.VISIBLE);
                 }
             }
         });

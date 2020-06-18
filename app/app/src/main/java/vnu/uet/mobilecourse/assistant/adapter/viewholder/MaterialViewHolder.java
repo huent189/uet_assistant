@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 
@@ -60,10 +59,18 @@ public class MaterialViewHolder extends ChildViewHolder {
                 mIvMaterialIcon.setImageResource(R.drawable.ic_text_fields_32dp);
                 break;
 
-            default:
+            case CourseConstant.MaterialType.FORUM:
                 mIvMaterialIcon.setImageResource(R.drawable.ic_widgets_32dp);
                 break;
+
+            default:
+                mIvMaterialIcon.setImageResource(R.drawable.ic_extension_32dp);
+                break;
         }
+
+        //TODO: mark as done
+        mCbTaskStatus.setClickable(false);
+        mCbTaskStatus.setActivated(false);
 
         if (material.getCompletion() == 1) {
             mCbTaskStatus.setChecked(true);

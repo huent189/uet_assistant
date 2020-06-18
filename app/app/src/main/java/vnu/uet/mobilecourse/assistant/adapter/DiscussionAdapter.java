@@ -58,11 +58,13 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Di
 
             @Override
             protected IStateLiveData<InterestedDiscussion> onFollow(int discussionId) {
+                mOwner.saveRecycleViewState();
                 return mOwner.getViewModel().follow(discussionId);
             }
 
             @Override
             protected IStateLiveData<String> onUnFollow(int discussionId) {
+                mOwner.saveRecycleViewState();
                 return mOwner.getViewModel().unFollow(discussionId);
             }
         };

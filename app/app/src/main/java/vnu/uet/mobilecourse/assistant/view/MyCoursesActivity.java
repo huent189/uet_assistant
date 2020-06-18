@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.view;
 
+import android.app.Notification;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;

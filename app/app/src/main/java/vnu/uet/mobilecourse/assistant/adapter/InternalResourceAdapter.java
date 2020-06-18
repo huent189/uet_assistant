@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
 import java.util.List;
 import java.util.Locale;
@@ -26,6 +27,8 @@ public class InternalResourceAdapter extends ResourceAdapter {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final InternalFile file = mFiles.get(position);
+
+        Log.d(getClass().getSimpleName(), "onBindViewHolder: " + file.toString());
 
         holder.mTvAttachmentName.setText(file.getFileName());
 
