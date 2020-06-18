@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/margin_x2"
+    android:paddingBottom="@dimen/margin"
+    android:paddingHorizontal="@dimen/margin_x2"
+    android:layout_marginTop="@dimen/margin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/layoutContainer"
+        android:background="@drawable/border_left_background"
+        android:paddingStart="@dimen/margin_x2"
+        android:paddingEnd="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvAuthorName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_loading"/>
+
+        <TextView
+            style="@style/SecondaryText"
+            android:id="@+id/tvCreatedTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin_2"
+            android:text="@string/title_loading"/>
+
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_marginTop="@dimen/margin_x2"
+            android:layout_marginBottom="@dimen/margin_x2"
+            android:textSize="@dimen/font_size_item_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAttachments"
+            android:paddingHorizontal="@dimen/margin"
+            android:clipToPadding="false"
+            android:visibility="gone"
+            android:layout_marginBottom="@dimen/margin_x2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:gravity="center_vertical|end"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginBottom="@dimen/margin"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivStarred"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_star_border_24dp"/>
+
+            <ImageView
+                android:id="@+id/ivReplies"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/margin_x2"
+                android:tint="@color/primaryDark"
+                android:gravity="center_vertical"
+                android:src="@drawable/ic_reply_24dp"/>
+
+<!--            <Button-->
+<!--                android:id="@+id/btnFollow"-->
+<!--                style="@style/Button"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="32dp"-->
+<!--                android:paddingHorizontal="@dimen/margin"-->
+<!--                android:layout_gravity="end|center_vertical"-->
+<!--                android:text="@string/title_discussion_follow"-->
+<!--                android:textSize="@dimen/font_size_caption"-->
+<!--                android:textColor="@color/primaryDark"-->
+<!--                android:drawableTint="@color/primaryDark"-->
+<!--                android:drawablePadding="@dimen/small_margin"-->
+<!--                android:drawableStart="@drawable/ic_add_alert_24dp"-->
+<!--                android:background="@drawable/transparent_button_background"/>-->
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -2,7 +2,9 @@ package vnu.uet.mobilecourse.assistant.view.course;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -11,6 +13,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import vnu.uet.mobilecourse.assistant.model.forum.InterestedDiscussion;
 import vnu.uet.mobilecourse.assistant.viewmodel.DiscussionViewModel;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
@@ -18,13 +21,17 @@ import vnu.uet.mobilecourse.assistant.model.forum.Post;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.view.component.RepliesView;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DiscussionFragment extends Fragment {
 
@@ -45,8 +52,6 @@ public class DiscussionFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_discussion, container, false);
 
-        RepliesView repliesView = root.findViewById(R.id.repliesView);
-
         if (getArguments() != null) {
             String forumTitle = getArguments().getString("forum");
             if (forumTitle != null) {
@@ -55,7 +60,6 @@ public class DiscussionFragment extends Fragment {
 
             Discussion discussion = getArguments().getParcelable("discussion");
             if (discussion != null) {
-
                 TextView tvPinned = root.findViewById(R.id.tvPinned);
                 tvPinned.setVisibility(discussion.isPinned() ? View.VISIBLE : View.GONE);
 
@@ -69,8 +73,6 @@ public class DiscussionFragment extends Fragment {
                 TextView tvTitle = root.findViewById(R.id.tvTitle);
                 tvTitle.setText(discussion.getName());
 
-                TextView tvContent = root.findViewById(R.id.tvContent);
-
                 ImageView ivStarred = root.findViewById(R.id.ivStarred);
                 if (discussion.isStarred()) {
                     ivStarred.setImageResource(R.drawable.ic_star_border_24dp);
@@ -78,26 +80,117 @@ public class DiscussionFragment extends Fragment {
                     ivStarred.setImageResource(R.drawable.ic_star_border_24dp);
                 }
 
-                TextView tvReplies = root.findViewById(R.id.tvReplies);
-                tvReplies.setText(String.valueOf(discussion.getNumberReplies()));
+                setupFollowButton(root, discussion);
 
-                mViewModel.getDiscussionDetail(discussion.getId()).observe(getViewLifecycleOwner(), new Observer<Post>() {
-                    @Override
-                    public void onChanged(Post post) {
-                        if (post != null) {
-                            SpannableStringBuilder rootContent = StringUtils.convertHtml(post.getMessage());
-                            tvContent.setText(rootContent);
+                setupRepliesView(root, discussion);
 
-                            repliesView.setRootPost(post);
-
-                            root.setBackgroundResource(R.color.backgroundLight);
-                        }
-                    }
-                });
             }
         }
 
         return root;
+    }
+
+    private void setupRepliesView(View root, Discussion discussion) {
+        TextView tvReplies = root.findViewById(R.id.tvReplies);
+        tvReplies.setText(String.valueOf(discussion.getNumberReplies()));
+
+        View layoutEmpty = root.findViewById(R.id.layoutEmpty);
+        RepliesView repliesView = root.findViewById(R.id.repliesView);
+
+        if (discussion.getNumberReplies() == 0) {
+            layoutEmpty.setVisibility(View.VISIBLE);
+            repliesView.setVisibility(View.GONE);
+            root.setBackgroundResource(R.color.backgroundLight);
+        } else {
+            repliesView.setVisibility(View.VISIBLE);
+            layoutEmpty.setVisibility(View.GONE);
+        }
+
+        TextView tvContent = root.findViewById(R.id.tvContent);
+
+        mViewModel.getDiscussionDetail(discussion.getId()).observe(getViewLifecycleOwner(), new Observer<Post>() {
+            @Override
+            public void onChanged(Post post) {
+                if (post != null) {
+                    SpannableStringBuilder rootContent = StringUtils.convertHtml(post.getMessage());
+                    tvContent.setText(rootContent);
+
+                    repliesView.setRootPost(post);
+
+                    root.setBackgroundResource(R.color.backgroundLight);
+                }
+            }
+        });
+    }
+
+    private void setupFollowButton(View root, Discussion discussion) {
+        Button btnFollow = root.findViewById(R.id.btnFollow);
+        if (discussion.isInterest()) {
+            updateFollowEffect(btnFollow);
+        } else {
+            updateUnFollowEffect(btnFollow);
+        }
+
+        btnFollow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int discussionId = discussion.getId();
+                LifecycleOwner lifecycleOwner = getViewLifecycleOwner();
+
+                if (discussion.isInterest()) {
+                    updateUnFollowEffect(btnFollow);
+
+                    mViewModel.unFollow(discussionId).observe(lifecycleOwner, new Observer<StateModel<String>>() {
+                        @Override
+                        public void onChanged(StateModel<String> state) {
+                            // recover in case catch a error
+                            if (state.getStatus() == StateStatus.ERROR) {
+                                Toast.makeText(getContext(),
+                                        "Hủy theo dõi thất bại - " + state.getError().getMessage(),
+                                        Toast.LENGTH_SHORT
+                                ).show();
+                                updateFollowEffect(btnFollow);
+                            }
+                        }
+                    });
+                } else {
+                    updateFollowEffect(btnFollow);
+
+                    mViewModel.follow(discussionId).observe(lifecycleOwner, new Observer<StateModel<InterestedDiscussion>>() {
+                        @Override
+                        public void onChanged(StateModel<InterestedDiscussion> state) {
+                            // recover in case catch a error
+                            if (state.getStatus() == StateStatus.ERROR) {
+                                Toast.makeText(getContext(),
+                                        "Theo dõi thất bại - " + state.getError().getMessage(),
+                                        Toast.LENGTH_SHORT
+                                ).show();
+                                updateUnFollowEffect(btnFollow);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void updateFollowEffect(Button btnFollow) {
+        btnFollow.setText(R.string.title_discussion_unfollow);
+
+        int color = ContextCompat.getColor(getContext(), R.color.primary);
+        btnFollow.setTextColor(color);
+
+        btnFollow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notifications_active_24dp, 0, 0, 0);
+
+    }
+
+    private void updateUnFollowEffect(Button btnFollow) {
+        btnFollow.setText(R.string.title_discussion_follow);
+
+        int color = ContextCompat.getColor(getContext(), R.color.primaryDark);
+        btnFollow.setTextColor(color);
+
+        btnFollow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_alert_24dp, 0, 0, 0);
     }
 
     private Toolbar initializeToolbar(View root, String title) {

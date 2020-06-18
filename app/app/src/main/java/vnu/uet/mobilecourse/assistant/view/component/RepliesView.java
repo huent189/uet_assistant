@@ -67,28 +67,22 @@ public class RepliesView extends LinearLayout {
         mRootView.removeAllViews();
 
         for (Post reply : post.getReplies()) {
-            ViewGroup firstReply = setupReplyView(mRootView, reply);
-
-            firstReply.setPaddingRelative(toPixels(16), toPixels(16), toPixels(16), toPixels(8));
-
-            LayoutParams params = new LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            );
-
-            params.setMargins(0, toPixels(8), 0, 0);
-            firstReply.setLayoutParams(params);
-            firstReply.setBackgroundResource(R.color.background);
+            setupReplyView(mRootView, reply);
         }
     }
 
-    private int toPixels(int dp) {
-        float scale = getResources().getDisplayMetrics().density;
-        return (int) (dp * scale);
-    }
+    private void setupReplyView(ViewGroup parent, Post post) {
+        ViewGroup replayView, newParentView;
 
-    private ViewGroup setupReplyView(ViewGroup parent, Post post) {
-        ViewGroup replayView = (ViewGroup) mInflater.inflate(R.layout.layout_post_item, parent, false);
+        if (parent == mRootView) {
+            replayView = (ViewGroup) mInflater
+                    .inflate(R.layout.layout_post_first_child_item, parent, false);
+            newParentView = replayView.findViewById(R.id.layoutContainer);
+        } else {
+            replayView = (ViewGroup) mInflater
+                    .inflate(R.layout.layout_post_item, parent, false);
+            newParentView = replayView;
+        }
 
         TextView tvAuthorName = replayView.findViewById(R.id.tvAuthorName);
         tvAuthorName.setText(post.getAuthorName());
@@ -122,9 +116,7 @@ public class RepliesView extends LinearLayout {
         parent.addView(replayView);
 
         for (Post reply : post.getReplies()) {
-            setupReplyView(replayView, reply);
+            setupReplyView(newParentView, reply);
         }
-
-        return replayView;
     }
 }

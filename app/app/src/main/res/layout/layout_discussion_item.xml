@@ -98,7 +98,6 @@
                 android:text="@string/title_discussion_follow"
                 android:textSize="@dimen/font_size_caption"
                 android:textColor="@color/primaryDark"
-                android:drawableTint="@color/primaryDark"
                 android:drawablePadding="@dimen/small_margin"
                 android:drawableStart="@drawable/ic_add_alert_24dp"
                 android:background="@drawable/transparent_button_background"/>

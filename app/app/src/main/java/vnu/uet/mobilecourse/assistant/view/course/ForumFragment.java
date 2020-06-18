@@ -18,7 +18,9 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.DiscussionAdapter;
 import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,12 +53,33 @@ public class ForumFragment extends Fragment {
 
                 initializeToolbar(root, forumTitle);
 
-                mViewModel.getDiscussions(forumMaterial.getInstanceId()).observe(getViewLifecycleOwner(), new Observer<List<Discussion>>() {
+                View layoutEmpty = root.findViewById(R.id.layoutEmpty);
+
+                mViewModel.getDiscussions(forumMaterial.getInstanceId()).observe(getViewLifecycleOwner(), new Observer<StateModel<List<Discussion>>>() {
                     @Override
-                    public void onChanged(List<Discussion> discussions) {
-                        if (discussions != null) {
-                            DiscussionAdapter adapter = new DiscussionAdapter(discussions, forumTitle, ForumFragment.this);
-                            rvDiscussions.setAdapter(adapter);
+                    public void onChanged(StateModel<List<Discussion>> stateModel) {
+                        switch (stateModel.getStatus()) {
+                            case LOADING:
+
+                                break;
+
+                            case SUCCESS:
+                                Log.d(ForumFragment.class.getSimpleName(), "onChanged: discussions");
+
+                                List<Discussion> discussions = stateModel.getData();
+
+                                if (discussions.isEmpty()) {
+                                    layoutEmpty.setVisibility(View.VISIBLE);
+                                    rvDiscussions.setVisibility(View.GONE);
+                                } else {
+                                    layoutEmpty.setVisibility(View.GONE);
+                                    rvDiscussions.setVisibility(View.VISIBLE);
+
+                                    DiscussionAdapter adapter = new DiscussionAdapter(discussions,
+                                            forumTitle, ForumFragment.this);
+                                    rvDiscussions.setAdapter(adapter);
+                                }
+                                break;
                         }
                     }
                 });
@@ -78,5 +101,9 @@ public class ForumFragment extends Fragment {
         }
 
         return null;
+    }
+
+    public ForumViewModel getViewModel() {
+        return mViewModel;
     }
 }

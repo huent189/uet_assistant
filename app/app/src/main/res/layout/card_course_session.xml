@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_item_title"
                 android:textStyle="bold"
+                android:text="@string/title_loading"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,11 +34,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_caption"
+                android:text="@string/title_loading"
                 app:layout_constraintStart_toStartOf="@+id/tvDayOfWeek"
                 app:layout_constraintTop_toBottomOf="@+id/tvDayOfWeek" />
 
             <TextView
                 android:id="@+id/tvClassroom"
+                android:maxWidth="100dp"
+                android:gravity="end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/primary_button_background"
@@ -45,8 +49,12 @@
                 android:paddingHorizontal="@dimen/margin"
                 android:textSize="@dimen/font_size_caption"
                 android:textStyle="bold"
+                android:text="@string/title_loading"
+                android:layout_marginStart="@dimen/margin"
                 app:layout_constraintBottom_toBottomOf="@+id/tvSessionTime"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/tvDayOfWeek"
                 app:layout_constraintTop_toTopOf="@+id/tvDayOfWeek" />
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -64,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin"
-                android:text="@string/card_course_desc"
+                android:text="@string/title_loading"
                 android:textSize="@dimen/font_size_list_title"
                 app:layout_constraintStart_toStartOf="@+id/civAvatar"
                 app:layout_constraintTop_toBottomOf="@+id/civAvatar" />

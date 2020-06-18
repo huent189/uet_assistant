@@ -34,6 +34,8 @@ public class Discussion implements Parcelable {
     private int numberReplies;
     @Ignore
     private String content;
+    @Ignore
+    private boolean interest;
 
     public Discussion() {
 
@@ -52,6 +54,7 @@ public class Discussion implements Parcelable {
         isStarred = in.readByte() != 0;
         numberReplies = in.readInt();
         content = in.readString();
+        interest = in.readByte() != 0;
     }
 
     @Override
@@ -68,6 +71,7 @@ public class Discussion implements Parcelable {
         dest.writeByte((byte) (isStarred ? 1 : 0));
         dest.writeInt(numberReplies);
         dest.writeString(content);
+        dest.writeByte((byte) (interest ? 1 : 0));
     }
 
     @Override
@@ -183,6 +187,14 @@ public class Discussion implements Parcelable {
         this.numberReplies = numberReplies;
     }
 
+    public boolean isInterest() {
+        return interest;
+    }
+
+    public void setInterest(boolean interest) {
+        this.interest = interest;
+    }
+
     @Override
     public String toString() {
         return "Discussion{" +
@@ -197,6 +209,7 @@ public class Discussion implements Parcelable {
                 ", isLocked=" + isLocked +
                 ", isStarred=" + isStarred +
                 ", numberReplies=" + numberReplies +
+                ", follow=" + interest +
                 '}';
     }
 }

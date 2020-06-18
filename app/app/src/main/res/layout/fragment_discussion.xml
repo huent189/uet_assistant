@@ -46,7 +46,7 @@
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/margin_x2"
             android:paddingBottom="@dimen/margin"
-            android:paddingTop="@dimen/margin_x2"
+            android:paddingTop="@dimen/margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -148,10 +148,26 @@
 
         </LinearLayout>
 
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="@dimen/margin"-->
+<!--            android:layout_marginStart="@dimen/margin_x2"-->
+<!--            android:text="CÂU TRẢ LỜI" />-->
+
         <vnu.uet.mobilecourse.assistant.view.component.RepliesView
             android:id="@+id/repliesView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
+        <vnu.uet.mobilecourse.assistant.view.component.EmptyView
+            android:id="@+id/layoutEmpty"
+            android:layout_marginTop="@dimen/margin"
+            android:background="@color/background"
+            android:paddingTop="@dimen/margin_x6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:textContent="Không có câu trả lời nào."/>
 
     </LinearLayout>
 
