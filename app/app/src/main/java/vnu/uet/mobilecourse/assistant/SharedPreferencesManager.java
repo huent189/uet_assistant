@@ -11,6 +11,7 @@ public class SharedPreferencesManager {
     public static final String TOKEN = "TOKEN";
     public static final String REGISTER_EMAIL = "REGISTER_EMAIL";
     public static final String ENABLE_SYNC_NOTI = "ENABLE_SYNC_NOTI";
+    public static final String LAST_SYNC_TIME = "LAST_SYNC_TIME";
 //    public static final String NEW_NOTIFICATION = "NEW_NOTIFICATION";
     private static final String APP_SHARED_PREFS = "MySharedPrefs";
 
@@ -26,9 +27,9 @@ public class SharedPreferencesManager {
         return preferences.getString(key, null);
     }
 
-    public static long getLongValue(String key){
+    public static long getLongValue(String key, long defValue){
         initPreference();
-        return preferences.getLong(key, -1);
+        return preferences.getLong(key, defValue);
     }
 
     public static void deleteKey(String key){

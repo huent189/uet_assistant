@@ -2,6 +2,8 @@ package vnu.uet.mobilecourse.assistant.repository.course;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import com.google.gson.JsonElement;
+import retrofit2.Call;
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
 import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.CoursesDAO;
@@ -19,6 +21,7 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -78,7 +81,13 @@ public class CourseRepository {
     }
 
     public LiveData<List<Course>> getCourses() {
-        updateMyCourses();
+        new Thread(() -> {
+            try {
+                updateMyCourses();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
         return coursesDAO.getMyCourses();
     }
 
@@ -109,40 +118,45 @@ public class CourseRepository {
         }
     }
 
-    public void updateMyCourses(){
-        CourseRequest request = HTTPClient.getInstance().request(CourseRequest.class);
-        request.getMyCoures(User.getInstance().getUserId())
-                .enqueue(new CoursesResponseCallback<Course[]>(Course[].class) {
-                    @Override
-                    public void onSuccess(Course[] response) {
-                        CoursesDatabase.databaseWriteExecutor.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                for (Course entity:response) {
-                                    entity.setTitle(StringUtils.courseTitleFormat(entity.getTitle()));
-                                }
-                                coursesDAO.insertCourse(response);
-                            }
-                        });
-                    }
-                });
+    public ArrayList<Integer> updateMyCourses() throws IOException {
+        ArrayList<Integer> courseIds = new ArrayList<>();
+        Call<JsonElement> call = HTTPClient.getInstance().request(CourseRequest.class).getMyCoures(User.getInstance().getUserId());
+        CoursesResponseCallback<Course[]> handler = new CoursesResponseCallback<Course[]>(Course[].class) {
+            @Override
+            public void onSuccess(Course[] response) {
+                for (Course entity:response) {
+                    entity.setTitle(StringUtils.courseTitleFormat(entity.getTitle()));
+                    courseIds.add(entity.getId());
+                }
+                coursesDAO.insertCourse(response);
+            }
+        };
+        handler.onResponse(call,call.execute());
+        return courseIds;
     }
 
-    public void updateCourseContent(int courseId){
-        HTTPClient.getInstance().request(CourseRequest.class).getCourseContent(courseId + "")
-                .enqueue(new CoursesResponseCallback<CourseOverview[]>(CourseOverview[].class) {
-                    @Override
-                    public void onSuccess(CourseOverview[] response) {
-                        CoursesDatabase.databaseWriteExecutor.execute(()->{
-                            materialDAO.insertCourseContent(courseId, response);
-                        });
+    public List<CourseOverview> updateCourseContent(int courseId) throws IOException {
+        ArrayList<CourseOverview> updateList = new ArrayList<>();
+        Call<JsonElement> call = HTTPClient.getInstance().request(CourseRequest.class).getCourseContent(courseId);
+        CoursesResponseCallback<CourseOverview[]> hanler = new CoursesResponseCallback<CourseOverview[]>(CourseOverview[].class) {
+            @Override
+            public void onSuccess(CourseOverview[] response) {
+                updateList.addAll(materialDAO.insertCourseContent(courseId, response));
 
-                    }
-                });
+            }
+        };
+        hanler.onResponse(call, call.execute());
+        return updateList;
     }
 
     public LiveData<List<CourseOverview>> getContent(int courseId){
-        updateCourseContent(courseId);
+        new Thread(() -> {
+            try {
+                updateCourseContent(courseId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
         new CourseActionRepository().triggerCourseView(courseId);
         return materialDAO.getCourseContent(courseId);
     }

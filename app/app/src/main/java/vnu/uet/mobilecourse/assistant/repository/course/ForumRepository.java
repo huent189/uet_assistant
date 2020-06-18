@@ -39,7 +39,7 @@ public class ForumRepository {
         return forumDAO.getDiscussionByForum(forumInstanceId);
     }
 
-    public List<Discussion> updateAllDiccussion() throws IOException {
+    public List<Discussion> updateDiccussions() throws IOException {
         int[] forumIds = forumDAO.getAllForumId();
         ArrayList<Discussion> discussions = new ArrayList<>();
         for(int id: forumIds){

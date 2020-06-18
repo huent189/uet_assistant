@@ -20,6 +20,8 @@ public class Discussion {
     private String authorName;
     @SerializedName("userid")
     private String authorId;
+    @SerializedName("message")
+    private String message;
     @SerializedName("pinned")
     private boolean isPinned;
     @SerializedName("locked")
@@ -28,6 +30,15 @@ public class Discussion {
     private boolean isStarred;
     @SerializedName("numreplies")
     private int numberReplies;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public int getId() {
         return id;
     }
