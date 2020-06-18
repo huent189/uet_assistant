@@ -72,8 +72,13 @@ public class RepliesView extends LinearLayout {
     }
 
     private void setupReplyView(ViewGroup parent, Post post) {
-        ViewGroup replayView, newParentView;
+        // current replay view
+        ViewGroup replayView;
 
+        // new parent view for next recursive iteration
+        ViewGroup newParentView;
+
+        // use difference layout for 1-level reply
         if (parent == mRootView) {
             replayView = (ViewGroup) mInflater
                     .inflate(R.layout.layout_post_first_child_item, parent, false);
@@ -84,17 +89,21 @@ public class RepliesView extends LinearLayout {
             newParentView = replayView;
         }
 
+        // update author name
         TextView tvAuthorName = replayView.findViewById(R.id.tvAuthorName);
         tvAuthorName.setText(post.getAuthorName());
 
+        // update created time
         TextView tvCreatedTime = replayView.findViewById(R.id.tvCreatedTime);
         String createdTime = DateTimeUtils.generateViewText(post.getTimeCreated());
         tvCreatedTime.setText(createdTime);
 
+        // update replay message (html raw content)
         TextView tvMessage = replayView.findViewById(R.id.tvMessage);
         SpannableStringBuilder message = StringUtils.convertHtml(post.getMessage());
         tvMessage.setText(message);
 
+        // update attachments
         RecyclerView rvAttachments = replayView.findViewById(R.id.rvAttachments);
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 getContext(),
@@ -113,8 +122,10 @@ public class RepliesView extends LinearLayout {
             rvAttachments.setVisibility(View.GONE);
         }
 
+        // add created view into parent
         parent.addView(replayView);
 
+        // recursive for its replies
         for (Post reply : post.getReplies()) {
             setupReplyView(newParentView, reply);
         }
