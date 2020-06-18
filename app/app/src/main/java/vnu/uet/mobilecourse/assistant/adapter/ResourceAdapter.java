@@ -1,6 +1,8 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
+import android.content.Context;
 import android.text.method.ScrollingMovementMethod;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -12,16 +14,16 @@ import vnu.uet.mobilecourse.assistant.view.course.MaterialFragment;
 
 public abstract class ResourceAdapter extends RecyclerView.Adapter<ResourceAdapter.ViewHolder> {
 
-    protected MaterialFragment mOwner;
+    protected Context mContext;
 
-    protected ResourceAdapter(MaterialFragment owner) {
-        this.mOwner = owner;
+    protected ResourceAdapter(Context context) {
+        this.mContext = context;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mOwner.getLayoutInflater()
+        View view = LayoutInflater.from(mContext)
                 .inflate(R.layout.card_attachment, parent, false);
 
         return new ViewHolder(view);

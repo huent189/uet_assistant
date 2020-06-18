@@ -85,6 +85,9 @@
         <action
             android:id="@+id/action_navigation_explore_course_to_navigation_my_profile"
             app:destination="@id/navigation_my_profile" />
+        <action
+            android:id="@+id/action_navigation_explore_course_to_navigation_forum"
+            app:destination="@id/navigation_forum" />
     </fragment>
 
     <fragment
@@ -164,5 +167,19 @@
             android:id="@+id/action_navigation_modify_todo_to_navigation_add_todo_list"
             app:destination="@id/navigation_add_todo_list" />
     </fragment>
+    <fragment
+        android:id="@+id/navigation_forum"
+        android:name="vnu.uet.mobilecourse.assistant.view.course.ForumFragment"
+        android:label="fragment_forum"
+        tools:layout="@layout/fragment_forum" >
+        <action
+            android:id="@+id/action_navigation_forum_to_navigation_discussion"
+            app:destination="@id/navigation_discussion" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_discussion"
+        android:name="vnu.uet.mobilecourse.assistant.view.course.DiscussionFragment"
+        android:label="fragment_discussion"
+        tools:layout="@layout/fragment_discussion" />
 
 </navigation>

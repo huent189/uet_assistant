@@ -75,6 +75,9 @@
     <string name="title_course_enroll_error">Bạn chưa tham gia vào lớp học này\ntrên website môn học.</string>
     <string name="title_calendar_empty_event">Không có hoạt động nào được ghi nhận.\nBạn có thể thêm công việc mới</string>
     <string name="title_notification_empty">Bạn chưa nhận được thông báo nào!</string>
+    <string name="title_discussion_pinned">Được ghim</string>
+    <string name="title_discussion_follow">Theo dõi</string>
+    <string name="title_discussion_unfollow">Hủy theo dõi</string>
 
     <string-array name="dayOfWeek">
         <item>C.N</item>

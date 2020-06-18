@@ -41,4 +41,25 @@ public class DateTimeUtils {
     public static boolean isSameMonthAndYear(Date d1, Date d2) {
         return MONTH_FORMAT.format(d1).equals(MONTH_FORMAT.format(d2));
     }
+
+    public static String generateViewText(long seconds) {
+        Date date = DateTimeUtils.fromSecond(seconds);
+        String time = DateTimeUtils.DATE_TIME_FORMAT.format(date);
+
+        long diff = Math.abs(System.currentTimeMillis() - date.getTime());
+        // under 1 minute
+        if (diff < 60 * 1000) {
+            time = String.format(Locale.ROOT, "%d giây trước", diff / 1000);
+        }
+        // under 1 hour
+        else if (diff < 60 * 60 * 1000) {
+            time = String.format(Locale.ROOT, "%d phút trước", diff / 1000 / 60);
+        }
+        // under 1 day
+        else if (diff < 24 * 60 * 60 * 1000) {
+            time = String.format(Locale.ROOT, "%d giờ trước", diff / 1000 / 60 / 60);
+        }
+
+        return time;
+    }
 }

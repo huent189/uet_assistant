@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -16,8 +17,8 @@ public class InternalResourceAdapter extends ResourceAdapter {
 
     private List<InternalFile> mFiles;
 
-    public InternalResourceAdapter(List<InternalFile> files, MaterialFragment owner) {
-        super(owner);
+    public InternalResourceAdapter(List<InternalFile> files, Context context) {
+        super(context);
 
         mFiles = files;
     }
@@ -31,12 +32,12 @@ public class InternalResourceAdapter extends ResourceAdapter {
         long sizeInKB = file.getFileSize() / 1024;
         holder.mTvAttachmentSize.setText(String.format(Locale.ROOT, "%dKB", sizeInKB));
 
-        Activity activity = mOwner.getActivity();
+//        Activity activity = mContext.getA();
 
-        if (activity != null) {
+        if (mContext != null) {
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(file.getFileUrl()));
-                activity.startActivity(intent);
+                mContext.startActivity(intent);
             });
         }
     }

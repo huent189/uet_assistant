@@ -1,11 +1,15 @@
 package vnu.uet.mobilecourse.assistant.model.forum;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 
 @Entity()
-public class Discussion {
+public class Discussion implements Parcelable {
     @PrimaryKey
     @SerializedName("discussion")
     private int id;
@@ -28,6 +32,69 @@ public class Discussion {
     private boolean isStarred;
     @SerializedName("numreplies")
     private int numberReplies;
+    @Ignore
+    private String content;
+
+    public Discussion() {
+
+    }
+
+    protected Discussion(Parcel in) {
+        id = in.readInt();
+        forumId = in.readInt();
+        name = in.readString();
+        timeCreated = in.readLong();
+        timeModified = in.readLong();
+        authorName = in.readString();
+        authorId = in.readString();
+        isPinned = in.readByte() != 0;
+        isLocked = in.readByte() != 0;
+        isStarred = in.readByte() != 0;
+        numberReplies = in.readInt();
+        content = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeInt(forumId);
+        dest.writeString(name);
+        dest.writeLong(timeCreated);
+        dest.writeLong(timeModified);
+        dest.writeString(authorName);
+        dest.writeString(authorId);
+        dest.writeByte((byte) (isPinned ? 1 : 0));
+        dest.writeByte((byte) (isLocked ? 1 : 0));
+        dest.writeByte((byte) (isStarred ? 1 : 0));
+        dest.writeInt(numberReplies);
+        dest.writeString(content);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Discussion> CREATOR = new Creator<Discussion>() {
+        @Override
+        public Discussion createFromParcel(Parcel in) {
+            return new Discussion(in);
+        }
+
+        @Override
+        public Discussion[] newArray(int size) {
+            return new Discussion[size];
+        }
+    };
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
     public int getId() {
         return id;
     }

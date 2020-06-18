@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.adapter.viewholder;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,7 +18,7 @@ import vnu.uet.mobilecourse.assistant.model.material.CourseConstant;
 public class MaterialViewHolder extends ChildViewHolder {
 
     private TextView mTvTaskTitle;
-    private ImageView mIvTaskStatus;
+    private CheckBox mCbTaskStatus;
     private ImageView mIvMaterialIcon;
     private NavController mNavController;
 
@@ -25,7 +26,7 @@ public class MaterialViewHolder extends ChildViewHolder {
         super(itemView);
 
         mTvTaskTitle = itemView.findViewById(R.id.tvTaskTitle);
-        mIvTaskStatus = itemView.findViewById(R.id.ivTaskStatus);
+        mCbTaskStatus = itemView.findViewById(R.id.cbTaskStatus);
         mIvMaterialIcon = itemView.findViewById(R.id.ivMaterialIcon);
 
         mNavController = navController;
@@ -65,22 +66,24 @@ public class MaterialViewHolder extends ChildViewHolder {
         }
 
         if (material.getCompletion() == 1) {
-            mIvTaskStatus.setImageResource(R.drawable.ic_check_circle_24dp);
+            mCbTaskStatus.setChecked(true);
         } else {
-            mIvTaskStatus.setImageResource(R.drawable.ic_unchecked_circle_24dp);
+            mCbTaskStatus.setChecked(false);
         }
 
         itemView.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("material", material);
+            int actionId;
+
             if (CourseConstant.MaterialType.FORUM.equals(material.getType())) {
-                Toast.makeText(itemView.getContext(), "Chưa hỗ trợ", Toast.LENGTH_SHORT).show();
+                actionId = R.id.action_navigation_explore_course_to_navigation_forum;
             } else {
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("material", material);
-
-                int actionId = R.id.action_navigation_explore_course_to_navigation_material;
-
-                mNavController.navigate(actionId, bundle);
+                actionId = R.id.action_navigation_explore_course_to_navigation_material;
             }
+
+            mNavController.navigate(actionId, bundle);
+
         });
     }
 }

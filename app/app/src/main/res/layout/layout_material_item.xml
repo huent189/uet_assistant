@@ -29,13 +29,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingVertical="@dimen/margin_x2"
+            android:layout_marginEnd="@dimen/margin_x2"
             app:layout_constraintBottom_toBottomOf="@+id/ivMaterialIcon"
-            app:layout_constraintEnd_toStartOf="@+id/ivTaskStatus"
+            app:layout_constraintEnd_toStartOf="@+id/cbTaskStatus"
             app:layout_constraintStart_toEndOf="@+id/ivMaterialIcon"
             app:layout_constraintTop_toTopOf="@+id/ivMaterialIcon" />
 
         <CheckBox
-            android:id="@+id/cbDone"
+            android:id="@+id/cbTaskStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="@color/primary"
@@ -47,22 +48,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/ivTaskStatus"
-            android:contentDescription="@string/material_status_complete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
-            android:paddingEnd="20dp"
-            android:visibility="gone"
-            android:paddingStart="@dimen/margin_x3"
-            android:scaleX="0.75"
-            android:scaleY="0.75"
-            android:src="@drawable/ic_check_circle_24dp"
-            android:tint="@color/primary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+<!--        <ImageView-->
+<!--            android:id="@+id/ivTaskStatus"-->
+<!--            android:contentDescription="@string/material_status_complete"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical|end"-->
+<!--            android:paddingEnd="20dp"-->
+<!--            android:visibility="gone"-->
+<!--            android:paddingStart="@dimen/margin_x3"-->
+<!--            android:scaleX="0.75"-->
+<!--            android:scaleY="0.75"-->
+<!--            android:src="@drawable/ic_check_circle_24dp"-->
+<!--            android:tint="@color/primary"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
