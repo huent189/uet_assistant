@@ -7,16 +7,18 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
+import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
 import vnu.uet.mobilecourse.assistant.model.firebase.IFirebaseModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public abstract class FirebaseColReadOnlyDAO<T extends List<? extends IFirebaseModel>> implements IFirebaseReadOnlyDAO<T> {
     protected static final String TAG = FirebaseColReadOnlyDAO.class.getSimpleName();
 
-    private CollectionReference mColReference;
-    private String mCollectionName;
+    protected CollectionReference mColReference;
+    protected String mCollectionName;
 
     /**
      * DAO usually interact in an collection/sub collection
@@ -63,11 +65,26 @@ public abstract class FirebaseColReadOnlyDAO<T extends List<? extends IFirebaseM
                     // query completed with snapshots
                     else {
                         T list = fromSnapshot(snapshots);
-                        liveData.postSuccess(list);
+
+                        if (list.isEmpty()) {
+                            handleDocumentNotFound(liveData, id);
+                        } else {
+                            liveData.postSuccess(list);
+                        }
                     }
                 });
 
         return liveData;
+    }
+
+    /**
+     * Handle document not found after filter read-all result by id
+     *
+     * @param response live data contains result
+     * @param id of needed document
+     */
+    protected void handleDocumentNotFound(StateLiveData<T> response, String id) {
+        response.postError(new DocumentNotFoundException(id));
     }
 
     protected abstract T fromSnapshot(QuerySnapshot snapshots);

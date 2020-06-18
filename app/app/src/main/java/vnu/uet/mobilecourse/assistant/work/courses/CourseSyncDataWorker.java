@@ -92,9 +92,9 @@ public class CourseSyncDataWorker extends Worker {
                     pushNotification(mContext, notification);
                 }
             }
-            else {
-                pushEmptyNotification(mContext);
-            }
+//            else {
+//                pushEmptyNotification(mContext);
+//            }
         } catch (IOException e) {
             e.printStackTrace();
             return Result.retry();
