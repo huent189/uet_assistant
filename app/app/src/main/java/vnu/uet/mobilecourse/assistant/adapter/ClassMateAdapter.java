@@ -24,6 +24,7 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.StudentViewHolder;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
+import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.Participant_CourseSubCol;
 
 public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> implements Filterable {
@@ -59,9 +60,9 @@ public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> im
             protected void onChatClick(IStudent student) {
                 Bundle bundle = new Bundle();
                 bundle.putString("title", student.getName());
-                bundle.putString("type", "single");
+                bundle.putString("type", GroupChat.DIRECT);
                 bundle.putString("code", student.getCode());
-//                mNavController.navigate(R.id.action_navigation_search_student_to_navigation_chat_room, bundle);
+                mNavController.navigate(R.id.action_navigation_explore_course_to_navigation_chat_room, bundle);
             }
         };
     }

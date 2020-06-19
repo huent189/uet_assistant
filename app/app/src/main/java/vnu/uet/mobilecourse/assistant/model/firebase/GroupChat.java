@@ -60,4 +60,7 @@ public class GroupChat implements IFirebaseModel {
     public void setName(String name) {
         this.name = name;
     }
+
+    public static final String DIRECT = "DIRECT";
+    public static final String GROUP = "GROUP";
 }

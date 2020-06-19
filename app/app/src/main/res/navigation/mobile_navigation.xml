@@ -88,6 +88,9 @@
         <action
             android:id="@+id/action_navigation_explore_course_to_navigation_forum"
             app:destination="@id/navigation_forum" />
+        <action
+            android:id="@+id/action_navigation_explore_course_to_navigation_chat_room"
+            app:destination="@id/navigation_chat_room" />
     </fragment>
 
     <fragment
