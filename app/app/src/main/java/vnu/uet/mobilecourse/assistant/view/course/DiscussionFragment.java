@@ -3,11 +3,14 @@ package vnu.uet.mobilecourse.assistant.view.course;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.adapter.InternalResourceAdapter;
 import vnu.uet.mobilecourse.assistant.model.forum.InterestedDiscussion;
 import vnu.uet.mobilecourse.assistant.model.material.InternalFile;
+import vnu.uet.mobilecourse.assistant.util.DimensionUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.DiscussionViewModel;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
@@ -30,9 +34,11 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 import android.text.SpannableStringBuilder;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,10 +52,6 @@ public class DiscussionFragment extends Fragment {
 
     private DiscussionViewModel mViewModel;
     private FragmentActivity mActivity;
-
-    public static DiscussionFragment newInstance() {
-        return new DiscussionFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -90,14 +92,38 @@ public class DiscussionFragment extends Fragment {
                 }
 
                 setupFollowButton(root, discussion);
-
                 setupRepliesView(root, discussion);
 
             }
         }
 
+        setupContainerView(root);
+
         return root;
     }
+
+    private void setupContainerView(View root) {
+        NestedScrollView scrollView = root.findViewById(R.id.scrollView);
+        View layoutContainer = root.findViewById(R.id.layoutContainer);
+
+        scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // Ensure you call it only once
+                scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                // Get visible height of scroll view
+                Rect rect = new Rect();
+                scrollView.getLocalVisibleRect(rect);
+                int height = rect.height() - DimensionUtils.dpToPx(16, mActivity);
+
+                // Set min height
+                layoutContainer.setMinimumHeight(height);
+            }
+        });
+    }
+
+
 
     private void setupRepliesView(View root, Discussion discussion) {
         TextView tvReplies = root.findViewById(R.id.tvReplies);
@@ -106,34 +132,22 @@ public class DiscussionFragment extends Fragment {
         View layoutEmpty = root.findViewById(R.id.layoutEmpty);
         RepliesView repliesView = root.findViewById(R.id.repliesView);
 
-        View layoutContainer = root.findViewById(R.id.layoutContainer);
+        View layoutRootPost = root.findViewById(R.id.layoutRootPost);
 
         ShimmerFrameLayout sflReplies = root.findViewById(R.id.sflReplies);
         sflReplies.startShimmerAnimation();
 
-//        if (discussion.getNumberReplies() == 0) {
-//            layoutEmpty.setVisibility(View.VISIBLE);
-//            repliesView.setVisibility(View.GONE);
-//            root.setBackgroundResource(R.color.backgroundLight);
-//        } else {
-//            repliesView.setVisibility(View.VISIBLE);
-//            layoutEmpty.setVisibility(View.GONE);
-//        }
-
         TextView tvContent = root.findViewById(R.id.tvContent);
 
         RecyclerView rvAttachments = root.findViewById(R.id.rvAttachments);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(
-                getContext(),
-                LinearLayoutManager.HORIZONTAL,
-                false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
         rvAttachments.setLayoutManager(layoutManager);
 
         mViewModel.getDiscussionDetail(discussion.getId()).observe(getViewLifecycleOwner(), new Observer<Post>() {
             @Override
             public void onChanged(Post post) {
                 if (post != null) {
-                    layoutContainer.setVisibility(View.VISIBLE);
+                    layoutRootPost.setVisibility(View.VISIBLE);
                     sflReplies.setVisibility(View.GONE);
 
                     SpannableStringBuilder rootContent = StringUtils.convertHtml(post.getMessage());
@@ -160,7 +174,7 @@ public class DiscussionFragment extends Fragment {
 
                 } else {
                     repliesView.setVisibility(View.GONE);
-                    layoutContainer.setVisibility(View.GONE);
+                    layoutRootPost.setVisibility(View.GONE);
                     layoutEmpty.setVisibility(View.GONE);
                     sflReplies.setVisibility(View.VISIBLE);
                 }
@@ -222,7 +236,7 @@ public class DiscussionFragment extends Fragment {
     private void updateFollowEffect(Button btnFollow) {
         btnFollow.setText(R.string.title_discussion_unfollow);
 
-        int color = ContextCompat.getColor(getContext(), R.color.primary);
+        int color = ContextCompat.getColor(mActivity, R.color.primary);
         btnFollow.setTextColor(color);
 
         btnFollow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notifications_active_24dp, 0, 0, 0);
@@ -232,7 +246,7 @@ public class DiscussionFragment extends Fragment {
     private void updateUnFollowEffect(Button btnFollow) {
         btnFollow.setText(R.string.title_discussion_follow);
 
-        int color = ContextCompat.getColor(getContext(), R.color.primaryDark);
+        int color = ContextCompat.getColor(mActivity, R.color.primaryDark);
         btnFollow.setTextColor(color);
 
         btnFollow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_alert_24dp, 0, 0, 0);

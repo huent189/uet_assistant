@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:id="@+id/coordinator_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,6 +10,7 @@
     tools:context=".view.course.DiscussionFragment">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/apl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primary"
@@ -29,11 +31,13 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" >
 
     <LinearLayout
+        android:id="@+id/layoutContainer"
         android:descendantFocusability="blocksDescendants"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,7 +46,7 @@
 
         <LinearLayout
             android:background="@color/background"
-            android:id="@+id/layoutContainer"
+            android:id="@+id/layoutRootPost"
             android:orientation="vertical"
             android:visibility="gone"
             android:paddingHorizontal="@dimen/margin_x2"
@@ -197,7 +201,6 @@
             android:id="@+id/layoutEmpty"
             android:layout_marginTop="@dimen/margin"
             android:background="@color/background"
-            android:paddingTop="@dimen/margin_x6"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
