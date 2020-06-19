@@ -1,40 +1,9 @@
 package vnu.uet.mobilecourse.assistant.view.course;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
-import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import vnu.uet.mobilecourse.assistant.adapter.InternalResourceAdapter;
-import vnu.uet.mobilecourse.assistant.model.forum.InterestedDiscussion;
-import vnu.uet.mobilecourse.assistant.model.material.InternalFile;
-import vnu.uet.mobilecourse.assistant.util.DimensionUtils;
-import vnu.uet.mobilecourse.assistant.viewmodel.DiscussionViewModel;
-import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
-import vnu.uet.mobilecourse.assistant.model.forum.Post;
-import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
-import vnu.uet.mobilecourse.assistant.util.StringUtils;
-import vnu.uet.mobilecourse.assistant.view.component.RepliesView;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
-
 import android.text.SpannableStringBuilder;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +16,31 @@ import android.widget.Toast;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.adapter.InternalResourceAdapter;
+import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
+import vnu.uet.mobilecourse.assistant.model.forum.Post;
+import vnu.uet.mobilecourse.assistant.model.material.InternalFile;
+import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.util.DimensionUtils;
+import vnu.uet.mobilecourse.assistant.util.StringUtils;
+import vnu.uet.mobilecourse.assistant.view.component.RepliesView;
+import vnu.uet.mobilecourse.assistant.viewmodel.DiscussionViewModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class DiscussionFragment extends Fragment {
 
@@ -126,26 +120,36 @@ public class DiscussionFragment extends Fragment {
 
 
     private void setupRepliesView(View root, Discussion discussion) {
+        // update replies counter
         TextView tvReplies = root.findViewById(R.id.tvReplies);
         tvReplies.setText(String.valueOf(discussion.getNumberReplies()));
 
+        // initialize empty replies layout
         View layoutEmpty = root.findViewById(R.id.layoutEmpty);
+
+        // initialize replies panel layout
         RepliesView repliesView = root.findViewById(R.id.repliesView);
 
+        // initialize root post layout
         View layoutRootPost = root.findViewById(R.id.layoutRootPost);
 
+        // initialize shimmer loading layout
         ShimmerFrameLayout sflReplies = root.findViewById(R.id.sflReplies);
         sflReplies.startShimmerAnimation();
 
+        // initialize root post content text view
         TextView tvContent = root.findViewById(R.id.tvContent);
 
+        // initialize root post attachments list view
         RecyclerView rvAttachments = root.findViewById(R.id.rvAttachments);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity,
+                LinearLayoutManager.HORIZONTAL, false);
         rvAttachments.setLayoutManager(layoutManager);
 
         mViewModel.getDiscussionDetail(discussion.getId()).observe(getViewLifecycleOwner(), new Observer<Post>() {
             @Override
             public void onChanged(Post post) {
+                // success
                 if (post != null) {
                     layoutRootPost.setVisibility(View.VISIBLE);
                     sflReplies.setVisibility(View.GONE);
@@ -199,33 +203,27 @@ public class DiscussionFragment extends Fragment {
                 if (discussion.isInterest()) {
                     updateUnFollowEffect(btnFollow);
 
-                    mViewModel.unFollow(discussionId).observe(lifecycleOwner, new Observer<StateModel<String>>() {
-                        @Override
-                        public void onChanged(StateModel<String> state) {
-                            // recover in case catch a error
-                            if (state.getStatus() == StateStatus.ERROR) {
-                                Toast.makeText(getContext(),
-                                        "Hủy theo dõi thất bại - " + state.getError().getMessage(),
-                                        Toast.LENGTH_SHORT
-                                ).show();
-                                updateFollowEffect(btnFollow);
-                            }
+                    mViewModel.unFollow(discussionId).observe(lifecycleOwner, state -> {
+                        // recover in case catch a error
+                        if (state.getStatus() == StateStatus.ERROR) {
+                            Toast.makeText(mActivity,
+                                    "Hủy theo dõi thất bại",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                            updateFollowEffect(btnFollow);
                         }
                     });
                 } else {
                     updateFollowEffect(btnFollow);
 
-                    mViewModel.follow(discussionId).observe(lifecycleOwner, new Observer<StateModel<InterestedDiscussion>>() {
-                        @Override
-                        public void onChanged(StateModel<InterestedDiscussion> state) {
-                            // recover in case catch a error
-                            if (state.getStatus() == StateStatus.ERROR) {
-                                Toast.makeText(getContext(),
-                                        "Theo dõi thất bại - " + state.getError().getMessage(),
-                                        Toast.LENGTH_SHORT
-                                ).show();
-                                updateUnFollowEffect(btnFollow);
-                            }
+                    mViewModel.follow(discussionId).observe(lifecycleOwner, state -> {
+                        // recover in case catch a error
+                        if (state.getStatus() == StateStatus.ERROR) {
+                            Toast.makeText(mActivity,
+                                    "Theo dõi thất bại",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                            updateUnFollowEffect(btnFollow);
                         }
                     });
                 }
@@ -239,7 +237,8 @@ public class DiscussionFragment extends Fragment {
         int color = ContextCompat.getColor(mActivity, R.color.primary);
         btnFollow.setTextColor(color);
 
-        btnFollow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notifications_active_24dp, 0, 0, 0);
+        btnFollow.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_notifications_active_24dp, 0, 0, 0);
 
     }
 
@@ -249,7 +248,8 @@ public class DiscussionFragment extends Fragment {
         int color = ContextCompat.getColor(mActivity, R.color.primaryDark);
         btnFollow.setTextColor(color);
 
-        btnFollow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_alert_24dp, 0, 0, 0);
+        btnFollow.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.ic_add_alert_24dp, 0, 0, 0);
     }
 
     private Toolbar initializeToolbar(View root, String title) {

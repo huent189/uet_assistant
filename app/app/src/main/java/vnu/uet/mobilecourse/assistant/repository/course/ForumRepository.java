@@ -67,7 +67,7 @@ public class ForumRepository {
         return new MergeDiscussion(discussions, interests);
     }
 
-    public List<Discussion> updateAllDiccussion() throws IOException {
+    public List<Discussion> updateAllDiscussion() throws IOException {
         int[] forumIds = forumDAO.getAllForumId();
         ArrayList<Discussion> discussions = new ArrayList<>();
         for(int id: forumIds){

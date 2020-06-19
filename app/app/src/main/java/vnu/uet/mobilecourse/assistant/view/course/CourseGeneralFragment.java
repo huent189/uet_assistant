@@ -1,9 +1,12 @@
 package vnu.uet.mobilecourse.assistant.view.course;
 
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,6 +17,7 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,6 +38,9 @@ import static vnu.uet.mobilecourse.assistant.model.material.CourseConstant.Mater
 public class CourseGeneralFragment extends Fragment {
 
     private CourseGeneralViewModel mViewModel;
+    private RecyclerView mRvGeneralMaterials;
+    private NestedScrollView mScrollView;
+    private Bundle mScrollViewState;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -42,6 +49,7 @@ public class CourseGeneralFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(CourseGeneralViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_course_general, container, false);
+        mScrollView = root.findViewById(R.id.scrollView);
 
         Bundle args = getArguments();
         if (args != null) {
@@ -120,8 +128,8 @@ public class CourseGeneralFragment extends Fragment {
     }
 
     private void initializeGeneralMaterialsView(View root, ICourse course) {
-        RecyclerView rvGeneralMaterials = root.findViewById(R.id.rvGeneralMaterials);
-        rvGeneralMaterials.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRvGeneralMaterials = root.findViewById(R.id.rvGeneralMaterials);
+        mRvGeneralMaterials.setLayoutManager(new LinearLayoutManager(getContext()));
 
         TextView tvGeneralMaterials = root.findViewById(R.id.tvGeneralMaterials);
 
@@ -146,7 +154,7 @@ public class CourseGeneralFragment extends Fragment {
                                             new CourseGeneralMaterialAdapter(materials,
                                                     CourseGeneralFragment.this);
 
-                                    rvGeneralMaterials.setAdapter(adapter);
+                                    mRvGeneralMaterials.setAdapter(adapter);
                                 }
                             });
                 } else {
@@ -156,7 +164,7 @@ public class CourseGeneralFragment extends Fragment {
 
         } else {
             tvGeneralMaterials.setVisibility(View.GONE);
-            rvGeneralMaterials.setVisibility(View.GONE);
+            mRvGeneralMaterials.setVisibility(View.GONE);
         }
     }
 
@@ -194,4 +202,58 @@ public class CourseGeneralFragment extends Fragment {
 
         rvSessions.setLayoutManager(layoutManager);
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        saveRecycleViewState();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        restoreRecycleViewState();
+    }
+
+    private void saveRecycleViewState() {
+        RecyclerView.LayoutManager layoutManager = mRvGeneralMaterials.getLayoutManager();
+
+        if (layoutManager != null) {
+            mScrollViewState = new Bundle();
+
+            int scrollY = mScrollView.getScrollY();
+            Log.d(CourseGeneralFragment.class.getSimpleName(), "saveRecycleViewState: " + scrollY);
+            mScrollViewState.putInt(KEY_SCROLL_Y, scrollY);
+
+            Parcelable onSaveInstanceState = layoutManager.onSaveInstanceState();
+            mScrollViewState.putParcelable(KEY_RECYCLER_STATE, onSaveInstanceState);
+        }
+    }
+
+    private void restoreRecycleViewState() {
+        RecyclerView.LayoutManager layoutManager = mRvGeneralMaterials.getLayoutManager();
+
+        if (mScrollViewState != null && layoutManager != null) {
+            mScrollView.setVisibility(View.INVISIBLE);
+
+            Parcelable onSaveInstanceState = mScrollViewState.getParcelable(KEY_RECYCLER_STATE);
+            layoutManager.onRestoreInstanceState(onSaveInstanceState);
+
+            int scrollY = mScrollViewState.getInt(KEY_SCROLL_Y);
+            Log.d(CourseGeneralFragment.class.getSimpleName(), "restoreRecycleViewState: " + scrollY);
+
+            mScrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    mScrollView.smoothScrollTo(0, scrollY);
+                    mScrollView.setVisibility(View.VISIBLE);
+                }
+            });
+        }
+    }
+
+    private static final String KEY_SCROLL_Y = "scrollY";
+    private static final String KEY_RECYCLER_STATE = CourseGeneralMaterialAdapter.class.getName();
 }
