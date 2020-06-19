@@ -8,7 +8,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import vnu.uet.mobilecourse.assistant.alarm.receiver.SessionReceiver;
-import vnu.uet.mobilecourse.assistant.alarm.receiver.TodoReceiver;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.util.ParcelableUtils;
 import vnu.uet.mobilecourse.assistant.util.SessionConverter;
@@ -51,7 +50,7 @@ public class SessionScheduler extends Scheduler<CourseSession> {
         dueDate.setTime(dueTime);
 
         if (dueDate.before(Calendar.getInstance())) {
-            dueDate.add(Calendar.DAY_OF_MONTH, 7);
+            dueDate.add(Calendar.DAY_OF_MONTH, INTERVAL_DAY_STEP);
         }
 
         return dueDate.getTimeInMillis();
@@ -59,6 +58,8 @@ public class SessionScheduler extends Scheduler<CourseSession> {
 
     @Override
     public void schedule(CourseSession session) {
-        scheduleInterval(session, AlarmManager.INTERVAL_DAY * 7);
+        scheduleInterval(session, AlarmManager.INTERVAL_DAY * INTERVAL_DAY_STEP);
     }
+
+    private static final int INTERVAL_DAY_STEP = 7;
 }

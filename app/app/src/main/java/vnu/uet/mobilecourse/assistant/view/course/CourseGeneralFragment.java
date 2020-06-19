@@ -58,8 +58,9 @@ public class CourseGeneralFragment extends Fragment {
 
             String courseCode = course.getCode();
             courseCode = courseCode
-                    .replace(StringConst.COURSE_PREFIX + StringConst.UNDERSCORE_CHAR, StringConst.EMPTY)
-                    .replace(StringConst.UNDERSCORE_CHAR, StringConst.SPACE_CHAR);
+                    .replace(StringConst.COURSE_PREFIX, StringConst.EMPTY)
+                    .replace(StringConst.UNDERSCORE_CHAR, StringConst.SPACE_CHAR)
+                    .trim();
 
             TextView tvCourseTitle = root.findViewById(R.id.tvCourseTitle);
             tvCourseTitle.setText(course.getTitle());

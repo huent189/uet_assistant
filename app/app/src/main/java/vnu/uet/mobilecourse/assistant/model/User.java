@@ -4,11 +4,13 @@ import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
 
 public class User {
+
     private static User user;
     private String token;
     private String userId;
     private String email;
     private boolean enableSyncNoti;
+
     public static User getInstance(){
         if(user == null){
             user = new User();
