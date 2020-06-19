@@ -1,28 +1,29 @@
 package vnu.uet.mobilecourse.assistant.view.chat;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.MessageAdapter;
+import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
+import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.ChatRoomViewModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class ChatRoomFragment extends Fragment {
 
@@ -40,26 +41,48 @@ public class ChatRoomFragment extends Fragment {
         EditText etMessage= root.findViewById(R.id.etMessage);
         etMessage.setMovementMethod(new ScrollingMovementMethod());
 
-        TextView tvChatGroupTitle = root.findViewById(R.id.tvChatGroupTitle);
-
         Bundle args = getArguments();
         if (args != null) {
             String title = args.getString("title");
+            TextView tvChatGroupTitle = root.findViewById(R.id.tvChatGroupTitle);
             tvChatGroupTitle.setText(title);
-        }
 
-        initializeListView(root);
+            RecyclerView rvChat = initializeListView(root);
+
+            String code = args.getString("code");
+            mViewModel.getAllMessages(code).observe(getViewLifecycleOwner(), new Observer<StateModel<List<Message_GroupChatSubCol>>>() {
+                @Override
+                public void onChanged(StateModel<List<Message_GroupChatSubCol>> stateModel) {
+                    Log.d(ChatRoomFragment.class.getSimpleName(), "onChanged: " + stateModel.getStatus());
+
+                    switch (stateModel.getStatus()) {
+                        case SUCCESS:
+                            List<Message_GroupChatSubCol> messages = stateModel.getData();
+                            mMessageAdapter = new MessageAdapter(messages, ChatRoomFragment.this);
+                            rvChat.setAdapter(mMessageAdapter);
+
+                            break;
+
+                        case ERROR:
+                            Exception error = stateModel.getError();
+                            if (error instanceof DocumentNotFoundException) {
+                                Toast.makeText(getContext(), "Chat room not created yet.", Toast.LENGTH_SHORT).show();
+                                Log.d(ChatRoomFragment.class.getSimpleName(), "Chat room not created yet.");
+                            } else {
+                                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                                Log.d(ChatRoomFragment.class.getSimpleName(), "Error: " + error.getMessage());
+                            }
+
+                            break;
+                    }
+                }
+            });
+        }
 
         return root;
     }
 
-    private void initializeListView(View root) {
-//        List<String> messages = new ArrayList<>();
-//        for (int i = 0; i < 20; i++)
-//            messages.add("Tin nhắn số " + i);
-//
-//        mMessageAdapter = new MessageAdapter(messages, this);
-
+    private RecyclerView initializeListView(View root) {
         RecyclerView rvChat = root.findViewById(R.id.rvChat);
         rvChat.setHasFixedSize(true);
 
@@ -69,5 +92,7 @@ public class ChatRoomFragment extends Fragment {
         linearLayoutManager.setStackFromEnd(true);
 
         rvChat.setLayoutManager(linearLayoutManager);
+
+        return rvChat;
     }
 }

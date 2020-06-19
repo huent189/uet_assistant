@@ -198,9 +198,9 @@
             android:layout_marginTop="@dimen/margin"
             android:background="@color/background"
             android:paddingTop="@dimen/margin_x6"
-            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             app:textContent="Không có câu trả lời nào."/>
 
     </LinearLayout>

@@ -136,6 +136,8 @@ public class SearchStudentFragment extends Fragment {
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putString("title", tvName.getText().toString());
+                bundle.putString("code", tvId.getText().toString());
+                bundle.putString("type", "single");
                 mNavController.navigate(R.id.action_navigation_search_student_to_navigation_chat_room, bundle);
             }
         });

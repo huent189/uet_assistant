@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/margin_x2"
+    android:gravity="center_vertical"
+    android:background="@color/background"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civAvatar"
+        android:layout_width="@dimen/img_avatar_size"
+        android:layout_height="@dimen/img_avatar_size"
+        android:src="@drawable/avatar" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnChat"
+        app:layout_constraintStart_toEndOf="@+id/civAvatar"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvChatGroupTitle"
+            style="@style/ListItemTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nguyễn Tùng Lâm" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin">
+
+            <TextView
+                android:id="@+id/tvLastMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="17020845" />
+
+            <TextView
+                style="@style/SecondaryText"
+                android:layout_marginHorizontal="@dimen/small_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dot_delimiter" />
+
+            <TextView
+                android:id="@+id/tvLastMessageTime"
+                style="@style/SecondaryText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="17020845" />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivStatus"
+        android:layout_marginStart="@dimen/margin_x2"
+        android:layout_width="@dimen/new_message_dot"
+        android:layout_height="@dimen/new_message_dot"
+        android:src="@drawable/ic_check_circle_24dp"/>
+
+</LinearLayout>

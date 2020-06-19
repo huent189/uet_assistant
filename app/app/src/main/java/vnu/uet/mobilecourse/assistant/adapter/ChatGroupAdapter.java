@@ -35,7 +35,7 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
     @Override
     public ChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mOwner.getLayoutInflater()
-                .inflate(R.layout.layout_chat_group_item, parent, false);
+                .inflate(R.layout.layout_group_chat_item, parent, false);
 
         Activity activity = mOwner.getActivity();
 
@@ -63,7 +63,7 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
         private TextView mTvChatGroupTitle;
         private TextView mTvLastMessage;
         private TextView mTvLastMessageTime;
-        private ImageView mIvNewMessageDot;
+        private ImageView mIvStatus;
 
         ChatViewHolder(@NonNull View view) {
             super(view);
@@ -72,7 +72,7 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
             mTvChatGroupTitle = view.findViewById(R.id.tvChatGroupTitle);
             mTvLastMessage = view.findViewById(R.id.tvLastMessage);
             mTvLastMessageTime = view.findViewById(R.id.tvLastMessageTime);
-            mIvNewMessageDot = view.findViewById(R.id.ivNewMessageDot);
+            mIvStatus = view.findViewById(R.id.ivStatus);
         }
 
         void bind(GroupChat_UserSubCol chat, NavController navController) {
@@ -83,7 +83,7 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
             String lastMessageTimeInStr = DateTimeUtils.TIME_12H_FORMAT.format(lastMessageTime);
             mTvLastMessageTime.setText(lastMessageTimeInStr);
 
-            mIvNewMessageDot.setVisibility(chat.isSeen() ? View.GONE : View.VISIBLE);
+            mIvStatus.setVisibility(chat.isSeen() ? View.GONE : View.VISIBLE);
 
             itemView.setOnClickListener(v ->
                     navController.navigate(

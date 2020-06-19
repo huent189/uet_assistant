@@ -78,6 +78,7 @@
     <string name="title_discussion_pinned">Được ghim</string>
     <string name="title_discussion_follow">Theo dõi</string>
     <string name="title_discussion_unfollow">Hủy theo dõi</string>
+    <string name="dot_delimiter">•</string>
 
     <string-array name="dayOfWeek">
         <item>C.N</item>

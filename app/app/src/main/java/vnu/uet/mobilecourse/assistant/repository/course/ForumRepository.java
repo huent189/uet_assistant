@@ -17,6 +17,7 @@ import vnu.uet.mobilecourse.assistant.model.forum.Post;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
+import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
@@ -137,7 +138,7 @@ public class ForumRepository {
     }
 
     public IStateLiveData<InterestedDiscussion> follow(int discussionId) {
-        String docId = STUDENT_ID + INTEREST_DISCUSSION_PREFIX + discussionId;
+        String docId = FirebaseStructureId.interestDiscussion(discussionId);
 
         InterestedDiscussion interest = new InterestedDiscussion();
         interest.setId(docId);
@@ -148,13 +149,12 @@ public class ForumRepository {
     }
 
     public IStateLiveData<String> unFollow(int discussionId) {
-        String docId = STUDENT_ID + INTEREST_DISCUSSION_PREFIX + discussionId;
+        String docId = FirebaseStructureId.interestDiscussion(discussionId);
         return interestDAO.delete(docId);
     }
 
     private static final String STUDENT_ID = User.getInstance().getStudentId();
 
-    private static final String INTEREST_DISCUSSION_PREFIX = "_interest_";
 
     static class MergeDiscussion extends StateMediatorLiveData<List<Discussion>> {
 

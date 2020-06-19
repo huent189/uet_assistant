@@ -10,17 +10,20 @@ import com.google.firebase.firestore.WriteBatch;
 
 import java.util.List;
 
+import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChat_UserSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Message_GroupChatSubColDAO;
+import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
@@ -140,5 +143,39 @@ public class ChatRepository implements IChatRepository {
         });
 
         return groupChatStateLiveData;
+    }
+
+    @Deprecated
+    static class ConnectedCheckingLiveData extends StateMediatorLiveData<Boolean> {
+
+        public ConnectedCheckingLiveData(StateLiveData<GroupChat_UserSubCol> readLiveData) {
+            postLoading();
+
+            addSource(readLiveData, new Observer<StateModel<GroupChat_UserSubCol>>() {
+                @Override
+                public void onChanged(StateModel<GroupChat_UserSubCol> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case LOADING:
+                            postLoading();
+                            break;
+
+                        case ERROR:
+                            Exception exception = stateModel.getError();
+
+                            if (exception instanceof DocumentNotFoundException) {
+                                postSuccess(Boolean.FALSE);
+                            } else {
+                                postError(exception);
+                            }
+
+                            break;
+
+                        case SUCCESS:
+                            postSuccess(Boolean.TRUE);
+                            break;
+                    }
+                }
+            });
+        }
     }
 }

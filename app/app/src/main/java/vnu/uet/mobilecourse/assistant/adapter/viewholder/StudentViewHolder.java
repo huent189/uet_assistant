@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.adapter.viewholder;
 
+import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -11,7 +12,7 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
 
-public class StudentViewHolder extends RecyclerView.ViewHolder {
+public abstract class StudentViewHolder extends RecyclerView.ViewHolder {
 
     private CircleImageView mCivAvatar;
     private TextView mTvName;
@@ -48,8 +49,17 @@ public class StudentViewHolder extends RecyclerView.ViewHolder {
             mBtnChat.setBackgroundResource(R.drawable.primary_button_background);
             mBtnChat.setClickable(true);
             mBtnChat.setEnabled(true);
+
+            mBtnChat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onChatClick(student);
+                }
+            });
         }
     }
+
+    protected abstract void onChatClick(IStudent student);
 
     public void setOnClickListener(View.OnClickListener listener) {
         itemView.setOnClickListener(listener);

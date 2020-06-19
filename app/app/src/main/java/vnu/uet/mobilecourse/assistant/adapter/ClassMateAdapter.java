@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.StudentViewHolder;
+import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.Participant_CourseSubCol;
 
@@ -52,7 +53,17 @@ public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> im
             mNavController = Navigation.findNavController(activity, R.id.nav_host_fragment);
         }
 
-        return new StudentViewHolder(view);
+        return new StudentViewHolder(view) {
+
+            @Override
+            protected void onChatClick(IStudent student) {
+                Bundle bundle = new Bundle();
+                bundle.putString("title", student.getName());
+                bundle.putString("type", "single");
+                bundle.putString("code", student.getCode());
+//                mNavController.navigate(R.id.action_navigation_search_student_to_navigation_chat_room, bundle);
+            }
+        };
     }
 
     @Override
