@@ -203,6 +203,7 @@ public class ChatRoomFragment extends Fragment {
         bundle.putString("code", mCode);
 //        bundle.putString("avatar", current.getAvatar());
         bundle.putBoolean("active", true);
+        bundle.putBoolean("fromChat", true);
 
         mNavController.navigate(R.id.action_navigation_chat_room_to_navigation_friend_profile, bundle);
     }

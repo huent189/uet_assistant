@@ -101,6 +101,9 @@
         <action
             android:id="@+id/action_navigation_friend_profile_to_navigation_explore_course"
             app:destination="@id/navigation_explore_course" />
+        <action
+            android:id="@+id/action_navigation_friend_profile_to_navigation_chat_room"
+            app:destination="@id/navigation_chat_room" />
     </fragment>
 
     <fragment
