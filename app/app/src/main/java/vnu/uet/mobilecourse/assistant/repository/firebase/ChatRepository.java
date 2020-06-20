@@ -105,7 +105,7 @@ public class ChatRepository implements IChatRepository {
     }
 
     @Override
-    public IStateLiveData<GroupChat> createGroupChat(GroupChat groupChat) {
+    public StateLiveData<GroupChat> createGroupChat(GroupChat groupChat) {
         // create group chat
         StateLiveData<GroupChat> groupChatStateLiveData = new GroupChatDAO().add(groupChat.getId(), groupChat);
 

@@ -1,61 +1,112 @@
 package vnu.uet.mobilecourse.assistant.view.chat;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.firestore.util.Util;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.MessageAdapter;
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
+import vnu.uet.mobilecourse.assistant.model.User;
+import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
+import vnu.uet.mobilecourse.assistant.model.firebase.MemberRole;
+import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
+import vnu.uet.mobilecourse.assistant.repository.course.UserRepository;
+import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
+import vnu.uet.mobilecourse.assistant.repository.firebase.StudentRepository;
+import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
+import vnu.uet.mobilecourse.assistant.util.StringConst;
+import vnu.uet.mobilecourse.assistant.viewmodel.CalendarSharedViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.ChatRoomViewModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class ChatRoomFragment extends Fragment {
 
     private MessageAdapter mMessageAdapter;
-
+    private FragmentActivity mActivity;
     private ChatRoomViewModel mViewModel;
+    private NavController mNavController;
+
+    private String mCode, mTitle, mType, mRoomId;
+
+    private TextView mEtMessage;
+
+    private boolean initializeRoom = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         mViewModel = new ViewModelProvider(this).get(ChatRoomViewModel.class);
+        mViewModel.setLifecycleOwner(getViewLifecycleOwner());
 
         View root = inflater.inflate(R.layout.fragment_chat_room, container, false);
 
-        EditText etMessage= root.findViewById(R.id.etMessage);
-        etMessage.setMovementMethod(new ScrollingMovementMethod());
+        mActivity = getActivity();
+
+        if (mActivity != null) {
+            mNavController = Navigation.findNavController(mActivity, R.id.nav_host_fragment);
+        }
+
+        mEtMessage= root.findViewById(R.id.etMessage);
+        mEtMessage.setMovementMethod(new ScrollingMovementMethod());
 
         Bundle args = getArguments();
         if (args != null) {
-            String title = args.getString("title");
+            mTitle = args.getString("title");
+            mViewModel.setTitle(mTitle);
             TextView tvChatGroupTitle = root.findViewById(R.id.tvRoomTitle);
-            tvChatGroupTitle.setText(title);
+            tvChatGroupTitle.setText(mTitle);
 
             RecyclerView rvChat = initializeListView(root);
 
-            String code = args.getString("code");
-            mViewModel.getAllMessages(code).observe(getViewLifecycleOwner(), new Observer<StateModel<List<Message_GroupChatSubCol>>>() {
+            mCode = args.getString("code");
+            mViewModel.setCode(mCode);
+
+            mType = args.getString("type");
+            mViewModel.setType(mType);
+
+            if (mType.equals(GroupChat.DIRECT)) {
+                mRoomId = FirebaseStructureId.directedChat(mCode);
+            }
+
+            mViewModel.getAllMessages(mRoomId).observe(getViewLifecycleOwner(), new Observer<StateModel<List<Message_GroupChatSubCol>>>() {
                 @Override
                 public void onChanged(StateModel<List<Message_GroupChatSubCol>> stateModel) {
                     Log.d(ChatRoomFragment.class.getSimpleName(), "onChanged: " + stateModel.getStatus());
@@ -64,17 +115,15 @@ public class ChatRoomFragment extends Fragment {
                         case SUCCESS:
                             List<Message_GroupChatSubCol> messages = stateModel.getData();
 
-                            for (int i = 0; i < 20; i++) {
-                                Message_GroupChatSubCol message = new Message_GroupChatSubCol();
-                                message.setFromName("safsfs");
-                                message.setContent("Tin nhắn " + i);
-                                message.setTimestamp(System.currentTimeMillis() / 1000);
-                                messages.add(message);
-                                if (i % 3 == 0) message.setFromId("17020845");
+                            if (messages.isEmpty()) {
+//                                if (mType.equals(GroupChat.DIRECT)) {
+//                                    mViewModel.createDirectedChat();
+//                                }
+                                initializeRoom = true;
+                            } else {
+                                mMessageAdapter = new MessageAdapter(messages, ChatRoomFragment.this);
+                                rvChat.setAdapter(mMessageAdapter);
                             }
-
-                            mMessageAdapter = new MessageAdapter(messages, ChatRoomFragment.this);
-                            rvChat.setAdapter(mMessageAdapter);
 
                             break;
 
@@ -94,7 +143,86 @@ public class ChatRoomFragment extends Fragment {
             });
         }
 
+        ImageButton btnSend = root.findViewById(R.id.btnSend);
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessage();
+            }
+        });
+
+        initializeToolbar(root);
+
         return root;
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void sendMessage() {
+        String content = mEtMessage.getText().toString();
+        Log.d("CHAT", "sendMessage: " + content);
+
+        Message_GroupChatSubCol message = new Message_GroupChatSubCol();
+        message.setFromId(User.getInstance().getStudentId());
+        message.setFromName("Nguyễn Tùng Lâm");
+        message.setTimestamp(System.currentTimeMillis() / 1000);
+        message.setContent(content);
+        message.setId(Util.autoId());
+
+        mViewModel.sendMessage(mRoomId, message, initializeRoom).observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
+            @Override
+            public void onChanged(StateModel<String> stateModel) {
+                switch (stateModel.getStatus()) {
+                    case SUCCESS:
+                        mEtMessage.setText(StringConst.EMPTY);
+                        break;
+
+                    case ERROR:
+                        Toast.makeText(mActivity, "Không thể gửi tin nhắn", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
+    }
+
+    private Toolbar initializeToolbar(View root) {
+        Toolbar toolbar = null;
+
+        if (mActivity instanceof AppCompatActivity) {
+            toolbar = root.findViewById(R.id.toolbar);
+            toolbar.setTitle(StringConst.EMPTY);
+            ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
+            setHasOptionsMenu(true);
+        }
+
+        return toolbar;
+    }
+
+    private void navigateFriendProfile() {
+        Bundle bundle = new Bundle();
+        bundle.putString("name", mTitle);
+        bundle.putString("code", mCode);
+//        bundle.putString("avatar", current.getAvatar());
+        bundle.putBoolean("active", true);
+
+        mNavController.navigate(R.id.action_navigation_chat_room_to_navigation_friend_profile, bundle);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.chat_room_toolbar_menu, menu);
+        Log.d(getTag(), "onCreateOptionsMenu: ");
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        if (item.getItemId() == R.id.action_view_info) {
+            navigateFriendProfile();
+            Log.d(getTag(), "onOptionsItemSelected: ");
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private RecyclerView initializeListView(View root) {

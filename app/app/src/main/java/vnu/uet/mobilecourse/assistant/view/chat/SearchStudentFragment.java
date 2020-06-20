@@ -148,7 +148,7 @@ public class SearchStudentFragment extends Fragment {
                 String code = tvId.getText().toString();
                 bundle.putString("code", code);
 
-                bundle.putString("type", GroupChat.GROUP);
+                bundle.putString("type", GroupChat.DIRECT);
 
                 mNavController.navigate(R.id.action_navigation_search_student_to_navigation_chat_room, bundle);
             }

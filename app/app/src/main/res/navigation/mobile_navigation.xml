@@ -145,7 +145,11 @@
         android:id="@+id/navigation_chat_room"
         android:name="vnu.uet.mobilecourse.assistant.view.chat.ChatRoomFragment"
         android:label="fragment_chat_room"
-        tools:layout="@layout/fragment_chat_room" />
+        tools:layout="@layout/fragment_chat_room" >
+        <action
+            android:id="@+id/action_navigation_chat_room_to_navigation_friend_profile"
+            app:destination="@id/navigation_friend_profile" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_search_student"

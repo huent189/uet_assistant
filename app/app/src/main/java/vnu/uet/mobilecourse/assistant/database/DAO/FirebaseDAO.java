@@ -139,11 +139,11 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
                 .set(document)
                 .addOnSuccessListener(aVoid -> {
                     response.postSuccess(document);
-                    Log.d(TAG, "Add a new todo list: " + id);
+                    Log.d(TAG, "Add a new document: " + id);
                 })
                 .addOnFailureListener(e -> {
                     response.postError(e);
-                    Log.e(TAG, "Failed to add todo list: " + id);
+                    Log.e(TAG, "Failed to add document: " + id);
                 });
 
         return response;

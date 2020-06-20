@@ -86,6 +86,7 @@
                     android:inputType="textMultiLine" />
 
                 <ImageButton
+                    android:id="@+id/btnSend"
                     style="@style/CircleButton"
                     android:layout_gravity="bottom"
                     android:src="@drawable/ic_send_24dp"

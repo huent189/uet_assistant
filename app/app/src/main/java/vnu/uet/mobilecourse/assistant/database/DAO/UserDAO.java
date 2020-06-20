@@ -36,11 +36,11 @@ public class UserDAO extends FirebaseDocReadOnlyDAO<User> {
                 .set(user)
                 .addOnSuccessListener(aVoid -> {
                     response.postSuccess(user);
-                    Log.d(TAG, "Add a new todo list: " + user.getId());
+                    Log.d(TAG, "Add a new user: " + user.getId());
                 })
                 .addOnFailureListener(e -> {
                     response.postError(e);
-                    Log.e(TAG, "Failed to add todo list: " + user.getId());
+                    Log.e(TAG, "Failed to add user: " + user.getId());
                 });
 
         return response;
