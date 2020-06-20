@@ -9,7 +9,7 @@ public class GroupChat implements IFirebaseModel {
 
     private String id;
     private long createdTime;
-    private String avatar;
+//    private String avatar;
     private String name;
 
     @Exclude
@@ -45,13 +45,13 @@ public class GroupChat implements IFirebaseModel {
         this.createdTime = createdTime;
     }
 
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
+//    public String getAvatar() {
+//        return avatar;
+//    }
+//
+//    public void setAvatar(String avatar) {
+//        this.avatar = avatar;
+//    }
 
     public String getName() {
         return name;

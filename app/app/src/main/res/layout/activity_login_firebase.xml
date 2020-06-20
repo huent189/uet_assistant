@@ -29,8 +29,6 @@
             android:layout_height="wrap_content" />
     </LinearLayout>
 
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutVerifySuccess"
         android:layout_width="match_parent"
@@ -125,6 +123,5 @@
             tools:ignore="OnClick" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </FrameLayout>

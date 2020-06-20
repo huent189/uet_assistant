@@ -1,6 +1,8 @@
 package vnu.uet.mobilecourse.assistant.view.chat;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -44,7 +49,7 @@ public class ChatRoomFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             String title = args.getString("title");
-            TextView tvChatGroupTitle = root.findViewById(R.id.tvChatGroupTitle);
+            TextView tvChatGroupTitle = root.findViewById(R.id.tvRoomTitle);
             tvChatGroupTitle.setText(title);
 
             RecyclerView rvChat = initializeListView(root);
@@ -58,6 +63,16 @@ public class ChatRoomFragment extends Fragment {
                     switch (stateModel.getStatus()) {
                         case SUCCESS:
                             List<Message_GroupChatSubCol> messages = stateModel.getData();
+
+                            for (int i = 0; i < 20; i++) {
+                                Message_GroupChatSubCol message = new Message_GroupChatSubCol();
+                                message.setFromName("safsfs");
+                                message.setContent("Tin nhắn " + i);
+                                message.setTimestamp(System.currentTimeMillis() / 1000);
+                                messages.add(message);
+                                if (i % 3 == 0) message.setFromId("17020845");
+                            }
+
                             mMessageAdapter = new MessageAdapter(messages, ChatRoomFragment.this);
                             rvChat.setAdapter(mMessageAdapter);
 

@@ -25,9 +25,13 @@ public class FirebaseStructureId {
 
         do {
             id = Util.autoId();
-        } while (id.contains(BEGIN_PREFIX) || id.contains(DIRECT_CHAT_PREFIX));
+        } while (isDirectedChat(id));
 
         return id;
+    }
+
+    public static boolean isDirectedChat(String id) {
+        return (id.contains(BEGIN_PREFIX) || id.contains(DIRECT_CHAT_PREFIX));
     }
 
     private static final String INTEREST_DISCUSSION_PREFIX = "_interest_";

@@ -127,7 +127,8 @@
                     android:id="@+id/ivStarred"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_star_border_24dp"/>
+                    android:src="@drawable/ic_star_border_24dp"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/tvReplies"
