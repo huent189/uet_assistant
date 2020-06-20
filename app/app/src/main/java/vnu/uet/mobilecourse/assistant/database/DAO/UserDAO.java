@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Map;
@@ -56,6 +57,26 @@ public class UserDAO extends FirebaseDocReadOnlyDAO<User> {
         // state of the response won't change (still loading)
         mColReference.document(id)
                 .update(changes)
+                .addOnSuccessListener(aVoid -> {
+                    // response post success with id of updated document
+                    response.postSuccess(id);
+                    Log.d(TAG, "Change document: " + id);
+                })
+                .addOnFailureListener(e -> {
+                    response.postError(e);
+                    Log.e(TAG, "Failed to change document: " + id);
+                });
+
+        return response;
+    }
+
+    public StateLiveData<String> increaseNotifications(String id) {
+        // initialize output state live data with loading state
+        StateModel<String> loadingState = new StateModel<>(StateStatus.LOADING);
+        StateLiveData<String> response = new StateLiveData<>(loadingState);
+
+        mColReference.document(id)
+                .update("newNotifications", FieldValue.increment(1))
                 .addOnSuccessListener(aVoid -> {
                     // response post success with id of updated document
                     response.postSuccess(id);

@@ -60,6 +60,8 @@
     <string name="title_loading">Đang tải…</string>
 
     <string name="title_error">Lỗi</string>
+    <string name="title_error_no_connectivity">Không thể kết nối mạng</string>
+    <string name="title_error_unavailable_host">Không thể kết nối website môn học</string>
 
     <string name="title_setting">Cài đặt</string>
     <string name="title_logout">Đăng xuất</string>

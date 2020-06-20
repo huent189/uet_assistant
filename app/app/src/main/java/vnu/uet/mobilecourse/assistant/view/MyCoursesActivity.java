@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.view;
 
-import android.app.Notification;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,6 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.util.Util;
 
 import java.util.List;
 
@@ -27,6 +27,8 @@ import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.repository.firebase.NavigationBadgeRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
+import vnu.uet.mobilecourse.assistant.util.NetworkChangeReceiver;
+import vnu.uet.mobilecourse.assistant.util.NetworkUtils;
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
 import vnu.uet.mobilecourse.assistant.view.notification.NotificationsFragment;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
@@ -42,6 +44,7 @@ public class MyCoursesActivity extends AppCompatActivity {
 
     private NavigationBadgeRepository mNavigationBadgeRepo = NavigationBadgeRepository.getInstance();
 
+    private NetworkChangeReceiver mNetworkListener = new NetworkChangeReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,12 +87,41 @@ public class MyCoursesActivity extends AppCompatActivity {
             updateNotificationBadge(counter);
         });
 
+        // schedule job
         setupCourseReminders();
         setupTodoReminders();
         CourseDataSynchronization.start();
 
+        // check if open activity by notification
         checkIfOpenByNotification();
+
+        // setup error text view
+        setupErrorTextView();
     }
+
+    private void setupErrorTextView() {
+        TextView tvError = findViewById(R.id.tvError);
+
+        boolean courseAvailable = getIntent()
+                .getBooleanExtra("courseAvailable", true);
+
+        if (!courseAvailable) {
+            tvError.setVisibility(View.VISIBLE);
+            tvError.setText(R.string.title_error_unavailable_host);
+        }
+
+        mNetworkListener.observe(MyCoursesActivity.this, status -> {
+            if (courseAvailable) {
+                if (status == NetworkUtils.STATUS_NOT_CONNECTED) {
+                    tvError.setVisibility(View.VISIBLE);
+                    tvError.setText(R.string.title_error_no_connectivity);
+                } else {
+                    tvError.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
 
     private void checkIfOpenByNotification() {
         if (NotificationHelper.ACTION_OPEN.equals(getIntent().getAction())) {
@@ -138,8 +170,6 @@ public class MyCoursesActivity extends AppCompatActivity {
                         sessions.forEach(session ->
                                 SessionScheduler
                                         .getInstance(MyCoursesActivity.this).schedule(session));
-//                                CourseHandler.getInstance()
-//                                        .schedule(getApplicationContext(), session));
                     });
 
                     break;
@@ -161,7 +191,6 @@ public class MyCoursesActivity extends AppCompatActivity {
 
                         if (deadline > System.currentTimeMillis()) {
                             TodoScheduler.getInstance(MyCoursesActivity.this).schedule(todo);
-//                            TodoHandler.getInstance().schedule(getApplicationContext(), todo);
                         }
                     });
 
@@ -199,5 +228,20 @@ public class MyCoursesActivity extends AppCompatActivity {
         } else {
             mNavController.navigateUp();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mNetworkListener, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        unregisterReceiver(mNetworkListener);
     }
 }
