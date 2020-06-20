@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import androidx.lifecycle.Observer;
@@ -86,9 +87,10 @@ public class TodoRepository implements ITodoRepository {
 
     @Override
     public IStateLiveData<String> deleteTodoList(String id, List<Todo> todos) {
-        todos.forEach(todo -> deleteTodo(todo.getId()));
+//        todos.forEach(todo -> deleteTodo(todo.getId()));
+        String[] todoIds = todos.stream().map(Todo::getId).toArray(String[]::new);
 
-        return mListDao.delete(id);
+        return mListDao.deleteDeep(id, todoIds);
     }
 
     @Override

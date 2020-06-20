@@ -2,12 +2,17 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import androidx.annotation.NonNull;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
@@ -15,8 +20,11 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class TodoListDAO extends FirebaseDAO<TodoList> {
 
+    private CollectionReference mTodoColReference;
+
     public TodoListDAO() {
         super(FirebaseFirestore.getInstance().collection(FirebaseCollectionName.TODO_LIST));
+        mTodoColReference = FirebaseFirestore.getInstance().collection(FirebaseCollectionName.TODO);
     }
 
     @Override
@@ -56,5 +64,39 @@ public class TodoListDAO extends FirebaseDAO<TodoList> {
         }
 
         return mDataList;
+    }
+
+    @Deprecated
+    @Override
+    public StateLiveData<String> delete(String id) {
+        return super.delete(id);
+    }
+
+    public StateLiveData<String> deleteDeep(String id, String[] todoIds) {
+        // initialize output state live data with loading state
+        StateModel<String> loadingState = new StateModel<>(StateStatus.LOADING);
+        StateLiveData<String> response = new StateLiveData<>(loadingState);
+
+        // initialize write batch
+        WriteBatch writeBatch = FirebaseFirestore.getInstance().batch();
+
+        writeBatch.delete(mColReference.document(id));
+
+        for (String todoId : todoIds) {
+            writeBatch.delete(mTodoColReference.document(todoId));
+        }
+
+        // commit
+        writeBatch.commit()
+                .addOnSuccessListener(aVoid -> {
+                    response.postSuccess(id);
+                    Log.d(TAG, "Delete todo list with its todo: " + id);
+                })
+                .addOnFailureListener(e -> {
+                    response.postError(e);
+                    Log.e(TAG, "Failed to delete todo list: " + id);
+                });
+
+        return response;
     }
 }
