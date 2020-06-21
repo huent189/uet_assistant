@@ -11,7 +11,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +26,7 @@ import java.util.List;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.AllCoursesAdapter;
 import vnu.uet.mobilecourse.assistant.model.ICourse;
+import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.FriendProfileViewModel;
@@ -30,12 +34,20 @@ import vnu.uet.mobilecourse.assistant.viewmodel.FriendProfileViewModel;
 public class FriendProfileFragment extends Fragment {
 
     private FriendProfileViewModel mViewModel;
+    private NavController mNavController;
+    private FragmentActivity mActivity;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
         mViewModel = new ViewModelProvider(this).get(FriendProfileViewModel.class);
+
+        mActivity = getActivity();
+
+        if (mActivity != null) {
+            mNavController = Navigation.findNavController(mActivity, R.id.nav_host_fragment);
+        }
 
         View root = inflater.inflate(R.layout.fragment_friend_profile, container, false);
 
@@ -54,7 +66,16 @@ public class FriendProfileFragment extends Fragment {
 
             Button btnChat = root.findViewById(R.id.btnChat);
             boolean active = args.getBoolean("active");
-            if (!active) btnChat.setVisibility(View.GONE);
+            if (!active) {
+                btnChat.setVisibility(View.GONE);
+
+                btnChat.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onChatClick(args);
+                    }
+                });
+            }
 
             LinearLayout layoutDob = root.findViewById(R.id.layoutDob);
             LinearLayout layoutClass = root.findViewById(R.id.layoutClass);
@@ -130,6 +151,18 @@ public class FriendProfileFragment extends Fragment {
         }
 
         return root;
+    }
+
+    private void onChatClick(Bundle prevArgs) {
+        if (prevArgs.getBoolean("fromChat", false)) {
+            mNavController.navigateUp();
+        } else {
+            Bundle bundle = new Bundle(prevArgs);
+            bundle.remove("active");
+            bundle.remove("fromChat");
+            bundle.putString("type", GroupChat.DIRECT);
+            mNavController.navigate(R.id.action_navigation_friend_profile_to_navigation_chat_room, bundle);
+        }
     }
 
     private RecyclerView initializeCommonCoursesView(View root) {

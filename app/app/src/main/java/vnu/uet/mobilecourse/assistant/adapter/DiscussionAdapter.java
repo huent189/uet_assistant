@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Date;
 import java.util.List;
@@ -20,21 +21,28 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
+import vnu.uet.mobilecourse.assistant.model.forum.InterestedDiscussion;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.view.course.ForumFragment;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.DiscussionHolder> {
 
     private List<Discussion> mDiscussions;
-    private Fragment mOwner;
+    private ForumFragment mOwner;
     private String mForumTitle;
 
-    public DiscussionAdapter(List<Discussion> discussions, String forumTitle, Fragment owner) {
+    public DiscussionAdapter(List<Discussion> discussions, String forumTitle, ForumFragment owner) {
         this.mDiscussions = discussions;
         this.mOwner = owner;
         this.mForumTitle = forumTitle;
@@ -46,7 +54,20 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Di
         View view = mOwner.getLayoutInflater()
                 .inflate(R.layout.layout_discussion_item, parent, false);
 
-        return new DiscussionHolder(view);
+        return new DiscussionHolder(view) {
+
+            @Override
+            protected IStateLiveData<InterestedDiscussion> onFollow(int discussionId) {
+                mOwner.saveRecycleViewState();
+                return mOwner.getViewModel().follow(discussionId);
+            }
+
+            @Override
+            protected IStateLiveData<String> onUnFollow(int discussionId) {
+                mOwner.saveRecycleViewState();
+                return mOwner.getViewModel().unFollow(discussionId);
+            }
+        };
     }
 
     @Override
@@ -60,12 +81,13 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Di
         return mDiscussions.size();
     }
 
-    static class DiscussionHolder extends RecyclerView.ViewHolder {
+    static abstract class DiscussionHolder extends RecyclerView.ViewHolder {
 
         private View mLayoutContainer;
         private TextView mTvPinned;
         private CircleImageView mCivAvatar;
         private TextView mTvAuthorName;
+
         private TextView mTvCreatedTime;
         private TextView mTvTitle;
         private ImageView mIvStarred;
@@ -118,27 +140,55 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Di
             mTvReplies.setText(String.valueOf(discussion.getNumberReplies()));
 
             if (discussion.isStarred()) {
-                mIvStarred.setImageResource(R.drawable.ic_star_border_24dp);
+                mIvStarred.setImageResource(R.drawable.ic_star_24dp);
             } else {
                 mIvStarred.setImageResource(R.drawable.ic_star_border_24dp);
+            }
+
+            if (discussion.isInterest()) {
+                updateFollowEffect();
+            } else {
+                updateUnFollowEffect();
             }
 
             mBtnFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String currentText = mBtnFollow.getText().toString();
+                    int discussionId = discussion.getId();
+                    LifecycleOwner lifecycleOwner = mOwner.getViewLifecycleOwner();
 
-                    if (currentText.equals("Theo dõi")) {
-                        mBtnFollow.setText(R.string.title_discussion_unfollow);
+                    if (discussion.isInterest()) {
+                        updateUnFollowEffect();
 
-                        int color = ContextCompat.getColor(itemView.getContext(), R.color.primary);
-                        changeButtonColor(color);
-
+                        onUnFollow(discussionId).observe(lifecycleOwner, new Observer<StateModel<String>>() {
+                            @Override
+                            public void onChanged(StateModel<String> state) {
+                                // recover in case catch a error
+                                if (state.getStatus() == StateStatus.ERROR) {
+                                    Toast.makeText(mOwner.getContext(),
+                                            "Hủy theo dõi thất bại - " + state.getError().getMessage(),
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                    updateFollowEffect();
+                                }
+                            }
+                        });
                     } else {
-                        mBtnFollow.setText(R.string.title_discussion_follow);
+                        updateFollowEffect();
 
-                        int color = ContextCompat.getColor(itemView.getContext(), R.color.primaryDark);
-                        changeButtonColor(color);
+                        onFollow(discussionId).observe(lifecycleOwner, new Observer<StateModel<InterestedDiscussion>>() {
+                            @Override
+                            public void onChanged(StateModel<InterestedDiscussion> state) {
+                                // recover in case catch a error
+                                if (state.getStatus() == StateStatus.ERROR) {
+                                    Toast.makeText(mOwner.getContext(),
+                                            "Theo dõi thất bại - " + state.getError().getMessage(),
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+                                    updateUnFollowEffect();
+                                }
+                            }
+                        });
                     }
                 }
             });
@@ -155,13 +205,26 @@ public class DiscussionAdapter extends RecyclerView.Adapter<DiscussionAdapter.Di
             });
         }
 
-        private void changeButtonColor(int color) {
+        private void updateFollowEffect() {
+            mBtnFollow.setText(R.string.title_discussion_unfollow);
+
+            int color = ContextCompat.getColor(itemView.getContext(), R.color.primary);
             mBtnFollow.setTextColor(color);
-            for (Drawable drawable : mBtnFollow.getCompoundDrawables()) {
-                if (drawable != null) {
-                    drawable.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
-                }
-            }
+
+            mBtnFollow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_notifications_active_24dp, 0, 0, 0);
+
         }
+
+        private void updateUnFollowEffect() {
+            mBtnFollow.setText(R.string.title_discussion_follow);
+
+            int color = ContextCompat.getColor(itemView.getContext(), R.color.primaryDark);
+            mBtnFollow.setTextColor(color);
+
+            mBtnFollow.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_alert_24dp, 0, 0, 0);
+        }
+
+        protected abstract IStateLiveData<InterestedDiscussion> onFollow(int discussionId);
+        protected abstract IStateLiveData<String> onUnFollow(int discussionId);
     }
 }

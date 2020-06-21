@@ -190,12 +190,6 @@ public class CalendarFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.calendar_toolbar_menu, menu);
-    }
-
     private void addTodo() {
         Date date = mCalendarView.getSelectedDate();
         String currentDate = DateTimeUtils.SHORT_DATE_FORMAT.format(date);
@@ -223,6 +217,12 @@ public class CalendarFragment extends Fragment {
 
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchhelper.attachToRecyclerView(mRvDailyTodoList);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.calendar_toolbar_menu, menu);
     }
 
     @Override

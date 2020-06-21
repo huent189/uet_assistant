@@ -1,7 +1,5 @@
 package vnu.uet.mobilecourse.assistant.repository.firebase;
 
-import androidx.lifecycle.Observer;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +22,7 @@ public class NavigationBadgeRepository {
     private static final String STUDENT_ID = vnu.uet.mobilecourse.assistant.model.User
             .getInstance().getStudentId();
 
-    private int mNewNotificationCounter;
+//    private int mNewNotificationCounter;
 
     public static NavigationBadgeRepository getInstance() {
         if (instance == null) {
@@ -57,22 +55,22 @@ public class NavigationBadgeRepository {
     }
 
     public StateLiveData<String> increaseNewNotifications() {
-        Map<String, Object> changes = new HashMap<>();
-        changes.put("newNotifications", ++mNewNotificationCounter);
+//        Map<String, Object> changes = new HashMap<>();
+//        changes.put("newNotifications", ++mNewNotificationCounter);
 
-        return mUserRepo.modify(changes);
+        return mUserRepo.increaseNotifications();
     }
 
     public StateLiveData<String> seeAllNotifications() {
-        mNewNotificationCounter = 0;
+//        mNewNotificationCounter = 0;
 
         Map<String, Object> changes = new HashMap<>();
-        changes.put("newNotifications", mNewNotificationCounter);
+        changes.put("newNotifications", 0);
 
         return mUserRepo.modify(changes);
     }
 
-    public class NewNotificationCounter extends StateMediatorLiveData<Integer> {
+    static class NewNotificationCounter extends StateMediatorLiveData<Integer> {
 
         public NewNotificationCounter(StateLiveData<User> userLiveData) {
             postLoading();
@@ -91,7 +89,7 @@ public class NavigationBadgeRepository {
                         User user = stateModel.getData();
                         int counter = user.getNewNotifications();
                         postSuccess(counter);
-                        mNewNotificationCounter = counter;
+//                        mNewNotificationCounter = counter;
 
                         break;
                 }

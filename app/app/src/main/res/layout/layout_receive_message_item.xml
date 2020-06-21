@@ -5,7 +5,7 @@
     android:orientation="horizontal"
     android:paddingStart="@dimen/margin_x2"
     android:paddingEnd="88dp"
-    android:background="@color/background"
+    android:paddingVertical="@dimen/small_margin_2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -14,11 +14,12 @@
         android:layout_height="wrap_content">
 
         <TextView
+            style="@style/SecondaryText"
             android:id="@+id/tvTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Lam, 6:50 PM"
-            android:textColor="@color/whiteDisable"
+            android:visibility="gone"
+            android:textSize="@dimen/font_size_small"
             app:layout_constraintBottom_toTopOf="@+id/tvMessage"
             app:layout_constraintStart_toStartOf="@+id/tvMessage"
             app:layout_constraintTop_toTopOf="parent" />

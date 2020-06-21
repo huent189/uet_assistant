@@ -4,7 +4,7 @@
     android:id="@+id/layoutEmpty"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/margin_x6"
+    android:paddingVertical="@dimen/margin_x2"
     android:gravity="center"
     android:orientation="vertical">
 

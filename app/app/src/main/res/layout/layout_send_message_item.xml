@@ -4,17 +4,18 @@
     android:orientation="vertical"
     android:paddingEnd="@dimen/margin_x2"
     android:paddingStart="88dp"
-    android:background="@color/background"
+    android:paddingVertical="@dimen/small_margin_2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
+        style="@style/SecondaryText"
         android:id="@+id/tvTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="6:50 PM"
+        android:visibility="gone"
         android:layout_gravity="end"
-        android:textColor="@color/whiteDisable"/>
+        android:textSize="@dimen/font_size_small"/>
 
     <TextView
         android:id="@+id/tvMessage"

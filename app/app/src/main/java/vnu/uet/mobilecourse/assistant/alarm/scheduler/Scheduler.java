@@ -4,7 +4,6 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.util.Log;
 
 import static android.app.PendingIntent.FLAG_CANCEL_CURRENT;
@@ -17,7 +16,7 @@ public abstract class Scheduler<T> {
 
     private AlarmManager mAlarmManager;
 
-    public Scheduler(Context context) {
+    protected Scheduler(Context context) {
         mContext = context.getApplicationContext();
         mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
     }

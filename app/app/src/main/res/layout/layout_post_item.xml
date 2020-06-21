@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:paddingTop="@dimen/small_margin"
     android:paddingStart="@dimen/margin_x2"
+    android:layout_marginStart="@dimen/margin_x2"
     android:paddingEnd="0dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -20,6 +21,7 @@
             android:id="@+id/tvAuthorName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_x2"
             android:text="@string/title_loading"/>
 
         <TextView
@@ -27,6 +29,7 @@
             android:id="@+id/tvCreatedTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_x2"
             android:layout_marginTop="@dimen/small_margin_2"
             android:text="@string/title_loading"/>
 
@@ -34,6 +37,7 @@
             android:id="@+id/tvMessage"
             android:layout_marginTop="@dimen/margin_x2"
             android:layout_marginBottom="@dimen/margin_x2"
+            android:layout_marginEnd="@dimen/margin_x2"
             android:textSize="@dimen/font_size_item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
@@ -52,6 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="20dp"
             android:layout_marginBottom="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin_x2"
             android:orientation="horizontal">
 
             <ImageView

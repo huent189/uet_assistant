@@ -12,6 +12,7 @@ public interface FirebaseCollectionName {
     String MEMBER = "member";
     String MESSAGE = "message";
     String USER_INFO = "userInfo";
+    String INTERESTED_DISCUSSION = "interestedDiscussion";
 
     @Deprecated
     String ENROLLMENT = "enrollment";

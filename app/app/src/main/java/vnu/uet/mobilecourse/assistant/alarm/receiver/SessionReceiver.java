@@ -20,8 +20,13 @@ public class SessionReceiver extends SchedulerReceiver<CourseSession> {
     @Override
     protected Notification_UserSubCol generateNotification(CourseSession session) {
         String title = "Đi học " + session.getCourseName();
-        String desc = String.format(Locale.ROOT, "Buổi học diễn ra từ tiết %d - %d tại %s",
-                session.getStart(), session.getEnd(), session.getClassroom());
+        String desc = String.format(
+                Locale.ROOT,
+                "Buổi học diễn ra từ tiết %d - %d tại %s",
+                session.getStart(),
+                session.getEnd(),
+                session.getClassroom()
+        );
         String courseCode = session.getCourseCode();
 
         CourseAttendantNotification notificationDoc = new CourseAttendantNotification();

@@ -8,12 +8,20 @@ import com.google.gson.JsonElement;
 import retrofit2.Call;
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
 import vnu.uet.mobilecourse.assistant.database.DAO.ForumDAO;
+import vnu.uet.mobilecourse.assistant.database.DAO.InterestedDiscussionDAO;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
+import vnu.uet.mobilecourse.assistant.model.forum.DiscussionComparator;
+import vnu.uet.mobilecourse.assistant.model.forum.InterestedDiscussion;
 import vnu.uet.mobilecourse.assistant.model.forum.Post;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
+import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,14 +31,27 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ForumRepository {
+
     private CourseRequest sender;
     private ForumDAO forumDAO;
+    private InterestedDiscussionDAO interestDAO;
+    private static ForumRepository instance;
 
     public ForumRepository() {
         sender = HTTPClient.getInstance().request(CourseRequest.class);
         forumDAO = CoursesDatabase.getDatabase().forumDAO();
+        interestDAO = new InterestedDiscussionDAO();
     }
-    public LiveData<List<Discussion>> getDiscussionsByForum(int forumInstanceId){
+
+    public static ForumRepository getInstance() {
+        if (instance == null) {
+            instance = new ForumRepository();
+        }
+
+        return instance;
+    }
+
+    public IStateLiveData<List<Discussion>> getDiscussionsByForum(int forumInstanceId) {
         new Thread(() -> {
             try {
                 updateDiscussionByForum(forumInstanceId);
@@ -38,10 +59,15 @@ public class ForumRepository {
                 e.printStackTrace();
             }
         }).start();
-        return forumDAO.getDiscussionByForum(forumInstanceId);
+
+
+        LiveData<List<Discussion>> discussions = forumDAO.getDiscussionByForum(forumInstanceId);
+        StateLiveData<List<InterestedDiscussion>> interests = interestDAO.readAll();
+
+        return new MergeDiscussion(discussions, interests);
     }
 
-    public List<Discussion> updateDiccussions() throws IOException {
+    public List<Discussion> updateAllDiscussion() throws IOException {
         int[] forumIds = forumDAO.getAllForumId();
         ArrayList<Discussion> discussions = new ArrayList<>();
         for(int id: forumIds){
@@ -107,26 +133,119 @@ public class ForumRepository {
         return hierarchicalPost;
     }
 
-    public static class MergeDiscussion extends StateMediatorLiveData<List<Discussion>> {
+    public IStateLiveData<List<InterestedDiscussion>> getFollowingDiscussions() {
+        return interestDAO.readAll();
+    }
 
-        public MergeDiscussion(LiveData<List<Discussion>> liveData) {
+    public IStateLiveData<InterestedDiscussion> follow(int discussionId) {
+        String docId = FirebaseStructureId.interestDiscussion(discussionId);
+
+        InterestedDiscussion interest = new InterestedDiscussion();
+        interest.setId(docId);
+        interest.setDiscussionId(discussionId);
+        interest.setTime(System.currentTimeMillis() / 1000);
+
+        return interestDAO.add(docId, interest);
+    }
+
+    public IStateLiveData<String> unFollow(int discussionId) {
+        String docId = FirebaseStructureId.interestDiscussion(discussionId);
+        return interestDAO.delete(docId);
+    }
+
+    private static final String STUDENT_ID = User.getInstance().getStudentId();
+
+
+    static class MergeDiscussion extends StateMediatorLiveData<List<Discussion>> {
+
+        private List<Discussion> mDiscussions;
+        private List<InterestedDiscussion> mInterests;
+        private boolean courseSuccess;
+        private boolean firebaseSuccess;
+
+        MergeDiscussion(LiveData<List<Discussion>> discussions, StateLiveData<List<InterestedDiscussion>> interests) {
             postLoading();
 
-            addSource(liveData, new Observer<List<Discussion>>() {
+            addSource(discussions, new Observer<List<Discussion>>() {
                 @Override
                 public void onChanged(List<Discussion> discussions) {
                     if (discussions == null) {
                         postLoading();
+                        courseSuccess = false;
+                    } else {
+                        courseSuccess = true;
+                        setDiscussions(discussions);
+
+                        if (courseSuccess && firebaseSuccess) {
+                            List<Discussion> combineData = combineData();
+                            postSuccess(combineData);
+                        }
                     }
-                    else {
-                        discussions.forEach(discussion -> {
-//                            d
-                        });
+                }
+            });
+
+            addSource(interests, new Observer<StateModel<List<InterestedDiscussion>>>() {
+                @Override
+                public void onChanged(StateModel<List<InterestedDiscussion>> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case LOADING:
+                            postLoading();
+                            firebaseSuccess = false;
+                            break;
+
+                        case ERROR:
+                            postError(stateModel.getError());
+                            firebaseSuccess = false;
+                            break;
+
+                        case SUCCESS:
+                            firebaseSuccess = true;
+                            setInterests(stateModel.getData());
+
+                            if (courseSuccess && firebaseSuccess) {
+                                List<Discussion> combineData = combineData();
+                                postSuccess(combineData);
+                            }
+
+                            break;
                     }
                 }
             });
         }
 
+
+        private void setInterests(List<InterestedDiscussion> interests) {
+            this.mInterests = interests;
+        }
+
+        private void setDiscussions(List<Discussion> mDiscussions) {
+            this.mDiscussions = mDiscussions;
+        }
+
+        private List<Discussion> combineData() {
+            List<Discussion> discussions = new ArrayList<>(mDiscussions);
+            List<InterestedDiscussion> interests = new ArrayList<>(mInterests);
+
+            interests.forEach(i -> Log.d("INTEREST", "interest: " + i.getDiscussionId()));
+
+            discussions.forEach(discussion -> {
+                boolean found = false;
+
+                for (InterestedDiscussion interest : interests) {
+                    if (interest.getDiscussionId() == discussion.getId()) {
+                        found = true;
+                        interests.remove(interest);
+                        break;
+                    }
+                }
+
+                discussion.setInterest(found);
+            });
+
+            discussions.sort(new DiscussionComparator());
+
+            return discussions;
+        }
     }
 }
 

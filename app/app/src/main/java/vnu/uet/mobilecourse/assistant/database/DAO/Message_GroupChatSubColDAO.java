@@ -38,6 +38,7 @@ public class Message_GroupChatSubColDAO extends FirebaseDAO<Message_GroupChatSub
     @Override
     public StateLiveData<List<Message_GroupChatSubCol>> readAll() {
         StateLiveData<List<Message_GroupChatSubCol>> messagesState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
+
         mColReference.limit(100).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
@@ -53,8 +54,6 @@ public class Message_GroupChatSubColDAO extends FirebaseDAO<Message_GroupChatSub
                 }
             }
         });
-
-
 
 
         return messagesState;

@@ -43,7 +43,6 @@
 
             </LinearLayout>
 
-
             <androidx.appcompat.widget.Toolbar
                 style="@style/Toolbar"
                 android:id="@+id/toolbar"

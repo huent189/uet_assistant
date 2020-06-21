@@ -9,8 +9,10 @@ public class GroupChat implements IFirebaseModel {
 
     private String id;
     private long createdTime;
-    private String avatar;
     private String name;
+
+    @Exclude
+    private String avatar;
 
     @Exclude
     private List<Member_GroupChatSubCol> members = new ArrayList<>();
@@ -45,6 +47,7 @@ public class GroupChat implements IFirebaseModel {
         this.createdTime = createdTime;
     }
 
+    @Exclude
     public String getAvatar() {
         return avatar;
     }
@@ -60,4 +63,7 @@ public class GroupChat implements IFirebaseModel {
     public void setName(String name) {
         this.name = name;
     }
+
+    public static final String DIRECT = "DIRECT";
+    public static final String GROUP = "GROUP";
 }

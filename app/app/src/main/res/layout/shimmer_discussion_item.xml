@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/background"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+
+    <LinearLayout
+        android:id="@+id/layoutContainer"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/margin_x2"
+        android:background="@drawable/list_item_background"
+        android:paddingBottom="@dimen/margin"
+        android:paddingTop="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvPinned"
+            android:drawableTint="@color/accent"
+            android:layout_marginBottom="@dimen/margin"
+            android:gravity="center_vertical"
+            android:textColor="@color/accent"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_thumbtack"
+            android:drawablePadding="@dimen/margin"
+            android:textSize="@dimen/font_size_caption"
+            android:text="@string/title_discussion_pinned" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvAuthorName"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:background="@color/backgroundLight"/>
+
+            <TextView
+                style="@style/SecondaryText"
+                android:id="@+id/tvCreatedTime"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:background="@color/backgroundLight"/>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_marginTop="@dimen/margin_x2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:background="@color/backgroundLight"
+            android:textSize="@dimen/font_size_item_title" />
+
+        <LinearLayout
+            android:layout_marginTop="@dimen/margin"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/backgroundLight"
+                tools:ignore="ContentDescription" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="@dimen/margin_x2"
+                android:background="@color/backgroundLight"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin"
+                android:gravity="center_vertical"
+                android:background="@color/backgroundLight"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="@dimen/margin_x2"
+                android:background="@color/backgroundLight"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin"
+                android:gravity="center_vertical"
+                android:background="@color/backgroundLight"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
