@@ -3,6 +3,7 @@ package vnu.uet.mobilecourse.assistant.model;
 import android.app.AlarmManager;
 
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
+import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
 
 public class User {
@@ -67,6 +68,7 @@ public class User {
         this.email = email;
         SharedPreferencesManager.setString(REGISTER_EMAIL, email);
     }
+
 
     public boolean getEnableSyncNoti() {
         return enableSyncNoti;

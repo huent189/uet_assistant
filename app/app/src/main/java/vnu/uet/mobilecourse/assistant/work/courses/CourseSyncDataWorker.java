@@ -116,6 +116,7 @@ public class CourseSyncDataWorker extends Worker {
                 Set<String> type = updateMaterialList.stream().map(Material::getType).collect(Collectors.toSet());
                 List<MaterialContent> materials = materialRepository.selectiveUpdate(type);
                 List<Discussion> discussions = updateForum();
+                User.getInstance().setLastSyncTime(System.currentTimeMillis()/1000);
                 if(User.getInstance().getEnableSyncNoti()){
                     if(materials.size() != 0){
                         List<IdNamePair> courseNames = database.coursesDAO().getAllCourseName();

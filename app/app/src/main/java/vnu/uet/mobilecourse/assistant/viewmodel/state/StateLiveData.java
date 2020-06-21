@@ -13,17 +13,17 @@ public class StateLiveData<T> extends LiveData<StateModel<T>> implements IStateL
 
     @Override
     public void postLoading() {
-        setValue(new StateModel<>(StateStatus.LOADING));
+        postValue(new StateModel<>(StateStatus.LOADING));
     }
 
     @Override
     public void postSuccess(@NonNull T data) {
-        setValue(new StateModel<>(StateStatus.SUCCESS, data));
+        postValue(new StateModel<>(StateStatus.SUCCESS, data));
     }
 
     @Override
     public void postError(@NonNull Exception e) {
-        setValue(new StateModel<>(StateStatus.ERROR, e));
+        postValue(new StateModel<>(StateStatus.ERROR, e));
     }
 
 }

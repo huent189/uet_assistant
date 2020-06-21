@@ -3,11 +3,12 @@ package vnu.uet.mobilecourse.assistant.model.forum;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import com.google.gson.annotations.SerializedName;
 
 @Entity()
 public class Discussion implements Parcelable {
@@ -25,8 +26,6 @@ public class Discussion implements Parcelable {
     private String authorName;
     @SerializedName("userid")
     private String authorId;
-    @SerializedName("message")
-    private String message;
     @SerializedName("pinned")
     private boolean isPinned;
     @SerializedName("locked")
@@ -35,7 +34,7 @@ public class Discussion implements Parcelable {
     private boolean isStarred;
     @SerializedName("numreplies")
     private int numberReplies;
-
+    private String message;
     @Ignore
     private boolean interest;
 

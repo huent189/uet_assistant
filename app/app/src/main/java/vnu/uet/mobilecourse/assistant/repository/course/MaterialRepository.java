@@ -6,19 +6,21 @@ import com.google.gson.JsonElement;
 import retrofit2.Call;
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
 import vnu.uet.mobilecourse.assistant.database.DAO.MaterialDAO;
+import vnu.uet.mobilecourse.assistant.database.querymodel.MaterialWithCourse;
+import vnu.uet.mobilecourse.assistant.model.event.CourseSubmissionEvent;
 import vnu.uet.mobilecourse.assistant.model.material.*;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MaterialRepository {
+    private static final int DAY_DURATION = 24 * 60 *60;
 
     private static MaterialRepository instance;
 
@@ -235,18 +237,35 @@ public class MaterialRepository {
         return updateList;
     }
 
-//    public List<LiveData<CourseSubmissionEvent>> getDailyCourseSubmissionEvent(){
-//        long startTime = Timestamp.valueOf(LocalDate.now().atStartOfDay().toString()).getTime();
-//        long endTime = Timestamp.valueOf(LocalDate.now().plusDays(1).atStartOfDay().toString()).getTime();
-//        LiveData<List<AssignmentContent>> assigments = materialDAO.getAssignment(startTime, endTime);
-//        LiveData<List<QuizNoGrade>> quizzes = materialDAO.getQuiz(startTime, endTime);
-//        MediatorLiveData<List<CourseSubmissionEvent>> events = new MediatorLiveData<>();
-//        events.addSource(assigments, new Observer<List<AssignmentContent>>() {
-//            @Override
-//            public void onChanged(List<AssignmentContent> assignmentContents) {
-//                assignmentContents.stream().map(assign -> new ArrayList<AssignmentContent>(
-////                        new AssignmentContent(assign.ge)))
-//            }
-//        });
-//    }
+    public IStateLiveData<List<CourseSubmissionEvent>> getDailyCourseSubmissionEvent(Date date){
+        IStateLiveData<List<CourseSubmissionEvent>> eventsLiveData = new StateLiveData<>();
+        eventsLiveData.postLoading();
+        new Thread(() -> {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DATE);
+            calendar.clear();
+            calendar.set(year, month, day);
+            long startTime = calendar.getTimeInMillis() / 1000;
+            long endTime = calendar.getTimeInMillis() / 1000 + DAY_DURATION;
+            List<MaterialWithCourse> materials = queryCourseSubmission(startTime, endTime);
+            ArrayList<CourseSubmissionEvent> events = new ArrayList<>();
+            materials.forEach(materialWithCourse -> {
+                events.add(materialWithCourse.toStartEvent());
+                events.add(materialWithCourse.toEndEvent());
+            });
+            eventsLiveData.postSuccess(events);
+        }).start();
+        return eventsLiveData;
+    }
+    private List<MaterialWithCourse> queryCourseSubmission(long startTime, long endTime){
+        List<MaterialWithCourse> assignments = materialDAO.getAssignmentInRange(startTime, endTime);
+        List<MaterialWithCourse> quizzes = materialDAO.getQuizInRange(startTime, endTime);
+        ArrayList<MaterialWithCourse> merge = new ArrayList<MaterialWithCourse>();
+        merge.addAll(assignments);
+        merge.addAll(quizzes);
+        return merge;
+    }
 }
