@@ -3,6 +3,7 @@ package vnu.uet.mobilecourse.assistant.model.forum;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -195,6 +196,7 @@ public class Discussion implements Parcelable {
         this.interest = interest;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Discussion{" +
