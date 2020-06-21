@@ -24,6 +24,7 @@ import vnu.uet.mobilecourse.assistant.model.material.InternalResourceContent;
 import vnu.uet.mobilecourse.assistant.model.material.MaterialContent;
 import vnu.uet.mobilecourse.assistant.model.material.QuizNoGrade;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.MaterialViewModel;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.Material;
@@ -180,7 +181,7 @@ public class MaterialFragment extends Fragment {
                                 List<InternalFile> files = internalResource.getFiles();
 
                                 if (files != null) {
-                                    InternalResourceAdapter adapter = new InternalResourceAdapter(files, MaterialFragment.this);
+                                    InternalResourceAdapter adapter = new InternalResourceAdapter(files, mActivity);
                                     rvAttachments.setAdapter(adapter);
 
                                     rvAttachments.setVisibility(View.VISIBLE);
@@ -188,7 +189,7 @@ public class MaterialFragment extends Fragment {
                                 }
 
                             } else if (content instanceof ExternalResourceContent) {
-                                ExternalResourceAdapter adapter = new ExternalResourceAdapter(material, MaterialFragment.this);
+                                ExternalResourceAdapter adapter = new ExternalResourceAdapter(material, mActivity);
                                 rvAttachments.setAdapter(adapter);
 
                                 rvAttachments.setVisibility(View.VISIBLE);
@@ -214,7 +215,7 @@ public class MaterialFragment extends Fragment {
     }
 
     private void setDescriptionView(TextView tvDesc, @NonNull String rawContent) {
-        SpannableStringBuilder strBuilder = mViewModel.convertHtml(rawContent);
+        SpannableStringBuilder strBuilder = StringUtils.convertHtml(rawContent);
 
         if (strBuilder.length() > 0) {
             tvDesc.setText(strBuilder);

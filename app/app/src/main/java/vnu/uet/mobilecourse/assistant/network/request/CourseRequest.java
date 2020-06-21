@@ -12,7 +12,7 @@ public interface CourseRequest {
     Call<JsonElement> getMyCoures(@Field("userid") String userId);
     @FormUrlEncoded
     @POST("webservice/rest/server.php?wsfunction=core_course_get_contents")
-    Call<JsonElement> getCourseContent(@Field("courseid") String courseId);
+    Call<JsonElement> getCourseContent(@Field("courseid") int courseId);
     @FormUrlEncoded
     @POST("webservice/rest/server.php?wsfunction=gradereport_user_get_grade_items")
     Call<JsonElement> getCourseGrade(@Field("courseid") String courseId, @Field("userid") String userId);
@@ -46,4 +46,10 @@ public interface CourseRequest {
     @FormUrlEncoded
     @POST("webservice/rest/server.php?wsfunction=mod_quiz_get_quizzes_by_courses")
     Call<JsonElement> getQuizzesByCourses(@Field("courseids[]") int[] courseIds);
+    @FormUrlEncoded
+    @POST("webservice/rest/server.php?wsfunction=mod_forum_get_discussion_posts&sortdirection=ASC")
+    Call<JsonElement> getDiscussionDetail(@Field("discussionid") int dicussionId);
+    @FormUrlEncoded
+    @POST("webservice/rest/server.php?wsfunction=mod_forum_get_forums_by_courses")
+    Call<JsonElement> getForumByCourses(@Field("courseids[]") int[] courseIds);
 }

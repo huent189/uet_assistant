@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.model.event;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 

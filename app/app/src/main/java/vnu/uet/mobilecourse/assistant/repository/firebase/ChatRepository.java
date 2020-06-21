@@ -11,12 +11,15 @@ import com.google.firebase.firestore.WriteBatch;
 
 import java.util.List;
 
+import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChat_UserSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Member_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Message_GroupChatSubColDAO;
+import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
@@ -69,9 +72,9 @@ public class ChatRepository implements IChatRepository {
 
 
     @Override
-    public IStateLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message) {
+    public StateLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message) {
         DocumentReference messRef = db.collection(FirebaseCollectionName.GROUP_CHAT).document(groupId).collection(FirebaseCollectionName.MESSAGE).document(message.getId());
-        IStateLiveData<String> sendStatus = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
+        StateLiveData<String> sendStatus = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
         messRef.set(message).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -80,8 +83,8 @@ public class ChatRepository implements IChatRepository {
         }).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-
-                db.collection(FirebaseCollectionName.USER).document(SharedPreferencesManager.getStringValue(SharedPreferencesManager.USER_ID)) // user DocRef
+                // update last message to group chat in user col
+                db.collection(FirebaseCollectionName.USER).document(User.getInstance().getStudentId()) // user DocRef
                         .collection(FirebaseCollectionName.GROUP_CHAT) // subCollection
                         .document(groupId) // group DocRef
                         .update("lastMessage", message.getContent(),
@@ -111,6 +114,7 @@ public class ChatRepository implements IChatRepository {
 
         return new CreateGroupChatState(createGroupState, addMember, addGroup);
     }
+
 
     static class CreateGroupChatState extends StateMediatorLiveData<String> {
         private boolean createGroupState = false;
@@ -169,6 +173,40 @@ public class ChatRepository implements IChatRepository {
                 }
                 if (createGroupState && addMemberToGroupState && addGroupToMenberState) {
                     postSuccess("create group success!");
+                }
+            });
+        }
+    }
+
+    @Deprecated
+    static class ConnectedCheckingLiveData extends StateMediatorLiveData<Boolean> {
+
+        public ConnectedCheckingLiveData(StateLiveData<GroupChat_UserSubCol> readLiveData) {
+            postLoading();
+
+            addSource(readLiveData, new Observer<StateModel<GroupChat_UserSubCol>>() {
+                @Override
+                public void onChanged(StateModel<GroupChat_UserSubCol> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case LOADING:
+                            postLoading();
+                            break;
+
+                        case ERROR:
+                            Exception exception = stateModel.getError();
+
+                            if (exception instanceof DocumentNotFoundException) {
+                                postSuccess(Boolean.FALSE);
+                            } else {
+                                postError(exception);
+                            }
+
+                            break;
+
+                        case SUCCESS:
+                            postSuccess(Boolean.TRUE);
+                            break;
+                    }
                 }
             });
         }

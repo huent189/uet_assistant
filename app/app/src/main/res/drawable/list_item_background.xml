@@ -15,7 +15,7 @@
             <layer-list>
                 <item android:start="-3dp" android:end="-3dp" android:top="-3dp">
                     <shape>
-                        <solid android:color="@color/transparent" />
+                        <solid android:color="@color/background" />
                         <stroke android:color="@color/backgroundLight"
                             android:width="1dp"/>
                     </shape>

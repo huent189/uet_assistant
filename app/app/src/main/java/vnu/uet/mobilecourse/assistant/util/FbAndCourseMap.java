@@ -22,7 +22,7 @@ public class FbAndCourseMap {
         }
     }
 
-    private static String cleanCode(String code) {
+    public static String cleanCode(String code) {
         if (code.length() < DELIMITER_POS)
             return code;
 
@@ -39,12 +39,13 @@ public class FbAndCourseMap {
 
 
         // remove space between alphabet and number
+        // Eg: "INT 2206 21" --> "INT2206 21"
         StringBuilder builder = new StringBuilder(cleanCode);
         if (builder.charAt(DELIMITER_POS) == StringConst.SPACE_CHAR) {
             builder.deleteCharAt(DELIMITER_POS);
         }
 
-        return cleanCode;
+        return builder.toString();
     }
 
     public static final int DELIMITER_POS = 3;

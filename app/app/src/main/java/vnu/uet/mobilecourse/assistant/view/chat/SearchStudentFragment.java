@@ -20,9 +20,16 @@ import android.widget.TextView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 
+import java.util.List;
+
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.adapter.ChatGroupAdapter;
+import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
+import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
 import vnu.uet.mobilecourse.assistant.viewmodel.SearchStudentViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
@@ -106,6 +113,11 @@ public class SearchStudentFragment extends Fragment {
                                     btnChat.setBackgroundResource(R.color.background);
                                     btnChat.setClickable(false);
                                     btnChat.setEnabled(false);
+                                } else {
+                                    btnChat.setImageResource(R.drawable.ic_chat_24dp);
+                                    btnChat.setBackgroundResource(R.drawable.primary_button_background);
+                                    btnChat.setClickable(true);
+                                    btnChat.setEnabled(true);
                                 }
 
                                 break;
@@ -135,8 +147,29 @@ public class SearchStudentFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putString("title", tvName.getText().toString());
+
+                String title = tvName.getText().toString();
+                bundle.putString("title", title);
+
+                String code = tvId.getText().toString();
+                bundle.putString("code", code);
+
+                bundle.putString("type", GroupChat.DIRECT);
+
                 mNavController.navigate(R.id.action_navigation_search_student_to_navigation_chat_room, bundle);
+            }
+        });
+
+        RecyclerView rvChatGroups = root.findViewById(R.id.rvChatGroups);
+        mViewModel.getGroupChats().observe(getViewLifecycleOwner(), new Observer<StateModel<List<GroupChat_UserSubCol>>>() {
+            @Override
+            public void onChanged(StateModel<List<GroupChat_UserSubCol>> stateModel) {
+                switch (stateModel.getStatus()) {
+                    case SUCCESS:
+                        ChatGroupAdapter adapter = new ChatGroupAdapter(stateModel.getData(), SearchStudentFragment.this);
+                        rvChatGroups.setAdapter(adapter);
+                        break;
+                }
             }
         });
 

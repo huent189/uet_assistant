@@ -7,6 +7,8 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.exception.NoConnectivityException;
+import vnu.uet.mobilecourse.assistant.exception.UnavailableHostException;
 import vnu.uet.mobilecourse.assistant.repository.FirebaseAuthenticationService;
 import vnu.uet.mobilecourse.assistant.repository.course.UserRepository;
 
@@ -28,23 +30,42 @@ public class MainActivity extends AppCompatActivity {
         new UserRepository().isLoggedIn().observe(MainActivity.this, stateModel -> {
             switch (stateModel.getStatus()) {
                 case SUCCESS:
-                    boolean isFirebaseLoggedIn = FirebaseAuthenticationService.isFirebaseLoggedIn();
-
-                    if (isFirebaseLoggedIn) {
-                        navigateToActivity(MyCoursesActivity.class);
-                    } else {
-                        navigateToActivity(LoginFirebaseActivity.class);
-                    }
-
+                    checkFirebaseLogin();
                     break;
 
                 case ERROR:
-                    stateModel.getError().printStackTrace();
-                    navigateToActivity(LoginActivity.class);
+                    Exception err = stateModel.getError();
+
+                    if (err instanceof UnavailableHostException) {
+                        boolean isFirebaseLoggedIn = FirebaseAuthenticationService.isFirebaseLoggedIn();
+
+                        if (isFirebaseLoggedIn) {
+                            Intent intent = new Intent(MainActivity.this, MyCoursesActivity.class);
+                            intent.putExtra("courseAvailable", false);
+                            startActivity(intent);
+                        } else {
+                            navigateToActivity(LoginFirebaseActivity.class);
+                        }
+                    } else if (err instanceof NoConnectivityException) {
+                        checkFirebaseLogin();
+                    } else {
+                        stateModel.getError().printStackTrace();
+                        navigateToActivity(LoginActivity.class);
+                    }
 
                     break;
             }
         });
+    }
+
+    private void checkFirebaseLogin() {
+        boolean isFirebaseLoggedIn = FirebaseAuthenticationService.isFirebaseLoggedIn();
+
+        if (isFirebaseLoggedIn) {
+            navigateToActivity(MyCoursesActivity.class);
+        } else {
+            navigateToActivity(LoginFirebaseActivity.class);
+        }
     }
 
     private void navigateToActivity(Class<? extends AppCompatActivity> activity) {

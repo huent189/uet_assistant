@@ -14,9 +14,9 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 public class StudentRepository {
 
     private static StudentRepository instance;
-    private FirebaseUserRepository mUserRepo;
-    private UserInfoDAO mUserInfoDAO;
-    private StudentCache mCache;
+    private final FirebaseUserRepository mUserRepo;
+    private final UserInfoDAO mUserInfoDAO;
+    private final StudentCache mCache;
 
     public static StudentRepository getInstance() {
         if (instance == null) {

@@ -1,8 +1,10 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,7 +37,7 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
     @Override
     public ChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = mOwner.getLayoutInflater()
-                .inflate(R.layout.layout_chat_group_item, parent, false);
+                .inflate(R.layout.layout_group_chat_item, parent, false);
 
         Activity activity = mOwner.getActivity();
 
@@ -63,7 +65,9 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
         private TextView mTvChatGroupTitle;
         private TextView mTvLastMessage;
         private TextView mTvLastMessageTime;
-        private ImageView mIvNewMessageDot;
+        private ImageView mIvStatus;
+        private View mLayoutTime;
+        private View mLayoutContainer;
 
         ChatViewHolder(@NonNull View view) {
             super(view);
@@ -72,24 +76,39 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
             mTvChatGroupTitle = view.findViewById(R.id.tvChatGroupTitle);
             mTvLastMessage = view.findViewById(R.id.tvLastMessage);
             mTvLastMessageTime = view.findViewById(R.id.tvLastMessageTime);
-            mIvNewMessageDot = view.findViewById(R.id.ivNewMessageDot);
+            mIvStatus = view.findViewById(R.id.ivStatus);
+            mLayoutTime = view.findViewById(R.id.layoutTime);
+            mLayoutContainer = view.findViewById(R.id.layoutContainer);
         }
 
         void bind(GroupChat_UserSubCol chat, NavController navController) {
             mTvChatGroupTitle.setText(chat.getName());
-            mTvLastMessage.setText(chat.getLastMessage());
 
             Date lastMessageTime = DateTimeUtils.fromSecond(chat.getLastMessageTime());
             String lastMessageTimeInStr = DateTimeUtils.TIME_12H_FORMAT.format(lastMessageTime);
             mTvLastMessageTime.setText(lastMessageTimeInStr);
 
-            mIvNewMessageDot.setVisibility(chat.isSeen() ? View.GONE : View.VISIBLE);
+            mIvStatus.setVisibility(chat.isSeen() ? View.GONE : View.VISIBLE);
 
-            itemView.setOnClickListener(v ->
-                    navController.navigate(
-                            R.id.action_navigation_explore_course_to_navigation_friend_profile
-                    )
-            );
+            mLayoutTime.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    int maxWidth = mLayoutContainer.getWidth() - mLayoutTime.getWidth();
+
+                    mTvLastMessage.setMaxWidth(maxWidth);
+                    mTvLastMessage.setText(chat.getLastMessage());
+
+                    mLayoutTime.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            });
+
+            itemView.setOnClickListener(v -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("title", chat.getName());
+                bundle.putString("type", chat.getType());
+                bundle.putString("roomId", chat.getId());
+                navController.navigate(R.id.action_navigation_chat_to_navigation_chat_room, bundle);
+            });
         }
     }
 

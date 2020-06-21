@@ -60,6 +60,8 @@
     <string name="title_loading">Đang tải…</string>
 
     <string name="title_error">Lỗi</string>
+    <string name="title_error_no_connectivity">Không thể kết nối mạng</string>
+    <string name="title_error_unavailable_host">Không thể kết nối website môn học</string>
 
     <string name="title_setting">Cài đặt</string>
     <string name="title_logout">Đăng xuất</string>
@@ -75,6 +77,10 @@
     <string name="title_course_enroll_error">Bạn chưa tham gia vào lớp học này\ntrên website môn học.</string>
     <string name="title_calendar_empty_event">Không có hoạt động nào được ghi nhận.\nBạn có thể thêm công việc mới</string>
     <string name="title_notification_empty">Bạn chưa nhận được thông báo nào!</string>
+    <string name="title_discussion_pinned">Được ghim</string>
+    <string name="title_discussion_follow">Theo dõi</string>
+    <string name="title_discussion_unfollow">Hủy theo dõi</string>
+    <string name="dot_delimiter">•</string>
 
     <string-array name="dayOfWeek">
         <item>C.N</item>

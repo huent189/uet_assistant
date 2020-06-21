@@ -51,6 +51,10 @@ public class FirebaseUserRepository {
         return mDao.update(STUDENT_ID, changes);
     }
 
+    public StateLiveData<String> increaseNotifications() {
+        return mDao.increaseNotifications(STUDENT_ID);
+    }
+
     public IStateLiveData<User> add(User user) {
         return mDao.add(user);
     }

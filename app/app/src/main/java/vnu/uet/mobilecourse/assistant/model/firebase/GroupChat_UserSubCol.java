@@ -1,5 +1,9 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
+import com.google.firebase.firestore.Exclude;
+
+import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
+
 public class GroupChat_UserSubCol implements IFirebaseModel {
 
     private String id;
@@ -8,6 +12,9 @@ public class GroupChat_UserSubCol implements IFirebaseModel {
     private String lastMessage;
     private long lastMessageTime;
     private boolean seen;
+
+    @Exclude
+    private String type;
 
     @Override
     public String getId() {
@@ -56,5 +63,13 @@ public class GroupChat_UserSubCol implements IFirebaseModel {
 
     public void setSeen(boolean seen) {
         this.seen = seen;
+    }
+
+    public String getType() {
+        if (type == null) {
+            type = FirebaseStructureId.isDirectedChat(id) ? GroupChat.DIRECT : GroupChat.GROUP;
+        }
+
+        return type;
     }
 }

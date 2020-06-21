@@ -85,6 +85,12 @@
         <action
             android:id="@+id/action_navigation_explore_course_to_navigation_my_profile"
             app:destination="@id/navigation_my_profile" />
+        <action
+            android:id="@+id/action_navigation_explore_course_to_navigation_forum"
+            app:destination="@id/navigation_forum" />
+        <action
+            android:id="@+id/action_navigation_explore_course_to_navigation_chat_room"
+            app:destination="@id/navigation_chat_room" />
     </fragment>
 
     <fragment
@@ -95,6 +101,9 @@
         <action
             android:id="@+id/action_navigation_friend_profile_to_navigation_explore_course"
             app:destination="@id/navigation_explore_course" />
+        <action
+            android:id="@+id/action_navigation_friend_profile_to_navigation_chat_room"
+            app:destination="@id/navigation_chat_room" />
     </fragment>
 
     <fragment
@@ -139,7 +148,11 @@
         android:id="@+id/navigation_chat_room"
         android:name="vnu.uet.mobilecourse.assistant.view.chat.ChatRoomFragment"
         android:label="fragment_chat_room"
-        tools:layout="@layout/fragment_chat_room" />
+        tools:layout="@layout/fragment_chat_room" >
+        <action
+            android:id="@+id/action_navigation_chat_room_to_navigation_friend_profile"
+            app:destination="@id/navigation_friend_profile" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_search_student"
@@ -164,5 +177,19 @@
             android:id="@+id/action_navigation_modify_todo_to_navigation_add_todo_list"
             app:destination="@id/navigation_add_todo_list" />
     </fragment>
+    <fragment
+        android:id="@+id/navigation_forum"
+        android:name="vnu.uet.mobilecourse.assistant.view.course.ForumFragment"
+        android:label="fragment_forum"
+        tools:layout="@layout/fragment_forum" >
+        <action
+            android:id="@+id/action_navigation_forum_to_navigation_discussion"
+            app:destination="@id/navigation_discussion" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_discussion"
+        android:name="vnu.uet.mobilecourse.assistant.view.course.DiscussionFragment"
+        android:label="fragment_discussion"
+        tools:layout="@layout/fragment_discussion" />
 
 </navigation>

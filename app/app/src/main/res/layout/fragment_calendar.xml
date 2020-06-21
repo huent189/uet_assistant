@@ -89,6 +89,7 @@
     <vnu.uet.mobilecourse.assistant.view.component.EmptyView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="@dimen/margin_x6"
         app:textContent="@string/title_calendar_empty_event"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 

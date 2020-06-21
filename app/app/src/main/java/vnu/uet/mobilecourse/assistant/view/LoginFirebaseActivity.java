@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.repository.FirebaseAuthenticationService;
 import vnu.uet.mobilecourse.assistant.repository.course.UserRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -36,9 +37,9 @@ public class LoginFirebaseActivity extends AppCompatActivity {
             showErrorLayout();
         else {
             StateLiveData<String> loginFirebase = new FirebaseAuthenticationService()
-                    .signInWithEmailLink(
-                            SharedPreferencesManager
-                                    .getStringValue(SharedPreferencesManager.REGISTER_EMAIL)
+                    .signInWithEmailLink(User.getInstance().getEmail()
+//                            SharedPreferencesManager
+//                                    .getStringValue(User.REGISTER_EMAIL)
                             , deepLink
                     );
 

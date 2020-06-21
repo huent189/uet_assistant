@@ -52,6 +52,7 @@ public abstract class EventViewHolder extends ChildViewHolder {
         Date deadline = event.getTime();
         SimpleDateFormat dateFormat = DateTimeUtils.TIME_12H_FORMAT;
         mTvDeadline.setText(dateFormat.format(deadline));
+//        mTvDeadline.setText(String.valueOf(event.getTime()));
 
         mTvCategory.setText(event.getCategory());
 

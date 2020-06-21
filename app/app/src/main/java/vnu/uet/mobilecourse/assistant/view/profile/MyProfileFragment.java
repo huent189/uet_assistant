@@ -17,6 +17,7 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import java.util.Date;
 
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.MyProfileViewModel;
@@ -47,49 +48,66 @@ public class MyProfileFragment extends Fragment {
         ShimmerFrameLayout sflDobAndClass = root.findViewById(R.id.sflDobAndClass);
         sflDobAndClass.startShimmerAnimation();
 
-        mViewModel.getUserInfo().observe(getViewLifecycleOwner(), stateModel -> {
-            switch (stateModel.getStatus()) {
-                case LOADING:
-                    // hide text
-                    tvUsername.setVisibility(View.INVISIBLE);
-                    tvUserId.setVisibility(View.INVISIBLE);
-                    layoutDob.setVisibility(View.INVISIBLE);
-                    layoutClass.setVisibility(View.INVISIBLE);
+        // show text
+        tvUsername.setVisibility(View.VISIBLE);
+        tvUserId.setVisibility(View.VISIBLE);
+        layoutDob.setVisibility(View.VISIBLE);
+        layoutClass.setVisibility(View.VISIBLE);
 
-                    // show shimmer layout
-                    sflNameAndId.setVisibility(View.VISIBLE);
-                    sflDobAndClass.setVisibility(View.VISIBLE);
+        // hide shimmer layout
+        sflNameAndId.setVisibility(View.INVISIBLE);
+        sflDobAndClass.setVisibility(View.INVISIBLE);
 
-                    break;
+        User user = User.getInstance();
+        tvUsername.setText(user.getName());
+        tvUserId.setText(user.getStudentId());
+        tvClass.setText(user.getUetClass());
+        Date dob = new Date(user.getDob());
+        tvDoB.setText(DateTimeUtils.DATE_FORMAT.format(dob));
 
-                case SUCCESS:
-                    // get user info from state data
-                    UserInfo userInfo = stateModel.getData();
-
-                    // update username and student id
-                    tvUsername.setText(userInfo.getName());
-                    tvUserId.setText(userInfo.getId());
-
-                    // update day of birth
-                    Date dob = new Date(userInfo.getDOB());
-                    tvDoB.setText(DateTimeUtils.DATE_FORMAT.format(dob));
-
-                    // update uet class
-                    tvClass.setText(userInfo.getUetClass());
-
-                    // show text
-                    tvUsername.setVisibility(View.VISIBLE);
-                    tvUserId.setVisibility(View.VISIBLE);
-                    layoutDob.setVisibility(View.VISIBLE);
-                    layoutClass.setVisibility(View.VISIBLE);
-
-                    // hide shimmer layout
-                    sflNameAndId.setVisibility(View.INVISIBLE);
-                    sflDobAndClass.setVisibility(View.INVISIBLE);
-
-                    break;
-            }
-        });
+//        mViewModel.getUserInfo().observe(getViewLifecycleOwner(), stateModel -> {
+//            switch (stateModel.getStatus()) {
+//                case LOADING:
+//                    // hide text
+//                    tvUsername.setVisibility(View.INVISIBLE);
+//                    tvUserId.setVisibility(View.INVISIBLE);
+//                    layoutDob.setVisibility(View.INVISIBLE);
+//                    layoutClass.setVisibility(View.INVISIBLE);
+//
+//                    // show shimmer layout
+//                    sflNameAndId.setVisibility(View.VISIBLE);
+//                    sflDobAndClass.setVisibility(View.VISIBLE);
+//
+//                    break;
+//
+//                case SUCCESS:
+//                    // get user info from state data
+//                    UserInfo userInfo = stateModel.getData();
+//
+//                    // update username and student id
+//                    tvUsername.setText(userInfo.getName());
+//                    tvUserId.setText(userInfo.getId());
+//
+//                    // update day of birth
+//                    Date dob = new Date(userInfo.getDOB());
+//                    tvDoB.setText(DateTimeUtils.DATE_FORMAT.format(dob));
+//
+//                    // update uet class
+//                    tvClass.setText(userInfo.getUetClass());
+//
+//                    // show text
+//                    tvUsername.setVisibility(View.VISIBLE);
+//                    tvUserId.setVisibility(View.VISIBLE);
+//                    layoutDob.setVisibility(View.VISIBLE);
+//                    layoutClass.setVisibility(View.VISIBLE);
+//
+//                    // hide shimmer layout
+//                    sflNameAndId.setVisibility(View.INVISIBLE);
+//                    sflDobAndClass.setVisibility(View.INVISIBLE);
+//
+//                    break;
+//            }
+//        });
 
         return root;
     }

@@ -1,5 +1,7 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
+import com.google.firebase.firestore.Exclude;
+
 public class Member_GroupChatSubCol implements IFirebaseModel {
     /**
      * member id
@@ -7,6 +9,8 @@ public class Member_GroupChatSubCol implements IFirebaseModel {
     private String id;
     private String name;
     private String role;
+
+    @Exclude
     private String avatar;
 
     @Override
@@ -34,10 +38,12 @@ public class Member_GroupChatSubCol implements IFirebaseModel {
         this.role = role;
     }
 
+    @Exclude
     public String getAvatar() {
         return avatar;
     }
 
+    @Exclude
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }

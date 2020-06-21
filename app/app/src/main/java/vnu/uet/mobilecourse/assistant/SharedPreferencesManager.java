@@ -7,11 +7,6 @@ import vnu.uet.mobilecourse.assistant.view.MyApplication;
 public class SharedPreferencesManager {
 
     private static SharedPreferences preferences;
-    public static final String USER_ID = "USER_ID";
-    public static final String TOKEN = "TOKEN";
-    public static final String REGISTER_EMAIL = "REGISTER_EMAIL";
-    public static final String ENABLE_SYNC_NOTI = "ENABLE_SYNC_NOTI";
-//    public static final String NEW_NOTIFICATION = "NEW_NOTIFICATION";
     private static final String APP_SHARED_PREFS = "MySharedPrefs";
 
     private static void initPreference(){
@@ -26,9 +21,9 @@ public class SharedPreferencesManager {
         return preferences.getString(key, null);
     }
 
-    public static long getLongValue(String key){
+    public static long getLongValue(String key, long defValue){
         initPreference();
-        return preferences.getLong(key, -1);
+        return preferences.getLong(key, defValue);
     }
 
     public static void deleteKey(String key){
@@ -49,27 +44,24 @@ public class SharedPreferencesManager {
         initPreference();
         preferences.edit().putBoolean(key, value).apply();
     }
+
     public static boolean getBooleanValue(String key){
         initPreference();
         return preferences.getBoolean(key, false);
     }
+
     public static void setInt(String key, int value){
         initPreference();
         preferences.edit().putInt(key, value).apply();
     }
 
-    public static int getInt(String key){
+    public static int getInt(String key, int defValue){
         initPreference();
-        return preferences.getInt(key, 0);
+        return preferences.getInt(key, defValue);
     }
 
     public static void clearAll(){
         initPreference();
         preferences.edit().clear().apply();
-    }
-
-    public static void registerOnChangeListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
-        initPreference();
-        preferences.registerOnSharedPreferenceChangeListener(listener);
     }
 }
