@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingEnd="@dimen/margin_x2"
     android:paddingStart="88dp"
@@ -17,9 +18,9 @@
         android:layout_gravity="end"
         android:textSize="@dimen/font_size_small"/>
 
-    <TextView
+    <vnu.uet.mobilecourse.assistant.view.component.ChatBox
         android:id="@+id/tvMessage"
         style="@style/SendMessage"
-        android:text="@string/title_chat" />
+        android:text="10 bài tập không di chuyển dành cho những người lười biếng có thể khởi động lại cơ thể của bạn" />
 
 </LinearLayout>

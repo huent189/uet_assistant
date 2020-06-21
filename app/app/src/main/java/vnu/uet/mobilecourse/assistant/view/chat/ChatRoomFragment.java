@@ -79,6 +79,9 @@ public class ChatRoomFragment extends Fragment {
             RecyclerView rvChat = initializeListView(root);
 
             mCode = args.getString("code");
+            if (mCode == null) {
+                // temporary
+            }
             mViewModel.setCode(mCode);
 
             mType = args.getString("type");

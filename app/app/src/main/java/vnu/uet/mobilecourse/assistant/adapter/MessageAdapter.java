@@ -1,8 +1,10 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import java.util.List;
@@ -18,6 +20,8 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.util.StringUtils;
+import vnu.uet.mobilecourse.assistant.view.component.ChatBox;
 import vnu.uet.mobilecourse.assistant.viewmodel.time.TimeLiveData;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
@@ -91,6 +95,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 //            int prevPosition = position - 1;
 //            samePrev = getItemViewType(position) == getItemViewType(prevPosition);
 //        }
+
+//        ViewGroup.LayoutParams paramsReset = holder.mTvMessage.getLayoutParams();
+//        paramsReset.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+//        holder.mTvMessage.setLayoutParams(paramsReset);
 
         holder.bind(message, samePrev);
 
@@ -181,6 +189,31 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         protected void bind(Message_GroupChatSubCol message, boolean samePrev) {
             mTvMessage.setText(message.getContent());
+
+            itemView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    int paddingEnd = itemView.getPaddingEnd();
+                    int paddingStart = itemView.getPaddingStart();
+                    int maxWidth = itemView.getWidth() - (paddingEnd + paddingStart);
+
+                    Log.d(getClass().getSimpleName(), "bind: " + maxWidth);
+
+//                    String content = message.getContent();
+//
+//                    String[] sections = content.split(" ");
+//                    String formattedMessage = StringUtils.splitTextToFitWidth(sections, mTvMessage.getPaint(), maxWidth);
+//                    mTvMessage.setText(formattedMessage);
+
+                    if (mTvMessage instanceof ChatBox) {
+                        ((ChatBox) mTvMessage).reduce(maxWidth);
+                    }
+
+                    itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            });
+
+
         }
     }
 }

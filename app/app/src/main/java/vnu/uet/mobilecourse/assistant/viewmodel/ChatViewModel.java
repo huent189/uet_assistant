@@ -1,11 +1,8 @@
 package vnu.uet.mobilecourse.assistant.viewmodel;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
 import java.util.List;
 
+import androidx.lifecycle.ViewModel;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.repository.firebase.ChatRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;

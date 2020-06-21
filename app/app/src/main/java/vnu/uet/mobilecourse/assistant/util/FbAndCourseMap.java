@@ -22,7 +22,7 @@ public class FbAndCourseMap {
         }
     }
 
-    private static String cleanCode(String code) {
+    public static String cleanCode(String code) {
         if (code.length() < DELIMITER_POS)
             return code;
 

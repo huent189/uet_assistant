@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.util;
 
+import android.graphics.Paint;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -47,5 +48,30 @@ public class StringUtils {
         builder = StringUtils.removeExtraLineBreak(builder);
 
         return builder;
+    }
+
+    public static String splitTextToFitWidth(String[] _texts, Paint _paint, int maxWidth) {
+
+        String formattedText = "";
+
+        String workingText = "";
+        for (String section : _texts)
+        {
+            String newPart = (workingText.length() > 0 ? " " : "") + section;
+            workingText += newPart;
+
+            int width = (int)_paint.measureText(workingText, 0, workingText.length());
+
+            if (width > maxWidth)
+            {
+                formattedText += (formattedText.length() > 0 ? "\n" : "") + workingText.substring(0, workingText.length() - newPart.length());
+                workingText = section;
+            }
+        }
+
+        if (workingText.length() > 0)
+            formattedText += (formattedText.length() > 0 ? "\n" : "") + workingText;
+
+        return formattedText;
     }
 }

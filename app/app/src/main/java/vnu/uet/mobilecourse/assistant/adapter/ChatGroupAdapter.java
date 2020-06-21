@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -65,6 +66,8 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
         private TextView mTvLastMessage;
         private TextView mTvLastMessageTime;
         private ImageView mIvStatus;
+        private View mLayoutTime;
+        private View mLayoutContainer;
 
         ChatViewHolder(@NonNull View view) {
             super(view);
@@ -74,17 +77,30 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
             mTvLastMessage = view.findViewById(R.id.tvLastMessage);
             mTvLastMessageTime = view.findViewById(R.id.tvLastMessageTime);
             mIvStatus = view.findViewById(R.id.ivStatus);
+            mLayoutTime = view.findViewById(R.id.layoutTime);
+            mLayoutContainer = view.findViewById(R.id.layoutContainer);
         }
 
         void bind(GroupChat_UserSubCol chat, NavController navController) {
             mTvChatGroupTitle.setText(chat.getName());
-            mTvLastMessage.setText(chat.getLastMessage());
 
             Date lastMessageTime = DateTimeUtils.fromSecond(chat.getLastMessageTime());
             String lastMessageTimeInStr = DateTimeUtils.TIME_12H_FORMAT.format(lastMessageTime);
             mTvLastMessageTime.setText(lastMessageTimeInStr);
 
             mIvStatus.setVisibility(chat.isSeen() ? View.GONE : View.VISIBLE);
+
+            mLayoutTime.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    int maxWidth = mLayoutContainer.getWidth() - mLayoutTime.getWidth();
+
+                    mTvLastMessage.setMaxWidth(maxWidth);
+                    mTvLastMessage.setText(chat.getLastMessage());
+
+                    mLayoutTime.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            });
 
             itemView.setOnClickListener(v -> {
                 Bundle bundle = new Bundle();

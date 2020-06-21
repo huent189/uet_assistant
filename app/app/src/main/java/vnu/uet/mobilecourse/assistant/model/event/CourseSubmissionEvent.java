@@ -2,6 +2,9 @@ package vnu.uet.mobilecourse.assistant.model.event;
 
 import java.util.Date;
 
+import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.util.FbAndCourseMap;
+
 public class CourseSubmissionEvent implements IEvent {
     private int courseId;
     private int materialId;
@@ -67,12 +70,12 @@ public class CourseSubmissionEvent implements IEvent {
 
     @Override
     public String getCategory() {
-        return courseName;
+        return FbAndCourseMap.cleanCode(courseName);
     }
 
     @Override
     public Date getTime() {
-        return new Date(time);
+        return DateTimeUtils.fromSecond(time);
     }
 
     @Override
