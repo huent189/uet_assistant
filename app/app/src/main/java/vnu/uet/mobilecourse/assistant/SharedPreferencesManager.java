@@ -7,12 +7,6 @@ import vnu.uet.mobilecourse.assistant.view.MyApplication;
 public class SharedPreferencesManager {
 
     private static SharedPreferences preferences;
-    public static final String USER_ID = "USER_ID";
-    public static final String TOKEN = "TOKEN";
-    public static final String REGISTER_EMAIL = "REGISTER_EMAIL";
-    public static final String ENABLE_SYNC_NOTI = "ENABLE_SYNC_NOTI";
-    public static final String LAST_SYNC_TIME = "LAST_SYNC_TIME";
-//    public static final String NEW_NOTIFICATION = "NEW_NOTIFICATION";
     private static final String APP_SHARED_PREFS = "MySharedPrefs";
 
     private static void initPreference(){

@@ -89,7 +89,7 @@ public class CourseSyncDataWorker extends Worker {
     private void pushEmptyNotification(Context context){
         NotificationHelper helper = NotificationHelper.getsInstance();
         Notification notification = helper.build(context, CHANNEL_ID,
-                R.drawable.ic_bot, "FOR_TEST",
+                R.drawable.ic_bot_border, "FOR_TEST",
                 "Ê m không có thông báo gì mới đâu, t đang test thôi :v");
         helper.notify(context, ((int) (Math.random() * 1000000000)) + "", notification);
     }

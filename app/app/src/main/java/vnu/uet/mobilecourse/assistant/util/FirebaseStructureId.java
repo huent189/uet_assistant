@@ -15,7 +15,16 @@ public class FirebaseStructureId {
     }
 
     public static String directedChat(String mateId) {
-        return BEGIN_PREFIX + USER_CODE + DIRECT_CHAT_PREFIX + mateId;
+        int codeComparision = Integer.compare(USER_CODE.hashCode(), mateId.hashCode());
+
+        String id;
+        if (codeComparision >= 0) {
+            id = BEGIN_PREFIX + USER_CODE + DIRECT_CHAT_PREFIX + mateId;
+        } else {
+            id = BEGIN_PREFIX + mateId + DIRECT_CHAT_PREFIX + USER_CODE;
+        }
+
+        return id;
 
     }
 

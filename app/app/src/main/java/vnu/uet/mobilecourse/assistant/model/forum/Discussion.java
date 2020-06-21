@@ -32,9 +32,7 @@ public class Discussion implements Parcelable {
     private boolean isStarred;
     @SerializedName("numreplies")
     private int numberReplies;
-    @SerializedName("message")
-    @ColumnInfo(name = "message")
-    private String content;
+    private String message;
     @Ignore
     private boolean interest;
 
@@ -54,7 +52,7 @@ public class Discussion implements Parcelable {
         isLocked = in.readByte() != 0;
         isStarred = in.readByte() != 0;
         numberReplies = in.readInt();
-        content = in.readString();
+        message = in.readString();
         interest = in.readByte() != 0;
     }
 
@@ -71,7 +69,7 @@ public class Discussion implements Parcelable {
         dest.writeByte((byte) (isLocked ? 1 : 0));
         dest.writeByte((byte) (isStarred ? 1 : 0));
         dest.writeInt(numberReplies);
-        dest.writeString(content);
+        dest.writeString(message);
         dest.writeByte((byte) (interest ? 1 : 0));
     }
 
@@ -92,12 +90,12 @@ public class Discussion implements Parcelable {
         }
     };
 
-    public String getContent() {
-        return content;
+    public String getMessage() {
+        return message;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public int getId() {

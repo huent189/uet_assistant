@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -85,11 +86,13 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
 
             mIvStatus.setVisibility(chat.isSeen() ? View.GONE : View.VISIBLE);
 
-            itemView.setOnClickListener(v ->
-                    navController.navigate(
-                            R.id.action_navigation_explore_course_to_navigation_friend_profile
-                    )
-            );
+            itemView.setOnClickListener(v -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("title", chat.getName());
+                bundle.putString("type", chat.getType());
+                bundle.putString("roomId", chat.getId());
+                navController.navigate(R.id.action_navigation_chat_to_navigation_chat_room, bundle);
+            });
         }
     }
 
