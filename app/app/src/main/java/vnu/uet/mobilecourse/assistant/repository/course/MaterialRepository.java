@@ -237,8 +237,8 @@ public class MaterialRepository {
         return updateList;
     }
 
-    public IStateLiveData<List<CourseSubmissionEvent>> getDailyCourseSubmissionEvent(Date date){
-        IStateLiveData<List<CourseSubmissionEvent>> eventsLiveData = new StateLiveData<>();
+    public StateLiveData<List<CourseSubmissionEvent>> getDailyCourseSubmissionEvent(Date date){
+        StateLiveData<List<CourseSubmissionEvent>> eventsLiveData = new StateLiveData<>();
         eventsLiveData.postLoading();
         new Thread(() -> {
             Calendar calendar = Calendar.getInstance();

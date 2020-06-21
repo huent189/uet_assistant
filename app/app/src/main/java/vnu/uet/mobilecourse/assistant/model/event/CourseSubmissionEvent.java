@@ -14,7 +14,8 @@ public class CourseSubmissionEvent implements IEvent {
         return type;
     }
 
-    public CourseSubmissionEvent(int courseId, int materialId, String courseName, String title, long time, boolean isCompleted, String type) {
+    public CourseSubmissionEvent(int courseId, int materialId, String courseName, String title,
+                                 long time, boolean isCompleted, String type) {
         this.courseId = courseId;
         this.materialId = materialId;
         this.courseName = courseName;
