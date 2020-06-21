@@ -1,5 +1,7 @@
 package vnu.uet.mobilecourse.assistant.model;
 
+import android.app.AlarmManager;
+
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
 
@@ -28,11 +30,11 @@ public class User {
         email = SharedPreferencesManager.getStringValue(REGISTER_EMAIL);
         userId = SharedPreferencesManager.getStringValue(USER_ID);
         name = SharedPreferencesManager.getStringValue(NAME);
-        dob = SharedPreferencesManager.getLongValue(DOB);
+        dob = SharedPreferencesManager.getLongValue(DOB, 0);
         uetClass = SharedPreferencesManager.getStringValue(CLASS);
         enableSyncNoti = SharedPreferencesManager.getBooleanValue(ENABLE_SYNC_NOTI);
-        lastSyncTime = SharedPreferencesManager.getLongValue(SharedPreferencesManager.LAST_SYNC_TIME,
-                System.currentTimeMillis() - 24*60*60*1000);
+        lastSyncTime = SharedPreferencesManager.getLongValue(LAST_SYNC_TIME,
+                System.currentTimeMillis() - AlarmManager.INTERVAL_DAY);
     }
 
     public String getToken() {
@@ -108,7 +110,7 @@ public class User {
 
     public void setLastSyncTime(long lastSyncTime) {
         this.lastSyncTime = lastSyncTime;
-        SharedPreferencesManager.setLong(SharedPreferencesManager.LAST_SYNC_TIME, lastSyncTime);
+        SharedPreferencesManager.setLong(LAST_SYNC_TIME, lastSyncTime);
     }
 
     private static final String USER_ID = "USER_ID";
@@ -118,4 +120,5 @@ public class User {
     private static final String DOB = "DAY_OF_BIRTH";
     private static final String CLASS = "UET_CLASS";
     private static final String ENABLE_SYNC_NOTI = "ENABLE_SYNC_NOTI";
+    private static final String LAST_SYNC_TIME = "LAST_SYNC_TIME";
 }
