@@ -11,6 +11,7 @@ import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.WeeklyMaterial;
 import vnu.uet.mobilecourse.assistant.model.material.*;
 
+import java.util.ArrayList;
 import java.util.List;
 @Dao
 public abstract class MaterialDAO {
@@ -21,14 +22,22 @@ public abstract class MaterialDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertMaterial(List<Material> materials);
-    public void insertCourseContent(int courseId, CourseOverview... contents){
+    public ArrayList<CourseOverview> insertCourseContent(int courseId, CourseOverview... contents){
+        ArrayList<CourseOverview> updateList = new ArrayList<>();
+        long lastTime = getLastMaterialUpdateTimeByCourse(courseId);
         for (CourseOverview content: contents) {
-            content.getWeekInfo().setCourseId(courseId);
-            insertWeekInfo(content.getWeekInfo());
-            content.getMaterials().forEach(material -> material.setWeekId(content.getWeekInfo().getId()));
-            insertMaterial(content.getMaterials());
+            if(content.getMaterials().stream().anyMatch(material -> material.getLastModified() > lastTime)){
+                content.getWeekInfo().setCourseId(courseId);
+                insertWeekInfo(content.getWeekInfo());
+                content.getMaterials().forEach(material -> material.setWeekId(content.getWeekInfo().getId()));
+                insertMaterial(content.getMaterials());
+                updateList.add(content);
+            }
         }
+        return updateList;
     }
+    @Query("SELECT COALESCE(MAX(Material.lastModified), -1) from Material, WeeklyMaterial WHERE courseId = :courseId and Material.weekId = WeeklyMaterial.id")
+    public abstract long getLastMaterialUpdateTimeByCourse(int courseId);
     @Transaction
     @Query("SELECT * FROM WeeklyMaterial WHERE courseId = :course_id")
     public abstract LiveData<List<CourseOverview>> getCourseContent(int course_id);

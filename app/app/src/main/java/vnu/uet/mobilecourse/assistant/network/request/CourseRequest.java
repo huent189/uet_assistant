@@ -12,7 +12,7 @@ public interface CourseRequest {
     Call<JsonElement> getMyCoures(@Field("userid") String userId);
     @FormUrlEncoded
     @POST("webservice/rest/server.php?wsfunction=core_course_get_contents")
-    Call<JsonElement> getCourseContent(@Field("courseid") String courseId);
+    Call<JsonElement> getCourseContent(@Field("courseid") int courseId);
     @FormUrlEncoded
     @POST("webservice/rest/server.php?wsfunction=gradereport_user_get_grade_items")
     Call<JsonElement> getCourseGrade(@Field("courseid") String courseId, @Field("userid") String userId);

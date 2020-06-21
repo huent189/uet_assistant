@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MaterialRepository {
@@ -96,7 +97,28 @@ public class MaterialRepository {
                 return materialDAO.getMaterialContent(materialId);
         }
     }
-
+    public List<MaterialContent> selectiveUpdate(Set<String> types) throws IOException {
+        ArrayList<MaterialContent> updateList = new ArrayList<>();
+        if(types.contains(CourseConstant.MaterialType.ASSIGN)){
+            updateList.addAll(updateAssignments());
+        }
+        if(types.contains(CourseConstant.MaterialType.URL)){
+            updateList.addAll(updateExternalResources());
+        }
+        if(types.contains(CourseConstant.MaterialType.RESOURCE)){
+            updateList.addAll(updateInternalResources());
+        }
+        if(types.contains(CourseConstant.MaterialType.LABEL)){
+            updateList.addAll(updateLabels());
+        }
+        if(types.contains(CourseConstant.MaterialType.PAGE)){
+            updateList.addAll(updatePageContents());
+        }
+        if(types.contains(CourseConstant.MaterialType.QUIZ)){
+            updateList.addAll(updateQuizzes());
+        }
+        return updateList;
+    }
     public List<MaterialContent> updateAll() throws IOException {
         ArrayList<MaterialContent> updateList = new ArrayList<>();
         updateList.addAll(updateAssignments());
@@ -212,4 +234,19 @@ public class MaterialRepository {
         handler.onResponse(call, call.execute());
         return updateList;
     }
+
+//    public List<LiveData<CourseSubmissionEvent>> getDailyCourseSubmissionEvent(){
+//        long startTime = Timestamp.valueOf(LocalDate.now().atStartOfDay().toString()).getTime();
+//        long endTime = Timestamp.valueOf(LocalDate.now().plusDays(1).atStartOfDay().toString()).getTime();
+//        LiveData<List<AssignmentContent>> assigments = materialDAO.getAssignment(startTime, endTime);
+//        LiveData<List<QuizNoGrade>> quizzes = materialDAO.getQuiz(startTime, endTime);
+//        MediatorLiveData<List<CourseSubmissionEvent>> events = new MediatorLiveData<>();
+//        events.addSource(assigments, new Observer<List<AssignmentContent>>() {
+//            @Override
+//            public void onChanged(List<AssignmentContent> assignmentContents) {
+//                assignmentContents.stream().map(assign -> new ArrayList<AssignmentContent>(
+////                        new AssignmentContent(assign.ge)))
+//            }
+//        });
+//    }
 }

@@ -7,6 +7,7 @@ import vnu.uet.mobilecourse.assistant.view.MyApplication;
 public class SharedPreferencesManager {
 
     private static SharedPreferences preferences;
+    public static final String LAST_SYNC_TIME = "LAST_SYNC_TIME";
     private static final String APP_SHARED_PREFS = "MySharedPrefs";
 
     private static void initPreference(){
@@ -21,9 +22,9 @@ public class SharedPreferencesManager {
         return preferences.getString(key, null);
     }
 
-    public static long getLongValue(String key){
+    public static long getLongValue(String key, long defValue){
         initPreference();
-        return preferences.getLong(key, -1);
+        return preferences.getLong(key, defValue);
     }
 
     public static void deleteKey(String key){

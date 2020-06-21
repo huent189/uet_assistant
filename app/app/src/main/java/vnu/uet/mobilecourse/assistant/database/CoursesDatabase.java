@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
                     ExternalResourceContent.class, InternalFile.class, InternalResourceContent.class,
                     MaterialContent.class, PageContent.class, QuizNoGrade.class, Discussion.class, Post.class
 },
-        version = 8)
+        version = 9)
 public abstract class CoursesDatabase extends RoomDatabase {
     private static volatile CoursesDatabase instance;
     private static final int NUMBER_OF_THREADS = 4;
@@ -79,6 +79,12 @@ public abstract class CoursesDatabase extends RoomDatabase {
                                     supportSQLiteDatabase.execSQL("ALTER TABLE `Material` ADD COLUMN `instanceId` INTEGER DEFAULT 0 NOT NULL");
                                     supportSQLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS `Discussion` (`id` INTEGER NOT NULL, `forumId` INTEGER NOT NULL, `name` TEXT, `timeCreated` INTEGER NOT NULL, `timeModified` INTEGER NOT NULL, `authorName` TEXT, `authorId` TEXT, `isPinned` INTEGER NOT NULL, `isLocked` INTEGER NOT NULL, `isStarred` INTEGER NOT NULL, `numberReplies` INTEGER NOT NULL, PRIMARY KEY(`id`))");
                                     supportSQLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS `Post` (`id` INTEGER NOT NULL, `discussionId` INTEGER NOT NULL, `subject` TEXT, `message` TEXT, `authorId` INTEGER NOT NULL, `authorName` TEXT, `isReply` INTEGER NOT NULL, `parentId` INTEGER NOT NULL, `timeCreated` INTEGER NOT NULL, PRIMARY KEY(`id`))");
+                                }
+                            }, new Migration(8, 9) {
+                                @Override
+                                public void migrate(@NonNull SupportSQLiteDatabase supportSQLiteDatabase) {
+                                    supportSQLiteDatabase.execSQL("DELETE FROM `Discussion`");
+                                    supportSQLiteDatabase.execSQL("ALTER TABLE `Discussion` ADD COLUMN `message` TEXT");
                                 }
                             })
                             .fallbackToDestructiveMigrationOnDowngrade()

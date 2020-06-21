@@ -13,6 +13,7 @@ public class User {
     private long dob;
     private String uetClass;
     private boolean enableSyncNoti;
+    private long lastSyncTime;
 
     public static User getInstance(){
         if(user == null){
@@ -30,6 +31,8 @@ public class User {
         dob = SharedPreferencesManager.getLongValue(DOB);
         uetClass = SharedPreferencesManager.getStringValue(CLASS);
         enableSyncNoti = SharedPreferencesManager.getBooleanValue(ENABLE_SYNC_NOTI);
+        lastSyncTime = SharedPreferencesManager.getLongValue(SharedPreferencesManager.LAST_SYNC_TIME,
+                System.currentTimeMillis() - 24*60*60*1000);
     }
 
     public String getToken() {
@@ -97,6 +100,15 @@ public class User {
     public void setUetClass(String uetClass) {
         this.uetClass = uetClass;
         SharedPreferencesManager.setString(CLASS, uetClass);
+    }
+
+    public long getLastSyncTime() {
+        return lastSyncTime;
+    }
+
+    public void setLastSyncTime(long lastSyncTime) {
+        this.lastSyncTime = lastSyncTime;
+        SharedPreferencesManager.setLong(SharedPreferencesManager.LAST_SYNC_TIME, lastSyncTime);
     }
 
     private static final String USER_ID = "USER_ID";
