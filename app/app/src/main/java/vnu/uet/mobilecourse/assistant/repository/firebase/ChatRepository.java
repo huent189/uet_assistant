@@ -17,6 +17,7 @@ import vnu.uet.mobilecourse.assistant.database.DAO.GroupChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChat_UserSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Message_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
@@ -69,9 +70,9 @@ public class ChatRepository implements IChatRepository {
 
 
     @Override
-    public IStateLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message) {
+    public StateLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message) {
         DocumentReference messRef = db.collection(FirebaseCollectionName.GROUP_CHAT).document(groupId).collection(FirebaseCollectionName.MESSAGE).document(message.getId());
-        IStateLiveData<String> sendStatus = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
+        StateLiveData<String> sendStatus = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
         messRef.set(message).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -82,7 +83,7 @@ public class ChatRepository implements IChatRepository {
             public void onSuccess(Void aVoid) {
 
                 // update last message to group chat in user col
-                db.collection(FirebaseCollectionName.USER).document(SharedPreferencesManager.getStringValue(SharedPreferencesManager.USER_ID)) // user DocRef
+                db.collection(FirebaseCollectionName.USER).document(User.getInstance().getStudentId()) // user DocRef
                         .collection(FirebaseCollectionName.GROUP_CHAT) // subCollection
                         .document(groupId) // group DocRef
                         .update("lastMessage", message.getContent(),
@@ -130,7 +131,7 @@ public class ChatRepository implements IChatRepository {
                 groupChat_userSubCol.setId(groupChat.getId());
                 groupChat_userSubCol.setName(groupChat.getName());
                 groupChat_userSubCol.setSeen(false);
-                db.collection(FirebaseCollectionName.USER).document(SharedPreferencesManager.getStringValue(SharedPreferencesManager.USER_ID)) // user DocRef
+                db.collection(FirebaseCollectionName.USER).document(User.getInstance().getStudentId()) // user DocRef
                         .collection(FirebaseCollectionName.GROUP_CHAT) // subCollection
                         .document(groupChat.getId()) // group DocRef
                         .set(groupChat_userSubCol).addOnFailureListener(new OnFailureListener() {

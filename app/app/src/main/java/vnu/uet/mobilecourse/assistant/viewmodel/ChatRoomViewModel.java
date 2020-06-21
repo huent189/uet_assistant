@@ -2,7 +2,6 @@ package vnu.uet.mobilecourse.assistant.viewmodel;
 
 import java.util.List;
 
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import vnu.uet.mobilecourse.assistant.model.User;
@@ -10,11 +9,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.MemberRole;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
-import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
 import vnu.uet.mobilecourse.assistant.repository.firebase.ChatRepository;
-import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
-import vnu.uet.mobilecourse.assistant.repository.firebase.StudentRepository;
-import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
@@ -23,11 +18,10 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 public class ChatRoomViewModel extends ViewModel {
 
     private ChatRepository mChatRepo = ChatRepository.getInstance();
-    private LifecycleOwner mLifecycleOwner;
     private String mCode, mTitle, mType;
 
     private static final String STUDENT_ID = User.getInstance().getStudentId();
-    private static String STUDENT_NAME;
+    private static final String STUDENT_NAME = User.getInstance().getName();
 
     public IStateLiveData<List<Message_GroupChatSubCol>> getAllMessages(String roomId) {
         return mChatRepo.getMessages(roomId);
@@ -39,15 +33,15 @@ public class ChatRoomViewModel extends ViewModel {
 
     public IStateLiveData<String> sendMessage(String roomId, Message_GroupChatSubCol message, boolean init) {
         if (init && mType.equals(GroupChat.DIRECT)) {
-            createDirectedChat(roomId);
+            return new FirstMessageLiveData(roomId, message);
         }
 
         return mChatRepo.sendMessage(roomId, message);
     }
 
-    public IStateLiveData<GroupChat> createDirectedChat(String roomId) {
-        final IStateLiveData[] liveData = new StateLiveData[]{new StateLiveData<GroupChat>()};
-        liveData[0].postLoading();
+    public StateLiveData<GroupChat> createDirectedChat(String roomId) {
+        StateLiveData<GroupChat> liveData = new StateLiveData<>();
+        liveData.postLoading();
 
         GroupChat groupChat = new GroupChat();
 
@@ -58,6 +52,7 @@ public class ChatRoomViewModel extends ViewModel {
 
         Member_GroupChatSubCol me = new Member_GroupChatSubCol();
         me.setId(STUDENT_ID);
+        me.setName(STUDENT_NAME);
         me.setRole(MemberRole.MEMBER);
 
         Member_GroupChatSubCol other = new Member_GroupChatSubCol();
@@ -68,34 +63,57 @@ public class ChatRoomViewModel extends ViewModel {
         groupChat.getMembers().add(me);
         groupChat.getMembers().add(other);
 
-        if (STUDENT_NAME == null) {
-            StudentRepository.getInstance()
-                    .getStudentById(STUDENT_ID).observe(mLifecycleOwner, stateModel -> {
-                        switch (stateModel.getStatus()) {
-                            case LOADING:
-                                liveData[0].postLoading();
-                                break;
+        liveData = createRoom(groupChat);
 
-                            case ERROR:
-                                liveData[0].postError(stateModel.getError());
-                                break;
-
-                            case SUCCESS:
-                                STUDENT_NAME = stateModel.getData().getName();
-                                me.setName(STUDENT_NAME);
-                                liveData[0] = createRoom(groupChat);
-                        }
-                    });
-        } else {
-            me.setName(STUDENT_NAME);
-            liveData[0] = createRoom(groupChat);
-        }
-
-        return liveData[0];
+        return liveData;
     }
 
-    public void setLifecycleOwner(LifecycleOwner mLifecycleOwner) {
-        this.mLifecycleOwner = mLifecycleOwner;
+    class FirstMessageLiveData extends StateMediatorLiveData<String> {
+
+        FirstMessageLiveData(String roomId, Message_GroupChatSubCol message) {
+            postLoading();
+
+            StateLiveData<GroupChat> createLiveData = createDirectedChat(roomId);
+
+            addSource(createLiveData, new Observer<StateModel<GroupChat>>() {
+                @Override
+                public void onChanged(StateModel<GroupChat> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case LOADING:
+                            postLoading();
+                            break;
+
+                        case ERROR:
+                            postError(stateModel.getError());
+                            break;
+
+                        case SUCCESS:
+                            addSource(mChatRepo.sendMessage(roomId, message), new Observer<StateModel<String>>() {
+                                @Override
+                                public void onChanged(StateModel<String> stateModel) {
+                                    switch (stateModel.getStatus()) {
+                                        case LOADING:
+                                            postLoading();
+                                            break;
+
+                                        case ERROR:
+                                            postError(stateModel.getError());
+                                            break;
+
+                                        case SUCCESS:
+                                            postSuccess(stateModel.getData());
+                                            break;
+                                    }
+                                }
+                            });
+
+                            removeSource(createLiveData);
+
+                            break;
+                    }
+                }
+            });
+        }
     }
 
     public void setCode(String code) {

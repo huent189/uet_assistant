@@ -13,5 +13,9 @@ public interface IStateLiveData<T> {
 
     void observe(@NonNull LifecycleOwner owner, @NonNull Observer<? super StateModel<T>> observer);
 
+    void observeForever(@NonNull Observer<? super StateModel<T>> observer);
+
+    void removeObserver(@NonNull final Observer<? super StateModel<T>> observer);
+
     StateModel<T> getValue();
 }

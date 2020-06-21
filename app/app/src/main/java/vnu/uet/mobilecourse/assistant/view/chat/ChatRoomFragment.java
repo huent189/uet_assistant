@@ -2,8 +2,6 @@ package vnu.uet.mobilecourse.assistant.view.chat;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,19 +10,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.util.Util;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,19 +34,10 @@ import vnu.uet.mobilecourse.assistant.adapter.MessageAdapter;
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
-import vnu.uet.mobilecourse.assistant.model.firebase.MemberRole;
-import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
-import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
-import vnu.uet.mobilecourse.assistant.repository.course.UserRepository;
-import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
-import vnu.uet.mobilecourse.assistant.repository.firebase.StudentRepository;
 import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
-import vnu.uet.mobilecourse.assistant.viewmodel.CalendarSharedViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.ChatRoomViewModel;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class ChatRoomFragment extends Fragment {
@@ -74,7 +57,6 @@ public class ChatRoomFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
 
         mViewModel = new ViewModelProvider(this).get(ChatRoomViewModel.class);
-        mViewModel.setLifecycleOwner(getViewLifecycleOwner());
 
         View root = inflater.inflate(R.layout.fragment_chat_room, container, false);
 
@@ -102,7 +84,8 @@ public class ChatRoomFragment extends Fragment {
             mType = args.getString("type");
             mViewModel.setType(mType);
 
-            if (mType.equals(GroupChat.DIRECT)) {
+            mRoomId = args.getString("roomId");
+            if (mRoomId == null && mType.equals(GroupChat.DIRECT)) {
                 mRoomId = FirebaseStructureId.directedChat(mCode);
             }
 
@@ -163,7 +146,7 @@ public class ChatRoomFragment extends Fragment {
 
         Message_GroupChatSubCol message = new Message_GroupChatSubCol();
         message.setFromId(User.getInstance().getStudentId());
-        message.setFromName("Nguyễn Tùng Lâm");
+        message.setFromName(User.getInstance().getName());
         message.setTimestamp(System.currentTimeMillis() / 1000);
         message.setContent(content);
         message.setId(Util.autoId());
@@ -173,15 +156,17 @@ public class ChatRoomFragment extends Fragment {
             public void onChanged(StateModel<String> stateModel) {
                 switch (stateModel.getStatus()) {
                     case SUCCESS:
-                        mEtMessage.setText(StringConst.EMPTY);
                         break;
 
                     case ERROR:
-                        Toast.makeText(mActivity, "Không thể gửi tin nhắn", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "Không thể gửi tin nhắn - "
+                                + stateModel.getError().getMessage(), Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
         });
+
+        mEtMessage.setText(StringConst.EMPTY);
     }
 
     private Toolbar initializeToolbar(View root) {
