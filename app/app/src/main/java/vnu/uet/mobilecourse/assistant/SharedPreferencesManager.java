@@ -21,9 +21,9 @@ public class SharedPreferencesManager {
         return preferences.getString(key, null);
     }
 
-    public static long getLongValue(String key){
+    public static long getLongValue(String key, long defValue){
         initPreference();
-        return preferences.getLong(key, -1);
+        return preferences.getLong(key, defValue);
     }
 
     public static void deleteKey(String key){
@@ -44,27 +44,24 @@ public class SharedPreferencesManager {
         initPreference();
         preferences.edit().putBoolean(key, value).apply();
     }
+
     public static boolean getBooleanValue(String key){
         initPreference();
         return preferences.getBoolean(key, false);
     }
+
     public static void setInt(String key, int value){
         initPreference();
         preferences.edit().putInt(key, value).apply();
     }
 
-    public static int getInt(String key){
+    public static int getInt(String key, int defValue){
         initPreference();
-        return preferences.getInt(key, 0);
+        return preferences.getInt(key, defValue);
     }
 
     public static void clearAll(){
         initPreference();
         preferences.edit().clear().apply();
-    }
-
-    public static void registerOnChangeListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
-        initPreference();
-        preferences.registerOnSharedPreferenceChangeListener(listener);
     }
 }

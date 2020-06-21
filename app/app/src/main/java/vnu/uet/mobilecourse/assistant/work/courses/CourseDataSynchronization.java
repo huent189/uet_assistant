@@ -15,7 +15,7 @@ public class CourseDataSynchronization {
                 .setConstraints(constraints)
                 .build();
         WorkManager.getInstance(MyApplication.getInstance().getApplicationContext())
-                .enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.KEEP, syncDataWork);
+                .enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.REPLACE, syncDataWork);
     }
 
 }
