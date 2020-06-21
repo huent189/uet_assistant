@@ -6,6 +6,7 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.room.*;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 import androidx.sqlite.db.SupportSQLiteQuery;
+import vnu.uet.mobilecourse.assistant.database.querymodel.MaterialWithCourse;
 import vnu.uet.mobilecourse.assistant.model.CourseOverview;
 import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.WeeklyMaterial;
@@ -113,8 +114,18 @@ public abstract class MaterialDAO {
     public abstract LiveData<InternalResourceContent> getInternalResourceParent(int id);
     @Query("SELECT * from InternalFile WHERE parentId = :id")
     public abstract LiveData<List<InternalFile>> getInternalFile(int id);
-    @Query("SELECT * from AssignmentContent WHERE startDate >= :startTime and deadline < :endTime")
-    public abstract LiveData<List<AssignmentContent>> getAssignment(long startTime, long endTime);
-    @Query("SELECT * from QuizNoGrade WHERE timeOpen >= :startTime and timeClose < :endTime")
-    public abstract LiveData<List<QuizNoGrade>>getQuiz(long startTime, long endTime);
+//    @Query("SELECT * from AssignmentContent WHERE startDate >= :startTime and deadline < :endTime")
+//    public abstract LiveData<List<AssignmentContent>> getAssignment(long startTime, long endTime);
+//    @Query("SELECT * from QuizNoGrade WHERE timeOpen >= :startTime and timeClose < :endTime")
+//    public abstract LiveData<List<QuizNoGrade>>getQuiz(long startTime, long endTime);
+@Query("SELECT Course.id as courseId, Course.code as courseName, Material.type, Material.completion as isCompleted, materialId," +
+        " AssignmentContent.name as materialName, startDate as startTime, deadline as endTime" +
+        " from Course, Material, AssignmentContent " +
+        "WHERE Course.id = AssignmentContent.courseId and Material.id = AssignmentContent.materialId and startDate >= :startTime and deadline < :endTime")
+    public abstract List<MaterialWithCourse> getAssignmentInRange(long startTime, long endTime);
+    @Query("SELECT Course.id as courseId, Course.code as courseName, Material.type, Material.completion as isCompleted, materialId," +
+            " QuizNoGrade.name as materialName, timeOpen as startTime, timeClose as endTime" +
+            " from Course, Material, QuizNoGrade " +
+            "WHERE Course.id = QuizNoGrade.courseId and Material.id = QuizNoGrade.materialId and timeOpen >= :startTime and timeClose < :endTime")
+    public abstract List<MaterialWithCourse> getQuizInRange(long startTime, long endTime);
 }
