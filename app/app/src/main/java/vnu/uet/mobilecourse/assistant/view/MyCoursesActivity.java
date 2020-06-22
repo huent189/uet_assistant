@@ -25,7 +25,6 @@ import vnu.uet.mobilecourse.assistant.alarm.scheduler.TodoScheduler;
 import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
-import vnu.uet.mobilecourse.assistant.repository.course.MaterialRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.NavigationBadgeRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.NetworkChangeReceiver;
