@@ -6,6 +6,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class Message_GroupChatSubColDAO extends FirebaseDAO<Message_GroupChatSub
     public StateLiveData<List<Message_GroupChatSubCol>> readAll() {
         StateLiveData<List<Message_GroupChatSubCol>> messagesState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
 
-        mColReference.limit(100).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        mColReference.orderBy("timestamp", Query.Direction.ASCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
