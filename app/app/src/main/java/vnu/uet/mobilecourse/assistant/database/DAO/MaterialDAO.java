@@ -121,11 +121,13 @@ public abstract class MaterialDAO {
 @Query("SELECT Course.id as courseId, Course.code as courseName, Material.type, Material.completion as isCompleted, materialId," +
         " AssignmentContent.name as materialName, startDate as startTime, deadline as endTime" +
         " from Course, Material, AssignmentContent " +
-        "WHERE Course.id = AssignmentContent.courseId and Material.id = AssignmentContent.materialId and startDate >= :startTime and deadline < :endTime")
+        "WHERE Course.id = AssignmentContent.courseId and Material.id = AssignmentContent.materialId " +
+        "and ((startDate >= :startTime and startDate < :endTime) or (deadline >= :startTime and deadline < :endTime))")
     public abstract List<MaterialWithCourse> getAssignmentInRange(long startTime, long endTime);
     @Query("SELECT Course.id as courseId, Course.code as courseName, Material.type, Material.completion as isCompleted, materialId," +
             " QuizNoGrade.name as materialName, timeOpen as startTime, timeClose as endTime" +
             " from Course, Material, QuizNoGrade " +
-            "WHERE Course.id = QuizNoGrade.courseId and Material.id = QuizNoGrade.materialId and timeOpen >= :startTime and timeClose < :endTime")
+            "WHERE Course.id = QuizNoGrade.courseId and Material.id = QuizNoGrade.materialId " +
+            "and ((timeOpen >= :startTime and timeOpen < :endTime) or (timeClose >= :startTime and timeClose < :endTime))")
     public abstract List<MaterialWithCourse> getQuizInRange(long startTime, long endTime);
 }
