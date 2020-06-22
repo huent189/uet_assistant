@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_create"
-        android:icon="@drawable/ic_create_24dp"
-        android:title="@string/title_chat"
+        android:icon="@drawable/ic_group_add_24dp"
+        android:title="@string/title_chat_create_group"
         app:showAsAction="ifRoom|collapseActionView" />
 </menu>

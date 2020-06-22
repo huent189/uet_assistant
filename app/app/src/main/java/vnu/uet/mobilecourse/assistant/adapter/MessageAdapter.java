@@ -185,9 +185,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     }
                 }
             });
+            mTvMessage.setVisibility(View.INVISIBLE);
         }
 
         protected void bind(Message_GroupChatSubCol message, boolean samePrev) {
+            mTvMessage.setVisibility(View.INVISIBLE);
             mTvMessage.setText(message.getContent());
 
             itemView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -208,6 +210,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     if (mTvMessage instanceof ChatBox) {
                         ((ChatBox) mTvMessage).reduce(maxWidth);
                     }
+
+                    mTvMessage.setVisibility(View.VISIBLE);
 
                     itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }

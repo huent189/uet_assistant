@@ -41,6 +41,7 @@ public class SearchStudentFragment extends Fragment {
     private SearchStudentViewModel mViewModel;
     private FragmentActivity mActivity;
     private NavController mNavController;
+    private ChatGroupAdapter mAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -81,6 +82,8 @@ public class SearchStudentFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                mAdapter.getFilter().filter(newText);
+
                 if (!newText.matches("[0-9]+")) {
                     tvSearchResultTitle.setVisibility(View.GONE);
                     layoutSearchResult.setVisibility(View.GONE);
@@ -92,6 +95,18 @@ public class SearchStudentFragment extends Fragment {
                     tvSearchResultTitle.setVisibility(View.VISIBLE);
                     layoutSearchResult.setVisibility(View.GONE);
                     shimmerSearchResult.setVisibility(View.VISIBLE);
+                    return false;
+                }
+
+                long count = mAdapter.getVisibleRooms().stream()
+                        .filter(room -> room.getType().equals(GroupChat.DIRECT)
+                                && room.getId().contains(newText)
+                        ).count();
+
+                if (count > 0) {
+                    tvSearchResultTitle.setVisibility(View.GONE);
+                    layoutSearchResult.setVisibility(View.GONE);
+                    shimmerSearchResult.setVisibility(View.GONE);
                     return false;
                 }
 
@@ -166,8 +181,8 @@ public class SearchStudentFragment extends Fragment {
             public void onChanged(StateModel<List<GroupChat_UserSubCol>> stateModel) {
                 switch (stateModel.getStatus()) {
                     case SUCCESS:
-                        ChatGroupAdapter adapter = new ChatGroupAdapter(stateModel.getData(), SearchStudentFragment.this);
-                        rvChatGroups.setAdapter(adapter);
+                        mAdapter = new ChatGroupAdapter(stateModel.getData(), SearchStudentFragment.this);
+                        rvChatGroups.setAdapter(mAdapter);
                         break;
                 }
             }
