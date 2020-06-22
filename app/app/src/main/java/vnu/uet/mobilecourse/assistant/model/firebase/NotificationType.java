@@ -20,8 +20,14 @@ public interface NotificationType {
      * admin notification
      */
     int ADMIN = 4;
+
     /**
      * new forum post;
      */
     int FORUM = 5;
+
+    /**
+     * submission deadline
+     */
+    int SUBMISSION = 6;
 }

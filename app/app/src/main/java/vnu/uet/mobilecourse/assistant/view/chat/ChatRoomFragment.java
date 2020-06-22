@@ -159,6 +159,10 @@ public class ChatRoomFragment extends Fragment {
             public void onChanged(StateModel<String> stateModel) {
                 switch (stateModel.getStatus()) {
                     case SUCCESS:
+                        if (stateModel.getData().equals(ChatRoomViewModel.CONNECTED_MSG)) {
+                            Toast.makeText(mActivity, stateModel.getData(), Toast.LENGTH_SHORT).show();
+                        }
+
                         break;
 
                     case ERROR:

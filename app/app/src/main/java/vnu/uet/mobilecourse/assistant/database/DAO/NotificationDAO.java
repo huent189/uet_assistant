@@ -6,15 +6,17 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
+import vnu.uet.mobilecourse.assistant.exception.UnsupportedNotificationException;
+import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
 import vnu.uet.mobilecourse.assistant.model.notification.AdminNotification;
 import vnu.uet.mobilecourse.assistant.model.notification.CourseAttendantNotification;
+import vnu.uet.mobilecourse.assistant.model.notification.ForumPostNotification;
 import vnu.uet.mobilecourse.assistant.model.notification.NewMaterialNotification;
-import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
 import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.notification.SubmissionNotification;
 import vnu.uet.mobilecourse.assistant.model.notification.TodoNotification;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
@@ -57,12 +59,20 @@ public class NotificationDAO extends FirebaseDAO<Notification_UserSubCol> {
                         }
                         // query completed with snapshots
                         else {
-                            List<Notification_UserSubCol> allLists = snapshots.getDocuments().stream()
-                                    .map(this::fromSnapshot)
-                                    .filter(Objects::nonNull)
-                                    .collect(Collectors.toList());
+                            List<Notification_UserSubCol> allLists = new ArrayList<>();
 
-                            mDataList.postSuccess(allLists);
+                            try {
+                                for (DocumentSnapshot snapshot : snapshots.getDocuments()) {
+                                    Notification_UserSubCol notification = fromSnapshot(snapshot);
+                                    allLists.add(notification);
+                                }
+
+                                mDataList.postSuccess(allLists);
+
+                            } catch (UnsupportedNotificationException ex) {
+                                ex.printStackTrace();
+                                mDataList.postError(ex);
+                            }
                         }
                     });
         }
@@ -70,7 +80,7 @@ public class NotificationDAO extends FirebaseDAO<Notification_UserSubCol> {
         return mDataList;
     }
 
-    private Notification_UserSubCol fromSnapshot(DocumentSnapshot snapshot) {
+    private Notification_UserSubCol fromSnapshot(DocumentSnapshot snapshot) throws UnsupportedNotificationException {
         Notification_UserSubCol notification = null;
 
         Object typeObj = snapshot.get("type");
@@ -85,9 +95,7 @@ public class NotificationDAO extends FirebaseDAO<Notification_UserSubCol> {
 
                 case NotificationType.TODO:
                     notification = new TodoNotification();
-
                     String todoId = snapshot.getString("todoId");
-
                     ((TodoNotification) notification).setTodoId(todoId);
 
                     break;
@@ -109,33 +117,59 @@ public class NotificationDAO extends FirebaseDAO<Notification_UserSubCol> {
 
                     break;
 
-                case NotificationType.ATTENDANCE:
+                case NotificationType.ATTENDANCE: {
                     notification = new CourseAttendantNotification();
                     String courseCode = snapshot.getString("courseCode");
                     ((CourseAttendantNotification) notification).setCourseCode(courseCode);
 
                     break;
-            }
-
-            if (notification != null) {
-                String id = snapshot.getId();
-                notification.setId(id);
-
-                notification.setType(type);
-
-                Object notifyTimeObj = snapshot.get("notifyTime");
-                if (notifyTimeObj instanceof Long) {
-                    long notifyTime = ((Long) notifyTimeObj).intValue();
-                    notification.setNotifyTime(notifyTime);
                 }
 
-                String title = snapshot.getString("title");
-                notification.setTitle(title);
+                case NotificationType.FORUM:
+                    notification = new ForumPostNotification();
+                    Long discussionId = snapshot.getLong("discussionId");
+                    assert discussionId != null;
+                    ((ForumPostNotification) notification).setDiscussionId(discussionId.intValue());
 
-                String description = snapshot.getString("description");
-                notification.setDescription(description);
+                    break;
+
+                case NotificationType.SUBMISSION: {
+                    notification = new SubmissionNotification();
+                    String courseCode = snapshot.getString("courseCode");
+                    Long courseId = snapshot.getLong("courseId");
+                    Long materialId = snapshot.getLong("materialId");
+                    String materialType = snapshot.getString("materialType");
+
+                    ((SubmissionNotification) notification).setCourseCode(courseCode);
+                    assert courseId != null;
+                    ((SubmissionNotification) notification).setCourseId(courseId.intValue());
+                    assert materialId != null;
+                    ((SubmissionNotification) notification).setMaterialId(materialId.intValue());
+                    ((SubmissionNotification) notification).setMaterialType(materialType);
+
+                    break;
+                }
+
+                default:
+                    throw new UnsupportedNotificationException(type);
             }
 
+            String id = snapshot.getId();
+            notification.setId(id);
+
+            notification.setType(type);
+
+            Object notifyTimeObj = snapshot.get("notifyTime");
+            if (notifyTimeObj instanceof Long) {
+                long notifyTime = ((Long) notifyTimeObj).intValue();
+                notification.setNotifyTime(notifyTime);
+            }
+
+            String title = snapshot.getString("title");
+            notification.setTitle(title);
+
+            String description = snapshot.getString("description");
+            notification.setDescription(description);
         }
 
         return notification;
