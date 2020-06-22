@@ -77,15 +77,17 @@ public class GroupChat_UserSubColDAO extends FirebaseDAO<GroupChat_UserSubCol> {
         WriteBatch batch = db.batch();
         for (Member_GroupChatSubCol member :
                 groupChat.getMembers()) {
-            DocumentReference groupChatDocRef = db.collection(FirebaseCollectionName.USER).document(member.getId())
-                                                .collection(FirebaseCollectionName.GROUP_CHAT).document(groupChat.getId());
+            DocumentReference groupChatDocRef = db
+                    .collection(FirebaseCollectionName.USER)
+                    .document(member.getId())
+                    .collection(FirebaseCollectionName.GROUP_CHAT)
+                    .document(groupChat.getId());
             batch.set(groupChatDocRef, groupChat_userSubCol);
         }
-        batch.commit().addOnFailureListener((e)->{
-            addGroupChatState.postError(e);
-        }).addOnSuccessListener((Void)-> {
-            addGroupChatState.postSuccess("add group chat success");
-        });
+        batch.commit().addOnFailureListener(addGroupChatState::postError)
+                .addOnSuccessListener((Void)->
+                    addGroupChatState.postSuccess("add group chat success")
+                );
 
         return addGroupChatState;
     }
