@@ -5,9 +5,7 @@
     android:background="@drawable/border_left_background"
     android:orientation="vertical"
     android:paddingTop="@dimen/small_margin"
-    android:paddingStart="@dimen/margin_x2"
     android:layout_marginStart="@dimen/margin_x2"
-    android:paddingEnd="0dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -15,6 +13,8 @@
         android:id="@+id/layoutContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="@dimen/margin_x2"
+        android:paddingEnd="0dp"
         android:orientation="vertical">
 
         <TextView

@@ -1,28 +1,23 @@
 package vnu.uet.mobilecourse.assistant.repository.firebase;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MediatorLiveData;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.WriteBatch;
 
 import java.util.List;
 
 import androidx.lifecycle.Observer;
-import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChat_UserSubColDAO;
-import vnu.uet.mobilecourse.assistant.database.DAO.Member_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Message_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
-import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -49,9 +44,7 @@ public class ChatRepository implements IChatRepository {
 
     public ChatRepository() {
         db = FirebaseFirestore.getInstance();
-
         mUserGroupChatDAO = new GroupChat_UserSubColDAO();
-
     }
 
     @Override
@@ -73,22 +66,16 @@ public class ChatRepository implements IChatRepository {
 
     @Override
     public StateLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message) {
-        DocumentReference messRef = db.collection(FirebaseCollectionName.GROUP_CHAT).document(groupId).collection(FirebaseCollectionName.MESSAGE).document(message.getId());
+        DocumentReference messRef = db
+                .collection(FirebaseCollectionName.GROUP_CHAT)
+                .document(groupId)
+                .collection(FirebaseCollectionName.MESSAGE)
+                .document(message.getId());
+
         StateLiveData<String> sendStatus = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
-        messRef.set(message).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                sendStatus.postError(e);
-            }
-        }).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                // update last message to group chat in user col
-                db.collection(FirebaseCollectionName.USER).document(User.getInstance().getStudentId()) // user DocRef
-                        .collection(FirebaseCollectionName.GROUP_CHAT) // subCollection
-                        .document(groupId) // group DocRef
-                        .update("lastMessage", message.getContent(),
-                                "lastMessageTime", message.getTimestamp()).addOnFailureListener(new OnFailureListener() {
+
+        messRef.set(message)
+                .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         sendStatus.postError(e);
@@ -96,18 +83,32 @@ public class ChatRepository implements IChatRepository {
                 }).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        sendStatus.postSuccess("success");
+                        // update last message to group chat in user col
+                        db.collection(FirebaseCollectionName.USER)
+                                .document(User.getInstance().getStudentId()) // user DocRef
+                                .collection(FirebaseCollectionName.GROUP_CHAT) // subCollection
+                                .document(groupId) // group DocRef
+                                .update("lastMessage", message.getContent(),
+                                        "lastMessageTime", message.getTimestamp())
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        sendStatus.postError(e);
+                                    }
+                                }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        sendStatus.postSuccess("success");
+                                    }
+                                });
                     }
                 });
-            }
-        });
-
 
         return sendStatus;
     }
 
     @Override
-    public IStateLiveData<String> createGroupChat(GroupChat groupChat) {
+    public StateMediatorLiveData<String> createGroupChat(GroupChat groupChat) {
         StateLiveData<GroupChat> createGroupState = new GroupChatDAO().add( groupChat.getId(), groupChat);
         StateLiveData<String> addGroup = new GroupChat_UserSubColDAO().addGroupChat(groupChat);
         StateLiveData<String> addMember = new GroupChatDAO().addMembers(groupChat.getId(), groupChat.getMembers());
@@ -119,7 +120,7 @@ public class ChatRepository implements IChatRepository {
     static class CreateGroupChatState extends StateMediatorLiveData<String> {
         private boolean createGroupState = false;
         private boolean addMemberToGroupState = false;
-        private boolean addGroupToMenberState = false;
+        private boolean addGroupToMemberState = false;
 
         CreateGroupChatState(@NonNull StateLiveData<GroupChat> createGroupLiveData,
                              @NonNull StateLiveData<String> addMemberLiveData,
@@ -128,16 +129,18 @@ public class ChatRepository implements IChatRepository {
             addSource(createGroupLiveData, stateModel -> {
                 switch (stateModel.getStatus()) {
                     case ERROR:
+                        createGroupState = false;
                         postError(stateModel.getError());
                         break;
                     case SUCCESS:
                         createGroupState = true;
                         break;
                     case LOADING:
+                        createGroupState = false;
                         postLoading();
                         break;
                 }
-                if (createGroupState && addMemberToGroupState && addGroupToMenberState) {
+                if (createGroupState && addMemberToGroupState && addGroupToMemberState) {
                     postSuccess("create group success!");
                 }
             });
@@ -145,33 +148,37 @@ public class ChatRepository implements IChatRepository {
             addSource(addMemberLiveData, stateModel -> {
                 switch (stateModel.getStatus()) {
                     case ERROR:
+                        addMemberToGroupState = false;
                         postError(stateModel.getError());
                         break;
                     case SUCCESS:
                         addMemberToGroupState = true;
                         break;
                     case LOADING:
+                        addMemberToGroupState = false;
                         postLoading();
                         break;
                 }
-                if (createGroupState && addMemberToGroupState && addGroupToMenberState) {
+                if (createGroupState && addMemberToGroupState && addGroupToMemberState) {
                     postSuccess("create group success!");
                 }
             });
 
-            addSource(addMemberLiveData, stateModel -> {
+            addSource(addGroupLiveData, stateModel -> {
                 switch (stateModel.getStatus()) {
                     case ERROR:
+                        addGroupToMemberState = false;
                         postError(stateModel.getError());
                         break;
                     case SUCCESS:
-                        addGroupToMenberState = true;
+                        addGroupToMemberState = true;
                         break;
                     case LOADING:
+                        addGroupToMemberState = false;
                         postLoading();
                         break;
                 }
-                if (createGroupState && addMemberToGroupState && addGroupToMenberState) {
+                if (createGroupState && addMemberToGroupState && addGroupToMemberState) {
                     postSuccess("create group success!");
                 }
             });

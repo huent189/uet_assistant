@@ -106,9 +106,9 @@ public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> im
         protected FilterResults performFiltering(CharSequence constraint) {
             List<Participant_CourseSubCol> filteredList;
 
-            if (constraint == null || constraint.length() == 0)
+            if (constraint == null || constraint.length() == 0) {
                 filteredList = new ArrayList<>(mFullList);
-            else {
+            } else {
                 final String filterPattern = constraint.toString().trim();
 
                 filteredList = mFullList.stream()
