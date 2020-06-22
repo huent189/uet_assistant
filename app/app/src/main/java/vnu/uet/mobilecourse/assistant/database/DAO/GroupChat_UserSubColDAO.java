@@ -2,13 +2,17 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 
 import android.util.Log;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
@@ -60,5 +64,29 @@ public class GroupChat_UserSubColDAO extends FirebaseDAO<GroupChat_UserSubCol> {
         }
 
         return mDataList;
+    }
+
+    public StateLiveData<String> addGroupChat(GroupChat groupChat) {
+        StateLiveData<String> addGroupChatState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
+        GroupChat_UserSubCol groupChat_userSubCol = new GroupChat_UserSubCol();
+        groupChat_userSubCol.setSeen(false);
+        groupChat_userSubCol.setAvatar(groupChat.getAvatar());
+        groupChat_userSubCol.setName(groupChat.getName());
+        groupChat_userSubCol.setId(groupChat.getId());
+
+        WriteBatch batch = db.batch();
+        for (Member_GroupChatSubCol member :
+                groupChat.getMembers()) {
+            DocumentReference groupChatDocRef = db.collection(FirebaseCollectionName.USER).document(member.getId())
+                                                .collection(FirebaseCollectionName.GROUP_CHAT).document(groupChat.getId());
+            batch.set(groupChatDocRef, groupChat_userSubCol);
+        }
+        batch.commit().addOnFailureListener((e)->{
+            addGroupChatState.postError(e);
+        }).addOnSuccessListener((Void)-> {
+            addGroupChatState.postSuccess("add group chat success");
+        });
+
+        return addGroupChatState;
     }
 }

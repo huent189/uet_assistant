@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.repository.firebase;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MediatorLiveData;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -15,6 +16,7 @@ import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChat_UserSubColDAO;
+import vnu.uet.mobilecourse.assistant.database.DAO.Member_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Message_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
 import vnu.uet.mobilecourse.assistant.model.User;
@@ -81,7 +83,6 @@ public class ChatRepository implements IChatRepository {
         }).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-
                 // update last message to group chat in user col
                 db.collection(FirebaseCollectionName.USER).document(User.getInstance().getStudentId()) // user DocRef
                         .collection(FirebaseCollectionName.GROUP_CHAT) // subCollection
@@ -106,44 +107,75 @@ public class ChatRepository implements IChatRepository {
     }
 
     @Override
-    public StateLiveData<GroupChat> createGroupChat(GroupChat groupChat) {
-        // create group chat
-        StateLiveData<GroupChat> groupChatStateLiveData = new GroupChatDAO().add(groupChat.getId(), groupChat);
+    public IStateLiveData<String> createGroupChat(GroupChat groupChat) {
+        StateLiveData<GroupChat> createGroupState = new GroupChatDAO().add( groupChat.getId(), groupChat);
+        StateLiveData<String> addGroup = new GroupChat_UserSubColDAO().addGroupChat(groupChat);
+        StateLiveData<String> addMember = new GroupChatDAO().addMembers(groupChat.getId(), groupChat.getMembers());
 
-        // add member to group chat
-        WriteBatch batch = db.batch();
-        for (Member_GroupChatSubCol member:
-             groupChat.getMembers()) {
-            DocumentReference memberRef = db.collection(FirebaseCollectionName.GROUP_CHAT).document(groupChat.getId()).collection(FirebaseCollectionName.MEMBER).document(member.getId());
-            batch.set(memberRef, member);
+        return new CreateGroupChatState(createGroupState, addMember, addGroup);
+    }
+
+
+    static class CreateGroupChatState extends StateMediatorLiveData<String> {
+        private boolean createGroupState = false;
+        private boolean addMemberToGroupState = false;
+        private boolean addGroupToMenberState = false;
+
+        CreateGroupChatState(@NonNull StateLiveData<GroupChat> createGroupLiveData,
+                             @NonNull StateLiveData<String> addMemberLiveData,
+                             @NonNull StateLiveData<String> addGroupLiveData) {
+            super(new StateModel<>(StateStatus.LOADING));
+            addSource(createGroupLiveData, stateModel -> {
+                switch (stateModel.getStatus()) {
+                    case ERROR:
+                        postError(stateModel.getError());
+                        break;
+                    case SUCCESS:
+                        createGroupState = true;
+                        break;
+                    case LOADING:
+                        postLoading();
+                        break;
+                }
+                if (createGroupState && addMemberToGroupState && addGroupToMenberState) {
+                    postSuccess("create group success!");
+                }
+            });
+
+            addSource(addMemberLiveData, stateModel -> {
+                switch (stateModel.getStatus()) {
+                    case ERROR:
+                        postError(stateModel.getError());
+                        break;
+                    case SUCCESS:
+                        addMemberToGroupState = true;
+                        break;
+                    case LOADING:
+                        postLoading();
+                        break;
+                }
+                if (createGroupState && addMemberToGroupState && addGroupToMenberState) {
+                    postSuccess("create group success!");
+                }
+            });
+
+            addSource(addMemberLiveData, stateModel -> {
+                switch (stateModel.getStatus()) {
+                    case ERROR:
+                        postError(stateModel.getError());
+                        break;
+                    case SUCCESS:
+                        addGroupToMenberState = true;
+                        break;
+                    case LOADING:
+                        postLoading();
+                        break;
+                }
+                if (createGroupState && addMemberToGroupState && addGroupToMenberState) {
+                    postSuccess("create group success!");
+                }
+            });
         }
-
-        batch.commit().addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                groupChatStateLiveData.postError(e);
-            }
-        }).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                // add group chat to member
-                GroupChat_UserSubCol groupChat_userSubCol = new GroupChat_UserSubCol();
-                groupChat_userSubCol.setId(groupChat.getId());
-                groupChat_userSubCol.setName(groupChat.getName());
-                groupChat_userSubCol.setSeen(false);
-                db.collection(FirebaseCollectionName.USER).document(User.getInstance().getStudentId()) // user DocRef
-                        .collection(FirebaseCollectionName.GROUP_CHAT) // subCollection
-                        .document(groupChat.getId()) // group DocRef
-                        .set(groupChat_userSubCol).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        groupChatStateLiveData.postError(e);
-                    }
-                });
-            }
-        });
-
-        return groupChatStateLiveData;
     }
 
     @Deprecated

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.List;
@@ -21,7 +22,7 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebaseDAO<T> {
     protected static final String TAG = FirebaseDAO.class.getSimpleName();
-
+    protected FirebaseFirestore db = FirebaseFirestore.getInstance();
     /**
      * Student Id = Owner Id
      */
