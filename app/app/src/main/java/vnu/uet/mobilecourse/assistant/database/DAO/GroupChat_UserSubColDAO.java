@@ -2,8 +2,10 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.List;
@@ -69,47 +71,60 @@ public class GroupChat_UserSubColDAO extends FirebaseDAO<GroupChat_UserSubCol> {
     public StateLiveData<String> addGroupChat(GroupChat groupChat) {
         StateLiveData<String> addGroupChatState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
 
-        if (groupChat.getMembers().size()==2) {
-            WriteBatch batch = db.batch();
+        WriteBatch batch = db.batch();
+
+        // directed chat
+        if (groupChat.getMembers().size() == 2) {
 
             for (int i = 0; i < 2; i++) {
                 GroupChat_UserSubCol groupChat_userSubCol = new GroupChat_UserSubCol();
+
                 groupChat_userSubCol.setSeen(false);
-                groupChat_userSubCol.setAvatar(groupChat.getMembers().get((i+1)%2).getAvatar());
-                groupChat_userSubCol.setName(groupChat.getMembers().get((i+1)%2).getName());
+
+                int otherIdx = (i + 1) % 2;
+                Member_GroupChatSubCol other = groupChat.getMembers().get(otherIdx);
+
+                groupChat_userSubCol.setAvatar(other.getAvatar());
+                groupChat_userSubCol.setName(other.getName());
+
                 groupChat_userSubCol.setId(groupChat.getId());
 
-                DocumentReference docRef = db.collection(FirebaseCollectionName.USER).document(groupChat.getMembers().get(i).getId())
-                                                                                    .collection(FirebaseCollectionName.GROUP_CHAT).document(groupChat.getId());
+                Member_GroupChatSubCol me = groupChat.getMembers().get(i);
+
+                DocumentReference docRef = db.collection(FirebaseCollectionName.USER)
+                        .document(me.getId())
+                        .collection(FirebaseCollectionName.GROUP_CHAT)
+                        .document(groupChat.getId());
+
                 batch.set(docRef, groupChat_userSubCol);
             }
-            batch.commit().addOnFailureListener((e) -> {
-                addGroupChatState.postError(e);
-            }).addOnSuccessListener((Void) -> {
-                addGroupChatState.postSuccess("add group chat success");
-            });
 
-        } else {
+        }
 
+        // group chat
+        else {
             GroupChat_UserSubCol groupChat_userSubCol = new GroupChat_UserSubCol();
             groupChat_userSubCol.setSeen(false);
             groupChat_userSubCol.setAvatar(groupChat.getAvatar());
             groupChat_userSubCol.setName(groupChat.getName());
             groupChat_userSubCol.setId(groupChat.getId());
 
-            WriteBatch batch = db.batch();
-            for (Member_GroupChatSubCol member :
-                    groupChat.getMembers()) {
-                DocumentReference groupChatDocRef = db.collection(FirebaseCollectionName.USER).document(member.getId())
-                        .collection(FirebaseCollectionName.GROUP_CHAT).document(groupChat.getId());
+            for (Member_GroupChatSubCol member : groupChat.getMembers()) {
+                DocumentReference groupChatDocRef = db
+                        .collection(FirebaseCollectionName.USER)
+                        .document(member.getId())
+                        .collection(FirebaseCollectionName.GROUP_CHAT)
+                        .document(groupChat.getId());
+
                 batch.set(groupChatDocRef, groupChat_userSubCol);
             }
-            batch.commit().addOnFailureListener((e) -> {
-                addGroupChatState.postError(e);
-            }).addOnSuccessListener((Void) -> {
-                addGroupChatState.postSuccess("add group chat success");
-            });
         }
+
+        batch.commit()
+                .addOnFailureListener(addGroupChatState::postError)
+                .addOnSuccessListener((Void)->
+                        addGroupChatState.postSuccess("add group chat success")
+                );
 
         return addGroupChatState;
     }

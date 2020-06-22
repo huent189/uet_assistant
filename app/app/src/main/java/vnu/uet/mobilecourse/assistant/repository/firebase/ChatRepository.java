@@ -6,6 +6,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.util.Util;
 
 import java.util.List;
 
@@ -30,7 +32,6 @@ public class ChatRepository implements IChatRepository {
     private FirebaseFirestore db;
 
     private GroupChat_UserSubColDAO mUserGroupChatDAO;
-    private Message_GroupChatSubColDAO mMessageDAO;
 
     private static ChatRepository instance;
 
@@ -42,7 +43,7 @@ public class ChatRepository implements IChatRepository {
         return instance;
     }
 
-    public ChatRepository() {
+    private ChatRepository() {
         db = FirebaseFirestore.getInstance();
         mUserGroupChatDAO = new GroupChat_UserSubColDAO();
     }
@@ -59,7 +60,7 @@ public class ChatRepository implements IChatRepository {
 
     @Override
     public IStateLiveData<List<Message_GroupChatSubCol>> getMessages(String groupId) {
-        mMessageDAO = new Message_GroupChatSubColDAO(groupId);
+        Message_GroupChatSubColDAO mMessageDAO = new Message_GroupChatSubColDAO(groupId);
         return mMessageDAO.readAll();
     }
 
@@ -118,6 +119,7 @@ public class ChatRepository implements IChatRepository {
 
 
     static class CreateGroupChatState extends StateMediatorLiveData<String> {
+
         private boolean createGroupState = false;
         private boolean addMemberToGroupState = false;
         private boolean addGroupToMemberState = false;

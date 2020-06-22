@@ -82,6 +82,7 @@
     <string name="title_discussion_unfollow">Hủy theo dõi</string>
     <string name="dot_delimiter">•</string>
     <string name="title_chat_create_group">Tạo cuộc trò chuyện nhóm</string>
+    <string name="title_next">Tiếp</string>
 
     <string-array name="dayOfWeek">
         <item>C.N</item>

@@ -1,11 +1,15 @@
 package vnu.uet.mobilecourse.assistant.model.event;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.FbAndCourseMap;
 
-public class CourseSubmissionEvent implements IEvent {
+public class CourseSubmissionEvent implements IEvent, Parcelable {
+
     private int courseId;
     private int materialId;
     private String courseName;
@@ -13,6 +17,45 @@ public class CourseSubmissionEvent implements IEvent {
     private long time;
     private boolean isCompleted;
     private String type;
+
+    protected CourseSubmissionEvent(Parcel in) {
+        courseId = in.readInt();
+        materialId = in.readInt();
+        courseName = in.readString();
+        title = in.readString();
+        time = in.readLong();
+        isCompleted = in.readByte() != 0;
+        type = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(courseId);
+        dest.writeInt(materialId);
+        dest.writeString(courseName);
+        dest.writeString(title);
+        dest.writeLong(time);
+        dest.writeByte((byte) (isCompleted ? 1 : 0));
+        dest.writeString(type);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<CourseSubmissionEvent> CREATOR = new Creator<CourseSubmissionEvent>() {
+        @Override
+        public CourseSubmissionEvent createFromParcel(Parcel in) {
+            return new CourseSubmissionEvent(in);
+        }
+
+        @Override
+        public CourseSubmissionEvent[] newArray(int size) {
+            return new CourseSubmissionEvent[size];
+        }
+    };
+
     public String getType() {
         return type;
     }
