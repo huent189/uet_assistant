@@ -20,7 +20,7 @@ public class Discussion implements Parcelable {
     private String name;
     @SerializedName("created")
     private long timeCreated;
-    @SerializedName("modified")
+    @SerializedName("timemodified")
     private long timeModified;
     @SerializedName("userfullname")
     private String authorName;

@@ -3,6 +3,7 @@ package vnu.uet.mobilecourse.assistant.work.courses;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.content.Context;
+import android.text.Html;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -15,6 +16,7 @@ import vnu.uet.mobilecourse.assistant.model.CourseOverview;
 import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
+import vnu.uet.mobilecourse.assistant.model.forum.Post;
 import vnu.uet.mobilecourse.assistant.model.material.MaterialContent;
 import vnu.uet.mobilecourse.assistant.model.material.PageContent;
 import vnu.uet.mobilecourse.assistant.model.notification.ForumPostNotification;
@@ -30,10 +32,7 @@ import vnu.uet.mobilecourse.assistant.repository.firebase.NotificationRepository
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -71,11 +70,21 @@ public class CourseSyncDataWorker extends Worker {
         return notification;
     }
     @SuppressLint("RestrictedApi")
-    private Notification_UserSubCol generateNotification(Discussion discussion){
+    private Notification_UserSubCol generateNotification(Discussion discussion) throws IOException {
         ForumPostNotification notification = new ForumPostNotification();
+        List<Post> posts = forumRepository.updatePostByDiscussion(discussion.getId());
+        List<String> postMessages = posts.stream().sorted(new Comparator<Post>() {
+            @Override
+            public int compare(Post o1, Post o2) {
+                if(o1.getTimeCreated() == o2.getTimeCreated()) return 0;
+                return o1.getTimeCreated() < o2.getTimeCreated() ? -1 : 1;
+            }
+        }).map(post -> post.getAuthorName()+ ": "
+                + Html.fromHtml(post.getMessage(), Html.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH).toString().replace('\n', ' '))
+                .collect(Collectors.toList());
         notification.setId(Util.autoId());
-        notification.setTitle("Bạn có một bài đăng mới trên diễn đàn");
-        notification.setDescription(discussion.getName());
+        notification.setTitle(discussion.getName());
+        notification.setDescription(String.join("\n", postMessages));
         notification.setNotifyTime(System.currentTimeMillis() / 1000);
         notification.setDiscussionId(discussion.getId());
         return notification;
@@ -98,6 +107,7 @@ public class CourseSyncDataWorker extends Worker {
     public Result doWork() {
         Log.d("COURSE_SYNC", "doWork:");
         try {
+            User.getInstance().setLastSyncTime(System.currentTimeMillis() / 1000);
             ArrayList<Integer> courseIds = courseRepository.updateMyCourses();
             ArrayList<Material> updateMaterialList = new ArrayList<>();
             courseIds.forEach(new Consumer<Integer>() {
@@ -112,46 +122,52 @@ public class CourseSyncDataWorker extends Worker {
                     }
                 }
             });
+            List<MaterialContent> materials = null;
+            List<Discussion> discussions = updateForum();
             if(updateMaterialList.size() > 0 ){
                 Set<String> type = updateMaterialList.stream().map(Material::getType).collect(Collectors.toSet());
-                List<MaterialContent> materials = materialRepository.selectiveUpdate(type);
-                List<Discussion> discussions = updateForum();
-                User.getInstance().setLastSyncTime(System.currentTimeMillis()/1000);
-                if(User.getInstance().getEnableSyncNoti()){
-                    if(materials.size() != 0){
-                        List<IdNamePair> courseNames = database.coursesDAO().getAllCourseName();
-                        Map<Integer, String> idNameMap = courseNames.stream()
-                                .collect(Collectors.toMap(IdNamePair::getId, IdNamePair::getName));
-                        for (MaterialContent content:materials) {
-                            Notification_UserSubCol notification;
-                            if(content instanceof PageContent && ((PageContent) content).getRevision() > 1){
-                                notification = generateNotification(content, false, idNameMap.get(content.getCourseId()));
-                            } else {
-                                notification = generateNotification(content, true, idNameMap.get(content.getCourseId()));
-                            }
-                            NotificationRepository.getInstance().add(notification);
-                            NavigationBadgeRepository.getInstance().increaseNewNotifications();
-                            if(content.getTimeModified() >= User.getInstance().getLastSyncTime()){
-                                pushNotification(mContext, notification);
-                            }
+                materials = materialRepository.selectiveUpdate(type);
+
+            }
+            if(User.getInstance().getEnableSyncNoti()){
+                if(materials != null && materials.size() != 0){
+                    List<IdNamePair> courseNames = database.coursesDAO().getAllCourseName();
+                    Map<Integer, String> idNameMap = courseNames.stream()
+                            .collect(Collectors.toMap(IdNamePair::getId, IdNamePair::getName));
+                    for (MaterialContent content:materials) {
+                        Notification_UserSubCol notification;
+                        if(content instanceof PageContent && ((PageContent) content).getRevision() > 1){
+                            notification = generateNotification(content, false, idNameMap.get(content.getCourseId()));
+                        } else {
+                            notification = generateNotification(content, true, idNameMap.get(content.getCourseId()));
+                        }
+                        NotificationRepository.getInstance().add(notification);
+                        NavigationBadgeRepository.getInstance().increaseNewNotifications();
+                        if(content.getTimeModified() >= User.getInstance().getLastSyncTime()){
+                            pushNotification(mContext, notification);
                         }
                     }
-                    if(discussions.size() != 0){
-                        discussions.forEach(new Consumer<Discussion>() {
-                            @Override
-                            public void accept(Discussion discussion) {
-                                Notification_UserSubCol notification = generateNotification(discussion);
+                }
+                if(discussions.size() != 0){
+                    discussions.forEach(new Consumer<Discussion>() {
+                        @Override
+                        public void accept(Discussion discussion) {
+                            Notification_UserSubCol notification = null;
+                            try {
+                                notification = generateNotification(discussion);
                                 NotificationRepository.getInstance().add(notification);
                                 NavigationBadgeRepository.getInstance().increaseNewNotifications();
                                 pushNotification(mContext, notification);
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                        });
-                    }
+                        }
+                    });
+                }
 
-                }
-                else {
-                    User.getInstance().setEnableSyncNoti(true);
-                }
+            }
+            else {
+                User.getInstance().setEnableSyncNoti(true);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -161,7 +177,6 @@ public class CourseSyncDataWorker extends Worker {
     }
     private List<Discussion> updateForum() throws IOException {
         List<Discussion> updateList = forumRepository.updateAllDiscussion();
-        updateList = updateList.stream().filter(discussion -> discussion.getTimeModified() > User.getInstance().getLastSyncTime()).collect(Collectors.toList());
         return updateList;
     }
 }

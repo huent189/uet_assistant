@@ -44,6 +44,7 @@ public class UserRepository {
                         JsonElement userId = response.body().get("userid");
                         if(userId != null){
                             User.getInstance().setUserId(userId.getAsString());
+                            User.getInstance().setEnableSyncNoti(false);
                             new FirebaseAuthenticationService().sendLinkLoginToMail(User.getInstance().getEmail(), liveLoginResponse);
                         }
 
