@@ -1,5 +1,7 @@
 package vnu.uet.mobilecourse.assistant.viewmodel;
 
+import android.widget.Toast;
+
 import java.util.List;
 
 import androidx.lifecycle.Observer;
@@ -89,6 +91,8 @@ public class ChatRoomViewModel extends ViewModel {
                             break;
 
                         case SUCCESS:
+                            postSuccess(CONNECTED_MSG);
+
                             addSource(mChatRepo.sendMessage(roomId, message), new Observer<StateModel<String>>() {
                                 @Override
                                 public void onChanged(StateModel<String> stateModel) {
@@ -128,4 +132,6 @@ public class ChatRoomViewModel extends ViewModel {
     public void setType(String type) {
         this.mType = type;
     }
+
+    public static final String CONNECTED_MSG = "Hai bạn đã được kết nối";
 }
