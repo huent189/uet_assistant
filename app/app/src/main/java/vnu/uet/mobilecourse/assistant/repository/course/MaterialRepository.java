@@ -12,7 +12,6 @@ import vnu.uet.mobilecourse.assistant.model.material.*;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 
 import java.io.IOException;
@@ -253,8 +252,14 @@ public class MaterialRepository {
             List<MaterialWithCourse> materials = queryCourseSubmission(startTime, endTime);
             ArrayList<CourseSubmissionEvent> events = new ArrayList<>();
             materials.forEach(materialWithCourse -> {
-                events.add(materialWithCourse.toStartEvent());
-                events.add(materialWithCourse.toEndEvent());
+                CourseSubmissionEvent start = materialWithCourse.toStartEvent();
+                if(start.getTime().getTime() / 1000  >= startTime){
+                    events.add(start);
+                }
+                CourseSubmissionEvent end = materialWithCourse.toEndEvent();
+                if(end.getTime().getTime() / 1000 < endTime){
+                    events.add(materialWithCourse.toEndEvent());
+                }
             });
             eventsLiveData.postSuccess(events);
         }).start();
