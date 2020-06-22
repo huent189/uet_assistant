@@ -27,9 +27,9 @@ public class ChatRoomViewModel extends ViewModel {
         return mChatRepo.getMessages(roomId);
     }
 
-    private StateLiveData<GroupChat> createRoom(GroupChat groupChat) {
-        return mChatRepo.createGroupChat(groupChat);
-    }
+//    private StateMediatorLiveData<String> createRoom(GroupChat groupChat) {
+//        return mChatRepo.createGroupChat(groupChat);
+//    }
 
     public IStateLiveData<String> sendMessage(String roomId, Message_GroupChatSubCol message, boolean init) {
         if (init && mType.equals(GroupChat.DIRECT)) {
@@ -39,8 +39,8 @@ public class ChatRoomViewModel extends ViewModel {
         return mChatRepo.sendMessage(roomId, message);
     }
 
-    public StateLiveData<GroupChat> createDirectedChat(String roomId) {
-        StateLiveData<GroupChat> liveData = new StateLiveData<>();
+    private StateMediatorLiveData<String> createDirectedChat(String roomId) {
+        StateMediatorLiveData<String> liveData = new StateMediatorLiveData<>();
         liveData.postLoading();
 
         GroupChat groupChat = new GroupChat();
@@ -63,7 +63,8 @@ public class ChatRoomViewModel extends ViewModel {
         groupChat.getMembers().add(me);
         groupChat.getMembers().add(other);
 
-        liveData = createRoom(groupChat);
+//        liveData = createRoom(groupChat);
+        liveData = mChatRepo.createGroupChat(groupChat);
 
         return liveData;
     }
@@ -73,11 +74,11 @@ public class ChatRoomViewModel extends ViewModel {
         FirstMessageLiveData(String roomId, Message_GroupChatSubCol message) {
             postLoading();
 
-            StateLiveData<GroupChat> createLiveData = createDirectedChat(roomId);
+            StateMediatorLiveData<String> createLiveData = createDirectedChat(roomId);
 
-            addSource(createLiveData, new Observer<StateModel<GroupChat>>() {
+            addSource(createLiveData, new Observer<StateModel<String>>() {
                 @Override
-                public void onChanged(StateModel<GroupChat> stateModel) {
+                public void onChanged(StateModel<String> stateModel) {
                     switch (stateModel.getStatus()) {
                         case LOADING:
                             postLoading();
