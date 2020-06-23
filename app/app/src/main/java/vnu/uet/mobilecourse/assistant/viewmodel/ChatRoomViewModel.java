@@ -33,12 +33,12 @@ public class ChatRoomViewModel extends ViewModel {
 //        return mChatRepo.createGroupChat(groupChat);
 //    }
 
-    public IStateLiveData<String> sendMessage(String roomId, Message_GroupChatSubCol message, boolean init) {
+    public IStateLiveData<String> sendMessage(String roomId, Message_GroupChatSubCol message, List<Member_GroupChatSubCol> members, boolean init) {
         if (init && mType.equals(GroupChat.DIRECT)) {
-            return new FirstMessageLiveData(roomId, message);
+            return new FirstMessageLiveData(roomId, message, members);
         }
 
-        return mChatRepo.sendMessage(roomId, message);
+        return mChatRepo.sendMessage(roomId, message, members);
     }
 
     private StateMediatorLiveData<String> createDirectedChat(String roomId) {
@@ -73,7 +73,7 @@ public class ChatRoomViewModel extends ViewModel {
 
     class FirstMessageLiveData extends StateMediatorLiveData<String> {
 
-        FirstMessageLiveData(String roomId, Message_GroupChatSubCol message) {
+        FirstMessageLiveData(String roomId, Message_GroupChatSubCol message, List<Member_GroupChatSubCol> members) {
             postLoading();
 
             StateMediatorLiveData<String> createLiveData = createDirectedChat(roomId);
@@ -93,7 +93,7 @@ public class ChatRoomViewModel extends ViewModel {
                         case SUCCESS:
                             postSuccess(CONNECTED_MSG);
 
-                            addSource(mChatRepo.sendMessage(roomId, message), new Observer<StateModel<String>>() {
+                            addSource(mChatRepo.sendMessage(roomId, message, members), new Observer<StateModel<String>>() {
                                 @Override
                                 public void onChanged(StateModel<String> stateModel) {
                                     switch (stateModel.getStatus()) {

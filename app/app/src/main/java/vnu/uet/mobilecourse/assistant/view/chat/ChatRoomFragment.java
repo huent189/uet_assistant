@@ -154,7 +154,8 @@ public class ChatRoomFragment extends Fragment {
         message.setContent(content);
         message.setId(Util.autoId());
 
-        mViewModel.sendMessage(mRoomId, message, initializeRoom).observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
+        //TODO: check members
+        mViewModel.sendMessage(mRoomId, message, null,initializeRoom).observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
             @Override
             public void onChanged(StateModel<String> stateModel) {
                 switch (stateModel.getStatus()) {
