@@ -50,7 +50,6 @@ public class ForumRepository {
 
         return instance;
     }
-
     public IStateLiveData<List<Discussion>> getDiscussionsByForum(int forumInstanceId) {
         new Thread(() -> {
             try {
@@ -98,7 +97,7 @@ public class ForumRepository {
         return updateList;
     }
 
-    private List<Post> updatePostByDiscussion(int discussionId) throws IOException {
+    public List<Post> updatePostByDiscussion(int discussionId) throws IOException {
         Call<JsonElement> call = sender.getDiscussionDetail(discussionId);
         final ArrayList<Post> updateList = new ArrayList<>();
         CoursesResponseCallback<Post[]> handler
