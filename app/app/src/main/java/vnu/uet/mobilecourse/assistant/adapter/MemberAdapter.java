@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
+import vnu.uet.mobilecourse.assistant.util.StringConst;
 
 public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder> {
 
@@ -59,6 +60,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
             @Override
             public void run() {
                 mOnClearListener.onClear(student);
+                notifyDataSetChanged();
             }
         });
     }
@@ -72,7 +74,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
         void onClear(IStudent student);
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         private CircleImageView mCivAvatar;
         private TextView mTvName;
@@ -87,7 +89,7 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
         }
 
         void bind(IStudent student, Runnable callback) {
-            mTvName.setText(student.getName());
+            mTvName.setText(getSimpleName(student.getName()));
 
             mBtnClear.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -95,6 +97,21 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
                     callback.run();
                 }
             });
+        }
+
+        private String getSimpleName(String fullName) {
+            String simpleName;
+
+            String[] items = fullName.split("\\s+");
+
+            int length = items.length;
+            if (length > 2) {
+                simpleName = items[length - 2] + StringConst.SPACE_CHAR + items[length - 1];
+            } else {
+                simpleName = fullName;
+            }
+
+            return simpleName;
         }
     }
 }

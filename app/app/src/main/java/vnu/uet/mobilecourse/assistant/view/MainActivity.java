@@ -32,11 +32,15 @@ public class MainActivity extends AppCompatActivity {
         new UserRepository().isLoggedIn().observe(MainActivity.this, stateModel -> {
             switch (stateModel.getStatus()) {
                 case SUCCESS:
+                    mBtnAccess.setClickable(true);
+                    mBtnAccess.setActivated(true);
                     checkFirebaseLogin();
                     break;
 
                 case ERROR:
                     Exception err = stateModel.getError();
+                    mBtnAccess.setClickable(true);
+                    mBtnAccess.setActivated(true);
 
                     if (err instanceof UnavailableHostException) {
                         boolean isFirebaseLoggedIn = FirebaseAuthenticationService.isFirebaseLoggedIn();

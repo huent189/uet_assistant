@@ -4,15 +4,18 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
+import vnu.uet.mobilecourse.assistant.database.DAO.ConnectionDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChat_UserSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Member_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Message_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
+import vnu.uet.mobilecourse.assistant.model.firebase.Connection;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
@@ -23,6 +26,7 @@ public class ChatRepository implements IChatRepository {
 
     private GroupChat_UserSubColDAO mUserGroupChatDAO;
     private GroupChatDAO mGroupChatDAO;
+    private ConnectionDAO mConnectionDAO;
 
     private static ChatRepository instance;
 
@@ -37,6 +41,7 @@ public class ChatRepository implements IChatRepository {
     private ChatRepository() {
         mUserGroupChatDAO = new GroupChat_UserSubColDAO();
         mGroupChatDAO = new GroupChatDAO();
+        mConnectionDAO = new ConnectionDAO();
     }
 
     @Override
@@ -72,7 +77,32 @@ public class ChatRepository implements IChatRepository {
         StateLiveData<String> addGroup = mUserGroupChatDAO.addGroupChat(groupChat);
         StateLiveData<String> addMember = mGroupChatDAO.addMembers(groupChat.getId(), groupChat.getMembers());
 
+        addConnections(groupChat.getMembers());
+
         return new CreateGroupChatState(createGroupState, addMember, addGroup);
+    }
+
+    public StateLiveData<List<Connection>> getAllConnections() {
+        return mConnectionDAO.readAll();
+    }
+
+    private void addConnections(List<Member_GroupChatSubCol> members) {
+        int size = members.size();
+
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = i + 1; j < size; j++) {
+                String fromId = members.get(i).getId();
+                String toId = members.get(j).getId();
+                String docId = FirebaseStructureId.connect(fromId, toId);
+
+                Connection connection = new Connection();
+                connection.setId(docId);
+                connection.setStudentIds(fromId, toId);
+                connection.setTimestamp(System.currentTimeMillis() / 1000);
+
+                mConnectionDAO.addUnique(docId, connection);
+            }
+        }
     }
 
     static class MergeGroupChat extends StateMediatorLiveData<GroupChat> {
@@ -111,7 +141,7 @@ public class ChatRepository implements IChatRepository {
                             roomSuccess = true;
                             setRoom(stateModel.getData());
 
-                            if (roomSuccess && memberSuccess) {
+                            if (roomSuccess && memberSuccess && subColSuccess) {
                                 GroupChat combine = combineData();
                                 postSuccess(combine);
                             }
@@ -139,7 +169,7 @@ public class ChatRepository implements IChatRepository {
                             subColSuccess = true;
                             setUserGroupChat(stateModel.getData());
 
-                            if (roomSuccess && memberSuccess) {
+                            if (roomSuccess && memberSuccess && subColSuccess) {
                                 GroupChat combine = combineData();
                                 postSuccess(combine);
                             }
@@ -167,7 +197,7 @@ public class ChatRepository implements IChatRepository {
                             memberSuccess = true;
                             setMembers(stateModel.getData());
 
-                            if (roomSuccess && memberSuccess) {
+                            if (roomSuccess && memberSuccess && subColSuccess) {
                                 GroupChat combine = combineData();
                                 postSuccess(combine);
                             }

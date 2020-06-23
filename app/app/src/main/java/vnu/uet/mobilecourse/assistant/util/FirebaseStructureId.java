@@ -39,11 +39,25 @@ public class FirebaseStructureId {
         return id;
     }
 
+    public static String connect(String from, String to) {
+        int codeComparision = Integer.compare(from.hashCode(), to.hashCode());
+
+        String id;
+        if (codeComparision >= 0) {
+            id = BEGIN_PREFIX + from + CONNECT_PREFIX + to;
+        } else {
+            id = BEGIN_PREFIX + to + CONNECT_PREFIX + from;
+        }
+
+        return id;
+    }
+
     public static boolean isDirectedChat(String id) {
         return (id.contains(BEGIN_PREFIX) || id.contains(DIRECT_CHAT_PREFIX));
     }
 
     private static final String INTEREST_DISCUSSION_PREFIX = "_interest_";
     private static final String DIRECT_CHAT_PREFIX = "_direct_chat_";
+    private static final String CONNECT_PREFIX = "_connect_";
     private static final String BEGIN_PREFIX = "structure_id_";
 }

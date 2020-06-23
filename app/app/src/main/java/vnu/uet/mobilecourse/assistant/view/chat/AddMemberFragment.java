@@ -17,6 +17,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.adapter.MemberAdapter;
+import vnu.uet.mobilecourse.assistant.adapter.SuggestionMemberAdapter;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
@@ -44,12 +45,15 @@ import android.widget.TextView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 
+import java.util.List;
+
 public class AddMemberFragment extends Fragment {
 
     private AddMemberViewModel mViewModel;
     private FragmentActivity mActivity;
     private NavController mNavController;
     private IStudent mSearchResult;
+    private SuggestionMemberAdapter suggestionAdapter = null;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -97,6 +101,8 @@ public class AddMemberFragment extends Fragment {
             }
         });
         rvMembers.setAdapter(memberAdapter);
+
+
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -165,20 +171,60 @@ public class AddMemberFragment extends Fragment {
             }
         });
 
+        RecyclerView rvSuggestions = root.findViewById(R.id.rvSuggestions);
+
+
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     mViewModel.addMember(mSearchResult);
+                    layoutSearchResult.setVisibility(View.GONE);
                 } else {
                     mViewModel.removeMember(mSearchResult);
                 }
 
-                layoutSearchResult.setVisibility(View.GONE);
                 memberAdapter.setMembers(mViewModel.getSelectedList());
+                if (suggestionAdapter != null) {
+                    suggestionAdapter.notifyDataSetChanged();
+                }
                 memberAdapter.notifyDataSetChanged();
             }
         });
+
+
+        SuggestionMemberAdapter.OnCheckChangeListener onCheckChangeListener = new SuggestionMemberAdapter.OnCheckChangeListener() {
+            @Override
+            public void onCheckedChanged(IStudent student, boolean isChecked) {
+                if (isChecked) {
+                    mViewModel.addMember(mSearchResult);
+                    layoutSearchResult.setVisibility(View.GONE);
+                } else {
+                    mViewModel.removeMember(mSearchResult);
+                }
+
+                memberAdapter.setMembers(mViewModel.getSelectedList());
+                if (suggestionAdapter != null) {
+                    suggestionAdapter.notifyDataSetChanged();
+                }
+                memberAdapter.notifyDataSetChanged();
+            }
+        };
+
+        mViewModel.getSuggestions().observe(getViewLifecycleOwner(), new Observer<StateModel<List<IStudent>>>() {
+            @Override
+            public void onChanged(StateModel<List<IStudent>> stateModel) {
+                switch (stateModel.getStatus()) {
+                    case SUCCESS:
+                        List<IStudent> suggestions = stateModel.getData();
+                        suggestionAdapter = new SuggestionMemberAdapter(suggestions, AddMemberFragment.this, onCheckChangeListener);
+                        rvSuggestions.setAdapter(suggestionAdapter);
+
+                        break;
+                }
+            }
+        });
+
 
         return root;
     }
