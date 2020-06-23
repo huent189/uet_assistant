@@ -13,11 +13,13 @@ import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChat_UserSubColDAO;
+import vnu.uet.mobilecourse.assistant.database.DAO.Member_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Message_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -63,48 +65,11 @@ public class ChatRepository implements IChatRepository {
         return mMessageDAO.readAll();
     }
 
-
     @Override
-    public StateLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message) {
-        DocumentReference messRef = db
-                .collection(FirebaseCollectionName.GROUP_CHAT)
-                .document(groupId)
-                .collection(FirebaseCollectionName.MESSAGE)
-                .document(message.getId());
+    public StateMediatorLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message, List<Member_GroupChatSubCol> members) {
+        StateLiveData<Message_GroupChatSubCol> addMessageState= new Message_GroupChatSubColDAO(groupId).add(message.getId(), message);
 
-        StateLiveData<String> sendStatus = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
-
-        messRef.set(message)
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        sendStatus.postError(e);
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // update last message to group chat in user col
-                        db.collection(FirebaseCollectionName.USER)
-                                .document(User.getInstance().getStudentId()) // user DocRef
-                                .collection(FirebaseCollectionName.GROUP_CHAT) // subCollection
-                                .document(groupId) // group DocRef
-                                .update("lastMessage", message.getContent(),
-                                        "lastMessageTime", message.getTimestamp())
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        sendStatus.postError(e);
-                                    }
-                                }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        sendStatus.postSuccess("success");
-                                    }
-                                });
-                    }
-                });
-
-        return sendStatus;
+        return new SendMessageState(groupId, addMessageState, members);
     }
 
     @Override
@@ -183,6 +148,37 @@ public class ChatRepository implements IChatRepository {
                 }
             });
         }
+    }
+
+    static class SendMessageState extends StateMediatorLiveData<String>{
+        SendMessageState(String groupId, @NonNull StateLiveData<Message_GroupChatSubCol> addMessageToGroup, List<Member_GroupChatSubCol>members) {
+
+            addSource(addMessageToGroup, stateModel -> {
+                switch (stateModel.getStatus()) {
+                    case LOADING:
+                        postLoading();
+                        break;
+                    case ERROR:
+                        postError(stateModel.getError());
+                        break;
+                    case SUCCESS:
+                        StateLiveData<String> updateLastMessage = new GroupChat_UserSubColDAO().updateLastMessage(groupId, members, stateModel.getData());
+                        addSource(updateLastMessage, updateLastMessageStateModel -> {
+                            switch (updateLastMessageStateModel.getStatus()){
+                                case ERROR:
+                                    postError(updateLastMessageStateModel.getError());
+                                    break;
+                                case LOADING:
+                                    postLoading();
+                                    break;
+                                case SUCCESS:
+                                    postSuccess("send message success");
+                            }
+                        });
+                }
+            });
+        }
+
     }
 
     @Deprecated

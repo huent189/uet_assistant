@@ -4,6 +4,7 @@ import java.util.List;
 
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
@@ -44,7 +45,7 @@ public interface IChatRepository {
      * @return state live data interface
      *      contains response state of this operation
      */
-    IStateLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message);
+    IStateLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message, List<Member_GroupChatSubCol> members);
 
     /**
      * Request to create a new group chat
