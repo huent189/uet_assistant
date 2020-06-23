@@ -197,10 +197,10 @@ public class AddMemberFragment extends Fragment {
             @Override
             public void onCheckedChanged(IStudent student, boolean isChecked) {
                 if (isChecked) {
-                    mViewModel.addMember(mSearchResult);
+                    mViewModel.addMember(student);
                     layoutSearchResult.setVisibility(View.GONE);
                 } else {
-                    mViewModel.removeMember(mSearchResult);
+                    mViewModel.removeMember(student);
                 }
 
                 memberAdapter.setMembers(mViewModel.getSelectedList());
