@@ -130,21 +130,22 @@ public class GroupChat_UserSubColDAO extends FirebaseDAO<GroupChat_UserSubCol> {
         return addGroupChatState;
     }
 
-    public StateLiveData<String> updateLastMessage(String groupId, List<Member_GroupChatSubCol> members, Message_GroupChatSubCol message) {
+    public StateLiveData<String> updateLastMessage(String groupId, String[] memberIds, Message_GroupChatSubCol message) {
         StateLiveData<String> updateStatus = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
 
         WriteBatch batch = db.batch();
-        for (Member_GroupChatSubCol member :
-                members) {
-            DocumentReference docRef = db.collection(FirebaseCollectionName.USER).document(member.getId()).collection(FirebaseCollectionName.GROUP_CHAT).document(groupId);
+        for (String memberId : memberIds) {
+            DocumentReference docRef = db.collection(FirebaseCollectionName.USER)
+                    .document(memberId)
+                    .collection(FirebaseCollectionName.GROUP_CHAT)
+                    .document(groupId);
+
             batch.update(docRef, "lastMessage", message.getContent(), "lastMessageTime", message.getTimestamp());
         }
 
         batch.commit().addOnSuccessListener(aVoid -> {
             updateStatus.postSuccess("update last message success");
-        }).addOnFailureListener(e -> {
-            updateStatus.postError(e);
-        });
+        }).addOnFailureListener(updateStatus::postError);
 
         return updateStatus;
     }

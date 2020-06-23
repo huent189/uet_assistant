@@ -2,7 +2,9 @@ package vnu.uet.mobilecourse.assistant.model.firebase;
 
 import com.google.firebase.firestore.Exclude;
 
-public class Member_GroupChatSubCol implements IFirebaseModel {
+import vnu.uet.mobilecourse.assistant.model.IStudent;
+
+public class Member_GroupChatSubCol implements IFirebaseModel, IStudent {
     /**
      * member id
      */
@@ -26,6 +28,11 @@ public class Member_GroupChatSubCol implements IFirebaseModel {
         return name;
     }
 
+    @Override
+    public String getCode() {
+        return id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -41,6 +48,11 @@ public class Member_GroupChatSubCol implements IFirebaseModel {
     @Exclude
     public String getAvatar() {
         return avatar;
+    }
+
+    @Override
+    public boolean isActive() {
+        return true;
     }
 
     @Exclude

@@ -34,6 +34,7 @@ import vnu.uet.mobilecourse.assistant.adapter.MessageAdapter;
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
+import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
@@ -42,6 +43,8 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class ChatRoomFragment extends Fragment {
 
+    private static final String STUDENT_ID = User.getInstance().getStudentId();
+
     private MessageAdapter mMessageAdapter;
     private FragmentActivity mActivity;
     private ChatRoomViewModel mViewModel;
@@ -49,9 +52,11 @@ public class ChatRoomFragment extends Fragment {
 
     private String mCode, mTitle, mType, mRoomId;
 
-    private TextView mEtMessage;
+    private TextView mEtMessage, mTvRoomTitle;
 
-    private boolean initializeRoom = false;
+    private boolean mEmptyRoom = false;
+
+    private String[] mMemberIds;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -72,68 +77,88 @@ public class ChatRoomFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             mTitle = args.getString("title");
-            mViewModel.setTitle(mTitle);
-            TextView tvChatGroupTitle = root.findViewById(R.id.tvRoomTitle);
-            tvChatGroupTitle.setText(mTitle);
+            mTvRoomTitle = root.findViewById(R.id.tvRoomTitle);
+            mTvRoomTitle.setText(mTitle);
 
             RecyclerView rvChat = initializeListView(root);
 
-            mCode = args.getString("code");
-            if (mCode == null) {
-                // temporary
-            }
-            mViewModel.setCode(mCode);
-
             mType = args.getString("type");
-            mViewModel.setType(mType);
+
+            mCode = args.getString("code");
+            if (mCode != null && GroupChat.DIRECT.equals(mType)) {
+                mMemberIds = new String[] {User.getInstance().getStudentId(), mCode};
+            }
 
             mRoomId = args.getString("roomId");
             if (mRoomId == null && mType.equals(GroupChat.DIRECT)) {
                 mRoomId = FirebaseStructureId.directedChat(mCode);
             }
 
-            mViewModel.getAllMessages(mRoomId).observe(getViewLifecycleOwner(), new Observer<StateModel<List<Message_GroupChatSubCol>>>() {
+            mViewModel.getRoomInfo(mRoomId).observe(getViewLifecycleOwner(), new Observer<StateModel<GroupChat>>() {
                 @Override
-                public void onChanged(StateModel<List<Message_GroupChatSubCol>> stateModel) {
-                    Log.d(ChatRoomFragment.class.getSimpleName(), "onChanged: " + stateModel.getStatus());
-
+                public void onChanged(StateModel<GroupChat> stateModel) {
                     switch (stateModel.getStatus()) {
                         case SUCCESS:
-                            List<Message_GroupChatSubCol> messages = stateModel.getData();
+                            GroupChat room = stateModel.getData();
 
-                            if (messages.isEmpty()) {
-//                                if (mType.equals(GroupChat.DIRECT)) {
-//                                    mViewModel.createDirectedChat();
-//                                }
-                                initializeRoom = true;
+                            List<Member_GroupChatSubCol> members = room.getMembers();
+                            mMemberIds = members.stream()
+                                    .map(Member_GroupChatSubCol::getId)
+                                    .toArray(String[]::new);
+
+                            if (GroupChat.DIRECT.equals(mType) && mCode == null) {
+                                mCode = findFirstOtherId(mMemberIds);
                             } else {
-                                mMessageAdapter = new MessageAdapter(messages, ChatRoomFragment.this);
-                                rvChat.setAdapter(mMessageAdapter);
+                                mTitle = room.getName();
+                                mTvRoomTitle.setText(mTitle);
                             }
 
-                            break;
-
-                        case ERROR:
-                            Exception error = stateModel.getError();
-                            if (error instanceof DocumentNotFoundException) {
-                                Toast.makeText(getContext(), "Chat room not created yet.", Toast.LENGTH_SHORT).show();
-                                Log.d(ChatRoomFragment.class.getSimpleName(), "Chat room not created yet.");
-                            } else {
-                                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                                Log.d(ChatRoomFragment.class.getSimpleName(), "Error: " + error.getMessage());
-                            }
-
-                            break;
+                            Toast.makeText(mActivity, "Fetch room info success", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
+
+            mViewModel.getAllMessages(mRoomId)
+                    .observe(getViewLifecycleOwner(), new Observer<StateModel<List<Message_GroupChatSubCol>>>() {
+                        @Override
+                        public void onChanged(StateModel<List<Message_GroupChatSubCol>> stateModel) {
+                            Log.d(ChatRoomFragment.class.getSimpleName(), "onChanged: " + stateModel.getStatus());
+
+                            switch (stateModel.getStatus()) {
+                                case SUCCESS:
+                                    List<Message_GroupChatSubCol> messages = stateModel.getData();
+
+                                    if (messages.isEmpty()) {
+                                        mEmptyRoom = true;
+                                    } else {
+                                        mMessageAdapter = new MessageAdapter(messages, ChatRoomFragment.this);
+                                        rvChat.setAdapter(mMessageAdapter);
+                                        mEmptyRoom = false;
+                                    }
+
+                                    break;
+
+                                case ERROR:
+                                    Exception error = stateModel.getError();
+                                    if (error instanceof DocumentNotFoundException) {
+                                        Toast.makeText(getContext(), "Chat room not created yet.", Toast.LENGTH_SHORT).show();
+                                        Log.d(ChatRoomFragment.class.getSimpleName(), "Chat room not created yet.");
+                                    } else {
+                                        Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Log.d(ChatRoomFragment.class.getSimpleName(), "Error: " + error.getMessage());
+                                    }
+
+                                    break;
+                            }
+                        }
+                    });
         }
 
         ImageButton btnSend = root.findViewById(R.id.btnSend);
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendMessage();
+                sendTextMessage();
             }
         });
 
@@ -142,8 +167,20 @@ public class ChatRoomFragment extends Fragment {
         return root;
     }
 
+    private String findFirstOtherId(String[] memberIds) {
+        String otherId = null;
+        for (String id : memberIds) {
+            if (!id.equals(STUDENT_ID)) {
+                otherId = id;
+                break;
+            }
+        }
+
+        return otherId;
+    }
+
     @SuppressLint("RestrictedApi")
-    private void sendMessage() {
+    private void sendTextMessage() {
         String content = mEtMessage.getText().toString();
         Log.d("CHAT", "sendMessage: " + content);
 
@@ -154,25 +191,44 @@ public class ChatRoomFragment extends Fragment {
         message.setContent(content);
         message.setId(Util.autoId());
 
-        //TODO: check members
-        mViewModel.sendMessage(mRoomId, message, null,initializeRoom).observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
-            @Override
-            public void onChanged(StateModel<String> stateModel) {
-                switch (stateModel.getStatus()) {
-                    case SUCCESS:
-                        if (stateModel.getData().equals(ChatRoomViewModel.CONNECTED_MSG)) {
-                            Toast.makeText(mActivity, stateModel.getData(), Toast.LENGTH_SHORT).show();
+        // first message in directed chat
+        if (GroupChat.DIRECT.equals(mType) && mEmptyRoom) {
+            mViewModel.connectAndSendMessage(mRoomId, mTitle, message, mMemberIds)
+                    .observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
+                        @Override
+                        public void onChanged(StateModel<String> stateModel) {
+                            switch (stateModel.getStatus()) {
+                                case SUCCESS:
+                                    if (stateModel.getData().equals(ChatRoomViewModel.CONNECTED_MSG)) {
+                                        Toast.makeText(mActivity, stateModel.getData(), Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    break;
+
+                                case ERROR:
+                                    Toast.makeText(mActivity, "Không thể gửi tin nhắn - "
+                                            + stateModel.getError().getMessage(), Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
                         }
+                    });
+        }
+        // other cases
+        else {
+            mViewModel.sendMessage(mRoomId, message, mMemberIds)
+                    .observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
+                        @Override
+                        public void onChanged(StateModel<String> stateModel) {
+                            switch (stateModel.getStatus()) {
+                                case ERROR:
+                                    Toast.makeText(mActivity, "Không thể gửi tin nhắn - "
+                                            + stateModel.getError().getMessage(), Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        }
+                    });
+        }
 
-                        break;
-
-                    case ERROR:
-                        Toast.makeText(mActivity, "Không thể gửi tin nhắn - "
-                                + stateModel.getError().getMessage(), Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        });
 
         mEtMessage.setText(StringConst.EMPTY);
     }

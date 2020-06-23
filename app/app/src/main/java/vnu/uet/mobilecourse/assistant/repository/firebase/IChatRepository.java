@@ -45,7 +45,7 @@ public interface IChatRepository {
      * @return state live data interface
      *      contains response state of this operation
      */
-    IStateLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message, List<Member_GroupChatSubCol> members);
+    IStateLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message, String[] memberIds);
 
     /**
      * Request to create a new group chat

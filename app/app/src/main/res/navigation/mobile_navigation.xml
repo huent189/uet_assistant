@@ -54,6 +54,9 @@
         <action
             android:id="@+id/action_navigation_chat_to_navigation_search_student"
             app:destination="@id/navigation_search_student" />
+        <action
+            android:id="@+id/action_navigation_chat_to_navigation_add_member"
+            app:destination="@id/navigation_add_member" />
     </fragment>
 
     <fragment
@@ -191,5 +194,10 @@
         android:name="vnu.uet.mobilecourse.assistant.view.course.DiscussionFragment"
         android:label="fragment_discussion"
         tools:layout="@layout/fragment_discussion" />
+    <fragment
+        android:id="@+id/navigation_add_member"
+        android:name="vnu.uet.mobilecourse.assistant.view.chat.AddMemberFragment"
+        android:label="fragment_add_member"
+        tools:layout="@layout/fragment_add_member" />
 
 </navigation>

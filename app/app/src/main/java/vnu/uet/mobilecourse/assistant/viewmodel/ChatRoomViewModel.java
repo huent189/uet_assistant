@@ -1,7 +1,5 @@
 package vnu.uet.mobilecourse.assistant.viewmodel;
 
-import android.widget.Toast;
-
 import java.util.List;
 
 import androidx.lifecycle.Observer;
@@ -13,14 +11,12 @@ import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.repository.firebase.ChatRepository;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class ChatRoomViewModel extends ViewModel {
 
     private ChatRepository mChatRepo = ChatRepository.getInstance();
-    private String mCode, mTitle, mType;
 
     private static final String STUDENT_ID = User.getInstance().getStudentId();
     private static final String STUDENT_NAME = User.getInstance().getName();
@@ -29,19 +25,20 @@ public class ChatRoomViewModel extends ViewModel {
         return mChatRepo.getMessages(roomId);
     }
 
-//    private StateMediatorLiveData<String> createRoom(GroupChat groupChat) {
-//        return mChatRepo.createGroupChat(groupChat);
-//    }
-
-    public IStateLiveData<String> sendMessage(String roomId, Message_GroupChatSubCol message, List<Member_GroupChatSubCol> members, boolean init) {
-        if (init && mType.equals(GroupChat.DIRECT)) {
-            return new FirstMessageLiveData(roomId, message, members);
-        }
-
-        return mChatRepo.sendMessage(roomId, message, members);
+    public IStateLiveData<GroupChat> getRoomInfo(String roomId) {
+        return mChatRepo.getGroupChatInfo(roomId);
     }
 
-    private StateMediatorLiveData<String> createDirectedChat(String roomId) {
+    public IStateLiveData<String> sendMessage(String roomId, Message_GroupChatSubCol message, String[] memberIds) {
+        return mChatRepo.sendMessage(roomId, message, memberIds);
+    }
+
+    public IStateLiveData<String> connectAndSendMessage(String roomId, String otherName,
+                                                        Message_GroupChatSubCol message, String[] memberIds) {
+        return new FirstMessageLiveData(roomId, message, otherName, memberIds);
+    }
+
+    private StateMediatorLiveData<String> createDirectedChat(String roomId, String otherName, String otherCode) {
         StateMediatorLiveData<String> liveData = new StateMediatorLiveData<>();
         liveData.postLoading();
 
@@ -49,7 +46,7 @@ public class ChatRoomViewModel extends ViewModel {
 
         groupChat.setId(roomId);
         groupChat.setCreatedTime(System.currentTimeMillis() / 1000);
-        groupChat.setName(mTitle);
+        groupChat.setName(otherName);
         groupChat.setAvatar(null);
 
         Member_GroupChatSubCol me = new Member_GroupChatSubCol();
@@ -58,14 +55,13 @@ public class ChatRoomViewModel extends ViewModel {
         me.setRole(MemberRole.MEMBER);
 
         Member_GroupChatSubCol other = new Member_GroupChatSubCol();
-        other.setId(mCode);
-        other.setName(mTitle);
+        other.setId(otherCode);
+        other.setName(otherName);
         other.setRole(MemberRole.MEMBER);
 
         groupChat.getMembers().add(me);
         groupChat.getMembers().add(other);
 
-//        liveData = createRoom(groupChat);
         liveData = mChatRepo.createGroupChat(groupChat);
 
         return liveData;
@@ -73,10 +69,12 @@ public class ChatRoomViewModel extends ViewModel {
 
     class FirstMessageLiveData extends StateMediatorLiveData<String> {
 
-        FirstMessageLiveData(String roomId, Message_GroupChatSubCol message, List<Member_GroupChatSubCol> members) {
+        FirstMessageLiveData(String roomId, Message_GroupChatSubCol message, String otherName, String[] memberIds) {
             postLoading();
 
-            StateMediatorLiveData<String> createLiveData = createDirectedChat(roomId);
+            String otherId = findOtherId(memberIds);
+
+            StateMediatorLiveData<String> createLiveData = createDirectedChat(roomId, otherName, otherId);
 
             addSource(createLiveData, new Observer<StateModel<String>>() {
                 @Override
@@ -93,7 +91,7 @@ public class ChatRoomViewModel extends ViewModel {
                         case SUCCESS:
                             postSuccess(CONNECTED_MSG);
 
-                            addSource(mChatRepo.sendMessage(roomId, message, members), new Observer<StateModel<String>>() {
+                            addSource(mChatRepo.sendMessage(roomId, message, memberIds), new Observer<StateModel<String>>() {
                                 @Override
                                 public void onChanged(StateModel<String> stateModel) {
                                     switch (stateModel.getStatus()) {
@@ -119,18 +117,18 @@ public class ChatRoomViewModel extends ViewModel {
                 }
             });
         }
-    }
 
-    public void setCode(String code) {
-        this.mCode = code;
-    }
+        private String findOtherId(String[] memberIds) {
+            String otherId = null;
+            for (String id : memberIds) {
+                if (!id.equals(STUDENT_ID)) {
+                    otherId = id;
+                    break;
+                }
+            }
 
-    public void setTitle(String title) {
-        this.mTitle = title;
-    }
-
-    public void setType(String type) {
-        this.mType = type;
+            return otherId;
+        }
     }
 
     public static final String CONNECTED_MSG = "Hai bạn đã được kết nối";

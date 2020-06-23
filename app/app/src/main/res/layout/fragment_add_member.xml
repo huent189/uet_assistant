@@ -6,7 +6,7 @@ xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:background="@color/background"
-tools:context=".CreateGroupChatFragment">
+tools:context=".view.chat.AddMemberFragment">
 
 
 <com.google.android.material.appbar.AppBarLayout
@@ -22,7 +22,7 @@ tools:context=".CreateGroupChatFragment">
         android:elevation="0dp"
         app:elevation="0dp"
         android:id="@+id/toolbar"
-        app:title="Thêm thành viên"
+        app:title="@string/title_chat_add_member"
         app:navigationIcon="@drawable/ic_arrow_back_24dp"
         app:menu="@menu/create_group_chat_toolbar_menu"
         android:layout_width="match_parent">
@@ -60,7 +60,14 @@ tools:context=".CreateGroupChatFragment">
 
         </com.facebook.shimmer.ShimmerFrameLayout>
 
-        <include android:id="@+id/layoutSearchResult" layout="@layout/layout_student_item"/>
+        <include android:id="@+id/layoutSearchResult" layout="@layout/layout_multi_choice_student_item"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMembers"
+            android:paddingHorizontal="@dimen/margin"
+            android:clipToPadding="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <TextView
             style="@style/ListTitle"
@@ -71,7 +78,7 @@ tools:context=".CreateGroupChatFragment">
             android:text="Đề xuất" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvChatGroups"
+            android:id="@+id/rvSuggestions"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

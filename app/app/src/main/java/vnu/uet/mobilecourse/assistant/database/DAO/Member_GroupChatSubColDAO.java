@@ -1,6 +1,5 @@
 package vnu.uet.mobilecourse.assistant.database.DAO;
 
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -31,9 +30,7 @@ public class Member_GroupChatSubColDAO extends FirebaseDAO<Member_GroupChatSubCo
                                                                             .filter(Objects::nonNull)
                                                                             .collect(Collectors.toList());
             readState.postSuccess(members);
-        }).addOnFailureListener(e -> {
-            readState.postError(e);
-        });
+        }).addOnFailureListener(readState::postError);
 
         return readState;
     }
