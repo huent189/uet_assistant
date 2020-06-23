@@ -1,19 +1,25 @@
 package vnu.uet.mobilecourse.assistant.database.DAO;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.MediatorLiveData;
 
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import vnu.uet.mobilecourse.assistant.model.event.EventComparator;
+import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
@@ -39,7 +45,7 @@ public class Message_GroupChatSubColDAO extends FirebaseDAO<Message_GroupChatSub
     public StateLiveData<List<Message_GroupChatSubCol>> readAll() {
         StateLiveData<List<Message_GroupChatSubCol>> messagesState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
 
-        mColReference.limit(100).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        mColReference.orderBy("timestamp", Query.Direction.ASCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
