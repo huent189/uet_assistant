@@ -56,7 +56,7 @@ public class ChatRepository implements IChatRepository {
 
     @Override
     public IStateLiveData<GroupChat> getGroupChatInfo(String groupId) {
-        return null;
+        return new MergeGroupChat(new GroupChatDAO().read(groupId), new Member_GroupChatSubColDAO(groupId).readAll());
     }
 
     @Override
@@ -81,6 +81,94 @@ public class ChatRepository implements IChatRepository {
         return new CreateGroupChatState(createGroupState, addMember, addGroup);
     }
 
+    static class MergeGroupChat extends StateMediatorLiveData<GroupChat> {
+
+        private boolean roomSuccess = false;
+        private boolean memberSuccess = false;
+        private GroupChat room;
+        private List<Member_GroupChatSubCol> members;
+
+        MergeGroupChat(@NonNull StateMediatorLiveData<GroupChat> groupChat,
+                       @NonNull StateLiveData<List<Member_GroupChatSubCol>> members) {
+
+            postLoading();
+
+            addSource(groupChat, new Observer<StateModel<GroupChat>>() {
+                @Override
+                public void onChanged(StateModel<GroupChat> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case LOADING:
+                            roomSuccess = false;
+                            postLoading();
+
+                            break;
+
+                        case ERROR:
+                            roomSuccess = false;
+                            postError(stateModel.getError());
+
+                            break;
+
+                        case SUCCESS:
+                            roomSuccess = true;
+                            setRoom(stateModel.getData());
+
+                            if (roomSuccess && memberSuccess) {
+                                GroupChat combine = combineData();
+                                postSuccess(combine);
+                            }
+                    }
+                }
+
+
+            });
+
+            addSource(members, new Observer<StateModel<List<Member_GroupChatSubCol>>>() {
+                @Override
+                public void onChanged(StateModel<List<Member_GroupChatSubCol>> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case LOADING:
+                            memberSuccess = false;
+                            postLoading();
+
+                            break;
+
+                        case ERROR:
+                            memberSuccess = false;
+                            postError(stateModel.getError());
+
+                            break;
+
+                        case SUCCESS:
+                            memberSuccess = true;
+                            setMembers(stateModel.getData());
+
+                            if (roomSuccess && memberSuccess) {
+                                GroupChat combine = combineData();
+                                postSuccess(combine);
+                            }
+                    }
+                }
+
+            });
+        }
+
+        private GroupChat combineData() {
+            room.getMembers().clear();
+
+            room.getMembers().addAll(members);
+
+            return room;
+        }
+
+        public void setMembers(List<Member_GroupChatSubCol> members) {
+            this.members = members;
+        }
+
+        public void setRoom(GroupChat room) {
+            this.room = room;
+        }
+    }
 
     static class CreateGroupChatState extends StateMediatorLiveData<String> {
         private boolean createGroupState = false;
