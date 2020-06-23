@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import vnu.uet.mobilecourse.assistant.R;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void accessCourses(View view) {
+        mBtnAccess.setClickable(false);
         mBtnAccess.setActivated(false);
 
         new UserRepository().isLoggedIn().observe(MainActivity.this, stateModel -> {
@@ -46,11 +48,17 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             navigateToActivity(LoginFirebaseActivity.class);
                         }
+
+                        Toast.makeText(this, "UET Courses not available", Toast.LENGTH_SHORT).show();
+
                     } else if (err instanceof NoConnectivityException) {
                         checkFirebaseLogin();
+                        Toast.makeText(this, "No internet available", Toast.LENGTH_SHORT).show();
+
                     } else {
                         stateModel.getError().printStackTrace();
                         navigateToActivity(LoginActivity.class);
+                        Toast.makeText(this, stateModel.getError().getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                     break;

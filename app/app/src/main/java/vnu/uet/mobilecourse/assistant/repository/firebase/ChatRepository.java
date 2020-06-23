@@ -1,25 +1,17 @@
 package vnu.uet.mobilecourse.assistant.repository.firebase;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.util.Util;
-
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
-import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChat_UserSubColDAO;
+import vnu.uet.mobilecourse.assistant.database.DAO.Member_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Message_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
-import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -29,9 +21,8 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class ChatRepository implements IChatRepository {
 
-    private FirebaseFirestore db;
-
     private GroupChat_UserSubColDAO mUserGroupChatDAO;
+    private GroupChatDAO mGroupChatDAO;
 
     private static ChatRepository instance;
 
@@ -44,8 +35,8 @@ public class ChatRepository implements IChatRepository {
     }
 
     private ChatRepository() {
-        db = FirebaseFirestore.getInstance();
         mUserGroupChatDAO = new GroupChat_UserSubColDAO();
+        mGroupChatDAO = new GroupChatDAO();
     }
 
     @Override
@@ -55,7 +46,11 @@ public class ChatRepository implements IChatRepository {
 
     @Override
     public IStateLiveData<GroupChat> getGroupChatInfo(String groupId) {
-        return null;
+        StateLiveData<GroupChat> groupChat = mGroupChatDAO.read(groupId);
+        StateLiveData<List<Member_GroupChatSubCol>> members = new Member_GroupChatSubColDAO(groupId).readAll();
+        StateMediatorLiveData<GroupChat_UserSubCol> userGroupChat = mUserGroupChatDAO.read(groupId);
+
+        return new MergeGroupChat(groupChat, userGroupChat, members);
     }
 
     @Override
@@ -64,59 +59,145 @@ public class ChatRepository implements IChatRepository {
         return mMessageDAO.readAll();
     }
 
-
     @Override
-    public StateLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message) {
-        DocumentReference messRef = db
-                .collection(FirebaseCollectionName.GROUP_CHAT)
-                .document(groupId)
-                .collection(FirebaseCollectionName.MESSAGE)
-                .document(message.getId());
+    public StateMediatorLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message, String[] memberIds) {
+        StateLiveData<Message_GroupChatSubCol> addMessageState= new Message_GroupChatSubColDAO(groupId).add(message.getId(), message);
 
-        StateLiveData<String> sendStatus = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
-
-        messRef.set(message)
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        sendStatus.postError(e);
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // update last message to group chat in user col
-                        db.collection(FirebaseCollectionName.USER)
-                                .document(User.getInstance().getStudentId()) // user DocRef
-                                .collection(FirebaseCollectionName.GROUP_CHAT) // subCollection
-                                .document(groupId) // group DocRef
-                                .update("lastMessage", message.getContent(),
-                                        "lastMessageTime", message.getTimestamp())
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        sendStatus.postError(e);
-                                    }
-                                }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        sendStatus.postSuccess("success");
-                                    }
-                                });
-                    }
-                });
-
-        return sendStatus;
+        return new SendMessageState(groupId, addMessageState, memberIds);
     }
 
     @Override
     public StateMediatorLiveData<String> createGroupChat(GroupChat groupChat) {
-        StateLiveData<GroupChat> createGroupState = new GroupChatDAO().add( groupChat.getId(), groupChat);
-        StateLiveData<String> addGroup = new GroupChat_UserSubColDAO().addGroupChat(groupChat);
-        StateLiveData<String> addMember = new GroupChatDAO().addMembers(groupChat.getId(), groupChat.getMembers());
+        StateLiveData<GroupChat> createGroupState = mGroupChatDAO.add(groupChat.getId(), groupChat);
+        StateLiveData<String> addGroup = mUserGroupChatDAO.addGroupChat(groupChat);
+        StateLiveData<String> addMember = mGroupChatDAO.addMembers(groupChat.getId(), groupChat.getMembers());
 
         return new CreateGroupChatState(createGroupState, addMember, addGroup);
     }
 
+    static class MergeGroupChat extends StateMediatorLiveData<GroupChat> {
+
+        private boolean roomSuccess = false;
+        private boolean memberSuccess = false;
+        private boolean subColSuccess = false;
+
+        private GroupChat room;
+        private GroupChat_UserSubCol userGroupChat;
+        private List<Member_GroupChatSubCol> members;
+
+        MergeGroupChat(@NonNull StateLiveData<GroupChat> groupChat,
+                       @NonNull StateMediatorLiveData<GroupChat_UserSubCol> userGroupChat,
+                       @NonNull StateLiveData<List<Member_GroupChatSubCol>> members) {
+
+            postLoading();
+
+            addSource(groupChat, new Observer<StateModel<GroupChat>>() {
+                @Override
+                public void onChanged(StateModel<GroupChat> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case LOADING:
+                            roomSuccess = false;
+                            postLoading();
+
+                            break;
+
+                        case ERROR:
+                            roomSuccess = false;
+                            postError(stateModel.getError());
+
+                            break;
+
+                        case SUCCESS:
+                            roomSuccess = true;
+                            setRoom(stateModel.getData());
+
+                            if (roomSuccess && memberSuccess) {
+                                GroupChat combine = combineData();
+                                postSuccess(combine);
+                            }
+                    }
+                }
+            });
+
+            addSource(userGroupChat, new Observer<StateModel<GroupChat_UserSubCol>>() {
+                @Override
+                public void onChanged(StateModel<GroupChat_UserSubCol> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case LOADING:
+                            subColSuccess = false;
+                            postLoading();
+
+                            break;
+
+                        case ERROR:
+                            subColSuccess = false;
+                            postError(stateModel.getError());
+
+                            break;
+
+                        case SUCCESS:
+                            subColSuccess = true;
+                            setUserGroupChat(stateModel.getData());
+
+                            if (roomSuccess && memberSuccess) {
+                                GroupChat combine = combineData();
+                                postSuccess(combine);
+                            }
+                    }
+                }
+            });
+
+            addSource(members, new Observer<StateModel<List<Member_GroupChatSubCol>>>() {
+                @Override
+                public void onChanged(StateModel<List<Member_GroupChatSubCol>> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case LOADING:
+                            memberSuccess = false;
+                            postLoading();
+
+                            break;
+
+                        case ERROR:
+                            memberSuccess = false;
+                            postError(stateModel.getError());
+
+                            break;
+
+                        case SUCCESS:
+                            memberSuccess = true;
+                            setMembers(stateModel.getData());
+
+                            if (roomSuccess && memberSuccess) {
+                                GroupChat combine = combineData();
+                                postSuccess(combine);
+                            }
+                    }
+                }
+
+            });
+        }
+
+        private GroupChat combineData() {
+            room.getMembers().clear();
+            room.setAvatar(userGroupChat.getAvatar());
+            room.setName(userGroupChat.getName());
+            room.getMembers().addAll(members);
+
+            return room;
+        }
+
+        private void setMembers(List<Member_GroupChatSubCol> members) {
+            this.members = members;
+        }
+
+        private void setUserGroupChat(GroupChat_UserSubCol userGroupChat) {
+            this.userGroupChat = userGroupChat;
+        }
+
+        private void setRoom(GroupChat room) {
+            this.room = room;
+        }
+    }
 
     static class CreateGroupChatState extends StateMediatorLiveData<String> {
 
@@ -185,6 +266,41 @@ public class ChatRepository implements IChatRepository {
                 }
             });
         }
+    }
+
+    static class SendMessageState extends StateMediatorLiveData<String>{
+        SendMessageState(String groupId, @NonNull StateLiveData<Message_GroupChatSubCol> addMessageToGroup,
+                         String[] memberIds) {
+
+            addSource(addMessageToGroup, stateModel -> {
+                switch (stateModel.getStatus()) {
+                    case LOADING:
+                        postLoading();
+                        break;
+                    case ERROR:
+                        postError(stateModel.getError());
+                        break;
+                    case SUCCESS:
+                        StateLiveData<String> updateLastMessage = new GroupChat_UserSubColDAO()
+                                .updateLastMessage(groupId, memberIds, stateModel.getData());
+
+                        addSource(updateLastMessage, updateLastMessageStateModel -> {
+                            switch (updateLastMessageStateModel.getStatus()){
+                                case ERROR:
+                                    postError(updateLastMessageStateModel.getError());
+                                    break;
+                                case LOADING:
+                                    postLoading();
+                                    break;
+                                case SUCCESS:
+                                    postSuccess("send message success");
+                                    break;
+                            }
+                        });
+                }
+            });
+        }
+
     }
 
     @Deprecated

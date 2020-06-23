@@ -9,6 +9,8 @@ public class GroupChat implements IFirebaseModel {
 
     private String id;
     private long createdTime;
+
+    @Exclude
     private String name;
 
     @Exclude
@@ -56,6 +58,7 @@ public class GroupChat implements IFirebaseModel {
         this.avatar = avatar;
     }
 
+    @Exclude
     public String getName() {
         return name;
     }

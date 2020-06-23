@@ -83,6 +83,7 @@
     <string name="dot_delimiter">•</string>
     <string name="title_chat_create_group">Tạo cuộc trò chuyện nhóm</string>
     <string name="title_next">Tiếp</string>
+    <string name="title_chat_add_member">Thêm thành viên</string>
 
     <string-array name="dayOfWeek">
         <item>C.N</item>

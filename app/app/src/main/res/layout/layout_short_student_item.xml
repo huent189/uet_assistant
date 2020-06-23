@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/margin"
+    android:paddingVertical="@dimen/margin_x2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civAvatar"
+                android:layout_width="@dimen/img_avatar_size"
+                android:layout_height="@dimen/img_avatar_size"
+                android:src="@drawable/avatar" />
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_marginTop="@dimen/margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nguyễn Tùng Lâm" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnClear"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/primary_button_background"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:scaleType="fitCenter"
+            android:layout_marginStart="@dimen/margin_x3"
+            android:layout_marginTop="@dimen/margin"
+            android:src="@drawable/btn_clear"/>
+
+    </FrameLayout>
+
+</LinearLayout>

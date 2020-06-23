@@ -128,9 +128,7 @@ public class MyCoursesActivity extends AppCompatActivity {
 
             String menuFragment = getIntent().getStringExtra("fragment");
 
-            // If menuFragment is defined, then this activity was launched with a fragment selection
             if (menuFragment != null) {
-                // Here we can decide what do to -- perhaps load other parameters from the intent extras such as IDs, etc
                 if (menuFragment.equals(NotificationsFragment.class.getName())) {
                     mNavController.navigate(R.id.action_navigation_courses_to_navigation_notifications);
                 }

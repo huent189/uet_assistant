@@ -1,7 +1,9 @@
 package vnu.uet.mobilecourse.assistant.viewmodel.state;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.Observer;
 
 public class StateMediatorLiveData<T> extends MediatorLiveData<StateModel<T>> implements IStateLiveData<T> {
 
