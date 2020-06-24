@@ -2,10 +2,14 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 
 import android.util.Log;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import vnu.uet.mobilecourse.assistant.model.forum.InterestedDiscussion;
@@ -21,6 +25,21 @@ public class InterestedDiscussionDAO extends FirebaseDAO<InterestedDiscussion> {
                 .document(STUDENT_ID)
                 .collection(FirebaseCollectionName.INTERESTED_DISCUSSION)
         );
+    }
+
+    public synchronized List<InterestedDiscussion> getAllSynchronize() {
+        Task<QuerySnapshot> task = mColReference.get();
+
+        try {
+            Tasks.await(task);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return task.getResult().getDocuments().stream()
+                .map(snapshot -> snapshot.toObject(InterestedDiscussion.class))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     @Override
