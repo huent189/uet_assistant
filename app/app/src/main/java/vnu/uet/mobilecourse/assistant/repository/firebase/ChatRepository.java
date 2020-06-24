@@ -4,6 +4,8 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
+
+import vnu.uet.mobilecourse.assistant.database.DAO.ChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.ConnectionDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChat_UserSubColDAO;
@@ -67,8 +69,9 @@ public class ChatRepository implements IChatRepository {
     @Override
     public StateMediatorLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message, String[] memberIds) {
         StateLiveData<Message_GroupChatSubCol> addMessageState= new Message_GroupChatSubColDAO(groupId).add(message.getId(), message);
-
-        return new SendMessageState(groupId, addMessageState, memberIds);
+        StateLiveData<String> updateLastMessage = new GroupChat_UserSubColDAO()
+                .updateLastMessage(groupId, memberIds, message);
+        return new SendMessageState(groupId, addMessageState, updateLastMessage, memberIds);
     }
 
     @Override
@@ -80,6 +83,16 @@ public class ChatRepository implements IChatRepository {
         addConnections(groupChat.getMembers());
 
         return new CreateGroupChatState(createGroupState, addMember, addGroup);
+    }
+
+    @Override
+    public StateLiveData<String> addMember(GroupChat_UserSubCol group, List <Member_GroupChatSubCol> members) {
+        return new ChatDAO().addMember(group, members);
+    }
+
+    @Override
+    public IStateLiveData<String> removeMember(String groupId, String memberId) {
+        return new ChatDAO().removeMember(groupId, memberId);
     }
 
     public StateLiveData<List<Connection>> getAllConnections() {
@@ -302,7 +315,7 @@ public class ChatRepository implements IChatRepository {
         boolean addMessageToGroupState = false;
         boolean updateLastMessageState = false;
         Message_GroupChatSubCol message;
-        SendMessageState(String groupId, @NonNull StateLiveData<Message_GroupChatSubCol> addMessageToGroup,
+        SendMessageState(String groupId, @NonNull StateLiveData<Message_GroupChatSubCol> addMessageToGroup, StateLiveData<String> updateLastMessage,
                          String[] memberIds) {
             postLoading();
 
@@ -327,8 +340,6 @@ public class ChatRepository implements IChatRepository {
                 }
             });
 
-            StateLiveData<String> updateLastMessage = new GroupChat_UserSubColDAO()
-                    .updateLastMessage(groupId, memberIds, message);
 
             addSource(updateLastMessage, updateLastMessageStateModel -> {
                 switch (updateLastMessageStateModel.getStatus()){
@@ -346,7 +357,7 @@ public class ChatRepository implements IChatRepository {
                 }
 
                 if (addMessageToGroupState && updateLastMessageState) {
-                    postSuccess("sent message success");
+                    postSuccess("sent  message success");
                 }
             });
         }
