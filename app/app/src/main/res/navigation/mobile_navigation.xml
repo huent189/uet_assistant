@@ -198,6 +198,24 @@
         android:id="@+id/navigation_add_member"
         android:name="vnu.uet.mobilecourse.assistant.view.chat.AddMemberFragment"
         android:label="fragment_add_member"
-        tools:layout="@layout/fragment_add_member" />
+        tools:layout="@layout/fragment_add_member" >
+        <action
+            android:id="@+id/action_navigation_add_member_to_navigation_chat_room"
+            app:destination="@id/navigation_chat_room" />
+        <action
+            android:id="@+id/action_navigation_add_member_to_navigation_set_room_title"
+            app:destination="@id/navigation_set_room_title" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_set_room_title"
+        android:name="vnu.uet.mobilecourse.assistant.view.chat.SetRoomTitleFragment"
+        android:label="fragment_set_room_title"
+        tools:layout="@layout/fragment_set_room_title" >
+        <action
+            android:id="@+id/action_navigation_set_room_title_to_navigation_chat_room"
+            app:destination="@id/navigation_chat_room"
+            app:popUpTo="@+id/navigation_add_member"
+            app:popUpToInclusive="true"/>
+    </fragment>
 
 </navigation>

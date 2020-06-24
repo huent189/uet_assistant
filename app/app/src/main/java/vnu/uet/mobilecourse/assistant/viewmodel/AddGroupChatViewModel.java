@@ -4,16 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.Connection;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
-import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.MemberRole;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
@@ -25,42 +26,58 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
-public class AddMemberViewModel extends ViewModel {
+public class AddGroupChatViewModel extends ViewModel {
 
     private StudentRepository mStudentRepo = StudentRepository.getInstance();
     private ChatRepository mChatRepo = ChatRepository.getInstance();
 
     private static final String USER_ID = User.getInstance().getStudentId();
 
-    private List<IStudent> mSelectedList = new ArrayList<>();
+    private MutableLiveData<List<IStudent>> mSelectedList = new MutableLiveData<>();
+
+    public AddGroupChatViewModel() {
+        clearData();
+    }
+
+    public void clearData() {
+        mSelectedList.postValue(new ArrayList<>());
+    }
 
     public IStateLiveData<UserInfo> searchStudent(String id) {
         return mStudentRepo.getStudentById(id);
     }
 
     public void addMember(IStudent student) {
-        mSelectedList.add(student);
+        List<IStudent> list = mSelectedList.getValue();
+        assert list != null;
+        list.add(student);
+
+        mSelectedList.postValue(list);
     }
 
     public void removeMember(IStudent student) {
-        mSelectedList.removeIf(stu -> stu.getCode().equals(student.getCode()));
+        List<IStudent> list = mSelectedList.getValue();
+        assert list != null;
+        list.removeIf(stu -> stu.getCode().equals(student.getCode()));
+
+        mSelectedList.postValue(list);
     }
 
-    public boolean isSelected(IStudent student) {
-        return mSelectedList.stream().anyMatch(stu -> stu.getCode().equals(student.getCode()));
+    public LiveData<Boolean> isSelected(IStudent student) {
+        return new SelectedState(mSelectedList, student);
     }
 
     public IStateLiveData<List<IStudent>> getSuggestions() {
         return new ConnectedStudents(mChatRepo.getAllConnections());
     }
 
-    public List<IStudent> getSelectedList() {
+    public LiveData<List<IStudent>> getSelectedList() {
         return mSelectedList;
     }
 
-    public IStateLiveData<String> createGroupChat() {
+    public IStateLiveData<GroupChat> createGroupChat(String title) {
         GroupChat groupChat = new GroupChat();
-        groupChat.setName("TESTTTTTT");
+        groupChat.setName(title);
 
         groupChat.setId(FirebaseStructureId.groupChat());
         groupChat.setAvatar(null);
@@ -73,7 +90,9 @@ public class AddMemberViewModel extends ViewModel {
         me.setAvatar(null);
         groupChat.getMembers().add(me);
 
-        for (IStudent student : mSelectedList) {
+        List<IStudent> students = mSelectedList.getValue();
+        assert students != null;
+        for (IStudent student : students) {
             Member_GroupChatSubCol other = new Member_GroupChatSubCol();
             other.setName(student.getName());
             other.setAvatar(student.getAvatar());
@@ -85,12 +104,29 @@ public class AddMemberViewModel extends ViewModel {
         return mChatRepo.createGroupChat(groupChat);
     }
 
+    static class SelectedState extends MediatorLiveData<Boolean> {
+
+        public SelectedState(@NonNull LiveData<List<IStudent>> listLiveData, IStudent student) {
+            postValue(Boolean.FALSE);
+
+            addSource(listLiveData, new Observer<List<IStudent>>() {
+                @Override
+                public void onChanged(List<IStudent> students) {
+                    boolean selected = students.stream()
+                            .anyMatch(stu -> stu.getCode().equals(student.getCode()));
+
+                    postValue(selected);
+                }
+            });
+        }
+    }
+
     static class ConnectedStudents extends StateMediatorLiveData<List<IStudent>> {
 
         private List<Connection> mConnections;
         private Map<String, IStudent> mStudentMap;
 
-        public ConnectedStudents(@NonNull StateLiveData<List<Connection>> connections) {
+        ConnectedStudents(@NonNull StateLiveData<List<Connection>> connections) {
 
             postLoading();
 
@@ -112,8 +148,6 @@ public class AddMemberViewModel extends ViewModel {
                             mConnections = stateModel.getData();
                             mStudentMap = new HashMap<>();
 
-                            boolean[] check = new boolean[mConnections.size()];
-
                             mConnections.forEach(connection -> {
                                 String otherId = null;
 
@@ -125,7 +159,8 @@ public class AddMemberViewModel extends ViewModel {
                                 }
 
                                 if (otherId != null) {
-                                    StateMediatorLiveData<UserInfo> userInfo = (StateMediatorLiveData<UserInfo>) StudentRepository.getInstance().getStudentById(otherId);
+                                    StateMediatorLiveData<UserInfo> userInfo = (StateMediatorLiveData<UserInfo>)
+                                            StudentRepository.getInstance().getStudentById(otherId);
 
                                     String finalOtherId = otherId;
                                     addSource(userInfo, new Observer<StateModel<UserInfo>>() {

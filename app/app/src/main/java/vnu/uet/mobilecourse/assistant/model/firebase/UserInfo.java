@@ -1,6 +1,8 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
 
+import android.os.Parcel;
+
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.PropertyName;
 

@@ -27,15 +27,9 @@ public class InterestedDiscussionDAO extends FirebaseDAO<InterestedDiscussion> {
         );
     }
 
-    public synchronized List<InterestedDiscussion> getAllSynchronize() {
+    public synchronized List<InterestedDiscussion> getAllSynchronize() throws ExecutionException, InterruptedException {
         Task<QuerySnapshot> task = mColReference.get();
-
-        try {
-            Tasks.await(task);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-
+        Tasks.await(task);
         return task.getResult().getDocuments().stream()
                 .map(snapshot -> snapshot.toObject(InterestedDiscussion.class))
                 .filter(Objects::nonNull)

@@ -1,47 +1,32 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
-import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
-import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
-import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
-import vnu.uet.mobilecourse.assistant.view.chat.AddMemberFragment;
-import vnu.uet.mobilecourse.assistant.view.chat.ChatFragment;
 
-public class SuggestionMemberAdapter extends RecyclerView.Adapter<SuggestionMemberAdapter.ViewHolder> {
+public class RoomMemberAdapter extends RecyclerView.Adapter<RoomMemberAdapter.ViewHolder> {
 
     private List<IStudent> mStudents;
     private NavController mNavController;
-    private AddMemberFragment mOwner;
-    private OnCheckChangeListener mOnCheckChangeListener;
+    private Fragment mOwner;
 
-    public SuggestionMemberAdapter(List<IStudent> students, AddMemberFragment owner, OnCheckChangeListener onCheckChangeListener) {
+    public RoomMemberAdapter(List<IStudent> students, Fragment owner) {
         this.mStudents = students;
         this.mOwner = owner;
-        this.mOnCheckChangeListener = onCheckChangeListener;
     }
 
     @NonNull
@@ -63,16 +48,7 @@ public class SuggestionMemberAdapter extends RecyclerView.Adapter<SuggestionMemb
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final IStudent current = mStudents.get(position);
-        holder.bind(current, new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mOnCheckChangeListener.onCheckedChanged(current, isChecked);
-            }
-        }, mOwner);
-    }
-
-    public interface OnCheckChangeListener {
-        void onCheckedChanged(IStudent student, boolean isChecked);
+        holder.bind(current);
     }
 
     @Override
@@ -85,7 +61,6 @@ public class SuggestionMemberAdapter extends RecyclerView.Adapter<SuggestionMemb
         private CircleImageView mCivAvatar;
         private TextView mTvName;
         private TextView mTvId;
-        private CheckBox mCheckbox;
 
         ViewHolder(@NonNull View view) {
             super(view);
@@ -93,21 +68,13 @@ public class SuggestionMemberAdapter extends RecyclerView.Adapter<SuggestionMemb
             mCivAvatar = view.findViewById(R.id.civAvatar);
             mTvName = view.findViewById(R.id.tvName);
             mTvId = view.findViewById(R.id.tvId);
-            mCheckbox = view.findViewById(R.id.checkbox);
+            CheckBox checkBox = view.findViewById(R.id.checkbox);
+            checkBox.setVisibility(View.GONE);
         }
 
-        void bind(IStudent student, CompoundButton.OnCheckedChangeListener listener, AddMemberFragment fragment) {
+        void bind(IStudent student) {
             mTvName.setText(student.getName());
             mTvId.setText(student.getCode());
-
-            fragment.getViewModel().isSelected(student).observe(fragment.getViewLifecycleOwner(), new Observer<Boolean>() {
-                @Override
-                public void onChanged(Boolean aBoolean) {
-                    mCheckbox.setChecked(aBoolean);
-                }
-            });
-
-            mCheckbox.setOnCheckedChangeListener(listener);
         }
     }
 }

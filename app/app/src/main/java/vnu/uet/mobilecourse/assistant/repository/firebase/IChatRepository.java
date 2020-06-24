@@ -53,5 +53,5 @@ public interface IChatRepository {
      * @return state live data interface
      *      contains response state of this operation
      */
-    IStateLiveData<String> createGroupChat(GroupChat groupChat);
+    IStateLiveData<GroupChat> createGroupChat(GroupChat groupChat);
 }

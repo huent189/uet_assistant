@@ -72,7 +72,7 @@ public class ChatRepository implements IChatRepository {
     }
 
     @Override
-    public StateMediatorLiveData<String> createGroupChat(GroupChat groupChat) {
+    public StateMediatorLiveData<GroupChat> createGroupChat(GroupChat groupChat) {
         StateLiveData<GroupChat> createGroupState = mGroupChatDAO.add(groupChat.getId(), groupChat);
         StateLiveData<String> addGroup = mUserGroupChatDAO.addGroupChat(groupChat);
         StateLiveData<String> addMember = mGroupChatDAO.addMembers(groupChat.getId(), groupChat.getMembers());
@@ -229,16 +229,18 @@ public class ChatRepository implements IChatRepository {
         }
     }
 
-    static class CreateGroupChatState extends StateMediatorLiveData<String> {
+    static class CreateGroupChatState extends StateMediatorLiveData<GroupChat> {
 
         private boolean createGroupState = false;
         private boolean addMemberToGroupState = false;
         private boolean addGroupToMemberState = false;
+        private GroupChat mGroupChat;
 
         CreateGroupChatState(@NonNull StateLiveData<GroupChat> createGroupLiveData,
                              @NonNull StateLiveData<String> addMemberLiveData,
                              @NonNull StateLiveData<String> addGroupLiveData) {
             super(new StateModel<>(StateStatus.LOADING));
+
             addSource(createGroupLiveData, stateModel -> {
                 switch (stateModel.getStatus()) {
                     case ERROR:
@@ -246,6 +248,7 @@ public class ChatRepository implements IChatRepository {
                         postError(stateModel.getError());
                         break;
                     case SUCCESS:
+                        mGroupChat = stateModel.getData();
                         createGroupState = true;
                         break;
                     case LOADING:
@@ -254,7 +257,7 @@ public class ChatRepository implements IChatRepository {
                         break;
                 }
                 if (createGroupState && addMemberToGroupState && addGroupToMemberState) {
-                    postSuccess("create group success!");
+                    postSuccess(mGroupChat);
                 }
             });
 
@@ -273,7 +276,7 @@ public class ChatRepository implements IChatRepository {
                         break;
                 }
                 if (createGroupState && addMemberToGroupState && addGroupToMemberState) {
-                    postSuccess("create group success!");
+                    postSuccess(mGroupChat);
                 }
             });
 
@@ -292,7 +295,7 @@ public class ChatRepository implements IChatRepository {
                         break;
                 }
                 if (createGroupState && addMemberToGroupState && addGroupToMemberState) {
-                    postSuccess("create group success!");
+                    postSuccess(mGroupChat);
                 }
             });
         }
