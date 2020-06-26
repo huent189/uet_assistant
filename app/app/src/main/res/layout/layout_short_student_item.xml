@@ -2,18 +2,19 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:paddingHorizontal="@dimen/margin"
     android:paddingVertical="@dimen/margin_x2"
+    android:paddingHorizontal="@dimen/margin"
+    android:background="@color/background"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
     <FrameLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout
             android:gravity="center_horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="64dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -28,7 +29,9 @@
                 android:layout_marginTop="@dimen/margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nguyễn Tùng Lâm" />
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="Tùnghgg Lâm Nguyeenx" />
 
         </LinearLayout>
 

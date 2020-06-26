@@ -17,17 +17,12 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.adapter.MemberAdapter;
+import vnu.uet.mobilecourse.assistant.adapter.SuggestionMemberAdapter;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
-import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
-import vnu.uet.mobilecourse.assistant.model.firebase.MemberRole;
-import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
-import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
-import vnu.uet.mobilecourse.assistant.util.StringConst;
-import vnu.uet.mobilecourse.assistant.viewmodel.AddMemberViewModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.AddGroupChatViewModel;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 import android.util.Log;
@@ -39,25 +34,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 
+import java.util.List;
+
 public class AddMemberFragment extends Fragment {
 
-    private AddMemberViewModel mViewModel;
+    private AddGroupChatViewModel mViewModel;
     private FragmentActivity mActivity;
     private NavController mNavController;
     private IStudent mSearchResult;
+    private SuggestionMemberAdapter suggestionAdapter = null;
+    private MemberAdapter mMemberAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        mViewModel = new ViewModelProvider(this).get(AddMemberViewModel.class);
 
         mActivity = getActivity();
         if (mActivity != null) {
+            mViewModel = new ViewModelProvider(mActivity).get(AddGroupChatViewModel.class);
             mNavController = Navigation.findNavController(mActivity, R.id.nav_host_fragment);
         }
 
@@ -74,6 +74,7 @@ public class AddMemberFragment extends Fragment {
         TextView tvName = layoutSearchResult.findViewById(R.id.tvName);
         TextView tvId = layoutSearchResult.findViewById(R.id.tvId);
         CheckBox checkBox = layoutSearchResult.findViewById(R.id.checkbox);
+        ImageView ivWarning = layoutSearchResult.findViewById(R.id.ivWarning);
 
         ShimmerFrameLayout shimmerSearchResult = root.findViewById(R.id.shimmerSearchResult);
         shimmerSearchResult.startShimmerAnimation();
@@ -90,13 +91,21 @@ public class AddMemberFragment extends Fragment {
 
         rvMembers.setLayoutManager(layoutManager);
 
-        MemberAdapter memberAdapter = new MemberAdapter(mViewModel.getSelectedList(), this, new MemberAdapter.OnClearListener() {
+        mViewModel.getSelectedList().observe(getViewLifecycleOwner(), new Observer<List<IStudent>>() {
             @Override
-            public void onClear(IStudent student) {
-                mViewModel.removeMember(student);
+            public void onChanged(List<IStudent> students) {
+                mMemberAdapter = new MemberAdapter(students, AddMemberFragment.this,
+                        new MemberAdapter.OnClearListener() {
+                            @Override
+                            public void onClear(IStudent student) {
+                                mViewModel.removeMember(student);
+                            }
+                        });
+                rvMembers.setAdapter(mMemberAdapter);
             }
         });
-        rvMembers.setAdapter(memberAdapter);
+
+
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -144,7 +153,20 @@ public class AddMemberFragment extends Fragment {
                                 tvName.setText(mSearchResult.getName());
                                 tvId.setText(mSearchResult.getCode());
 
-                                checkBox.setChecked(mViewModel.isSelected(mSearchResult));
+                                mViewModel.isSelected(mSearchResult).observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                                    @Override
+                                    public void onChanged(Boolean aBoolean) {
+                                        checkBox.setChecked(aBoolean);
+                                    }
+                                });
+
+                                if (mSearchResult.isActive()) {
+                                    ivWarning.setVisibility(View.GONE);
+                                    checkBox.setVisibility(View.VISIBLE);
+                                } else {
+                                    ivWarning.setVisibility(View.VISIBLE);
+                                    checkBox.setVisibility(View.GONE);
+                                }
 
                                 break;
 
@@ -165,20 +187,47 @@ public class AddMemberFragment extends Fragment {
             }
         });
 
+        RecyclerView rvSuggestions = root.findViewById(R.id.rvSuggestions);
+
+
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     mViewModel.addMember(mSearchResult);
+                    layoutSearchResult.setVisibility(View.GONE);
                 } else {
                     mViewModel.removeMember(mSearchResult);
                 }
-
-                layoutSearchResult.setVisibility(View.GONE);
-                memberAdapter.setMembers(mViewModel.getSelectedList());
-                memberAdapter.notifyDataSetChanged();
             }
         });
+
+
+        SuggestionMemberAdapter.OnCheckChangeListener onCheckChangeListener = new SuggestionMemberAdapter.OnCheckChangeListener() {
+            @Override
+            public void onCheckedChanged(IStudent student, boolean isChecked) {
+                if (isChecked) {
+                    mViewModel.addMember(student);
+                } else {
+                    mViewModel.removeMember(student);
+                }
+            }
+        };
+
+        mViewModel.getSuggestions().observe(getViewLifecycleOwner(), new Observer<StateModel<List<IStudent>>>() {
+            @Override
+            public void onChanged(StateModel<List<IStudent>> stateModel) {
+                switch (stateModel.getStatus()) {
+                    case SUCCESS:
+                        List<IStudent> suggestions = stateModel.getData();
+                        suggestionAdapter = new SuggestionMemberAdapter(suggestions, AddMemberFragment.this, onCheckChangeListener);
+                        rvSuggestions.setAdapter(suggestionAdapter);
+
+                        break;
+                }
+            }
+        });
+
 
         return root;
     }
@@ -207,19 +256,37 @@ public class AddMemberFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         if (item.getItemId() == R.id.action_next) {
-            mViewModel.createGroupChat().observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
-                @Override
-                public void onChanged(StateModel<String> stateModel) {
-                    switch (stateModel.getStatus()) {
-                        case SUCCESS:
-                            mNavController.navigateUp();
-                    }
-                }
-            });
+            List<IStudent> students = mViewModel.getSelectedList().getValue();
+            assert students != null;
+            int counter = students.size();
+            if (counter == 1) {
+                IStudent selected = students.get(0);
+
+                Bundle bundle = new Bundle();
+
+                String title = selected.getName();
+                bundle.putString("title", title);
+
+                String code = selected.getCode();
+                bundle.putString("code", code);
+
+                bundle.putString("type", GroupChat.DIRECT);
+
+                mNavController.navigate(R.id.action_navigation_add_member_to_navigation_chat_room, bundle);
+
+            } else if (counter > 1) {
+                mNavController.navigate(R.id.action_navigation_add_member_to_navigation_set_room_title);
+            } else {
+                Toast.makeText(mActivity, "Bạn chưa chọn thành viên", Toast.LENGTH_SHORT).show();
+            }
 
             Log.d(getTag(), "onOptionsItemSelected: ");
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public AddGroupChatViewModel getViewModel() {
+        return mViewModel;
     }
 }

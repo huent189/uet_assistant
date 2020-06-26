@@ -94,6 +94,8 @@ public class ChatRoomFragment extends Fragment {
                 mRoomId = FirebaseStructureId.directedChat(mCode);
             }
 
+            mViewModel.markAsSeen(mRoomId);
+
             mViewModel.getRoomInfo(mRoomId).observe(getViewLifecycleOwner(), new Observer<StateModel<GroupChat>>() {
                 @Override
                 public void onChanged(StateModel<GroupChat> stateModel) {
@@ -113,7 +115,11 @@ public class ChatRoomFragment extends Fragment {
                                 mTvRoomTitle.setText(mTitle);
                             }
 
-                            Toast.makeText(mActivity, "Fetch room info success", Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case ERROR:
+                            Toast.makeText(mActivity, "Không lấy được thông tin phòng chat", Toast.LENGTH_SHORT).show();
+                            break;
                     }
                 }
             });

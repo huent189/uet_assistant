@@ -29,6 +29,10 @@ public class ChatRoomViewModel extends ViewModel {
         return mChatRepo.getGroupChatInfo(roomId);
     }
 
+    public IStateLiveData<String> markAsSeen(String roomId) {
+        return mChatRepo.markRoomAsSeen(roomId);
+    }
+
     public IStateLiveData<String> sendMessage(String roomId, Message_GroupChatSubCol message, String[] memberIds) {
         return mChatRepo.sendMessage(roomId, message, memberIds);
     }
@@ -38,8 +42,8 @@ public class ChatRoomViewModel extends ViewModel {
         return new FirstMessageLiveData(roomId, message, otherName, memberIds);
     }
 
-    private StateMediatorLiveData<String> createDirectedChat(String roomId, String otherName, String otherCode) {
-        StateMediatorLiveData<String> liveData = new StateMediatorLiveData<>();
+    private StateMediatorLiveData<GroupChat> createDirectedChat(String roomId, String otherName, String otherCode) {
+        StateMediatorLiveData<GroupChat> liveData = new StateMediatorLiveData<>();
         liveData.postLoading();
 
         GroupChat groupChat = new GroupChat();
@@ -74,11 +78,11 @@ public class ChatRoomViewModel extends ViewModel {
 
             String otherId = findOtherId(memberIds);
 
-            StateMediatorLiveData<String> createLiveData = createDirectedChat(roomId, otherName, otherId);
+            StateMediatorLiveData<GroupChat> createLiveData = createDirectedChat(roomId, otherName, otherId);
 
-            addSource(createLiveData, new Observer<StateModel<String>>() {
+            addSource(createLiveData, new Observer<StateModel<GroupChat>>() {
                 @Override
-                public void onChanged(StateModel<String> stateModel) {
+                public void onChanged(StateModel<GroupChat> stateModel) {
                     switch (stateModel.getStatus()) {
                         case LOADING:
                             postLoading();

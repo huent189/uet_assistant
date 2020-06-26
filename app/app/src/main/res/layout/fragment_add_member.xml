@@ -64,8 +64,6 @@ tools:context=".view.chat.AddMemberFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMembers"
-            android:paddingHorizontal="@dimen/margin"
-            android:clipToPadding="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

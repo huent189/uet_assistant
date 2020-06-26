@@ -50,16 +50,6 @@ public class SharedPreferencesManager {
         return preferences.getBoolean(key, false);
     }
 
-    public static void setInt(String key, int value){
-        initPreference();
-        preferences.edit().putInt(key, value).apply();
-    }
-
-    public static int getInt(String key, int defValue){
-        initPreference();
-        return preferences.getInt(key, defValue);
-    }
-
     public static void clearAll(){
         initPreference();
         preferences.edit().clear().apply();

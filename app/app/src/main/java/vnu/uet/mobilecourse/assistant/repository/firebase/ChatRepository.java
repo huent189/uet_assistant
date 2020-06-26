@@ -1,18 +1,23 @@
 package vnu.uet.mobilecourse.assistant.repository.firebase;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
+import vnu.uet.mobilecourse.assistant.database.DAO.ConnectionDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChat_UserSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Member_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Message_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
+import vnu.uet.mobilecourse.assistant.model.firebase.Connection;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
@@ -23,6 +28,7 @@ public class ChatRepository implements IChatRepository {
 
     private GroupChat_UserSubColDAO mUserGroupChatDAO;
     private GroupChatDAO mGroupChatDAO;
+    private ConnectionDAO mConnectionDAO;
 
     private static ChatRepository instance;
 
@@ -37,11 +43,19 @@ public class ChatRepository implements IChatRepository {
     private ChatRepository() {
         mUserGroupChatDAO = new GroupChat_UserSubColDAO();
         mGroupChatDAO = new GroupChatDAO();
+        mConnectionDAO = new ConnectionDAO();
     }
 
     @Override
     public IStateLiveData<List<GroupChat_UserSubCol>> getAllUserGroupChats() {
         return mUserGroupChatDAO.readAll();
+    }
+
+    public IStateLiveData<String> markRoomAsSeen(String id) {
+        Map<String, Object> change = new HashMap<>();
+        change.put("seen", Boolean.TRUE);
+
+        return mUserGroupChatDAO.update(id, change);
     }
 
     @Override
@@ -67,12 +81,37 @@ public class ChatRepository implements IChatRepository {
     }
 
     @Override
-    public StateMediatorLiveData<String> createGroupChat(GroupChat groupChat) {
+    public StateMediatorLiveData<GroupChat> createGroupChat(GroupChat groupChat) {
         StateLiveData<GroupChat> createGroupState = mGroupChatDAO.add(groupChat.getId(), groupChat);
         StateLiveData<String> addGroup = mUserGroupChatDAO.addGroupChat(groupChat);
         StateLiveData<String> addMember = mGroupChatDAO.addMembers(groupChat.getId(), groupChat.getMembers());
 
+        addConnections(groupChat.getMembers());
+
         return new CreateGroupChatState(createGroupState, addMember, addGroup);
+    }
+
+    public StateLiveData<List<Connection>> getAllConnections() {
+        return mConnectionDAO.readAll();
+    }
+
+    private void addConnections(List<Member_GroupChatSubCol> members) {
+        int size = members.size();
+
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = i + 1; j < size; j++) {
+                String fromId = members.get(i).getId();
+                String toId = members.get(j).getId();
+                String docId = FirebaseStructureId.connect(fromId, toId);
+
+                Connection connection = new Connection();
+                connection.setId(docId);
+                connection.setStudentIds(fromId, toId);
+                connection.setTimestamp(System.currentTimeMillis() / 1000);
+
+                mConnectionDAO.addUnique(connection);
+            }
+        }
     }
 
     static class MergeGroupChat extends StateMediatorLiveData<GroupChat> {
@@ -111,7 +150,7 @@ public class ChatRepository implements IChatRepository {
                             roomSuccess = true;
                             setRoom(stateModel.getData());
 
-                            if (roomSuccess && memberSuccess) {
+                            if (roomSuccess && memberSuccess && subColSuccess) {
                                 GroupChat combine = combineData();
                                 postSuccess(combine);
                             }
@@ -139,7 +178,7 @@ public class ChatRepository implements IChatRepository {
                             subColSuccess = true;
                             setUserGroupChat(stateModel.getData());
 
-                            if (roomSuccess && memberSuccess) {
+                            if (roomSuccess && memberSuccess && subColSuccess) {
                                 GroupChat combine = combineData();
                                 postSuccess(combine);
                             }
@@ -167,7 +206,7 @@ public class ChatRepository implements IChatRepository {
                             memberSuccess = true;
                             setMembers(stateModel.getData());
 
-                            if (roomSuccess && memberSuccess) {
+                            if (roomSuccess && memberSuccess && subColSuccess) {
                                 GroupChat combine = combineData();
                                 postSuccess(combine);
                             }
@@ -199,16 +238,18 @@ public class ChatRepository implements IChatRepository {
         }
     }
 
-    static class CreateGroupChatState extends StateMediatorLiveData<String> {
+    static class CreateGroupChatState extends StateMediatorLiveData<GroupChat> {
 
         private boolean createGroupState = false;
         private boolean addMemberToGroupState = false;
         private boolean addGroupToMemberState = false;
+        private GroupChat mGroupChat;
 
         CreateGroupChatState(@NonNull StateLiveData<GroupChat> createGroupLiveData,
                              @NonNull StateLiveData<String> addMemberLiveData,
                              @NonNull StateLiveData<String> addGroupLiveData) {
             super(new StateModel<>(StateStatus.LOADING));
+
             addSource(createGroupLiveData, stateModel -> {
                 switch (stateModel.getStatus()) {
                     case ERROR:
@@ -216,6 +257,7 @@ public class ChatRepository implements IChatRepository {
                         postError(stateModel.getError());
                         break;
                     case SUCCESS:
+                        mGroupChat = stateModel.getData();
                         createGroupState = true;
                         break;
                     case LOADING:
@@ -224,7 +266,7 @@ public class ChatRepository implements IChatRepository {
                         break;
                 }
                 if (createGroupState && addMemberToGroupState && addGroupToMemberState) {
-                    postSuccess("create group success!");
+                    postSuccess(mGroupChat);
                 }
             });
 
@@ -243,7 +285,7 @@ public class ChatRepository implements IChatRepository {
                         break;
                 }
                 if (createGroupState && addMemberToGroupState && addGroupToMemberState) {
-                    postSuccess("create group success!");
+                    postSuccess(mGroupChat);
                 }
             });
 
@@ -262,7 +304,7 @@ public class ChatRepository implements IChatRepository {
                         break;
                 }
                 if (createGroupState && addMemberToGroupState && addGroupToMemberState) {
-                    postSuccess("create group success!");
+                    postSuccess(mGroupChat);
                 }
             });
         }
@@ -303,37 +345,5 @@ public class ChatRepository implements IChatRepository {
 
     }
 
-    @Deprecated
-    static class ConnectedCheckingLiveData extends StateMediatorLiveData<Boolean> {
 
-        public ConnectedCheckingLiveData(StateLiveData<GroupChat_UserSubCol> readLiveData) {
-            postLoading();
-
-            addSource(readLiveData, new Observer<StateModel<GroupChat_UserSubCol>>() {
-                @Override
-                public void onChanged(StateModel<GroupChat_UserSubCol> stateModel) {
-                    switch (stateModel.getStatus()) {
-                        case LOADING:
-                            postLoading();
-                            break;
-
-                        case ERROR:
-                            Exception exception = stateModel.getError();
-
-                            if (exception instanceof DocumentNotFoundException) {
-                                postSuccess(Boolean.FALSE);
-                            } else {
-                                postError(exception);
-                            }
-
-                            break;
-
-                        case SUCCESS:
-                            postSuccess(Boolean.TRUE);
-                            break;
-                    }
-                }
-            });
-        }
-    }
 }
