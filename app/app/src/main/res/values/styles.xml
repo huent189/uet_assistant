@@ -17,7 +17,9 @@
         <item name="radioButtonStyle">@style/RadioButton</item>
         <item name="checkboxStyle">@style/CheckBox</item>
         <item name="actionMenuTextColor">@color/white</item>
-<!--        <item name="android:actionMenuTextColor">@color/white</item>-->
+        <item name="android:popupBackground">@color/background</item>
+
+        <!--        <item name="android:actionMenuTextColor">@color/white</item>-->
     </style>
 
     <style name="CheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">

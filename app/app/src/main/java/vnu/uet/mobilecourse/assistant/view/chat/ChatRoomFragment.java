@@ -2,6 +2,12 @@ package vnu.uet.mobilecourse.assistant.view.chat;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Layout;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,13 +16,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.util.Util;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +41,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.MessageAdapter;
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
+import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
@@ -50,9 +60,11 @@ public class ChatRoomFragment extends Fragment {
     private ChatRoomViewModel mViewModel;
     private NavController mNavController;
 
-    private TextView mEtMessage, mTvRoomTitle;
-
+    private TextView mTvRoomTitle;
+    private MultiAutoCompleteTextView mEtMessage;
     private MenuItem mViewInfoItem;
+
+    private ArrayAdapter<String> mMemberListAdapter;
 
     private String mCode, mTitle, mType, mRoomId;
     private boolean mEmptyRoom = false;
@@ -72,8 +84,91 @@ public class ChatRoomFragment extends Fragment {
             mNavController = Navigation.findNavController(mActivity, R.id.nav_host_fragment);
         }
 
-        mEtMessage= root.findViewById(R.id.etMessage);
+        mEtMessage = root.findViewById(R.id.etMessage);
         mEtMessage.setMovementMethod(new ScrollingMovementMethod());
+        mEtMessage.setThreshold(1);
+
+        // Create a new Tokenizer which will get text after '@' and terminate on ' '
+        mEtMessage.setTokenizer(new MultiAutoCompleteTextView.Tokenizer() {
+
+            @Override
+            public CharSequence terminateToken(CharSequence text) {
+                int i = text.length();
+
+                while (i > 0 && text.charAt(i - 1) == ' ') {
+                    i--;
+                }
+
+                if (i > 0 && text.charAt(i - 1) == ' ') {
+                    return text;
+                } else {
+                    if (text instanceof Spanned) {
+                        SpannableString sp = new SpannableString(text + " ");
+                        TextUtils.copySpansFrom((Spanned) text, 0, text.length(), Object.class, sp, 0);
+                        return sp;
+                    } else {
+                        return text + " ";
+                    }
+                }
+            }
+
+            @Override
+            public int findTokenStart(CharSequence text, int cursor) {
+                int i = cursor;
+
+                while (i > 0 && text.charAt(i - 1) != '@') {
+                    i--;
+                }
+
+                //Check if token really started with @, else we don't have a valid token
+                if (i < 1 || text.charAt(i - 1) != '@') {
+                    return cursor;
+                }
+
+                return i;
+            }
+
+            @Override
+            public int findTokenEnd(CharSequence text, int cursor) {
+                int i = cursor;
+                int len = text.length();
+
+                while (i < len) {
+                    if (text.charAt(i) == ' ') {
+                        return i;
+                    } else {
+                        i++;
+                    }
+                }
+
+                return len;
+            }
+        });
+
+        mEtMessage.setDropDownBackgroundResource(R.drawable.list_item_background);
+
+//        mEtMessage.addTextChangedListener(new TextWatcher() {
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                Layout layout = mEtMessage.getLayout();
+//                int pos = mEtMessage.getSelectionStart();
+//                int line = layout.getLineForOffset(pos);
+//                int baseline = layout.getLineBaseline(line);
+//
+//                int bottom = mEtMessage.getHeight();
+//
+//                mEtMessage.setDropDownVerticalOffset(baseline - bottom);
+//            }
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//            }
+//        });
 
         Bundle args = getArguments();
         if (args != null) {
@@ -117,6 +212,13 @@ public class ChatRoomFragment extends Fragment {
                             }
 
                             if (mViewInfoItem != null) mViewInfoItem.setEnabled(true);
+
+                            mMemberListAdapter = new ArrayAdapter<>(mActivity,
+                                    android.R.layout.simple_dropdown_item_1line,
+                                    members.stream()
+                                            .map(Member_GroupChatSubCol::getId)
+                                            .collect(Collectors.toList()));
+                            mEtMessage.setAdapter(mMemberListAdapter);
 
                             break;
 

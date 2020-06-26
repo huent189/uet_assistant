@@ -136,6 +136,11 @@ public class ForumRepository {
         return interestDAO.readAll();
     }
 
+    public StateMediatorLiveData<InterestedDiscussion> getFollowingDiscussion(int discussionId) {
+        String formatId = FirebaseStructureId.interestDiscussion(discussionId);
+        return interestDAO.read(formatId);
+    }
+
     public IStateLiveData<InterestedDiscussion> follow(int discussionId) {
         String docId = FirebaseStructureId.interestDiscussion(discussionId);
 
@@ -146,6 +151,8 @@ public class ForumRepository {
 
         return interestDAO.add(docId, interest);
     }
+
+
 
     public IStateLiveData<String> unFollow(int discussionId) {
         String docId = FirebaseStructureId.interestDiscussion(discussionId);

@@ -62,13 +62,14 @@
                 android:layout_weight="1"/>
 
             <LinearLayout
+                android:id="@+id/layout_bottom_bar"
                 android:paddingHorizontal="@dimen/margin_x2"
                 android:paddingVertical="@dimen/margin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <EditText
+                <MultiAutoCompleteTextView
                     android:id="@+id/etMessage"
                     style="@style/EditText"
                     android:layout_height="wrap_content"
@@ -83,6 +84,8 @@
                     android:maxLines="5"
                     android:scrollbars="vertical"
                     android:gravity="start|center_vertical"
+                    android:dropDownVerticalOffset="0dp"
+                    android:dropDownAnchor="@id/layout_bottom_bar"
                     android:inputType="textMultiLine" />
 
                 <ImageButton
