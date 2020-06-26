@@ -47,7 +47,7 @@ public class AddGroupChatViewModel extends ViewModel {
         return mStudentRepo.getStudentById(id);
     }
 
-    public void addMember(IStudent student) {
+    public synchronized void addMember(IStudent student) {
         List<IStudent> list = mSelectedList.getValue();
         assert list != null;
         list.add(student);
@@ -55,7 +55,7 @@ public class AddGroupChatViewModel extends ViewModel {
         mSelectedList.postValue(list);
     }
 
-    public void removeMember(IStudent student) {
+    public synchronized void removeMember(IStudent student) {
         List<IStudent> list = mSelectedList.getValue();
         assert list != null;
         list.removeIf(stu -> stu.getCode().equals(student.getCode()));
