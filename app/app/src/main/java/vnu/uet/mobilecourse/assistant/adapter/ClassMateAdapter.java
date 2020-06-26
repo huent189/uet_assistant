@@ -26,16 +26,18 @@ import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.Participant_CourseSubCol;
+import vnu.uet.mobilecourse.assistant.view.course.ExploreCourseFragment;
+import vnu.uet.mobilecourse.assistant.view.profile.RoomProfileFragment;
 
 public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> implements Filterable {
 
-    private List<Participant_CourseSubCol> mClassMates;
-    private List<Participant_CourseSubCol> mFullList;
+    private List<? extends IStudent> mClassMates;
+    private List<? extends IStudent> mFullList;
     private NavController mNavController;
     private Fragment mOwner;
     private Filter mFilter;
 
-    public ClassMateAdapter(List<Participant_CourseSubCol> classMates, Fragment owner) {
+    public ClassMateAdapter(List<? extends IStudent> classMates, Fragment owner) {
         this.mClassMates = new ArrayList<>(classMates);
         this.mFullList = classMates;
         this.mOwner = owner;
@@ -62,31 +64,52 @@ public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> im
                 bundle.putString("title", student.getName());
                 bundle.putString("type", GroupChat.DIRECT);
                 bundle.putString("code", student.getCode());
-                mNavController.navigate(R.id.action_navigation_explore_course_to_navigation_chat_room, bundle);
+
+                int actionId = 0;
+
+                if (mOwner instanceof ExploreCourseFragment) {
+                    actionId = R.id.action_navigation_explore_course_to_navigation_chat_room;
+                } else if (mOwner instanceof RoomProfileFragment) {
+                    actionId = R.id.action_navigation_room_profile_to_navigation_chat_room;
+                }
+
+                if (actionId != 0) mNavController.navigate(actionId, bundle);
             }
         };
     }
 
     @Override
     public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
-        final Participant_CourseSubCol current = mClassMates.get(position);
+        final IStudent current = mClassMates.get(position);
 
         holder.bind(current);
         holder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                int actionId = 0;
+
                 if (current.getCode().equals(User.getInstance().getStudentId())) {
-                    mNavController.navigate(R.id.action_navigation_explore_course_to_navigation_my_profile);
+                    if (mOwner instanceof ExploreCourseFragment) {
+                        actionId = R.id.action_navigation_explore_course_to_navigation_my_profile;
+                    } else if (mOwner instanceof RoomProfileFragment) {
+                        actionId = R.id.action_navigation_room_profile_to_navigation_my_profile;
+                    }
 
                 } else {
-                    Bundle bundle = new Bundle();
                     bundle.putString("name", current.getName());
                     bundle.putString("code", current.getCode());
                     bundle.putString("avatar", current.getAvatar());
                     bundle.putBoolean("active", current.isActive());
 
-                    mNavController.navigate(R.id.action_navigation_explore_course_to_navigation_friend_profile, bundle);
+                    if (mOwner instanceof ExploreCourseFragment) {
+                        actionId = R.id.action_navigation_explore_course_to_navigation_friend_profile;
+                    } else if (mOwner instanceof RoomProfileFragment) {
+                        actionId = R.id.action_navigation_room_profile_to_navigation_friend_profile;
+                    }
                 }
+
+                if (actionId != 0) mNavController.navigate(actionId, bundle);
             }
         });
     }
@@ -101,10 +124,10 @@ public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> im
         return mFilter;
     }
 
-    public class ClassMateFilter extends MyFilter<Participant_CourseSubCol> {
+    public class ClassMateFilter extends MyFilter<IStudent> {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<Participant_CourseSubCol> filteredList;
+            List<IStudent> filteredList;
 
             if (constraint == null || constraint.length() == 0) {
                 filteredList = new ArrayList<>(mFullList);

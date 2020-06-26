@@ -155,6 +155,9 @@
         <action
             android:id="@+id/action_navigation_chat_room_to_navigation_friend_profile"
             app:destination="@id/navigation_friend_profile" />
+        <action
+            android:id="@+id/action_navigation_chat_room_to_navigation_room_profile"
+            app:destination="@id/navigation_room_profile" />
     </fragment>
 
     <fragment
@@ -216,6 +219,21 @@
             app:destination="@id/navigation_chat_room"
             app:popUpTo="@+id/navigation_add_member"
             app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_room_profile"
+        android:name="vnu.uet.mobilecourse.assistant.view.profile.RoomProfileFragment"
+        android:label="fragment_room_profile"
+        tools:layout="@layout/fragment_room_profile" >
+        <action
+            android:id="@+id/action_navigation_room_profile_to_navigation_chat_room"
+            app:destination="@id/navigation_chat_room" />
+        <action
+            android:id="@+id/action_navigation_room_profile_to_navigation_friend_profile"
+            app:destination="@id/navigation_friend_profile" />
+        <action
+            android:id="@+id/action_navigation_room_profile_to_navigation_my_profile"
+            app:destination="@id/navigation_my_profile" />
     </fragment>
 
 </navigation>

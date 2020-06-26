@@ -50,13 +50,14 @@ public class ChatRoomFragment extends Fragment {
     private ChatRoomViewModel mViewModel;
     private NavController mNavController;
 
-    private String mCode, mTitle, mType, mRoomId;
-
     private TextView mEtMessage, mTvRoomTitle;
 
-    private boolean mEmptyRoom = false;
+    private MenuItem mViewInfoItem;
 
+    private String mCode, mTitle, mType, mRoomId;
+    private boolean mEmptyRoom = false;
     private String[] mMemberIds;
+    private GroupChat mRoom;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -101,9 +102,9 @@ public class ChatRoomFragment extends Fragment {
                 public void onChanged(StateModel<GroupChat> stateModel) {
                     switch (stateModel.getStatus()) {
                         case SUCCESS:
-                            GroupChat room = stateModel.getData();
+                            mRoom = stateModel.getData();
 
-                            List<Member_GroupChatSubCol> members = room.getMembers();
+                            List<Member_GroupChatSubCol> members = mRoom.getMembers();
                             mMemberIds = members.stream()
                                     .map(Member_GroupChatSubCol::getId)
                                     .toArray(String[]::new);
@@ -111,9 +112,11 @@ public class ChatRoomFragment extends Fragment {
                             if (GroupChat.DIRECT.equals(mType) && mCode == null) {
                                 mCode = findFirstOtherId(mMemberIds);
                             } else {
-                                mTitle = room.getName();
+                                mTitle = mRoom.getName();
                                 mTvRoomTitle.setText(mTitle);
                             }
+
+                            if (mViewInfoItem != null) mViewInfoItem.setEnabled(true);
 
                             break;
 
@@ -263,19 +266,38 @@ public class ChatRoomFragment extends Fragment {
         mNavController.navigate(R.id.action_navigation_chat_room_to_navigation_friend_profile, bundle);
     }
 
+    private void navigateRoomProfile() {
+        if (mRoom != null) {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("room", mRoom);
+
+            mNavController.navigate(R.id.action_navigation_chat_room_to_navigation_room_profile, bundle);
+        }
+    }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+
         inflater.inflate(R.menu.chat_room_toolbar_menu, menu);
-        Log.d(getTag(), "onCreateOptionsMenu: ");
+
+        mViewInfoItem = menu.findItem(R.id.action_view_info);
+        mViewInfoItem.setEnabled(false);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         if (item.getItemId() == R.id.action_view_info) {
-            navigateFriendProfile();
-            Log.d(getTag(), "onOptionsItemSelected: ");
+            switch (mType) {
+                case GroupChat.DIRECT:
+                    navigateFriendProfile();
+                    break;
+
+                case GroupChat.GROUP:
+                    navigateRoomProfile();
+                    break;
+            }
         }
 
         return super.onOptionsItemSelected(item);

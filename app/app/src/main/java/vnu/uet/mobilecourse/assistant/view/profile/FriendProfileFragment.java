@@ -66,15 +66,15 @@ public class FriendProfileFragment extends Fragment {
 
             Button btnChat = root.findViewById(R.id.btnChat);
             boolean active = args.getBoolean("active");
-            if (!active) {
-                btnChat.setVisibility(View.GONE);
-
+            if (active) {
                 btnChat.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         onChatClick(args);
                     }
                 });
+            } else {
+                btnChat.setVisibility(View.GONE);
             }
 
             LinearLayout layoutDob = root.findViewById(R.id.layoutDob);

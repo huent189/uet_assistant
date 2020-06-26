@@ -1,10 +1,13 @@
 package vnu.uet.mobilecourse.assistant.database.DAO;
 
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 import androidx.lifecycle.MediatorLiveData;
 
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -45,23 +48,38 @@ public class Message_GroupChatSubColDAO extends FirebaseDAO<Message_GroupChatSub
     public StateLiveData<List<Message_GroupChatSubCol>> readAll() {
         StateLiveData<List<Message_GroupChatSubCol>> messagesState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
 
-        mColReference.orderBy("timestamp", Query.Direction.ASCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    messagesState.postError(e);
-                } else {
-                    List<Message_GroupChatSubCol> messages = queryDocumentSnapshots.getDocuments().stream()
-                                                                    .map(doc -> doc.toObject(Message_GroupChatSubCol.class))
-                                                                    .filter(Objects::nonNull)
-                                                                    .collect(Collectors.toList());
-                    messagesState.postSuccess(messages);
+        mColReference.orderBy("timestamp", Query.Direction.ASCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                        // catch an exception
+                        if (e != null) {
+                            messagesState.postError(e);
+                        }
+                        // hasn't got snapshots yet
+                        else if (snapshots == null) {
+                            Log.d(TAG, "Listening to data list.");
+                            mDataList.postLoading();
+                        }
+                        // query completed with snapshots
+                        else {
+                            List<Message_GroupChatSubCol> messages;
+                            messages = snapshots.getDocuments().stream()
+                                    .map(doc -> fromSnapshot(doc))
+                                    .filter(Objects::nonNull)
+                                    .collect(Collectors.toList());
 
-                }
-            }
-        });
+                            messagesState.postSuccess(messages);
 
+                        }
+                    }
+                });
 
         return messagesState;
+    }
+
+    private Message_GroupChatSubCol fromSnapshot(DocumentSnapshot snapshot) {
+        Message_GroupChatSubCol message = snapshot.toObject(Message_GroupChatSubCol.class);
+        return message;
     }
 }
