@@ -1,97 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingHorizontal="@dimen/margin_x2"
-    android:paddingVertical="@dimen/margin"
-    android:gravity="center_vertical"
-    android:background="@color/background"
-    android:orientation="horizontal"
+    android:background="@drawable/ripple_highlight"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/civAvatar"
-        android:layout_width="@dimen/img_avatar_size"
-        android:layout_height="@dimen/img_avatar_size"
-        android:src="@drawable/avatar" />
+    <FrameLayout
+        android:id="@+id/layoutNonSeen"
+        android:background="@color/backgroundLight"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <LinearLayout
-        android:id="@+id/layoutContainer"
-        android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnChat"
-        app:layout_constraintStart_toEndOf="@+id/civAvatar"
-        app:layout_constraintTop_toTopOf="parent">
+        android:paddingHorizontal="@dimen/margin_x2"
+        android:paddingVertical="12dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/tvChatGroupTitle"
-            style="@style/ListItemTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nguyễn Tùng Lâm" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/civAvatar"
+            android:layout_width="@dimen/img_avatar_size"
+            android:layout_height="@dimen/img_avatar_size"
+            android:src="@drawable/avatar" />
 
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
+            android:id="@+id/layoutContainer"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/small_margin">
+            android:layout_marginStart="16dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnChat"
+            app:layout_constraintStart_toEndOf="@+id/civAvatar"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tvLastMessage"
+                android:id="@+id/tvChatGroupTitle"
+                style="@style/ListItemTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:ellipsize="end"
-
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/textView4"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:text="Nguyễn Tùng Lâm" />
 
             <LinearLayout
-                android:id="@+id/layoutTime"
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin">
 
                 <TextView
-                    android:id="@+id/textView4"
-                    style="@style/SecondaryText"
+                    android:id="@+id/tvLastMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/small_margin"
-                    android:text="@string/dot_delimiter"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tvLastMessageTime"
+                    app:layout_constraintEnd_toStartOf="@+id/textView4"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/tvLastMessageTime"
-                    style="@style/SecondaryText"
+                <LinearLayout
+                    android:id="@+id/layoutTime"
+                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        style="@style/SecondaryText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/small_margin"
+                        android:text="@string/dot_delimiter"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/tvLastMessageTime"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tvLastMessageTime"
+                        style="@style/SecondaryText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
+
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/ivStatus"
+            android:layout_marginStart="@dimen/margin_x2"
+            android:layout_width="@dimen/new_message_dot"
+            android:layout_height="@dimen/new_message_dot"
+            android:src="@drawable/ic_check_circle_24dp"/>
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/ivStatus"
-        android:layout_marginStart="@dimen/margin_x2"
-        android:layout_width="@dimen/new_message_dot"
-        android:layout_height="@dimen/new_message_dot"
-        android:src="@drawable/ic_check_circle_24dp"/>
-
-</LinearLayout>
+</FrameLayout>

@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,6 +88,7 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
         private ImageView mIvStatus;
         private View mLayoutTime;
         private View mLayoutContainer;
+        private View mLayoutNonSeen;
 
         ChatViewHolder(@NonNull View view) {
             super(view);
@@ -98,6 +100,7 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
             mIvStatus = view.findViewById(R.id.ivStatus);
             mLayoutTime = view.findViewById(R.id.layoutTime);
             mLayoutContainer = view.findViewById(R.id.layoutContainer);
+            mLayoutNonSeen = view.findViewById(R.id.layoutNonSeen);
         }
 
         void bind(GroupChat_UserSubCol chat, NavController navController, String ownerName) {
@@ -107,7 +110,23 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
             String lastMessageTimeInStr = DateTimeUtils.TIME_12H_FORMAT.format(lastMessageTime);
             mTvLastMessageTime.setText(lastMessageTimeInStr);
 
-            mIvStatus.setVisibility(chat.isSeen() ? View.GONE : View.VISIBLE);
+            if (chat.isSeen()) {
+                mIvStatus.setImageResource(R.drawable.ic_check_circle_24dp);
+                mIvStatus.setScaleX(1.25f);
+                mIvStatus.setScaleY(1.25f);
+
+                mTvLastMessage.setTypeface(null, Typeface.NORMAL);
+
+//                mLayoutNonSeen.setVisibility(View.GONE);
+            } else {
+                mIvStatus.setImageResource(R.drawable.circle);
+                mIvStatus.setScaleX(1f);
+                mIvStatus.setScaleY(1f);
+
+                mTvLastMessage.setTypeface(null, Typeface.BOLD);
+
+//                mLayoutNonSeen.setVisibility(View.VISIBLE);
+            }
 
             mLayoutTime.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override

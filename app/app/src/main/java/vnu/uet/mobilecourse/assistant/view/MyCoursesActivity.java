@@ -40,7 +40,7 @@ public class MyCoursesActivity extends AppCompatActivity {
 
     private BottomNavigationView mNavView;
 
-    private View mNotificationBadge;
+    private View mNotificationBadge, mChatBadge;
 
     private NavigationBadgeRepository mNavigationBadgeRepo = NavigationBadgeRepository.getInstance();
 
@@ -77,6 +77,7 @@ public class MyCoursesActivity extends AppCompatActivity {
             }
         });
 
+        // observer counter badge
         mNavigationBadgeRepo.getNewNotifications().observe(this, stateModel -> {
             int counter = 0;
 
@@ -85,6 +86,16 @@ public class MyCoursesActivity extends AppCompatActivity {
             }
 
             updateNotificationBadge(counter);
+        });
+
+        mNavigationBadgeRepo.getNonSeenChats().observe(this, stateModel -> {
+            long counter = 0;
+
+            if (stateModel.getStatus() == StateStatus.SUCCESS) {
+                counter = stateModel.getData();
+            }
+
+            updateChatBadge(counter);
         });
 
         // schedule job
@@ -138,13 +149,20 @@ public class MyCoursesActivity extends AppCompatActivity {
 
     private void setupNavigationBadges() {
         BottomNavigationMenuView menuView = (BottomNavigationMenuView) mNavView.getChildAt(0);
-        BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(1);
 
+        // Notification Badge
+        BottomNavigationItemView notificationView = (BottomNavigationItemView) menuView.getChildAt(1);
         mNotificationBadge = LayoutInflater.from(this)
                 .inflate(R.layout.layout_bottom_nav_badge, menuView, false);
+        notificationView.addView(mNotificationBadge);
 
-        itemView.addView(mNotificationBadge);
+        // Chat Badge
+        BottomNavigationItemView chatView = (BottomNavigationItemView) menuView.getChildAt(2);
+        mChatBadge = LayoutInflater.from(this)
+                .inflate(R.layout.layout_bottom_nav_badge, menuView, false);
+        chatView.addView(mChatBadge);
     }
+
 
     private void updateNotificationBadge(int counter) {
         if (counter != 0) {
@@ -153,6 +171,16 @@ public class MyCoursesActivity extends AppCompatActivity {
             mNotificationBadge.setVisibility(View.VISIBLE);
         } else {
             mNotificationBadge.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateChatBadge(long counter) {
+        if (counter != 0) {
+            TextView tvCounter = mChatBadge.findViewById(R.id.tvCounter);
+            tvCounter.setText(String.valueOf(counter));
+            mChatBadge.setVisibility(View.VISIBLE);
+        } else {
+            mChatBadge.setVisibility(View.GONE);
         }
     }
 

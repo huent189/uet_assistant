@@ -29,6 +29,10 @@ public class ChatRoomViewModel extends ViewModel {
         return mChatRepo.getGroupChatInfo(roomId);
     }
 
+    public IStateLiveData<String> markAsSeen(String roomId) {
+        return mChatRepo.markRoomAsSeen(roomId);
+    }
+
     public IStateLiveData<String> sendMessage(String roomId, Message_GroupChatSubCol message, String[] memberIds) {
         return mChatRepo.sendMessage(roomId, message, memberIds);
     }

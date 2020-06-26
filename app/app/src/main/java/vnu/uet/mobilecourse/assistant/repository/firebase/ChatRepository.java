@@ -1,6 +1,8 @@
 package vnu.uet.mobilecourse.assistant.repository.firebase;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
@@ -47,6 +49,13 @@ public class ChatRepository implements IChatRepository {
     @Override
     public IStateLiveData<List<GroupChat_UserSubCol>> getAllUserGroupChats() {
         return mUserGroupChatDAO.readAll();
+    }
+
+    public IStateLiveData<String> markRoomAsSeen(String id) {
+        Map<String, Object> change = new HashMap<>();
+        change.put("seen", Boolean.TRUE);
+
+        return mUserGroupChatDAO.update(id, change);
     }
 
     @Override
@@ -336,37 +345,5 @@ public class ChatRepository implements IChatRepository {
 
     }
 
-    @Deprecated
-    static class ConnectedCheckingLiveData extends StateMediatorLiveData<Boolean> {
 
-        public ConnectedCheckingLiveData(StateLiveData<GroupChat_UserSubCol> readLiveData) {
-            postLoading();
-
-            addSource(readLiveData, new Observer<StateModel<GroupChat_UserSubCol>>() {
-                @Override
-                public void onChanged(StateModel<GroupChat_UserSubCol> stateModel) {
-                    switch (stateModel.getStatus()) {
-                        case LOADING:
-                            postLoading();
-                            break;
-
-                        case ERROR:
-                            Exception exception = stateModel.getError();
-
-                            if (exception instanceof DocumentNotFoundException) {
-                                postSuccess(Boolean.FALSE);
-                            } else {
-                                postError(exception);
-                            }
-
-                            break;
-
-                        case SUCCESS:
-                            postSuccess(Boolean.TRUE);
-                            break;
-                    }
-                }
-            });
-        }
-    }
 }

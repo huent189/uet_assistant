@@ -22,8 +22,6 @@ public class NavigationBadgeRepository {
     private static final String STUDENT_ID = vnu.uet.mobilecourse.assistant.model.User
             .getInstance().getStudentId();
 
-//    private int mNewNotificationCounter;
-
     public static NavigationBadgeRepository getInstance() {
         if (instance == null) {
             instance = new NavigationBadgeRepository();
@@ -43,27 +41,23 @@ public class NavigationBadgeRepository {
         return new NewNotificationCounter(liveData);
     }
 
-    public StateMediatorLiveData<Integer> getUnseenChats() {
+    public IStateLiveData<Long> getNonSeenChats() {
         IStateLiveData<List<GroupChat_UserSubCol>> liveData = mChatRepo.getAllUserGroupChats();
-        StateMediatorLiveData<Integer> counter = new StateMediatorLiveData<>(new StateModel<>(StateStatus.ERROR));
+        IStateLiveData<Long> counter = new StateMediatorLiveData<>(new StateModel<>(StateStatus.LOADING));
 
         if (liveData instanceof StateLiveData) {
-            counter = new UnseenGroupChatCounter((StateLiveData<List<GroupChat_UserSubCol>>) liveData);
+            StateLiveData<List<GroupChat_UserSubCol>> listLiveData = (StateLiveData<List<GroupChat_UserSubCol>>) liveData;
+            counter = new NonSeenRoomCounter(listLiveData);
         }
 
         return counter;
     }
 
     public StateLiveData<String> increaseNewNotifications() {
-//        Map<String, Object> changes = new HashMap<>();
-//        changes.put("newNotifications", ++mNewNotificationCounter);
-
         return mUserRepo.increaseNotifications();
     }
 
     public StateLiveData<String> seeAllNotifications() {
-//        mNewNotificationCounter = 0;
-
         Map<String, Object> changes = new HashMap<>();
         changes.put("newNotifications", 0);
 
@@ -97,12 +91,10 @@ public class NavigationBadgeRepository {
         }
     }
 
-    public static class UnseenGroupChatCounter extends StateMediatorLiveData<Integer> {
+    public static class NonSeenRoomCounter extends StateMediatorLiveData<Long> {
 
-        public UnseenGroupChatCounter(StateLiveData<List<GroupChat_UserSubCol>> groupChats) {
-            postLoading();
-
-            addSource(groupChats, stateModel -> {
+        NonSeenRoomCounter(StateLiveData<List<GroupChat_UserSubCol>> listLiveData) {
+            addSource(listLiveData, stateModel -> {
                 switch (stateModel.getStatus()) {
                     case LOADING:
                         postLoading();
@@ -113,13 +105,11 @@ public class NavigationBadgeRepository {
                         break;
 
                     case SUCCESS:
-                        List<GroupChat_UserSubCol> groupChats1 = stateModel.getData();
-
-                        long counter = groupChats1.stream()
-                                .filter(groupChat -> !groupChat.isSeen())
+                        List<GroupChat_UserSubCol> rooms = stateModel.getData();
+                        long counter = rooms.stream()
+                                .filter(room -> !room.isSeen())
                                 .count();
-
-                        postSuccess((int) counter);
+                        postSuccess(counter);
 
                         break;
                 }

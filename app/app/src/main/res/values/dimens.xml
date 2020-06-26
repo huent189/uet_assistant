@@ -57,6 +57,7 @@
     <dimen name="font_size_tab_title">14sp</dimen>
     <dimen name="font_size_input_text">16sp</dimen>
     <dimen name="font_size_small">12sp</dimen>
-    <dimen name="new_message_dot">18dp</dimen>
+
+    <dimen name="new_message_dot">12dp</dimen>
 
 </resources>
