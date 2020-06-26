@@ -154,7 +154,6 @@ public class ForumRepository {
 
     private static final String STUDENT_ID = User.getInstance().getStudentId();
 
-
     static class MergeDiscussion extends StateMediatorLiveData<List<Discussion>> {
 
         private List<Discussion> mDiscussions;
