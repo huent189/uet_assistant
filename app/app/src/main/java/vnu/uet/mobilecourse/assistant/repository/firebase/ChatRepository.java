@@ -100,7 +100,7 @@ public class ChatRepository implements IChatRepository {
                 connection.setStudentIds(fromId, toId);
                 connection.setTimestamp(System.currentTimeMillis() / 1000);
 
-                mConnectionDAO.addUnique(docId, connection);
+                mConnectionDAO.addUnique(connection);
             }
         }
     }

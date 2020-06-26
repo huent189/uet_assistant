@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 
 import android.util.Log;
 
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -65,56 +66,28 @@ public class ConnectionDAO extends FirebaseDAO<Connection> {
         return mDataList;
     }
 
-    public StateMediatorLiveData<Connection> addUnique(String id, Connection connection) {
-//        StateMediatorLiveData<Connection> liveData = new StateMediatorLiveData<>();
-//        liveData.postLoading();
-//
-//        liveData.addSource(mDataList, new Observer<StateModel<List<Connection>>>() {
-//            @Override
-//            public void onChanged(StateModel<List<Connection>> stateModel) {
-//                switch (stateModel.getStatus()) {
-//                    case ERROR:
-//                        liveData.postError(stateModel.getError());
-//                        break;
-//
-//                    case LOADING:
-//                        liveData.postLoading();
-//                        break;
-//
-//                    case SUCCESS:
-//                        liveData.removeSource(mDataList);
-//
-//                        boolean isExist = stateModel.getData().stream()
-//                                .anyMatch(conn -> conn.getId().equals(id));
-//
-//                        if (!isExist) {
-//                            liveData.addSource(add(id, connection), new Observer<StateModel<Connection>>() {
-//                                @Override
-//                                public void onChanged(StateModel<Connection> stateModel) {
-//                                    switch (stateModel.getStatus()) {
-//                                        case ERROR:
-//                                            liveData.postError(stateModel.getError());
-//                                            break;
-//
-//                                        case LOADING:
-//                                            liveData.postLoading();
-//                                            break;
-//
-//                                        case SUCCESS:
-//                                            liveData.postSuccess(stateModel.getData());
-//                                            break;
-//                                    }
-//                                }
-//                            });
-//                        }
-//
-//                }
-//            }
-//        });
-//
-//        return liveData;
-
+    public StateMediatorLiveData<Connection> addUnique(Connection connection) {
         return new UniqueCreation(this, connection);
+    }
+
+    private StateLiveData<String> increaseCounter(String id) {
+        // initialize output state live data with loading state
+        StateModel<String> loadingState = new StateModel<>(StateStatus.LOADING);
+        StateLiveData<String> response = new StateLiveData<>(loadingState);
+
+        mColReference.document(id)
+                .update("counter", FieldValue.increment(1))
+                .addOnSuccessListener(aVoid -> {
+                    // response post success with id of updated document
+                    response.postSuccess(id);
+                    Log.d(TAG, "Change document: " + id);
+                })
+                .addOnFailureListener(e -> {
+                    response.postError(e);
+                    Log.e(TAG, "Failed to change document: " + id);
+                });
+
+        return response;
     }
 
     public static class UniqueCreation extends StateMediatorLiveData<Connection> {
@@ -127,30 +100,70 @@ public class ConnectionDAO extends FirebaseDAO<Connection> {
             postLoading();
 
             StateLiveData<List<Connection>> listLiveData = mDAO.readAll();
+
             if (listLiveData.getValue() != null
                     && listLiveData.getValue().getStatus() == StateStatus.SUCCESS) {
                 checkList(listLiveData.getValue().getData(), connection);
-            } else {
-                addSource(connectionDAO.readAll(), new Observer<StateModel<List<Connection>>>() {
-                    @Override
-                    public void onChanged(StateModel<List<Connection>> stateModel) {
-                        switch (stateModel.getStatus()) {
-                            case ERROR:
-                                postError(stateModel.getError());
-                                break;
+            }
+            // can't get value
+            else {
+                addSource(listLiveData, stateModel -> {
+                    switch (stateModel.getStatus()) {
+                        case ERROR:
+                            postError(stateModel.getError());
+                            break;
 
-                            case LOADING:
-                                postLoading();
-                                break;
+                        case LOADING:
+                            postLoading();
+                            break;
 
-                            case SUCCESS:
-                                removeSource(connectionDAO.readAll());
-                                checkList(stateModel.getData(), connection);
-                                break;
-                        }
+                        case SUCCESS:
+                            removeSource(listLiveData);
+                            checkList(stateModel.getData(), connection);
+                            break;
                     }
                 });
             }
+        }
+
+        private void addNewDocument(Connection connection) {
+            String connectionId = connection.getId();
+
+            addSource(mDAO.add(connectionId, connection), stateModel -> {
+                switch (stateModel.getStatus()) {
+                    case ERROR:
+                        postError(stateModel.getError());
+                        break;
+
+                    case LOADING:
+                        postLoading();
+                        break;
+
+                    case SUCCESS:
+                        postSuccess(stateModel.getData());
+                        break;
+                }
+            });
+        }
+
+        private void increaseCounter(Connection connection) {
+            String connectionId = connection.getId();
+
+            addSource(mDAO.increaseCounter(connectionId), stateModel -> {
+                switch (stateModel.getStatus()) {
+                    case ERROR:
+                        postError(stateModel.getError());
+                        break;
+
+                    case LOADING:
+                        postLoading();
+                        break;
+
+                    case SUCCESS:
+                        postSuccess(connection);
+                        break;
+                }
+            });
         }
 
         private void checkList(List<Connection> list, Connection connection) {
@@ -158,24 +171,9 @@ public class ConnectionDAO extends FirebaseDAO<Connection> {
                     .anyMatch(conn -> conn.getId().equals(connection.getId()));
 
             if (!isExist) {
-                addSource(mDAO.add(connection.getId(), connection), new Observer<StateModel<Connection>>() {
-                    @Override
-                    public void onChanged(StateModel<Connection> stateModel) {
-                        switch (stateModel.getStatus()) {
-                            case ERROR:
-                                postError(stateModel.getError());
-                                break;
-
-                            case LOADING:
-                                postLoading();
-                                break;
-
-                            case SUCCESS:
-                                postSuccess(stateModel.getData());
-                                break;
-                        }
-                    }
-                });
+                addNewDocument(connection);
+            } else {
+                increaseCounter(connection);
             }
         }
     }

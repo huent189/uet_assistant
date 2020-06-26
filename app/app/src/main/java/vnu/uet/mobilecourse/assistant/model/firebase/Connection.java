@@ -8,6 +8,7 @@ public class Connection implements IFirebaseModel {
     private String id;
     private List<String> studentIds;
     private long timestamp;
+    private long counter;
 
     @Override
     public String getId() {
@@ -32,5 +33,13 @@ public class Connection implements IFirebaseModel {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public long getCounter() {
+        return counter;
+    }
+
+    public void setCounter(long counter) {
+        this.counter = counter;
     }
 }
