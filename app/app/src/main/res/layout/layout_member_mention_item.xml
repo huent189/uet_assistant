@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingHorizontal="@dimen/margin_x2"
+    android:paddingVertical="@dimen/margin"
+    android:background="@drawable/ripple_highlight"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/civAvatar"
+        android:layout_width="@dimen/small_img_avatar_size"
+        android:layout_height="@dimen/small_img_avatar_size"
+        android:src="@drawable/avatar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvName"
+        android:textSize="@dimen/font_size_item_title"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tùng Lâm" />
+
+    <TextView
+        android:layout_marginHorizontal="@dimen/small_margin"
+        android:textColor="@color/whiteDisable"
+        android:textSize="@dimen/font_size_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dot_delimiter"/>
+
+    <TextView
+        android:id="@+id/tvId"
+        android:textColor="@color/whiteDisable"
+        android:textSize="@dimen/font_size_item_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="17020845" />
+
+</LinearLayout>

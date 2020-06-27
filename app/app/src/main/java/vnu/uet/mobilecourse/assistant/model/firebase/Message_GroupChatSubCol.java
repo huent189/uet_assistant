@@ -1,10 +1,12 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
+import java.util.List;
+
 public class Message_GroupChatSubCol implements IFirebaseModel {
     private String id;
     private String fromId;
     private String fromName;
-    private String mentions;
+    private List<String> mentions;
     private String content;
     private long timestamp;
     private String contentType;
@@ -31,11 +33,11 @@ public class Message_GroupChatSubCol implements IFirebaseModel {
         this.fromName = fromName;
     }
 
-    public String getMentions() {
+    public List<String> getMentions() {
         return mentions;
     }
 
-    public void setMentions(String mentions) {
+    public void setMentions(List<String> mentions) {
         this.mentions = mentions;
     }
 

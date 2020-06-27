@@ -1,6 +1,11 @@
 package vnu.uet.mobilecourse.assistant.viewmodel;
 
+import android.annotation.SuppressLint;
+
+import com.google.firebase.firestore.util.Util;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
@@ -10,6 +15,8 @@ import vnu.uet.mobilecourse.assistant.model.firebase.MemberRole;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.repository.firebase.ChatRepository;
+import vnu.uet.mobilecourse.assistant.util.StringConst;
+import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
@@ -69,6 +76,66 @@ public class ChatRoomViewModel extends ViewModel {
         liveData = mChatRepo.createGroupChat(groupChat);
 
         return liveData;
+    }
+
+    @SuppressLint("RestrictedApi")
+    public Message_GroupChatSubCol generateTextMessage(String content, String[] memberIds) {
+        Message_GroupChatSubCol message = new Message_GroupChatSubCol();
+
+        message.setId(Util.autoId());
+
+        message.setFromId(User.getInstance().getStudentId());
+        message.setFromName(User.getInstance().getName());
+
+        message.setTimestamp(System.currentTimeMillis() / 1000);
+
+        List<String> mentions = parseMentions(content, memberIds);
+
+        content = refactorContent(content, mentions);
+        message.setContent(content);
+
+        mentions = mentions.stream()
+                .map(mention -> {
+                    String out = mention;
+                    if (out.charAt(0) == StringConst.AT_SIGN) {
+                        out = out.substring(1);
+                    }
+                    return out;
+                })
+                .distinct()
+                .collect(Collectors.toList());
+        message.setMentions(mentions);
+
+        return message;
+    }
+
+    private String refactorContent(String content, List<String> mentions) {
+        String refactor = content;
+
+        for (String mention : mentions) {
+            refactor = refactor.replaceAll(mention + "\\b", "<b>" + mention + "</b>");
+        }
+
+        return refactor;
+    }
+
+    private List<String> parseMentions(String content, String[] memberIds) {
+        List<String> mentions = StringUtils.getAllMatches(content, "@1[0-9]{7}\\b");
+
+        mentions.removeIf(mention -> {
+            boolean isMember = false;
+
+            for (String memberId : memberIds) {
+                if (mention.equals(StringConst.AT_SIGN + memberId)) {
+                    isMember = true;
+                    break;
+                }
+            }
+
+            return !isMember;
+        });
+
+        return mentions;
     }
 
     class FirstMessageLiveData extends StateMediatorLiveData<String> {

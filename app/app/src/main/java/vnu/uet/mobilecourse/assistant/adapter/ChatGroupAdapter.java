@@ -3,6 +3,7 @@ package vnu.uet.mobilecourse.assistant.adapter;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -27,6 +28,8 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.util.StringConst;
+import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.view.chat.ChatFragment;
 
 public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.ChatViewHolder> implements Filterable {
@@ -134,7 +137,9 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
                     int maxWidth = mLayoutContainer.getWidth() - mLayoutTime.getWidth();
 
                     mTvLastMessage.setMaxWidth(maxWidth);
-                    mTvLastMessage.setText(chat.getLastMessage());
+
+                    SpannableStringBuilder format = StringUtils.convertHtml(chat.getLastMessage());
+                    mTvLastMessage.setText(format.toString());
 
                     mLayoutTime.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }

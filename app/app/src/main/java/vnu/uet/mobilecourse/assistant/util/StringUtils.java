@@ -5,6 +5,11 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import androidx.annotation.NonNull;
 import androidx.core.text.HtmlCompat;
 
@@ -50,28 +55,39 @@ public class StringUtils {
         return builder;
     }
 
-    public static String splitTextToFitWidth(String[] _texts, Paint _paint, int maxWidth) {
+    public static String getLastSegment(String origin, int number) {
+        StringBuilder result = new StringBuilder();
 
-        String formattedText = "";
+        String[] items = origin.split("\\s+");
+        int length = items.length;
 
-        String workingText = "";
-        for (String section : _texts)
-        {
-            String newPart = (workingText.length() > 0 ? " " : "") + section;
-            workingText += newPart;
-
-            int width = (int)_paint.measureText(workingText, 0, workingText.length());
-
-            if (width > maxWidth)
-            {
-                formattedText += (formattedText.length() > 0 ? "\n" : "") + workingText.substring(0, workingText.length() - newPart.length());
-                workingText = section;
+        if (length > number) {
+            for (int i = length - number; i < length; i++) {
+                result.append(items[i]);
+                if (i != length - 1) {
+                    result.append(StringConst.SPACE_CHAR);
+                }
             }
+        } else {
+            result.append(origin);
         }
 
-        if (workingText.length() > 0)
-            formattedText += (formattedText.length() > 0 ? "\n" : "") + workingText;
+        return result.toString();
+    }
 
-        return formattedText;
+    public static String getLastSegment(String origin) {
+        return getLastSegment(origin, 1);
+    }
+
+    public static List<String> getAllMatches(String content, String regex) {
+        List<String> allMatches = new ArrayList<>();
+
+        Matcher m = Pattern.compile(regex).matcher(content);
+
+        while (m.find()) {
+            allMatches.add(m.group());
+        }
+
+        return allMatches;
     }
 }

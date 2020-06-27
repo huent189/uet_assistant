@@ -16,7 +16,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import vnu.uet.mobilecourse.assistant.adapter.MemberAdapter;
+import vnu.uet.mobilecourse.assistant.adapter.HorizontalMemberAdapter;
 import vnu.uet.mobilecourse.assistant.adapter.SuggestionMemberAdapter;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
@@ -49,7 +49,7 @@ public class AddMemberFragment extends Fragment {
     private NavController mNavController;
     private IStudent mSearchResult;
     private SuggestionMemberAdapter suggestionAdapter = null;
-    private MemberAdapter mMemberAdapter;
+    private HorizontalMemberAdapter mMemberAdapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -94,8 +94,8 @@ public class AddMemberFragment extends Fragment {
         mViewModel.getSelectedList().observe(getViewLifecycleOwner(), new Observer<List<IStudent>>() {
             @Override
             public void onChanged(List<IStudent> students) {
-                mMemberAdapter = new MemberAdapter(students, AddMemberFragment.this,
-                        new MemberAdapter.OnClearListener() {
+                mMemberAdapter = new HorizontalMemberAdapter(students, AddMemberFragment.this,
+                        new HorizontalMemberAdapter.OnClearListener() {
                             @Override
                             public void onClear(IStudent student) {
                                 mViewModel.removeMember(student);

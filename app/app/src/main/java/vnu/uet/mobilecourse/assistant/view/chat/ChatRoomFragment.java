@@ -2,12 +2,9 @@ package vnu.uet.mobilecourse.assistant.view.chat;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.Layout;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,15 +36,16 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.adapter.MentionAdapter;
 import vnu.uet.mobilecourse.assistant.adapter.MessageAdapter;
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
-import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
+import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.ChatRoomViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
@@ -64,7 +62,7 @@ public class ChatRoomFragment extends Fragment {
     private MultiAutoCompleteTextView mEtMessage;
     private MenuItem mViewInfoItem;
 
-    private ArrayAdapter<String> mMemberListAdapter;
+    private ArrayAdapter<Member_GroupChatSubCol> mMemberListAdapter;
 
     private String mCode, mTitle, mType, mRoomId;
     private boolean mEmptyRoom = false;
@@ -95,19 +93,19 @@ public class ChatRoomFragment extends Fragment {
             public CharSequence terminateToken(CharSequence text) {
                 int i = text.length();
 
-                while (i > 0 && text.charAt(i - 1) == ' ') {
+                while (i > 0 && text.charAt(i - 1) == StringConst.SPACE_CHAR) {
                     i--;
                 }
 
-                if (i > 0 && text.charAt(i - 1) == ' ') {
+                if (i > 0 && text.charAt(i - 1) == StringConst.SPACE_CHAR) {
                     return text;
                 } else {
                     if (text instanceof Spanned) {
-                        SpannableString sp = new SpannableString(text + " ");
+                        SpannableString sp = new SpannableString(text + StringConst.SPACE);
                         TextUtils.copySpansFrom((Spanned) text, 0, text.length(), Object.class, sp, 0);
                         return sp;
                     } else {
-                        return text + " ";
+                        return text + StringConst.SPACE;
                     }
                 }
             }
@@ -116,12 +114,14 @@ public class ChatRoomFragment extends Fragment {
             public int findTokenStart(CharSequence text, int cursor) {
                 int i = cursor;
 
-                while (i > 0 && text.charAt(i - 1) != '@') {
+                while (i > 0 && text.charAt(i - 1) != StringConst.AT_SIGN
+                        && text.charAt(i - 1) != StringConst.SPACE_CHAR
+                        && text.charAt(i - 1) != StringConst.LINE_BREAK_CHAR) {
                     i--;
                 }
 
                 //Check if token really started with @, else we don't have a valid token
-                if (i < 1 || text.charAt(i - 1) != '@') {
+                if (i < 1 || text.charAt(i - 1) != StringConst.AT_SIGN) {
                     return cursor;
                 }
 
@@ -134,7 +134,7 @@ public class ChatRoomFragment extends Fragment {
                 int len = text.length();
 
                 while (i < len) {
-                    if (text.charAt(i) == ' ') {
+                    if (text.charAt(i) == StringConst.AT_SIGN || text.charAt(i) == StringConst.LINE_BREAK_CHAR) {
                         return i;
                     } else {
                         i++;
@@ -213,11 +213,13 @@ public class ChatRoomFragment extends Fragment {
 
                             if (mViewInfoItem != null) mViewInfoItem.setEnabled(true);
 
-                            mMemberListAdapter = new ArrayAdapter<>(mActivity,
-                                    android.R.layout.simple_dropdown_item_1line,
-                                    members.stream()
-                                            .map(Member_GroupChatSubCol::getId)
-                                            .collect(Collectors.toList()));
+//                            mMemberListAdapter = new ArrayAdapter<>(mActivity,
+//                                    android.R.layout.simple_dropdown_item_1line,
+//                                    members.stream()
+//                                            .map(Member_GroupChatSubCol::getId)
+//                                            .collect(Collectors.toList()));
+
+                            mMemberListAdapter = new MentionAdapter(mActivity, members);
                             mEtMessage.setAdapter(mMemberListAdapter);
 
                             break;
@@ -290,17 +292,11 @@ public class ChatRoomFragment extends Fragment {
         return otherId;
     }
 
-    @SuppressLint("RestrictedApi")
     private void sendTextMessage() {
         String content = mEtMessage.getText().toString();
         Log.d("CHAT", "sendMessage: " + content);
 
-        Message_GroupChatSubCol message = new Message_GroupChatSubCol();
-        message.setFromId(User.getInstance().getStudentId());
-        message.setFromName(User.getInstance().getName());
-        message.setTimestamp(System.currentTimeMillis() / 1000);
-        message.setContent(content);
-        message.setId(Util.autoId());
+        Message_GroupChatSubCol message = mViewModel.generateTextMessage(content, mMemberIds);
 
         // first message in directed chat
         if (GroupChat.DIRECT.equals(mType) && mEmptyRoom) {

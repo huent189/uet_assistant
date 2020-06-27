@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.logging.Handler;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -185,12 +187,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     }
                 }
             });
-            mTvMessage.setVisibility(View.INVISIBLE);
+
+            itemView.setVisibility(View.INVISIBLE);
         }
 
         protected void bind(Message_GroupChatSubCol message, boolean samePrev) {
-            mTvMessage.setVisibility(View.INVISIBLE);
-            mTvMessage.setText(message.getContent());
+//            itemView.setVisibility(View.INVISIBLE);
+
+            String rawContent = message.getContent();
+            SpannableStringBuilder formatContent = StringUtils.convertHtml(rawContent);
+            mTvMessage.setText(formatContent);
 
             itemView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
@@ -201,23 +207,25 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
                     Log.d(getClass().getSimpleName(), "bind: " + maxWidth);
 
-//                    String content = message.getContent();
-//
-//                    String[] sections = content.split(" ");
-//                    String formattedMessage = StringUtils.splitTextToFitWidth(sections, mTvMessage.getPaint(), maxWidth);
-//                    mTvMessage.setText(formattedMessage);
-
                     if (mTvMessage instanceof ChatBox) {
                         ((ChatBox) mTvMessage).reduce(maxWidth);
                     }
 
-                    mTvMessage.setVisibility(View.VISIBLE);
-
                     itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                    showView();
                 }
             });
+        }
 
-
+        private void showView() {
+            mTvMessage.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    itemView.setVisibility(View.VISIBLE);
+                    mTvMessage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            });
         }
     }
 }

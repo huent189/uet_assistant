@@ -1,6 +1,5 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
-import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -10,29 +9,22 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
-import vnu.uet.mobilecourse.assistant.util.StringConst;
+import vnu.uet.mobilecourse.assistant.util.StringUtils;
 
-public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder> {
+public class HorizontalMemberAdapter extends RecyclerView.Adapter<HorizontalMemberAdapter.ViewHolder> {
 
     private List<IStudent> mMembers;
     private Fragment mOwner;
-    private NavController mNavController;
     private OnClearListener mOnClearListener;
 
-    public MemberAdapter(List<IStudent> member, Fragment owner, OnClearListener onClearListener) {
+    public HorizontalMemberAdapter(List<IStudent> member, Fragment owner, OnClearListener onClearListener) {
         this.mMembers = member;
         this.mOwner = owner;
         this.mOnClearListener = onClearListener;
-    }
-
-    public void setMembers(List<IStudent> mMembers) {
-        this.mMembers = mMembers;
     }
 
     @NonNull
@@ -41,27 +33,15 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
         View view = mOwner.getLayoutInflater()
                 .inflate(R.layout.layout_short_student_item, parent, false);
 
-        ViewHolder holder = new ViewHolder(view);
-
-        Activity activity = mOwner.getActivity();
-
-        if (activity != null) {
-            mNavController = Navigation
-                    .findNavController(activity, R.id.nav_host_fragment);
-        }
-
-        return holder;
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final IStudent student = mMembers.get(position);
-        holder.bind(student, new Runnable() {
-            @Override
-            public void run() {
-                mOnClearListener.onClear(student);
-                notifyDataSetChanged();
-            }
+        holder.bind(student, () -> {
+            mOnClearListener.onClear(student);
+            notifyDataSetChanged();
         });
     }
 
@@ -90,28 +70,11 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
 
         void bind(IStudent student, Runnable callback) {
             mTvName.setText(getSimpleName(student.getName()));
-
-            mBtnClear.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    callback.run();
-                }
-            });
+            mBtnClear.setOnClickListener(view -> callback.run());
         }
 
         private String getSimpleName(String fullName) {
-            String simpleName;
-
-            String[] items = fullName.split("\\s+");
-
-            int length = items.length;
-            if (length > 2) {
-                simpleName = items[length - 2] + StringConst.SPACE_CHAR + items[length - 1];
-            } else {
-                simpleName = fullName;
-            }
-
-            return simpleName;
+            return StringUtils.getLastSegment(fullName, 2);
         }
     }
 }
