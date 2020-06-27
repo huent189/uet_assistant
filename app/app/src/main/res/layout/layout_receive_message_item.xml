@@ -24,7 +24,7 @@
             app:layout_constraintStart_toStartOf="@+id/tvMessage"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <vnu.uet.mobilecourse.assistant.view.component.ChatBox
             android:id="@+id/tvMessage"
             style="@style/ReceiveMessage"
             android:layout_marginStart="@dimen/margin"

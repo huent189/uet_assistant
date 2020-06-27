@@ -1,11 +1,8 @@
 package vnu.uet.mobilecourse.assistant.view.component;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import vnu.uet.mobilecourse.assistant.util.DimensionUtils;
@@ -26,44 +23,32 @@ public class ChatBox extends androidx.appcompat.widget.AppCompatTextView {
         super(context, attrs, defStyleAttr);
     }
 
-
     public void reduce(int maxWidth) {
-        if(getLineCount() > 1 && refactor < 2)
-        {
-            refactor++;
+        if (getLineCount() > 1 && refactor < 2) {
+
             float longestLineWidth = -1;
-            for (int lineIndex = 0; lineIndex < getLineCount(); lineIndex++)
-            {
-                Log.d("CHATBOX", "lineIndex: " + lineIndex);
+
+            final int PADDING = DimensionUtils.dpToPx(16, getContext());
+
+            for (int lineIndex = 0; lineIndex < getLineCount(); lineIndex++) {
+
                 int lineStartIndex = getLayout().getLineStart(lineIndex);
                 int lineEndIndex = getLayout().getLineEnd(lineIndex);
+
                 String currentTextLine = getText().toString().substring(lineStartIndex, lineEndIndex);
-                Log.d("CHATBOX", "currentTextLine: " + currentTextLine);
-                // Added "_____" for your paddings.
-                float currentLineWidth = getPaint().measureText(currentTextLine)
-                        + DimensionUtils.dpToPx(16, getContext());
-                Log.d("CHATBOX", "currentLineWidth: " + currentLineWidth);
 
-                if (longestLineWidth < currentLineWidth)
-                {
-                    longestLineWidth = currentLineWidth;
-                }
+                float currentLineWidth = getPaint().measureText(currentTextLine) + PADDING;
+
+                if (longestLineWidth < currentLineWidth) longestLineWidth = currentLineWidth;
             }
 
-            if (longestLineWidth > maxWidth) {
-                longestLineWidth = maxWidth;
-            }
+            if (longestLineWidth > maxWidth) longestLineWidth = maxWidth;
 
             ViewGroup.LayoutParams paramsNew = getLayoutParams();
             paramsNew.width = (int) longestLineWidth;
             setLayoutParams(paramsNew);
+
+            refactor++;
         }
-    }
-
-
-    @Override
-    protected void onDraw(Canvas canvas)
-    {
-        super.onDraw(canvas);
     }
 }

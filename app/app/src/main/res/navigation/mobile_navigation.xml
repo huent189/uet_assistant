@@ -41,6 +41,9 @@
         <action
             android:id="@+id/action_navigation_notifications_to_navigation_explore_course"
             app:destination="@id/navigation_explore_course" />
+        <action
+            android:id="@+id/action_navigation_notifications_to_navigation_discussion"
+            app:destination="@id/navigation_discussion" />
     </fragment>
 
     <fragment
