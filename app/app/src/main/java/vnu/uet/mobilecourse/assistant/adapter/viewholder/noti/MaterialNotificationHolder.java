@@ -35,34 +35,34 @@ public class MaterialNotificationHolder extends NotificationHolder<NewMaterialNo
 
         CourseRepository.getInstance()
                 .getContent(courseId).observe(owner.getViewLifecycleOwner(), new Observer<List<CourseOverview>>() {
-            @Override
-            public void onChanged(List<CourseOverview> courseOverviews) {
-                if (courseOverviews != null && !courseOverviews.isEmpty()) {
-                    Material foundMaterial = null;
+                    @Override
+                    public void onChanged(List<CourseOverview> courseOverviews) {
+                        if (courseOverviews != null && !courseOverviews.isEmpty()) {
+                            Material foundMaterial = null;
 
-                    for (CourseOverview overview : courseOverviews) {
-                        for (Material material : overview.getMaterials()) {
-                            if (material.getId() == materialId) {
-                                foundMaterial = material;
-                                break;
+                            for (CourseOverview overview : courseOverviews) {
+                                for (Material material : overview.getMaterials()) {
+                                    if (material.getId() == materialId) {
+                                        foundMaterial = material;
+                                        break;
+                                    }
+                                }
+
+                                if (foundMaterial != null) break;
+                            }
+
+                            if (foundMaterial != null) {
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelable("material", foundMaterial);
+                                navController.navigate(R.id.action_navigation_notifications_to_navigation_material, bundle);
+                            } else {
+                                Context context = owner.getContext();
+                                final String MATERIAL_NOT_FOUND_MSG = "Không tìm thấy tài liệu";
+
+                                Toast.makeText(context, MATERIAL_NOT_FOUND_MSG, Toast.LENGTH_SHORT).show();
                             }
                         }
-
-                        if (foundMaterial != null) break;
                     }
-
-                    if (foundMaterial != null) {
-                        Bundle bundle = new Bundle();
-                        bundle.putParcelable("material", foundMaterial);
-                        navController.navigate(R.id.action_navigation_notifications_to_navigation_material, bundle);
-                    } else {
-                        Context context = owner.getContext();
-                        final String MATERIAL_NOT_FOUND_MSG = "Không tìm thấy tài liệu";
-
-                        Toast.makeText(context, MATERIAL_NOT_FOUND_MSG, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
+                });
     }
 }
