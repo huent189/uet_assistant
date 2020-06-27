@@ -9,6 +9,7 @@ import retrofit2.Call;
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
 import vnu.uet.mobilecourse.assistant.database.DAO.ForumDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.InterestedDiscussionDAO;
+import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
 import vnu.uet.mobilecourse.assistant.model.forum.DiscussionComparator;
@@ -18,10 +19,7 @@ import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
 import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,7 +63,74 @@ public class ForumRepository {
 
         return new MergeDiscussion(discussions, interests);
     }
-
+    public IStateLiveData<Discussion> getDiscussionById (int discussionId){
+        LiveData<Discussion> discussion = forumDAO.getDiscussionById(discussionId);
+        StateMediatorLiveData<InterestedDiscussion> interest = getFollowingDiscussion(discussionId);
+        StateMediatorLiveData<Discussion> mergeLiveData = new StateMediatorLiveData<>();
+        mergeLiveData.postLoading();
+        mergeLiveData.addSource(discussion, new Observer<Discussion>() {
+            @Override
+            public void onChanged(Discussion discussion) {
+                if(discussion != null){
+                    StateModel<Discussion> old = mergeLiveData.getValue();
+                    if(old != null && old.getStatus() != StateStatus.ERROR){
+                        StateStatus status = StateStatus.LOADING;
+                        if(old.getData() != null){
+                            discussion.setInterest(old.getData().isInterest());
+                            status = StateStatus.SUCCESS;
+                        }
+                        mergeLiveData.postValue(new StateModel<>(status, discussion));
+                    }
+                }
+            }
+        });
+        mergeLiveData.addSource(interest, new Observer<StateModel<InterestedDiscussion>>() {
+            @Override
+            public void onChanged(StateModel<InterestedDiscussion> interestedDiscussionStateModel) {
+                switch (interestedDiscussionStateModel.getStatus()){
+                    case LOADING:
+                        mergeLiveData.postLoading();
+                        break;
+                    case ERROR:
+                        if(interestedDiscussionStateModel.getError() instanceof DocumentNotFoundException){
+                            StateModel<Discussion> old = mergeLiveData.getValue();
+                            if(old != null){
+                                StateStatus status = StateStatus.SUCCESS;
+                                Discussion d = old.getData();
+                                if(d == null){
+                                    d = new Discussion();
+                                    status = StateStatus.LOADING;
+                                }
+                                d.setInterest(false);
+                                mergeLiveData.postValue(new StateModel<>(status, d));
+                            }
+                        }
+                        else {
+                            mergeLiveData.postError(interestedDiscussionStateModel.getError());
+                        }
+                        break;
+                    case SUCCESS:
+                        StateModel<Discussion> old = mergeLiveData.getValue();
+                        if(old != null){
+                            StateStatus status = StateStatus.SUCCESS;
+                            Discussion d = old.getData();
+                            if(d == null){
+                                d = new Discussion();
+                                status = StateStatus.LOADING;
+                            }
+                            d.setInterest(true);
+                            mergeLiveData.postValue(new StateModel<>(status, d));
+                        }
+                        break;
+                }
+            }
+        });
+        return mergeLiveData;
+    }
+    public StateMediatorLiveData<InterestedDiscussion> getFollowingDiscussion(int discussionId) {
+        String formatId = FirebaseStructureId.interestDiscussion(discussionId);
+        return interestDAO.read(formatId);
+    }
     public List<Discussion> updateAllDiscussion() throws IOException {
         int[] forumIds = forumDAO.getAllForumId();
         ArrayList<Discussion> discussions = new ArrayList<>();

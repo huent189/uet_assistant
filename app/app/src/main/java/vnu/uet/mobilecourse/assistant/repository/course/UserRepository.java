@@ -15,6 +15,7 @@ import retrofit2.Response;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.exception.InvalidLoginException;
 import vnu.uet.mobilecourse.assistant.exception.NoConnectivityException;
+import vnu.uet.mobilecourse.assistant.exception.UnavailableHostException;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.UserRequest;
@@ -25,6 +26,8 @@ import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
+
+import java.net.SocketTimeoutException;
 
 public class UserRepository {
     public StateLiveData<String> makeLoginRequest(String studentId, String password){
@@ -120,7 +123,9 @@ public class UserRepository {
                 if(throwable instanceof NoConnectivityException){
                     loginState.postError(new NoConnectivityException());
                 }
-                //TODO: check when server down and throw exception
+                else if(throwable instanceof SocketTimeoutException){
+                    loginState.postError(new UnavailableHostException());
+                }
                 else {
                     loginState.postError(new Exception(throwable));
                 }
