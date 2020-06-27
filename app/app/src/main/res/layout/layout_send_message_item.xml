@@ -10,7 +10,8 @@
         android:id="@+id/tvTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/small_margin"
+        android:layout_marginTop="@dimen/margin_x2"
+        android:layout_marginBottom="@dimen/margin"
         android:visibility="gone"
         android:layout_gravity="center_horizontal"
         android:textSize="@dimen/font_size_small"/>

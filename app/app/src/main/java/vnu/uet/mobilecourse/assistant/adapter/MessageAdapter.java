@@ -14,6 +14,7 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Handler;
 
@@ -47,12 +48,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageHolder> {
     private List<Message_GroupChatSubCol> mMessages;
     private NavController mNavController;
 
-    private TimeLiveData mTimer;
+//    private TimeLiveData mTimer;
 
     public MessageAdapter(List<Message_GroupChatSubCol> messages, Fragment owner) {
         this.mMessages = messages;
         this.mOwner = owner;
-        this.mTimer = new TimeLiveData();
+//        this.mTimer = new TimeLiveData();
     }
 
     @NonNull
@@ -101,7 +102,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageHolder> {
             Message_GroupChatSubCol prevMessage = mMessages.get(prevPosition);
 
             // under 1 minute
-            if (message.getTimestamp() - prevMessage.getTimestamp() < 60 * 1000) {
+            if (message.getTimestamp() - prevMessage.getTimestamp() < 60) {
                 if (prevMessage.getFromId().equals(message.getFromId())) {
                     visibilityType = MessageHolder.HIDE_INFO_N_TIME;
                 } else visibilityType = MessageHolder.HIDE_TIME;
@@ -110,13 +111,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageHolder> {
 
         holder.bind(message, visibilityType, mNavController);
 
-        mTimer.observe(mOwner.getViewLifecycleOwner(), new Observer<Long>() {
-            @Override
-            public void onChanged(Long aLong) {
-                String time = DateTimeUtils.generateViewText(message.getTimestamp());
-                holder.setTime(time);
-            }
-        });
+//        mTimer.observe(mOwner.getViewLifecycleOwner(), new Observer<Long>() {
+//            @Override
+//            public void onChanged(Long aLong) {
+//                String time = DateTimeUtils.generateViewText(message.getTimestamp());
+//                holder.setTime(time);
+//            }
+//        });
     }
 
     @Override

@@ -1,5 +1,7 @@
 package vnu.uet.mobilecourse.assistant.util;
 
+import android.app.AlarmManager;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,20 +46,27 @@ public class DateTimeUtils {
 
     public static String generateViewText(long seconds) {
         Date date = DateTimeUtils.fromSecond(seconds);
-        String time = DateTimeUtils.DATE_TIME_FORMAT.format(date);
+        String time;
 
         long diff = Math.abs(System.currentTimeMillis() - date.getTime());
-        // under 1 minute
-        if (diff < 60 * 1000) {
-            time = String.format(Locale.ROOT, "%d giây trước", diff / 1000);
-        }
-        // under 1 hour
-        else if (diff < 60 * 60 * 1000) {
-            time = String.format(Locale.ROOT, "%d phút trước", diff / 1000 / 60);
-        }
-        // under 1 day
-        else if (diff < 24 * 60 * 60 * 1000) {
-            time = String.format(Locale.ROOT, "%d giờ trước", diff / 1000 / 60 / 60);
+//        // under 1 minute
+//        if (diff < 60 * 1000) {
+//            time = String.format(Locale.ROOT, "%d giây trước", diff / 1000);
+//        }
+//        // under 1 hour
+//        else if (diff < 60 * 60 * 1000) {
+//            time = String.format(Locale.ROOT, "%d phút trước", diff / 1000 / 60);
+//        }
+//        // under 1 day
+//        else if (diff < 24 * 60 * 60 * 1000) {
+//            time = String.format(Locale.ROOT, "%d giờ trước", diff / 1000 / 60 / 60);
+//        }
+        if (diff < AlarmManager.INTERVAL_DAY) {
+            time = TIME_12H_FORMAT.format(date);
+        } else if (diff < 2 * AlarmManager.INTERVAL_DAY) {
+            time = "Hôm qua, " + TIME_12H_FORMAT.format(date);
+        } else {
+            time = DateTimeUtils.DATE_TIME_FORMAT.format(date);
         }
 
         return time;

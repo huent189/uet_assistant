@@ -17,6 +17,7 @@ import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.view.component.ChatBox;
@@ -76,6 +77,9 @@ public abstract class MessageHolder extends RecyclerView.ViewHolder {
 
         mTvMessage.setText(formatContent);
         mTvMessage.setMovementMethod(LinkMovementMethod.getInstance());
+
+        String time = DateTimeUtils.generateViewText(message.getTimestamp());
+        mTvTime.setText(time);
 
         itemView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -139,9 +143,9 @@ public abstract class MessageHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    public void setTime(String time) {
-        mTvTime.setText(time);
-    }
+//    public void setTime(String time) {
+//        mTvTime.setText(time);
+//    }
 
     public interface OnMentionClickListener {
         void onClick(String memberId);

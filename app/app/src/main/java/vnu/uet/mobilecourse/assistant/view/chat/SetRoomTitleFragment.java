@@ -5,7 +5,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
 
@@ -16,10 +15,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.adapter.RoomMemberAdapter;
+import vnu.uet.mobilecourse.assistant.adapter.VerticalMemberAdapter;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
-import vnu.uet.mobilecourse.assistant.view.chat.ChatFragment;
 import vnu.uet.mobilecourse.assistant.viewmodel.AddGroupChatViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
@@ -67,7 +65,7 @@ public class SetRoomTitleFragment extends Fragment {
         mViewModel.getSelectedList().observe(getViewLifecycleOwner(), new Observer<List<IStudent>>() {
             @Override
             public void onChanged(List<IStudent> students) {
-                RoomMemberAdapter adapter = new RoomMemberAdapter(students, SetRoomTitleFragment.this);
+                VerticalMemberAdapter adapter = new VerticalMemberAdapter(students, SetRoomTitleFragment.this);
                 rvMembers.setAdapter(adapter);
 
                 int memberCounter = students.size();

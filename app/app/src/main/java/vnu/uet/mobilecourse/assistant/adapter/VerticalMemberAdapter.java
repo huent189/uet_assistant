@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -18,13 +17,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 
-public class RoomMemberAdapter extends RecyclerView.Adapter<RoomMemberAdapter.ViewHolder> {
+public class VerticalMemberAdapter extends RecyclerView.Adapter<VerticalMemberAdapter.ViewHolder> {
 
     private List<IStudent> mStudents;
     private NavController mNavController;
     private Fragment mOwner;
 
-    public RoomMemberAdapter(List<IStudent> students, Fragment owner) {
+    public VerticalMemberAdapter(List<IStudent> students, Fragment owner) {
         this.mStudents = students;
         this.mOwner = owner;
     }
