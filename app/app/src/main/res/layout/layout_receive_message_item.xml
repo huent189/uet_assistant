@@ -1,24 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:paddingStart="@dimen/margin_x2"
-    android:paddingEnd="88dp"
+    android:orientation="vertical"
     android:paddingVertical="@dimen/small_margin_2"
+    android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <TextView
+        style="@style/SecondaryText"
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:visibility="gone"
+        android:layout_gravity="center_horizontal"
+        android:textSize="@dimen/font_size_small"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingStart="@dimen/margin_x2"
+        android:paddingEnd="88dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
             style="@style/SecondaryText"
-            android:id="@+id/tvTime"
+            android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:textSize="@dimen/font_size_small"
             app:layout_constraintBottom_toTopOf="@+id/tvMessage"
             app:layout_constraintStart_toStartOf="@+id/tvMessage"

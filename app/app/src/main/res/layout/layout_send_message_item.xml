@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:paddingEnd="@dimen/margin_x2"
-    android:paddingStart="88dp"
     android:paddingVertical="@dimen/small_margin_2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -13,12 +10,22 @@
         android:id="@+id/tvTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/small_margin"
         android:visibility="gone"
-        android:layout_gravity="end"
+        android:layout_gravity="center_horizontal"
         android:textSize="@dimen/font_size_small"/>
 
-    <vnu.uet.mobilecourse.assistant.view.component.ChatBox
-        android:id="@+id/tvMessage"
-        style="@style/SendMessage"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/margin_x2"
+        android:paddingStart="88dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <vnu.uet.mobilecourse.assistant.view.component.ChatBox
+            android:id="@+id/tvMessage"
+            style="@style/SendMessage"/>
+
+    </LinearLayout>
 
 </LinearLayout>

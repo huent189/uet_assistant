@@ -24,7 +24,8 @@ public class ChatBox extends androidx.appcompat.widget.AppCompatTextView {
     }
 
     public void reduce(int maxWidth) {
-        if (getLineCount() > 1 && refactor < 2) {
+        if (getLineCount() > 1 && refactor < 1) {
+            setVisibility(INVISIBLE);
 
             float longestLineWidth = -1;
 

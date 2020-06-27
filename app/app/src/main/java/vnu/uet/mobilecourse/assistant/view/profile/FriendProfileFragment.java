@@ -98,6 +98,12 @@ public class FriendProfileFragment extends Fragment {
                     case SUCCESS:
                         UserInfo userInfo = stateModel.getData();
 
+                        if (!getArguments().containsKey("name")) {
+                            String nameFetched = userInfo.getName();
+                            tvUsername.setText(nameFetched);
+                            getArguments().putString("name", nameFetched);
+                        }
+
                         Date dob = new Date(userInfo.getDOB());
                         tvDob.setText(DateTimeUtils.DATE_FORMAT.format(dob));
 
