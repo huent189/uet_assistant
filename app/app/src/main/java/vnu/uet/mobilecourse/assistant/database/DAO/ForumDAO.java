@@ -27,4 +27,6 @@ public abstract class ForumDAO {
     public abstract LiveData<List<Discussion>> getDiscussionByForum(int forumId);
     @Query("SELECT instanceId FROM Material WHERE type = '" + CourseConstant.MaterialType.FORUM +"'")
     public abstract int[] getAllForumId();
+    @Query("SELECT * FROM Discussion WHERE id = :discussionId")
+    public abstract LiveData<Discussion> getDiscussionById(int discussionId);
 }
