@@ -139,7 +139,6 @@ public class GroupChat_UserSubColDAO extends FirebaseDAO<GroupChat_UserSubCol> {
                     .document(memberId)
                     .collection(FirebaseCollectionName.GROUP_CHAT)
                     .document(groupId);
-
             batch.update(docRef, "lastMessage", message.getContent(), "lastMessageTime", message.getTimestamp());
         }
 

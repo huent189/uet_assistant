@@ -6,6 +6,8 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
+
+import vnu.uet.mobilecourse.assistant.database.DAO.ChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.ConnectionDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChat_UserSubColDAO;
@@ -76,8 +78,9 @@ public class ChatRepository implements IChatRepository {
     @Override
     public StateMediatorLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message, String[] memberIds) {
         StateLiveData<Message_GroupChatSubCol> addMessageState= new Message_GroupChatSubColDAO(groupId).add(message.getId(), message);
-
-        return new SendMessageState(groupId, addMessageState, memberIds);
+        StateLiveData<String> updateLastMessage = new GroupChat_UserSubColDAO()
+                .updateLastMessage(groupId, memberIds, message);
+        return new SendMessageState(groupId, addMessageState, updateLastMessage, memberIds);
     }
 
     @Override
@@ -89,6 +92,16 @@ public class ChatRepository implements IChatRepository {
         addConnections(groupChat.getMembers());
 
         return new CreateGroupChatState(createGroupState, addMember, addGroup);
+    }
+
+    @Override
+    public StateLiveData<String> addMember(GroupChat_UserSubCol group, List <Member_GroupChatSubCol> members) {
+        return new ChatDAO().addMember(group, members);
+    }
+
+    @Override
+    public IStateLiveData<String> removeMember(String groupId, String memberId) {
+        return new ChatDAO().removeMember(groupId, memberId);
     }
 
     public StateLiveData<List<Connection>> getAllConnections() {
@@ -311,34 +324,52 @@ public class ChatRepository implements IChatRepository {
     }
 
     static class SendMessageState extends StateMediatorLiveData<String>{
-        SendMessageState(String groupId, @NonNull StateLiveData<Message_GroupChatSubCol> addMessageToGroup,
+        boolean addMessageToGroupState = false;
+        boolean updateLastMessageState = false;
+        Message_GroupChatSubCol message;
+        SendMessageState(String groupId, @NonNull StateLiveData<Message_GroupChatSubCol> addMessageToGroup, StateLiveData<String> updateLastMessage,
                          String[] memberIds) {
+            postLoading();
 
             addSource(addMessageToGroup, stateModel -> {
                 switch (stateModel.getStatus()) {
                     case LOADING:
                         postLoading();
+                        addMessageToGroupState = false;
                         break;
                     case ERROR:
                         postError(stateModel.getError());
+                        addMessageToGroupState = false;
                         break;
                     case SUCCESS:
-                        StateLiveData<String> updateLastMessage = new GroupChat_UserSubColDAO()
-                                .updateLastMessage(groupId, memberIds, stateModel.getData());
+                        message = stateModel.getData();
+                        addMessageToGroupState = true;
+                        break;
+                }
 
-                        addSource(updateLastMessage, updateLastMessageStateModel -> {
-                            switch (updateLastMessageStateModel.getStatus()){
-                                case ERROR:
-                                    postError(updateLastMessageStateModel.getError());
-                                    break;
-                                case LOADING:
-                                    postLoading();
-                                    break;
-                                case SUCCESS:
-                                    postSuccess("send message success");
-                                    break;
-                            }
-                        });
+                if (addMessageToGroupState && updateLastMessageState) {
+                    postSuccess("sent message success");
+                }
+            });
+
+
+            addSource(updateLastMessage, updateLastMessageStateModel -> {
+                switch (updateLastMessageStateModel.getStatus()){
+                    case ERROR:
+                        postError(updateLastMessageStateModel.getError());
+                        updateLastMessageState = false;
+                        break;
+                    case LOADING:
+                        postLoading();
+                        updateLastMessageState = false;
+                        break;
+                    case SUCCESS:
+                        updateLastMessageState = true;
+                        break;
+                }
+
+                if (addMessageToGroupState && updateLastMessageState) {
+                    postSuccess("sent  message success");
                 }
             });
         }
