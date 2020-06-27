@@ -44,6 +44,8 @@ public abstract class MaterialDAO {
     public abstract LiveData<List<CourseOverview>> getCourseContent(int course_id);
     @Query("UPDATE Material SET completion = 1 WHERE id = :materialId")
     public abstract void updateMaterialCompletion(int materialId);
+    @Query("UPDATE Material SET completion = 0 WHERE id = :materialId")
+    public abstract void updateMaterialUnCompletion(int materialId);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertPageContent(List<PageContent> pageContents);
     @Insert(onConflict = OnConflictStrategy.REPLACE)

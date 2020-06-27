@@ -32,20 +32,7 @@ public abstract class MessageHolder extends RecyclerView.ViewHolder {
         super(itemView);
 
         mTvTime = itemView.findViewById(R.id.tvTime);
-
         mTvMessage = itemView.findViewById(R.id.tvMessage);
-//        mTvMessage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (mTvTime.getVisibility() == View.GONE) {
-//                    mTvTime.setVisibility(View.VISIBLE);
-//                } else {
-//                    mTvTime.setVisibility(View.GONE);
-//                }
-//            }
-//        });
-
-//        itemView.setVisibility(View.INVISIBLE);
     }
 
     public void bind(Message_GroupChatSubCol message, int visibilityType, NavController navController) {
@@ -142,10 +129,6 @@ public abstract class MessageHolder extends RecyclerView.ViewHolder {
             }
         });
     }
-
-//    public void setTime(String time) {
-//        mTvTime.setText(time);
-//    }
 
     public interface OnMentionClickListener {
         void onClick(String memberId);

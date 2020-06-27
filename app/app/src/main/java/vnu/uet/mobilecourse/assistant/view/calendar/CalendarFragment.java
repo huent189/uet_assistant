@@ -210,7 +210,6 @@ public class CalendarFragment extends Fragment {
                     Todo todo = (Todo) item;
                     mViewModel.deleteTodo(todo.getId());
                     TodoScheduler.getInstance(mActivity).cancel(todo);
-//                    TodoHandler.getInstance().cancel(mActivity, todo);
                 }
             }
         };

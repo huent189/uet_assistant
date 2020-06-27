@@ -64,19 +64,6 @@ public class AddTodoFragment extends TodoFragment {
                         Toast.makeText(getContext(),"Tạo thành công", Toast.LENGTH_SHORT).show();
                         TodoScheduler.getInstance(getContext()).schedule(todo);
 
-//                        Context mContext = getContext().getApplicationContext();
-//
-//                        Intent intent = new Intent(mContext, TodoReceiver.class);
-//                        intent.setAction(TodoScheduler.ACTION);
-//                        intent.putExtra("???", "???");
-//                        PendingIntent pendingIntent = PendingIntent
-//                                .getBroadcast(mContext, 0, intent, 0);
-//
-//                        AlarmManager mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-//                        long time = todo.getDeadline() * 1000;
-//                        mAlarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
-
-//                        TodoHandler.getInstance().schedule(getContext(), todo);
                         mNavController.navigateUp();
                 }
             });
