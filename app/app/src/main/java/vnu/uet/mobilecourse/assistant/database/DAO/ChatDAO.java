@@ -66,7 +66,7 @@ public class ChatDAO {
         batch.commit().addOnFailureListener(e -> {
             removeMemberState.postError(e);
         }).addOnSuccessListener(aVoid -> {
-            removeMemberState.postSuccess("remove member success");
+            removeMemberState.postSuccess(memberId);
         });
 
         return removeMemberState;

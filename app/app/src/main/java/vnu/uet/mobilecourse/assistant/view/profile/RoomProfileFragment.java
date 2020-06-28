@@ -19,11 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.VerticalMemberAdapter;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.RoomProfileViewModel;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class RoomProfileFragment extends Fragment {
 
@@ -117,17 +116,40 @@ public class RoomProfileFragment extends Fragment {
                 final int position = viewHolder.getAdapterPosition();
                 final IStudent item = mMemberAdapter.getStudent(position);
 
-                mViewModel.removeMember(mRoom.getId(), item.getCode())
-                        .observe(getViewLifecycleOwner(), stateModel -> {
-                            if (stateModel.getStatus() == StateStatus.ERROR) {
-                                final String FAILURE_MSG = "Xóa thành viên thất bại";
-                                Toast.makeText(mActivity, FAILURE_MSG, Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                removeMember(item);
             }
         };
 
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchhelper.attachToRecyclerView(mRvMembers);
+    }
+
+    private void removeMember(IStudent student) {
+        String studentCode = student.getCode();
+
+        mViewModel.removeMember(mRoom.getId(), studentCode)
+                .observe(getViewLifecycleOwner(), stateModel -> {
+                    switch (stateModel.getStatus()) {
+                        case ERROR:
+                            final String FAILURE_MSG = "Xóa thành viên thất bại";
+                            Toast.makeText(mActivity, FAILURE_MSG, Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case SUCCESS:
+                            // remove your self
+                            if (studentCode.equals(User.getInstance().getStudentId())) {
+                                final String SELF_REMOVE_MSG = "Thoát phòng chat thành công";
+                                Toast.makeText(mActivity, SELF_REMOVE_MSG, Toast.LENGTH_SHORT).show();
+
+                                mNavController.navigate(R.id.action_navigation_room_profile_to_navigation_chat);
+                            } else {
+                                final String REMOVE_MSG = "Xóa " + student.getName() + " khỏi phòng chat thành công";
+                                Toast.makeText(mActivity, REMOVE_MSG, Toast.LENGTH_SHORT).show();
+                            }
+
+                            break;
+
+                    }
+                });
     }
 }

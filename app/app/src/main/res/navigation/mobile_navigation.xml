@@ -240,6 +240,11 @@
         <action
             android:id="@+id/action_navigation_room_profile_to_navigation_add_member"
             app:destination="@id/navigation_add_member" />
+        <action
+            android:id="@+id/action_navigation_room_profile_to_navigation_chat"
+            app:destination="@id/navigation_chat"
+            app:popUpTo="@+id/navigation_chat"
+            app:popUpToInclusive="true"/>
     </fragment>
 
 </navigation>
