@@ -6,7 +6,7 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.room.*;
 import androidx.sqlite.db.SimpleSQLiteQuery;
 import androidx.sqlite.db.SupportSQLiteQuery;
-import vnu.uet.mobilecourse.assistant.database.querymodel.MaterialWithCourse;
+import vnu.uet.mobilecourse.assistant.database.querymodel.Submission;
 import vnu.uet.mobilecourse.assistant.model.CourseOverview;
 import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.WeeklyMaterial;
@@ -14,6 +14,8 @@ import vnu.uet.mobilecourse.assistant.model.material.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Dao
 public abstract class MaterialDAO {
     @Query("SELECT * FROM Material WHERE weekId = :week_id")
@@ -23,16 +25,17 @@ public abstract class MaterialDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertMaterial(List<Material> materials);
-    public ArrayList<CourseOverview> insertCourseContent(int courseId, CourseOverview... contents){
-        ArrayList<CourseOverview> updateList = new ArrayList<>();
+    public ArrayList<Material> insertMaterial(int courseId, CourseOverview... contents){
+        ArrayList<Material> updateList = new ArrayList<>();
         long lastTime = getLastMaterialUpdateTimeByCourse(courseId);
         for (CourseOverview content: contents) {
-            if(content.getMaterials().stream().anyMatch(material -> material.getLastModified() > lastTime)){
+            List<Material> filter = content.getMaterials().stream().filter(material -> material.getLastModified() > lastTime).collect(Collectors.toList());
+            if(!filter.isEmpty()){
                 content.getWeekInfo().setCourseId(courseId);
                 insertWeekInfo(content.getWeekInfo());
                 content.getMaterials().forEach(material -> material.setWeekId(content.getWeekInfo().getId()));
                 insertMaterial(content.getMaterials());
-                updateList.add(content);
+                updateList.addAll(filter);
             }
         }
         return updateList;
@@ -53,7 +56,7 @@ public abstract class MaterialDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract  void insertAssignments(List<AssignmentContent> contents);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract  void insertQuizzes(List<QuizNoGrade> contents);
+    public abstract void insertQuizzes(List<QuizNoGrade> contents);
     public  void insertInternalResource(List<InternalResourceContent> contents){
         insertInternalResourceParent(contents);
         for (InternalResourceContent content : contents) {
@@ -114,20 +117,30 @@ public abstract class MaterialDAO {
     public abstract LiveData<InternalResourceContent> getInternalResourceParent(int id);
     @Query("SELECT * from InternalFile WHERE parentId = :id")
     public abstract LiveData<List<InternalFile>> getInternalFile(int id);
-//    @Query("SELECT * from AssignmentContent WHERE startDate >= :startTime and deadline < :endTime")
-//    public abstract LiveData<List<AssignmentContent>> getAssignment(long startTime, long endTime);
-//    @Query("SELECT * from QuizNoGrade WHERE timeOpen >= :startTime and timeClose < :endTime")
-//    public abstract LiveData<List<QuizNoGrade>>getQuiz(long startTime, long endTime);
-@Query("SELECT Course.id as courseId, Course.code as courseName, Material.type, Material.completion as isCompleted, materialId," +
+    @Query("SELECT Course.id as courseId, Course.code as courseName, Material.type, Material.completion as isCompleted, materialId," +
         " AssignmentContent.name as materialName, startDate as startTime, deadline as endTime" +
         " from Course, Material, AssignmentContent " +
         "WHERE Course.id = AssignmentContent.courseId and Material.id = AssignmentContent.materialId " +
         "and ((startDate >= :startTime and startDate < :endTime) or (deadline >= :startTime and deadline < :endTime))")
-    public abstract List<MaterialWithCourse> getAssignmentInRange(long startTime, long endTime);
+    public abstract List<Submission> getAssignmentInRange(long startTime, long endTime);
     @Query("SELECT Course.id as courseId, Course.code as courseName, Material.type, Material.completion as isCompleted, materialId," +
             " QuizNoGrade.name as materialName, timeOpen as startTime, timeClose as endTime" +
             " from Course, Material, QuizNoGrade " +
             "WHERE Course.id = QuizNoGrade.courseId and Material.id = QuizNoGrade.materialId " +
             "and ((timeOpen >= :startTime and timeOpen < :endTime) or (timeClose >= :startTime and timeClose < :endTime))")
-    public abstract List<MaterialWithCourse> getQuizInRange(long startTime, long endTime);
+    public abstract List<Submission> getQuizInRange(long startTime, long endTime);
+    @Query("SELECT Course.id as courseId, Course.code as courseName, Material.type, Material.completion as isCompleted, materialId," +
+            " QuizNoGrade.name as materialName, timeOpen as startTime, timeClose as endTime" +
+            " from Course, Material, QuizNoGrade " +
+            "WHERE Course.id = QuizNoGrade.courseId and Material.id = QuizNoGrade.materialId " +
+            "and QuizNoGrade.id = (:ids)")
+    public abstract List<Submission> getQuizSubmissions(List<Integer> ids);
+    @Query("SELECT Course.id as courseId, Course.code as courseName, Material.type, Material.completion as isCompleted, materialId," +
+            " AssignmentContent.name as materialName, startDate as startTime, deadline as endTime" +
+            " from Course, Material, AssignmentContent " +
+            "WHERE Course.id = AssignmentContent.courseId and Material.id = AssignmentContent.materialId " +
+            "and AssignmentContent.id in (:ids)")
+    public abstract List<Submission> getAssignmentSubmissions(List<Integer> ids);
+    @Query("SELECT id from QuizNoGrade")
+    public abstract List<Integer> getAllQuizId();
 }

@@ -2,7 +2,7 @@ package vnu.uet.mobilecourse.assistant.database.querymodel;
 
 import vnu.uet.mobilecourse.assistant.model.event.CourseSubmissionEvent;
 
-public class MaterialWithCourse {
+public class Submission {
     private  int courseId;
     private String courseName;
     private int materialId;

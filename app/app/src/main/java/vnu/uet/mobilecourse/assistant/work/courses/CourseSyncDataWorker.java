@@ -10,20 +10,20 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import com.google.firebase.firestore.util.Util;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.alarm.scheduler.SubmissionScheduler;
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
 import vnu.uet.mobilecourse.assistant.database.querymodel.IdNamePair;
-import vnu.uet.mobilecourse.assistant.model.CourseOverview;
-import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.User;
+import vnu.uet.mobilecourse.assistant.model.event.CourseSubmissionEvent;
 import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
 import vnu.uet.mobilecourse.assistant.model.forum.Post;
+import vnu.uet.mobilecourse.assistant.model.material.AssignmentContent;
 import vnu.uet.mobilecourse.assistant.model.material.MaterialContent;
 import vnu.uet.mobilecourse.assistant.model.material.PageContent;
+import vnu.uet.mobilecourse.assistant.model.material.QuizNoGrade;
 import vnu.uet.mobilecourse.assistant.model.notification.ForumPostNotification;
 import vnu.uet.mobilecourse.assistant.model.notification.NewMaterialNotification;
 import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
-import vnu.uet.mobilecourse.assistant.network.HTTPClient;
-import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.repository.course.CourseRepository;
 import vnu.uet.mobilecourse.assistant.repository.course.ForumRepository;
 import vnu.uet.mobilecourse.assistant.repository.course.MaterialRepository;
@@ -32,12 +32,14 @@ import vnu.uet.mobilecourse.assistant.repository.firebase.NotificationRepository
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class CourseSyncDataWorker extends Worker {
-    private CourseRequest sender;
     private CoursesDatabase database;
     private MaterialRepository materialRepository;
     private CourseRepository courseRepository;
@@ -47,7 +49,6 @@ public class CourseSyncDataWorker extends Worker {
     public CourseSyncDataWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         this.mContext = context;
-        sender = HTTPClient.getInstance().request(CourseRequest.class);
         database = CoursesDatabase.getDatabase();
         materialRepository = MaterialRepository.getInstance();
         courseRepository = CourseRepository.getInstance();
@@ -109,28 +110,22 @@ public class CourseSyncDataWorker extends Worker {
         try {
             User.getInstance().setLastSyncTime(System.currentTimeMillis() / 1000);
             ArrayList<Integer> courseIds = courseRepository.updateMyCourses();
-            ArrayList<Material> updateMaterialList = new ArrayList<>();
             courseIds.forEach(new Consumer<Integer>() {
                 @Override
                 public void accept(Integer integer) {
                     try {
-                        updateMaterialList.addAll(courseRepository.updateCourseContent(integer)
-                                .parallelStream().map(CourseOverview::getMaterials)
-                                .flatMap(List::stream).collect(Collectors.toList()));
+                        courseRepository.updateCourseContent(integer);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             });
-            List<MaterialContent> materials = null;
+            List<MaterialContent> materials = materialRepository.updateAll();
             List<Discussion> discussions = updateForum();
-            if(updateMaterialList.size() > 0 ){
-                Set<String> type = updateMaterialList.stream().map(Material::getType).collect(Collectors.toSet());
-                materials = materialRepository.selectiveUpdate(type);
-
-            }
+            scheduleSubmissionEvent(materials.stream().filter(m -> m instanceof QuizNoGrade).map(MaterialContent::getId).collect(Collectors.toList()),
+                    materials.stream().filter(m -> m instanceof AssignmentContent).map(MaterialContent::getId).collect(Collectors.toList()));
             if(User.getInstance().getEnableSyncNoti()){
-                if(materials != null && materials.size() != 0){
+                if(materials.size() != 0){
                     List<IdNamePair> courseNames = database.coursesDAO().getAllCourseName();
                     Map<Integer, String> idNameMap = courseNames.stream()
                             .collect(Collectors.toMap(IdNamePair::getId, IdNamePair::getName));
@@ -143,18 +138,15 @@ public class CourseSyncDataWorker extends Worker {
                         }
                         NotificationRepository.getInstance().add(notification);
                         NavigationBadgeRepository.getInstance().increaseNewNotifications();
-                        if(content.getTimeModified() >= User.getInstance().getLastSyncTime()){
-                            pushNotification(mContext, notification);
-                        }
+                        pushNotification(mContext, notification);
                     }
                 }
                 if(discussions.size() != 0){
                     discussions.forEach(new Consumer<Discussion>() {
                         @Override
                         public void accept(Discussion discussion) {
-                            Notification_UserSubCol notification = null;
                             try {
-                                notification = generateNotification(discussion);
+                                Notification_UserSubCol notification = generateNotification(discussion);
                                 NotificationRepository.getInstance().add(notification);
                                 NavigationBadgeRepository.getInstance().increaseNewNotifications();
                                 pushNotification(mContext, notification);
@@ -164,7 +156,6 @@ public class CourseSyncDataWorker extends Worker {
                         }
                     });
                 }
-
             }
             else {
                 User.getInstance().setEnableSyncNoti(true);
@@ -176,7 +167,10 @@ public class CourseSyncDataWorker extends Worker {
         return Result.success();
     }
     private List<Discussion> updateForum() throws IOException {
-        List<Discussion> updateList = forumRepository.updateAllDiscussion();
-        return updateList;
+        return forumRepository.updateAllDiscussion();
+    }
+    private void scheduleSubmissionEvent(List<Integer> quizIds, List<Integer> assignIds){
+        List<CourseSubmissionEvent> events = materialRepository.getSubmissionEventFromNow(quizIds, assignIds);
+        events.forEach(courseSubmissionEvent -> SubmissionScheduler.getInstance(mContext).schedule(courseSubmissionEvent));
     }
 }

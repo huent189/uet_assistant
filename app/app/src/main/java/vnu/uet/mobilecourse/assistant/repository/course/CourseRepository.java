@@ -135,13 +135,13 @@ public class CourseRepository {
         return courseIds;
     }
 
-    public List<CourseOverview> updateCourseContent(int courseId) throws IOException {
-        ArrayList<CourseOverview> updateList = new ArrayList<>();
+    public List<Material> updateCourseContent(int courseId) throws IOException {
+        ArrayList<Material> updateList = new ArrayList<>();
         Call<JsonElement> call = HTTPClient.getInstance().request(CourseRequest.class).getCourseContent(courseId);
         CoursesResponseCallback<CourseOverview[]> hanler = new CoursesResponseCallback<CourseOverview[]>(CourseOverview[].class) {
             @Override
             public void onSuccess(CourseOverview[] response) {
-                updateList.addAll(materialDAO.insertCourseContent(courseId, response));
+                updateList.addAll(materialDAO.insertMaterial(courseId, response));
 
             }
         };

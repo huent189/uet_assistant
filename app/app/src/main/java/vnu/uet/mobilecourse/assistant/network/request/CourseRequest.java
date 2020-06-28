@@ -20,9 +20,6 @@ public interface CourseRequest {
     @POST("webservice/rest/server.php?wsfunction=core_course_view_course&sectionnumber=0")
     Call<JsonElement> triggerCourseView(@Field("courseid") int courseId);
     @FormUrlEncoded
-    @POST("webservice/rest/server.php?wsfunction=mod_forum_get_discussion_post")
-    Call<JsonElement> getDicussionPost(@Field("postid") int postId);
-    @FormUrlEncoded
     @POST("webservice/rest/server.php?wsfunction=core_course_get_course_module")
     Call<JsonElement> getModuleContent(@Field("cmid") int moduleId);
     @FormUrlEncoded
