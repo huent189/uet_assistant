@@ -19,7 +19,6 @@ import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
 import vnu.uet.mobilecourse.assistant.model.forum.Post;
 import vnu.uet.mobilecourse.assistant.model.material.AssignmentContent;
 import vnu.uet.mobilecourse.assistant.model.material.MaterialContent;
-import vnu.uet.mobilecourse.assistant.model.material.PageContent;
 import vnu.uet.mobilecourse.assistant.model.material.QuizNoGrade;
 import vnu.uet.mobilecourse.assistant.model.notification.ForumPostNotification;
 import vnu.uet.mobilecourse.assistant.model.notification.NewMaterialNotification;
@@ -55,14 +54,10 @@ public class CourseSyncDataWorker extends Worker {
         forumRepository = new ForumRepository();
     }
     @SuppressLint("RestrictedApi")
-    private Notification_UserSubCol generateNotification(MaterialContent content, boolean isNew, String courseName){
+    private Notification_UserSubCol generateNotification(MaterialContent content, String courseName){
         NewMaterialNotification notification = new NewMaterialNotification();
         notification.setId(Util.autoId());
-        if (isNew){
-            notification.setTitle("Bạn có một tài liệu mới");
-        } else {
-            notification.setTitle("Một tài liệu trong khóa học của bạn đã được cập nhật");
-        }
+        notification.setTitle("Cập nhật tài liệu");
         notification.setDescription(courseName + ": " + content.getName());
         notification.setNotifyTime(System.currentTimeMillis() / 1000);
         notification.setCourseId(content.getCourseId());
@@ -131,11 +126,7 @@ public class CourseSyncDataWorker extends Worker {
                             .collect(Collectors.toMap(IdNamePair::getId, IdNamePair::getName));
                     for (MaterialContent content:materials) {
                         Notification_UserSubCol notification;
-                        if(content instanceof PageContent && ((PageContent) content).getRevision() > 1){
-                            notification = generateNotification(content, false, idNameMap.get(content.getCourseId()));
-                        } else {
-                            notification = generateNotification(content, true, idNameMap.get(content.getCourseId()));
-                        }
+                        notification = generateNotification(content, idNameMap.get(content.getCourseId()));
                         NotificationRepository.getInstance().add(notification);
                         NavigationBadgeRepository.getInstance().increaseNewNotifications();
                         pushNotification(mContext, notification);
