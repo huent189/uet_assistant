@@ -138,8 +138,10 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
 
                     mTvLastMessage.setMaxWidth(maxWidth);
 
-                    SpannableStringBuilder format = StringUtils.convertHtml(chat.getLastMessage());
-                    mTvLastMessage.setText(format.toString());
+                    if (chat.getLastMessage() != null) {
+                        SpannableStringBuilder format = StringUtils.convertHtml(chat.getLastMessage());
+                        mTvLastMessage.setText(format.toString());
+                    }
 
                     mLayoutTime.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }

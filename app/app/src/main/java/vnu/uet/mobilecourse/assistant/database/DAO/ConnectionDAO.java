@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.Observer;
+import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
 import vnu.uet.mobilecourse.assistant.model.event.EventComparator;
 import vnu.uet.mobilecourse.assistant.model.firebase.Connection;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
@@ -23,6 +24,33 @@ public class ConnectionDAO extends FirebaseDAO<Connection> {
 
     public ConnectionDAO() {
         super(FirebaseFirestore.getInstance().collection(FirebaseCollectionName.CONNECTION));
+    }
+
+    @Override
+    protected void handleDocumentNotFound(StateMediatorLiveData<Connection> response, String id) {
+        mColReference.document(id)
+                .addSnapshotListener((snapshot, e) -> {
+                    // catch an exception
+                    if (e != null) {
+                        Log.e(TAG, "Listen to data list failed.");
+                        response.postError(e);
+                    }
+                    // hasn't got snapshots yet
+                    else if (snapshot == null) {
+                        Log.d(TAG, "Listening to data list.");
+                        response.postLoading();
+                    }
+                    // query completed with snapshots
+                    else {
+                        Connection connection = snapshot.toObject(Connection.class);
+
+                        if (connection == null) {
+                            response.postError(new DocumentNotFoundException(id));
+                        } else {
+                            response.postSuccess(connection);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -41,25 +69,25 @@ public class ConnectionDAO extends FirebaseDAO<Connection> {
 //                    .orderBy("deadline", Query.Direction.DESCENDING)
                     // listen for data change
                     .addSnapshotListener((snapshots, e) -> {
-                        // catch an exception
-                        if (e != null) {
-                            Log.e(TAG, "Listen to data list failed.");
-                            mDataList.postError(e);
-                        }
-                        // hasn't got snapshots yet
-                        else if (snapshots == null) {
-                            Log.d(TAG, "Listening to data list.");
-                            mDataList.postLoading();
-                        }
-                        // query completed with snapshots
-                        else {
-                            List<Connection> allLists = snapshots.getDocuments().stream()
-                                    .map(snapshot -> snapshot.toObject(Connection.class))
-                                    .filter(Objects::nonNull)
-                                    .collect(Collectors.toList());
+                            // catch an exception
+                            if (e != null) {
+                                Log.e(TAG, "Listen to data list failed.");
+                                mDataList.postError(e);
+                            }
+                            // hasn't got snapshots yet
+                            else if (snapshots == null) {
+                                Log.d(TAG, "Listening to data list.");
+                                mDataList.postLoading();
+                            }
+                            // query completed with snapshots
+                            else {
+                                List<Connection> allLists = snapshots.getDocuments().stream()
+                                        .map(snapshot -> snapshot.toObject(Connection.class))
+                                        .filter(Objects::nonNull)
+                                        .collect(Collectors.toList());
 
-                            mDataList.postSuccess(allLists);
-                        }
+                                mDataList.postSuccess(allLists);
+                            }
                     });
         }
 
@@ -80,7 +108,7 @@ public class ConnectionDAO extends FirebaseDAO<Connection> {
                 .addOnSuccessListener(aVoid -> {
                     // response post success with id of updated document
                     response.postSuccess(id);
-                    Log.d(TAG, "Change document: " + id);
+                    Log.d(TAG, "Change connection counter: " + id);
                 })
                 .addOnFailureListener(e -> {
                     response.postError(e);
@@ -94,23 +122,28 @@ public class ConnectionDAO extends FirebaseDAO<Connection> {
 
         private ConnectionDAO mDAO;
 
-        public UniqueCreation(ConnectionDAO connectionDAO, Connection connection) {
+        UniqueCreation(ConnectionDAO connectionDAO, Connection connection) {
             mDAO = connectionDAO;
 
             postLoading();
 
-            StateLiveData<List<Connection>> listLiveData = mDAO.readAll();
+            StateMediatorLiveData<Connection> liveData = mDAO.read(connection.getId());
 
-            if (listLiveData.getValue() != null
-                    && listLiveData.getValue().getStatus() == StateStatus.SUCCESS) {
-                checkList(listLiveData.getValue().getData(), connection);
+            if (liveData.getValue() != null
+                    && liveData.getValue().getStatus() == StateStatus.SUCCESS) {
+                increaseCounter(connection);
             }
             // can't get value
             else {
-                addSource(listLiveData, stateModel -> {
+                addSource(liveData, stateModel -> {
                     switch (stateModel.getStatus()) {
                         case ERROR:
-                            postError(stateModel.getError());
+                            Exception err = stateModel.getError();
+
+                            if (err instanceof DocumentNotFoundException) {
+                                addNewDocument(connection);
+                            } else postError(err);
+
                             break;
 
                         case LOADING:
@@ -118,12 +151,24 @@ public class ConnectionDAO extends FirebaseDAO<Connection> {
                             break;
 
                         case SUCCESS:
-                            removeSource(listLiveData);
-                            checkList(stateModel.getData(), connection);
+                            removeSource(liveData);
+                            increaseCounter(connection);
                             break;
                     }
                 });
             }
+
+            // keep mediator active until success
+            observeForever(new Observer<StateModel<Connection>>() {
+                @Override
+                public void onChanged(StateModel<Connection> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case SUCCESS:
+                            removeObserver(this);
+                            break;
+                    }
+                }
+            });
         }
 
         private void addNewDocument(Connection connection) {
@@ -164,17 +209,6 @@ public class ConnectionDAO extends FirebaseDAO<Connection> {
                         break;
                 }
             });
-        }
-
-        private void checkList(List<Connection> list, Connection connection) {
-            boolean isExist = list.stream()
-                    .anyMatch(conn -> conn.getId().equals(connection.getId()));
-
-            if (!isExist) {
-                addNewDocument(connection);
-            } else {
-                increaseCounter(connection);
-            }
         }
     }
 }
