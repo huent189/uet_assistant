@@ -20,6 +20,7 @@ import vnu.uet.mobilecourse.assistant.adapter.HorizontalMemberAdapter;
 import vnu.uet.mobilecourse.assistant.adapter.SuggestionMemberAdapter;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
+import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
 import vnu.uet.mobilecourse.assistant.viewmodel.AddGroupChatViewModel;
 import vnu.uet.mobilecourse.assistant.R;
@@ -47,9 +48,14 @@ public class AddMemberFragment extends Fragment {
     private AddGroupChatViewModel mViewModel;
     private FragmentActivity mActivity;
     private NavController mNavController;
-    private IStudent mSearchResult;
+
     private SuggestionMemberAdapter suggestionAdapter = null;
     private HorizontalMemberAdapter mMemberAdapter;
+
+    private IStudent mSearchResult;
+
+    private boolean mFromRoomProfile;
+    private GroupChat mRoom;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -62,6 +68,13 @@ public class AddMemberFragment extends Fragment {
         }
 
         View root = inflater.inflate(R.layout.fragment_add_member, container, false);
+
+        if (getArguments() != null) {
+            if (getArguments().containsKey("room")) {
+                mFromRoomProfile = true;
+                mRoom = getArguments().getParcelable("room");
+            }
+        }
 
         initializeToolbar(root);
 
@@ -146,26 +159,30 @@ public class AddMemberFragment extends Fragment {
                     public void onChanged(StateModel<UserInfo> stateModel) {
                         switch (stateModel.getStatus()) {
                             case SUCCESS:
-                                layoutSearchResult.setVisibility(View.VISIBLE);
-                                shimmerSearchResult.setVisibility(View.GONE);
+                                if (!mFromRoomProfile || (!isMember(stateModel.getData()))) {
+                                    layoutSearchResult.setVisibility(View.VISIBLE);
+                                    shimmerSearchResult.setVisibility(View.GONE);
 
-                                mSearchResult = stateModel.getData();
-                                tvName.setText(mSearchResult.getName());
-                                tvId.setText(mSearchResult.getCode());
+                                    mSearchResult = stateModel.getData();
+                                    tvName.setText(mSearchResult.getName());
+                                    tvId.setText(mSearchResult.getCode());
 
-                                mViewModel.isSelected(mSearchResult).observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-                                    @Override
-                                    public void onChanged(Boolean aBoolean) {
-                                        checkBox.setChecked(aBoolean);
+                                    mViewModel
+                                            .isSelected(mSearchResult)
+                                            .observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+                                                @Override
+                                                public void onChanged(Boolean aBoolean) {
+                                                    checkBox.setChecked(aBoolean);
+                                                }
+                                            });
+
+                                    if (mSearchResult.isActive()) {
+                                        ivWarning.setVisibility(View.GONE);
+                                        checkBox.setVisibility(View.VISIBLE);
+                                    } else {
+                                        ivWarning.setVisibility(View.VISIBLE);
+                                        checkBox.setVisibility(View.GONE);
                                     }
-                                });
-
-                                if (mSearchResult.isActive()) {
-                                    ivWarning.setVisibility(View.GONE);
-                                    checkBox.setVisibility(View.VISIBLE);
-                                } else {
-                                    ivWarning.setVisibility(View.VISIBLE);
-                                    checkBox.setVisibility(View.GONE);
                                 }
 
                                 break;
@@ -188,7 +205,6 @@ public class AddMemberFragment extends Fragment {
         });
 
         RecyclerView rvSuggestions = root.findViewById(R.id.rvSuggestions);
-
 
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -220,6 +236,11 @@ public class AddMemberFragment extends Fragment {
                 switch (stateModel.getStatus()) {
                     case SUCCESS:
                         List<IStudent> suggestions = stateModel.getData();
+
+                        if (mFromRoomProfile) {
+                            suggestions.removeIf(student -> isMember(student));
+                        }
+
                         suggestionAdapter = new SuggestionMemberAdapter(suggestions, AddMemberFragment.this, onCheckChangeListener);
                         rvSuggestions.setAdapter(suggestionAdapter);
 
@@ -230,6 +251,12 @@ public class AddMemberFragment extends Fragment {
 
 
         return root;
+    }
+
+    private boolean isMember(IStudent student) {
+        return mRoom.getMembers()
+                .stream()
+                .anyMatch(member -> member.getCode().equals(student.getCode()));
     }
 
     private Toolbar initializeToolbar(View root) {
@@ -249,7 +276,11 @@ public class AddMemberFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.create_group_chat_toolbar_menu, menu);
-        Log.d(getTag(), "onCreateOptionsMenu: ");
+
+        if (mFromRoomProfile) {
+            MenuItem item = menu.findItem(R.id.action_next);
+            item.setTitle("OK");
+        }
     }
 
     @Override
@@ -259,25 +290,42 @@ public class AddMemberFragment extends Fragment {
             List<IStudent> students = mViewModel.getSelectedList().getValue();
             assert students != null;
             int counter = students.size();
-            if (counter == 1) {
-                IStudent selected = students.get(0);
 
-                Bundle bundle = new Bundle();
-
-                String title = selected.getName();
-                bundle.putString("title", title);
-
-                String code = selected.getCode();
-                bundle.putString("code", code);
-
-                bundle.putString("type", GroupChat.DIRECT);
-
-                mNavController.navigate(R.id.action_navigation_add_member_to_navigation_chat_room, bundle);
-
-            } else if (counter > 1) {
-                mNavController.navigate(R.id.action_navigation_add_member_to_navigation_set_room_title);
-            } else {
+            if (counter == 0) {
                 Toast.makeText(mActivity, "Bạn chưa chọn thành viên", Toast.LENGTH_SHORT).show();
+            } else if (mFromRoomProfile) {
+                mViewModel.addMemberToExistRoom(mRoom.getId(), students)
+                        .observe(getViewLifecycleOwner(), stateModel -> {
+                            switch (stateModel.getStatus()) {
+                                case ERROR:
+                                    Toast.makeText(mActivity, "Thêm thành viên thất bại", Toast.LENGTH_SHORT).show();
+                                    break;
+
+                                case SUCCESS:
+                                    mNavController.navigateUp();
+                                    break;
+                            }
+                        });
+
+            } else {
+                if (counter == 1) {
+                    IStudent selected = students.get(0);
+
+                    Bundle bundle = new Bundle();
+
+                    String title = selected.getName();
+                    bundle.putString("title", title);
+
+                    String code = selected.getCode();
+                    bundle.putString("code", code);
+
+                    bundle.putString("type", GroupChat.DIRECT);
+
+                    mNavController.navigate(R.id.action_navigation_add_member_to_navigation_chat_room, bundle);
+
+                } else {
+                    mNavController.navigate(R.id.action_navigation_add_member_to_navigation_set_room_title);
+                }
             }
 
             Log.d(getTag(), "onOptionsItemSelected: ");

@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.repository.firebase;
 
 import java.util.List;
 
+import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
@@ -56,7 +57,7 @@ public interface IChatRepository {
      */
     IStateLiveData<GroupChat> createGroupChat(GroupChat groupChat);
 
-    IStateLiveData<String> addMember(GroupChat_UserSubCol group, List <Member_GroupChatSubCol> members);
+    IStateLiveData<List<Member_GroupChatSubCol>> addMember(String roomId, List<Member_GroupChatSubCol> members);
 
     IStateLiveData<String> removeMember(String groupId, String memberId);
 }

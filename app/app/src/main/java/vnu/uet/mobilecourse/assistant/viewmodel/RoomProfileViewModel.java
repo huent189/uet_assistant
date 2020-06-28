@@ -12,4 +12,8 @@ public class RoomProfileViewModel extends ViewModel {
     public IStateLiveData<GroupChat> getRoomInfo(String roomId) {
         return mChatRepo.getGroupChatInfo(roomId);
     }
+
+    public IStateLiveData<String> removeMember(String roomId, String memberId) {
+        return mChatRepo.removeMember(roomId, memberId);
+    }
 }

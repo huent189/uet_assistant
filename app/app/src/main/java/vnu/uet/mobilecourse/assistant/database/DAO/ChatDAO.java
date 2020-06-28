@@ -8,6 +8,7 @@ import com.google.firebase.firestore.WriteBatch;
 
 import java.util.List;
 
+import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -25,20 +26,21 @@ public class ChatDAO {
         userCol = db.collection(FirebaseCollectionName.USER);
     }
 
-    public StateLiveData<String> addMember(GroupChat_UserSubCol group, List <Member_GroupChatSubCol> members) {
+    public StateLiveData<String> addMember(GroupChat_UserSubCol group, List<Member_GroupChatSubCol> members) {
         StateLiveData<String> addMemberState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
         WriteBatch batch = db.batch();
 
-
-        for (Member_GroupChatSubCol member :
-                members) {
-
+        for (IStudent member : members) {
             // add member to group:
-            DocumentReference memberDocRef = groupChatCol.document(group.getId()).collection(FirebaseCollectionName.MEMBER).document(member.getId());
+            DocumentReference memberDocRef = groupChatCol.document(group.getId())
+                    .collection(FirebaseCollectionName.MEMBER)
+                    .document(member.getCode());
             batch.set(memberDocRef, member);
 
             // add group to member:
-            DocumentReference groupDocRef = userCol.document(member.getId()).collection(FirebaseCollectionName.GROUP_CHAT).document(group.getId());
+            DocumentReference groupDocRef = userCol.document(member.getCode())
+                    .collection(FirebaseCollectionName.GROUP_CHAT)
+                    .document(group.getId());
             batch.set(groupDocRef, group);
         }
 
