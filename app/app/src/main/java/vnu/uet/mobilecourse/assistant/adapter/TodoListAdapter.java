@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.adapter.viewholder.ExpandableGroupHolder;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.ISwipeToDeleteHolder;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.TodoViewHolder;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
@@ -96,10 +97,9 @@ public class TodoListAdapter extends
         }
     }
 
-    public static class TodoListViewHolder extends GroupViewHolder implements ISwipeToDeleteHolder {
+    public static class TodoListViewHolder extends ExpandableGroupHolder implements ISwipeToDeleteHolder {
 
         private TextView mTvTitle;
-        private ImageView mIvExpandArrow;
 
         private ExpandableTodoList mTodoList;
 
@@ -107,7 +107,6 @@ public class TodoListAdapter extends
             super(itemView);
 
             mTvTitle = itemView.findViewById(R.id.tvTitle);
-            mIvExpandArrow = itemView.findViewById(R.id.ivExpandArrow);
         }
 
         void bind(ExpandableTodoList content) {
