@@ -66,7 +66,6 @@ public class ConnectionDAO extends FirebaseDAO<Connection> {
             // query all document owned by current user
             mColReference.whereArrayContains("studentIds", STUDENT_ID)
                     // order
-//                    .orderBy("deadline", Query.Direction.DESCENDING)
                     // listen for data change
                     .addSnapshotListener((snapshots, e) -> {
                             // catch an exception
