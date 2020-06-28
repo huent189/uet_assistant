@@ -19,6 +19,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.ISwipeToDeleteHolder;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
+import vnu.uet.mobilecourse.assistant.model.User;
+import vnu.uet.mobilecourse.assistant.model.firebase.MemberRole;
+import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.util.DimensionUtils;
 import vnu.uet.mobilecourse.assistant.view.profile.RoomProfileFragment;
 
@@ -64,6 +67,8 @@ public class VerticalMemberAdapter extends RecyclerView.Adapter<VerticalMemberAd
         return mStudents.size();
     }
 
+    private static final String USER_ID = User.getInstance().getStudentId();
+
     static class ViewHolder extends RecyclerView.ViewHolder implements ISwipeToDeleteHolder {
 
         private CircleImageView mCivAvatar;
@@ -93,6 +98,11 @@ public class VerticalMemberAdapter extends RecyclerView.Adapter<VerticalMemberAd
         void bind(IStudent student) {
             mTvName.setText(student.getName());
             mTvId.setText(student.getCode());
+
+            if (student.getCode().equals(USER_ID)) {
+                String name = student.getName() + " (tôi)";
+                mTvName.setText(name);
+            }
         }
     }
 }

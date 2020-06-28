@@ -59,13 +59,6 @@ public abstract class StudentViewHolder extends RecyclerView.ViewHolder {
                 }
             });
         }
-
-        if (student instanceof Member_GroupChatSubCol) {
-            Member_GroupChatSubCol member = (Member_GroupChatSubCol) student;
-            if (member.getRole().equals(MemberRole.ADMIN)) {
-                mTvName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_security_16dp, 0);
-            }
-        }
     }
 
     protected abstract void onChatClick(IStudent student);

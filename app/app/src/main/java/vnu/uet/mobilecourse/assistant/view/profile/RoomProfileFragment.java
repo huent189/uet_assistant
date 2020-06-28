@@ -21,6 +21,7 @@ import vnu.uet.mobilecourse.assistant.adapter.VerticalMemberAdapter;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
+import vnu.uet.mobilecourse.assistant.view.chat.RenameDialog;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.RoomProfileViewModel;
 
@@ -83,7 +84,7 @@ public class RoomProfileFragment extends Fragment {
         layoutRename.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                openRenameDialog();
             }
         });
 
@@ -151,5 +152,22 @@ public class RoomProfileFragment extends Fragment {
 
                     }
                 });
+    }
+
+    private void openRenameDialog() {
+        RenameDialog dialog = new RenameDialog();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("title", mRoom.getName());
+        dialog.setArguments(bundle);
+
+        dialog.setOnSubmitListener(new RenameDialog.OnSubmitListener() {
+            @Override
+            public void onSubmit(String title) {
+                Toast.makeText(mActivity, title, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        dialog.show(mActivity.getSupportFragmentManager(), RenameDialog.class.getName());
     }
 }

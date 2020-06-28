@@ -85,6 +85,7 @@
     <string name="title_next">Tiếp</string>
     <string name="title_chat_add_member">Thêm thành viên</string>
     <string name="title_chat_set_room_title">Đặt tên nhóm mới</string>
+    <string name="hint_set_room_chat_title">Tên nhóm (bắt buộc)</string>
 
     <string-array name="dayOfWeek">
         <item>C.N</item>

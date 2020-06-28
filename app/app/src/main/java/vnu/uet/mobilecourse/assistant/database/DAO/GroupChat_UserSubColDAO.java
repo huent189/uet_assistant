@@ -2,13 +2,10 @@ package vnu.uet.mobilecourse.assistant.database.DAO;
 
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -60,11 +57,15 @@ public class GroupChat_UserSubColDAO extends FirebaseDAO<GroupChat_UserSubCol> {
                             List<GroupChat_UserSubCol> list = snapshots.getDocuments().stream()
                                     .map(snapshot -> snapshot.toObject(GroupChat_UserSubCol.class))
                                     .filter(Objects::nonNull)
-                                    .sorted(new Comparator<GroupChat_UserSubCol>() {
-                                        @Override
-                                        public int compare(GroupChat_UserSubCol o1, GroupChat_UserSubCol o2) {
-                                            return Long.compare(o1.getLastMessageTime(), o2.getLastMessageTime()) * -1;
-                                        }
+                                    .sorted((room1, room2) -> {
+                                        assert room1 != null;
+                                        int comparision = Long
+                                                .compare(
+                                                        room1.getLastMessageTime(),
+                                                        room2.getLastMessageTime()
+                                                );
+                                        comparision *= -1;
+                                        return comparision;
                                     })
                                     .collect(Collectors.toList());
 
@@ -94,7 +95,6 @@ public class GroupChat_UserSubColDAO extends FirebaseDAO<GroupChat_UserSubCol> {
 
                 groupChat_userSubCol.setAvatar(other.getAvatar());
                 groupChat_userSubCol.setName(other.getName());
-
                 groupChat_userSubCol.setId(groupChat.getId());
 
                 Member_GroupChatSubCol me = groupChat.getMembers().get(i);
@@ -149,9 +149,9 @@ public class GroupChat_UserSubColDAO extends FirebaseDAO<GroupChat_UserSubCol> {
             batch.update(docRef, "lastMessage", message.getContent(), "lastMessageTime", message.getTimestamp());
         }
 
-        batch.commit().addOnSuccessListener(aVoid -> {
-            updateStatus.postSuccess("update last message success");
-        }).addOnFailureListener(updateStatus::postError);
+        batch.commit()
+                .addOnSuccessListener(aVoid -> updateStatus.postSuccess("update last message success"))
+                .addOnFailureListener(updateStatus::postError);
 
         return updateStatus;
     }

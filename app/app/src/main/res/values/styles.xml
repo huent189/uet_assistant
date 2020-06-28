@@ -171,6 +171,13 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="Dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:headerDividersEnabled">true</item>
+        <item name="android:typeface">normal</item>
+        <item name="android:background">@color/background</item>
+        <item name="title">0dp</item>
+    </style>
 
     <style name="BottomNavigation">
         <item name="android:background">@drawable/navbar_background</item>
