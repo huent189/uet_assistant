@@ -6,12 +6,15 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
+
+import vnu.uet.mobilecourse.assistant.database.DAO.ChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.ConnectionDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChat_UserSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Member_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Message_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
+import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.firebase.Connection;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
@@ -76,8 +79,9 @@ public class ChatRepository implements IChatRepository {
     @Override
     public StateMediatorLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message, String[] memberIds) {
         StateLiveData<Message_GroupChatSubCol> addMessageState= new Message_GroupChatSubColDAO(groupId).add(message.getId(), message);
-
-        return new SendMessageState(groupId, addMessageState, memberIds);
+        StateLiveData<String> updateLastMessage = new GroupChat_UserSubColDAO()
+                .updateLastMessage(groupId, memberIds, message);
+        return new SendMessageState(groupId, addMessageState, updateLastMessage, memberIds);
     }
 
     @Override
@@ -89,6 +93,16 @@ public class ChatRepository implements IChatRepository {
         addConnections(groupChat.getMembers());
 
         return new CreateGroupChatState(createGroupState, addMember, addGroup);
+    }
+
+    @Override
+    public IStateLiveData<List<Member_GroupChatSubCol>> addMember(String roomId, List<Member_GroupChatSubCol> members) {
+        return new AddMemberState(mUserGroupChatDAO.read(roomId), members);
+    }
+
+    @Override
+    public IStateLiveData<String> removeMember(String groupId, String memberId) {
+        return new ChatDAO().removeMember(groupId, memberId);
     }
 
     public StateLiveData<List<Connection>> getAllConnections() {
@@ -311,39 +325,117 @@ public class ChatRepository implements IChatRepository {
     }
 
     static class SendMessageState extends StateMediatorLiveData<String>{
-        SendMessageState(String groupId, @NonNull StateLiveData<Message_GroupChatSubCol> addMessageToGroup,
+        boolean addMessageToGroupState = false;
+        boolean updateLastMessageState = false;
+        Message_GroupChatSubCol message;
+        SendMessageState(String groupId, @NonNull StateLiveData<Message_GroupChatSubCol> addMessageToGroup, StateLiveData<String> updateLastMessage,
                          String[] memberIds) {
+            postLoading();
 
             addSource(addMessageToGroup, stateModel -> {
                 switch (stateModel.getStatus()) {
                     case LOADING:
                         postLoading();
+                        addMessageToGroupState = false;
                         break;
                     case ERROR:
                         postError(stateModel.getError());
+                        addMessageToGroupState = false;
                         break;
                     case SUCCESS:
-                        StateLiveData<String> updateLastMessage = new GroupChat_UserSubColDAO()
-                                .updateLastMessage(groupId, memberIds, stateModel.getData());
+                        message = stateModel.getData();
+                        addMessageToGroupState = true;
+                        break;
+                }
 
-                        addSource(updateLastMessage, updateLastMessageStateModel -> {
-                            switch (updateLastMessageStateModel.getStatus()){
-                                case ERROR:
-                                    postError(updateLastMessageStateModel.getError());
-                                    break;
-                                case LOADING:
-                                    postLoading();
-                                    break;
-                                case SUCCESS:
-                                    postSuccess("send message success");
-                                    break;
-                            }
-                        });
+                if (addMessageToGroupState && updateLastMessageState) {
+                    postSuccess("sent message success");
+                }
+            });
+
+
+            addSource(updateLastMessage, updateLastMessageStateModel -> {
+                switch (updateLastMessageStateModel.getStatus()){
+                    case ERROR:
+                        postError(updateLastMessageStateModel.getError());
+                        updateLastMessageState = false;
+                        break;
+                    case LOADING:
+                        postLoading();
+                        updateLastMessageState = false;
+                        break;
+                    case SUCCESS:
+                        updateLastMessageState = true;
+                        break;
+                }
+
+                if (addMessageToGroupState && updateLastMessageState) {
+                    postSuccess("sent  message success");
                 }
             });
         }
 
     }
 
+    static class AddMemberState extends StateMediatorLiveData<List<Member_GroupChatSubCol>> {
 
+        public AddMemberState(StateMediatorLiveData<GroupChat_UserSubCol> roomState, List<Member_GroupChatSubCol> students) {
+            postLoading();
+
+            addSource(roomState, new Observer<StateModel<GroupChat_UserSubCol>>() {
+                @Override
+                public void onChanged(StateModel<GroupChat_UserSubCol> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case LOADING:
+                            postLoading();
+                            break;
+
+                        case ERROR:
+                            postError(stateModel.getError());
+                            break;
+
+                        case SUCCESS:
+                            removeSource(roomState);
+
+                            GroupChat_UserSubCol clone = cloneRoom(stateModel.getData());
+
+                            StateLiveData<String> addState = new ChatDAO().addMember(clone, students);
+                            addSource(addState, new Observer<StateModel<String>>() {
+                                @Override
+                                public void onChanged(StateModel<String> stateModel) {
+                                    switch (stateModel.getStatus()) {
+                                        case LOADING:
+                                            postLoading();
+                                            break;
+
+                                        case ERROR:
+                                            postError(stateModel.getError());
+                                            break;
+
+                                        case SUCCESS:
+                                            postSuccess(students);
+                                            removeSource(addState);
+                                            break;
+                                    }
+                                }
+                            });
+
+                    }
+                }
+            });
+        }
+
+        private GroupChat_UserSubCol cloneRoom(GroupChat_UserSubCol origin) {
+            GroupChat_UserSubCol clone = new GroupChat_UserSubCol();
+
+            clone.setId(origin.getId());
+            clone.setAvatar(origin.getAvatar());
+            clone.setName(origin.getName());
+            clone.setSeen(false);
+            clone.setLastMessage(origin.getLastMessage());
+            clone.setLastMessageTime(origin.getLastMessageTime());
+
+            return clone;
+        }
+    }
 }

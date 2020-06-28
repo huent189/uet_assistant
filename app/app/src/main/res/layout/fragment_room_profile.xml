@@ -29,6 +29,7 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:paddingBottom="@dimen/margin_x4"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -66,24 +67,121 @@
                 app:layout_constraintTop_toBottomOf="@+id/civAvatar" />
 
             <TextView
-                android:id="@+id/tvMemberTitle"
+                android:id="@+id/tvCommonTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_x2"
                 android:layout_marginTop="@dimen/margin_x3"
-                android:text="Các thành viên"
+                android:text="Thông tin chung"
+                android:textColor="@color/primary"
                 android:textSize="@dimen/font_size_list_title"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+            <LinearLayout
+                android:id="@+id/layout_rename"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin"
+                android:gravity="center_vertical"
+                android:background="@drawable/ripple_highlight"
+                android:paddingVertical="@dimen/margin_x2"
+                android:paddingHorizontal="@dimen/margin_x2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvCommonTitle">
+
+                <TextView
+                    style="@style/ListItemTitle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Đổi tên phòng chat"/>
+
+                <ImageView
+                    android:layout_marginStart="@dimen/margin_x2"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_create_24dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_change_avatar"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:background="@drawable/ripple_highlight"
+                android:paddingVertical="@dimen/margin_x2"
+                android:paddingHorizontal="@dimen/margin_x2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_rename">
+
+                <TextView
+                    style="@style/ListItemTitle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Thay ảnh đại diện"/>
+
+                <ImageView
+                    android:layout_marginStart="@dimen/margin_x2"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_image_32dp"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvMemberTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_x2"
+                android:layout_marginTop="@dimen/margin_x2"
+                android:text="Các thành viên"
+                android:textColor="@color/primary"
+                android:textSize="@dimen/font_size_list_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_change_avatar" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvMembers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin"
+                android:clipToPadding="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvMemberTitle" />
+
+            <LinearLayout
+                android:id="@+id/layout_add_member"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:background="@drawable/ripple_highlight"
+                android:paddingVertical="@dimen/margin_x2"
+                android:paddingHorizontal="@dimen/margin_x2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rvMembers">
+
+                <TextView
+                    style="@style/ListItemTitle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Thêm thành viên"/>
+
+                <ImageView
+                    android:layout_marginStart="@dimen/margin_x2"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_group_add_24dp"/>
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

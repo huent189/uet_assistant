@@ -9,6 +9,7 @@ import androidx.navigation.NavController;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.util.StringUtils;
 
 public class ReceiveMessageHolder extends MessageHolder {
 
@@ -40,7 +41,8 @@ public class ReceiveMessageHolder extends MessageHolder {
                 break;
         }
 
-        mTvName.setText(message.getFromName());
+        String simpleName = StringUtils.getLastSegment(message.getFromName(), 2);
+        mTvName.setText(simpleName);
 
         mCivAvatar.setOnClickListener(new View.OnClickListener() {
             @Override

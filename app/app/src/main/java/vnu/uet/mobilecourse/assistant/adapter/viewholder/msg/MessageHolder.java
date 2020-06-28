@@ -17,6 +17,7 @@ import androidx.navigation.NavController;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.view.component.ChatBox;
@@ -31,20 +32,7 @@ public abstract class MessageHolder extends RecyclerView.ViewHolder {
         super(itemView);
 
         mTvTime = itemView.findViewById(R.id.tvTime);
-
         mTvMessage = itemView.findViewById(R.id.tvMessage);
-//        mTvMessage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (mTvTime.getVisibility() == View.GONE) {
-//                    mTvTime.setVisibility(View.VISIBLE);
-//                } else {
-//                    mTvTime.setVisibility(View.GONE);
-//                }
-//            }
-//        });
-
-//        itemView.setVisibility(View.INVISIBLE);
     }
 
     public void bind(Message_GroupChatSubCol message, int visibilityType, NavController navController) {
@@ -76,6 +64,9 @@ public abstract class MessageHolder extends RecyclerView.ViewHolder {
 
         mTvMessage.setText(formatContent);
         mTvMessage.setMovementMethod(LinkMovementMethod.getInstance());
+
+        String time = DateTimeUtils.generateViewText(message.getTimestamp());
+        mTvTime.setText(time);
 
         itemView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -137,10 +128,6 @@ public abstract class MessageHolder extends RecyclerView.ViewHolder {
                 mTvMessage.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
-    }
-
-    public void setTime(String time) {
-        mTvTime.setText(time);
     }
 
     public interface OnMentionClickListener {

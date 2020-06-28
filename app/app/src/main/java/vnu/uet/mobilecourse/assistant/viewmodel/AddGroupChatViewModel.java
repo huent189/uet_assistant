@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -75,6 +76,24 @@ public class AddGroupChatViewModel extends ViewModel {
         return mSelectedList;
     }
 
+    public IStateLiveData<List<Member_GroupChatSubCol>> addMemberToExistRoom(String roomId, List<IStudent> students) {
+        List<Member_GroupChatSubCol> members = students.stream()
+                .map(this::convertToMember)
+                .collect(Collectors.toList());
+
+        return mChatRepo.addMember(roomId, members);
+    }
+
+    private Member_GroupChatSubCol convertToMember(IStudent student) {
+        Member_GroupChatSubCol member = new Member_GroupChatSubCol();
+        member.setId(student.getCode());
+        member.setAvatar(student.getAvatar());
+        member.setName(student.getName());
+        member.setRole(MemberRole.MEMBER);
+
+        return member;
+    }
+
     public IStateLiveData<GroupChat> createGroupChat(String title) {
         GroupChat groupChat = new GroupChat();
         groupChat.setName(title);
@@ -106,7 +125,7 @@ public class AddGroupChatViewModel extends ViewModel {
 
     static class SelectedState extends MediatorLiveData<Boolean> {
 
-        public SelectedState(@NonNull LiveData<List<IStudent>> listLiveData, IStudent student) {
+        SelectedState(@NonNull LiveData<List<IStudent>> listLiveData, IStudent student) {
             postValue(Boolean.FALSE);
 
             addSource(listLiveData, new Observer<List<IStudent>>() {

@@ -13,6 +13,7 @@ import androidx.navigation.NavController;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.material.CourseConstant;
+import vnu.uet.mobilecourse.assistant.repository.course.CourseActionRepository;
 
 public class MaterialViewHolder extends ChildViewHolder {
 
@@ -69,14 +70,24 @@ public class MaterialViewHolder extends ChildViewHolder {
         }
 
         //TODO: mark as done
-        mCbTaskStatus.setClickable(false);
-        mCbTaskStatus.setActivated(false);
+//        mCbTaskStatus.setClickable(false);
+//        mCbTaskStatus.setActivated(false);
 
         if (material.getCompletion() == 1) {
             mCbTaskStatus.setChecked(true);
         } else {
             mCbTaskStatus.setChecked(false);
         }
+
+        mCbTaskStatus.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            CourseActionRepository repository = new CourseActionRepository();
+
+            if (isChecked) {
+                repository.triggerMaterialCompletion(material);
+            } else {
+                repository.triggerMaterialUnCompletion(material);
+            }
+        });
 
         itemView.setOnClickListener(v -> {
             Bundle bundle = new Bundle();

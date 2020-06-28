@@ -87,7 +87,6 @@ public class TodoRepository implements ITodoRepository {
 
     @Override
     public IStateLiveData<String> deleteTodoList(String id, List<Todo> todos) {
-//        todos.forEach(todo -> deleteTodo(todo.getId()));
         String[] todoIds = todos.stream().map(Todo::getId).toArray(String[]::new);
 
         return mListDao.deleteDeep(id, todoIds);

@@ -11,6 +11,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
+import vnu.uet.mobilecourse.assistant.model.firebase.MemberRole;
+import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 
 public abstract class StudentViewHolder extends RecyclerView.ViewHolder {
 
@@ -56,6 +58,13 @@ public abstract class StudentViewHolder extends RecyclerView.ViewHolder {
                     onChatClick(student);
                 }
             });
+        }
+
+        if (student instanceof Member_GroupChatSubCol) {
+            Member_GroupChatSubCol member = (Member_GroupChatSubCol) student;
+            if (member.getRole().equals(MemberRole.ADMIN)) {
+                mTvName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_security_16dp, 0);
+            }
         }
     }
 

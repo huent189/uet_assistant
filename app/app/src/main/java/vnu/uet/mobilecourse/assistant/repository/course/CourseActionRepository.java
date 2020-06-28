@@ -35,9 +35,24 @@ public class CourseActionRepository {
                       }
                   });
     }
+
     public void triggerMaterialCompletion(Material material){
         CoursesDatabase.databaseWriteExecutor.execute(()->{
             database.materialDAO().updateMaterialCompletion(material.getId());
+        });
+        switch (material.getType()){
+            case CourseConstant.MaterialType.PAGE:
+                //TODO: trigger page view
+                break;
+            case CourseConstant.MaterialType.RESOURCE:
+                //TODO: trigger resource view
+                break;
+        }
+    }
+
+    public void triggerMaterialUnCompletion(Material material){
+        CoursesDatabase.databaseWriteExecutor.execute(()->{
+            database.materialDAO().updateMaterialUnCompletion(material.getId());
         });
         switch (material.getType()){
             case CourseConstant.MaterialType.PAGE:
