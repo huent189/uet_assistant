@@ -302,6 +302,7 @@ public class AddMemberFragment extends Fragment {
                                     break;
 
                                 case SUCCESS:
+                                    mViewModel.clearData();
                                     mNavController.navigateUp();
                                     break;
                             }

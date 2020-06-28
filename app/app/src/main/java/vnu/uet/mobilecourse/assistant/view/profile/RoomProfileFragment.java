@@ -1,36 +1,29 @@
 package vnu.uet.mobilecourse.assistant.view.profile;
 
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.VerticalMemberAdapter;
-import vnu.uet.mobilecourse.assistant.alarm.scheduler.TodoScheduler;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
-import vnu.uet.mobilecourse.assistant.model.event.IEvent;
-import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
+import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.RoomProfileViewModel;
-import vnu.uet.mobilecourse.assistant.adapter.ClassMateAdapter;
-import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class RoomProfileFragment extends Fragment {
 
@@ -71,20 +64,17 @@ public class RoomProfileFragment extends Fragment {
 
                 String roomId = mRoom.getId();
 
-                mViewModel.getRoomInfo(roomId).observe(getViewLifecycleOwner(), new Observer<StateModel<GroupChat>>() {
-                    @Override
-                    public void onChanged(StateModel<GroupChat> stateModel) {
-                        switch (stateModel.getStatus()) {
-                            case SUCCESS:
-                                mRoom = stateModel.getData();
+                mViewModel.getRoomInfo(roomId).observe(getViewLifecycleOwner(), stateModel -> {
+                    switch (stateModel.getStatus()) {
+                        case SUCCESS:
+                            mRoom = stateModel.getData();
 
-                                tvTitle.setText(mRoom.getName());
+                            tvTitle.setText(mRoom.getName());
 
-                                mMemberAdapter = new VerticalMemberAdapter(mRoom.getMembers(), RoomProfileFragment.this);
-                                mRvMembers.setAdapter(mMemberAdapter);
+                            mMemberAdapter = new VerticalMemberAdapter(mRoom.getMembers(), RoomProfileFragment.this);
+                            mRvMembers.setAdapter(mMemberAdapter);
 
-                                break;
-                        }
+                            break;
                     }
                 });
 
