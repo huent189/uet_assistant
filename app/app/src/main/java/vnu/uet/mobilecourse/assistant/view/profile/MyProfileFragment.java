@@ -86,6 +86,7 @@ public class MyProfileFragment extends Fragment {
         switch (requestCode) {
             case FileUtils.REQUEST_CODE_IMAGE:
                 String path = data.getData().getPath();
+                Toast.makeText(getContext(), path, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
