@@ -1,9 +1,11 @@
 package vnu.uet.mobilecourse.assistant.exception;
 
-import java.io.IOException;
-
-public class UnavailableHostException extends IOException {
+public class UnavailableHostException extends HostIsNotReachable {
     public UnavailableHostException() {
         super("server is down");
+    }
+
+    public UnavailableHostException(String message) {
+        super(message);
     }
 }

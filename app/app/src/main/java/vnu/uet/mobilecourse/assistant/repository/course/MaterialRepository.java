@@ -6,7 +6,7 @@ import com.google.gson.JsonElement;
 import retrofit2.Call;
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
 import vnu.uet.mobilecourse.assistant.database.DAO.MaterialDAO;
-import vnu.uet.mobilecourse.assistant.database.querymodel.MaterialWithCourse;
+import vnu.uet.mobilecourse.assistant.database.querymodel.Submission;
 import vnu.uet.mobilecourse.assistant.model.event.CourseSubmissionEvent;
 import vnu.uet.mobilecourse.assistant.model.material.*;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
@@ -141,7 +141,7 @@ public class MaterialRepository {
                 Log.d("REPO_UPDATE", "onSuccess: " + lastTime);
                 updateList.addAll(Arrays.stream(response)
                         .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
-                materialDAO.insertPageContent(Arrays.asList(response));
+                materialDAO.insertPageContent(updateList);
             }
         };
         handler.onResponse(call, call.execute());
@@ -159,7 +159,7 @@ public class MaterialRepository {
                 Log.d("REPO_UPDATE", "onSuccess: " + lastTime);
                 updateList.addAll(Arrays.stream(response)
                         .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
-                materialDAO.insertExternalResourceContent(Arrays.asList(response));
+                materialDAO.insertExternalResourceContent(updateList);
             }
         };
         handler.onResponse(call, call.execute());
@@ -177,7 +177,7 @@ public class MaterialRepository {
                 Log.d("REPO_UPDATE", "onSuccess: " + lastTime);
                 updateList.addAll(Arrays.stream(response)
                         .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
-                materialDAO.insertMaterialContent(Arrays.asList(response));
+                materialDAO.insertMaterialContent(updateList);
             }
         };
         handler.onResponse(call, call.execute());
@@ -195,8 +195,8 @@ public class MaterialRepository {
                 Log.d("REPO_UPDATE", "onSuccess: " + lastTime);
                 updateList.addAll(Arrays.stream(response)
                         .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
-                materialDAO.insertInternalResource(Arrays.asList(response));
-//                materialDAO.insertInternalResource(updateList);
+//                materialDAO.insertInternalResource(Arrays.asList(response));
+                materialDAO.insertInternalResource(updateList);
             }
         };
         handler.onResponse(call, call.execute());
@@ -213,7 +213,7 @@ public class MaterialRepository {
                 Log.d("REPO_UPDATE", "onSuccess: " + lastTime);
                 updateList.addAll(Arrays.stream(response)
                         .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
-                materialDAO.insertAssignments(Arrays.asList(response));
+                materialDAO.insertAssignments(updateList);
             }
         };
         handler.onResponse(call, call.execute());
@@ -222,14 +222,14 @@ public class MaterialRepository {
     private List<QuizNoGrade> updateQuizzes() throws IOException {
         Call<JsonElement> call = sender.getQuizzesByCourses(null);
         final ArrayList<QuizNoGrade> updateList = new ArrayList<>();
+        final List<Integer> existId = materialDAO.getAllQuizId();
         CoursesResponseCallback<QuizNoGrade[]> handler
                 = new CoursesResponseCallback<QuizNoGrade[]>(QuizNoGrade[].class, "quizzes") {
             @Override
             public void onSuccess(QuizNoGrade[] response) {
-                long lastTime = materialDAO.getLastUpdateTime(QuizNoGrade.class);
-                updateList.addAll(Arrays.stream(response)
-                        .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
-                materialDAO.insertQuizzes(Arrays.asList(response));
+                updateList.addAll(Arrays.stream(response).filter(quiz -> !existId.contains(quiz.getId()))
+                        .collect(Collectors.toList()));
+                materialDAO.insertQuizzes(updateList);
             }
         };
         handler.onResponse(call, call.execute());
@@ -249,15 +249,13 @@ public class MaterialRepository {
             calendar.set(year, month, day);
             long startTime = calendar.getTimeInMillis() / 1000;
             long endTime = calendar.getTimeInMillis() / 1000 + DAY_DURATION;
-            List<MaterialWithCourse> materials = queryCourseSubmission(startTime, endTime);
+            List<Submission> materials = queryCourseSubmission(startTime, endTime);
             ArrayList<CourseSubmissionEvent> events = new ArrayList<>();
             materials.forEach(materialWithCourse -> {
-                CourseSubmissionEvent start = materialWithCourse.toStartEvent();
-                if(start.getTime().getTime() / 1000  >= startTime){
-                    events.add(start);
+                if(materialWithCourse.getStartTime() >= startTime){
+                    events.add(materialWithCourse.toStartEvent());
                 }
-                CourseSubmissionEvent end = materialWithCourse.toEndEvent();
-                if(end.getTime().getTime() / 1000 < endTime){
+                if(materialWithCourse.getEndTime() < endTime){
                     events.add(materialWithCourse.toEndEvent());
                 }
             });
@@ -265,12 +263,33 @@ public class MaterialRepository {
         }).start();
         return eventsLiveData;
     }
-    private List<MaterialWithCourse> queryCourseSubmission(long startTime, long endTime){
-        List<MaterialWithCourse> assignments = materialDAO.getAssignmentInRange(startTime, endTime);
-        List<MaterialWithCourse> quizzes = materialDAO.getQuizInRange(startTime, endTime);
-        ArrayList<MaterialWithCourse> merge = new ArrayList<MaterialWithCourse>();
+    private List<Submission> queryCourseSubmission(long startTime, long endTime){
+        List<Submission> assignments = materialDAO.getAssignmentInRange(startTime, endTime);
+        List<Submission> quizzes = materialDAO.getQuizInRange(startTime, endTime);
+        ArrayList<Submission> merge = new ArrayList<Submission>();
         merge.addAll(assignments);
         merge.addAll(quizzes);
         return merge;
+    }
+
+    public List<CourseSubmissionEvent> getSubmissionEventFromNow(List<Integer> quizIds, List<Integer> assignIds){
+        List<Submission> submissions = new ArrayList<>();
+        if(!quizIds.isEmpty()){
+            submissions.addAll(materialDAO.getQuizSubmissions(quizIds));
+        }
+        if(!assignIds.isEmpty()){
+            submissions.addAll(materialDAO.getAssignmentSubmissions(assignIds));
+        }
+        long now = System.currentTimeMillis() / 1000 - 3339663;
+        return submissions.parallelStream().map(submission -> {
+            ArrayList<CourseSubmissionEvent> events = new ArrayList<>();
+            if(submission.getStartTime() >= now){
+                events.add(submission.toStartEvent());
+            }
+            if(submission.getEndTime() >= now){
+                events.add(submission.toEndEvent());
+            }
+            return events;
+        }).flatMap(List::stream).collect(Collectors.toList());
     }
 }

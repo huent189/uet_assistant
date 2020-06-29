@@ -6,10 +6,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
-import vnu.uet.mobilecourse.assistant.model.material.CourseConstant;
+import vnu.uet.mobilecourse.assistant.exception.HostIsNotReachable;
 import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
+import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
+import vnu.uet.mobilecourse.assistant.work.courses.CourseActionSynchronization;
 
 public class CourseActionRepository {
     private CourseRequest sender = HTTPClient.getInstance().request(CourseRequest.class);
@@ -37,30 +39,30 @@ public class CourseActionRepository {
     }
 
     public void triggerMaterialCompletion(Material material){
-        CoursesDatabase.databaseWriteExecutor.execute(()->{
-            database.materialDAO().updateMaterialCompletion(material.getId());
-        });
-        switch (material.getType()){
-            case CourseConstant.MaterialType.PAGE:
-                //TODO: trigger page view
-                break;
-            case CourseConstant.MaterialType.RESOURCE:
-                //TODO: trigger resource view
-                break;
-        }
+        updateMaterialCompletion(material.getId(), 1);
     }
 
     public void triggerMaterialUnCompletion(Material material){
+        updateMaterialCompletion(material.getId(), 0);
+    }
+
+    private void updateMaterialCompletion(int materialId, int isCompleted){
         CoursesDatabase.databaseWriteExecutor.execute(()->{
-            database.materialDAO().updateMaterialUnCompletion(material.getId());
+            database.materialDAO().updateMaterialCompletion(materialId, isCompleted);
         });
-        switch (material.getType()){
-            case CourseConstant.MaterialType.PAGE:
-                //TODO: trigger page view
-                break;
-            case CourseConstant.MaterialType.RESOURCE:
-                //TODO: trigger resource view
-                break;
-        }
+        sender.updateMaterialCompletion(materialId, isCompleted).enqueue(new CoursesResponseCallback<JsonElement>(JsonElement.class) {
+            @Override
+            public void onSuccess(JsonElement response) {
+            }
+
+            @Override
+            public void onError(Call<JsonElement> call, Throwable throwable) {
+                super.onError(call, throwable);
+                if(throwable instanceof HostIsNotReachable){
+                    CourseActionSynchronization.scheduleUpdateMaterialCompletion(materialId);
+                }
+
+            }
+        });
     }
 }
