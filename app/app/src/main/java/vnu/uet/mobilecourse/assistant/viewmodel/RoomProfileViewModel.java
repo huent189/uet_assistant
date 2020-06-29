@@ -1,5 +1,7 @@
 package vnu.uet.mobilecourse.assistant.viewmodel;
 
+import java.util.stream.Collectors;
+
 import androidx.lifecycle.ViewModel;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
@@ -20,5 +22,15 @@ public class RoomProfileViewModel extends ViewModel {
                 .toArray(String[]::new);
 
         return mChatRepo.removeMember(room.getId(), memberIds, memberId);
+    }
+
+    public IStateLiveData<String> changeTitle(GroupChat room, String title) {
+        String roomId = room.getId();
+
+        String[] memberIds = room.getMembers().stream()
+                .map(Member_GroupChatSubCol::getId)
+                .toArray(String[]::new);
+
+        return mChatRepo.changeTitle(roomId, memberIds, title);
     }
 }

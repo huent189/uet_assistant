@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -27,6 +28,7 @@ import vnu.uet.mobilecourse.assistant.util.FileUtils;
 import vnu.uet.mobilecourse.assistant.view.chat.RenameDialog;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.RoomProfileViewModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class RoomProfileFragment extends Fragment {
 
@@ -168,7 +170,21 @@ public class RoomProfileFragment extends Fragment {
         dialog.setOnSubmitListener(new RenameDialog.OnSubmitListener() {
             @Override
             public void onSubmit(String title) {
-                Toast.makeText(mActivity, title, Toast.LENGTH_SHORT).show();
+                mViewModel.changeTitle(mRoom, title)
+                        .observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
+                            @Override
+                            public void onChanged(StateModel<String> stateModel) {
+                                switch (stateModel.getStatus()) {
+                                    case ERROR:
+                                        Toast.makeText(mActivity, "Đổi tên phòng chat thất bại", Toast.LENGTH_SHORT).show();
+                                        break;
+
+                                    case SUCCESS:
+                                        Toast.makeText(mActivity, "Đổi tên phòng chat thành công", Toast.LENGTH_SHORT).show();
+                                        break;
+                                }
+                            }
+                        });
             }
         });
 
