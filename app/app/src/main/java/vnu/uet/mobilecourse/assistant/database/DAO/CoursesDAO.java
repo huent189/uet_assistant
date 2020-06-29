@@ -23,6 +23,7 @@ public abstract class CoursesDAO {
         } else {
             for(Course c: course){
                 updateLastAccessTime(c.getId(), c.getLastAccessTime());
+                updateProgress(c.getId(), c.getProgress());
             }
         }
     }
@@ -30,6 +31,8 @@ public abstract class CoursesDAO {
     public abstract void insert(Course... course);
     @Query("UPDATE Course SET lastAccessTime =:accessTime WHERE id = :id and lastAccessTime < :accessTime")
     public abstract void updateLastAccessTime(int id, long accessTime);
+    @Query("UPDATE Course SET progress =:progress WHERE id = :id")
+    public abstract void updateProgress(int id, double progress);
     @Query("SELECT count(*) FROM Course")
     public abstract int numRow();
     @RawQuery

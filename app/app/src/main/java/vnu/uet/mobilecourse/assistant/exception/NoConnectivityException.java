@@ -1,8 +1,6 @@
 package vnu.uet.mobilecourse.assistant.exception;
 
-import java.io.IOException;
-
-public class NoConnectivityException extends IOException {
+public class NoConnectivityException extends HostIsNotReachable {
     public NoConnectivityException() {
         super("Internet is unavailable");
     }

@@ -49,4 +49,7 @@ public interface CourseRequest {
     @FormUrlEncoded
     @POST("webservice/rest/server.php?wsfunction=mod_forum_get_forums_by_courses")
     Call<JsonElement> getForumByCourses(@Field("courseids[]") int[] courseIds);
+    @FormUrlEncoded
+    @POST("webservice/rest/server.php?wsfunction=core_completion_update_activity_completion_status_manually")
+    Call<JsonElement> updateMaterialCompletion(@Field("cmid") int materialId, @Field("completed") int isCompleted);
 }

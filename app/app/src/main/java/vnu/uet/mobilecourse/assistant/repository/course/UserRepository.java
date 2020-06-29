@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
 import vnu.uet.mobilecourse.assistant.exception.InvalidLoginException;
 import vnu.uet.mobilecourse.assistant.exception.NoConnectivityException;
@@ -61,8 +62,8 @@ public class UserRepository {
 
             }
             @Override
-            public void onError(Call<JsonElement> call, Exception e) {
-                liveLoginResponse.postError(e);
+            public void onError(Call<JsonElement> call, Throwable throwable) {
+                liveLoginResponse.postError(new Exception(throwable));
             }
         });
         return liveLoginResponse;
@@ -101,6 +102,7 @@ public class UserRepository {
         }
         HTTPClient.getInstance().request(UserRequest.class).getUserId().enqueue(new Callback<JsonObject>() {
             @Override
+            @EverythingIsNonNull
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if(response.isSuccessful()){
                     if (response.body().get("errorcode") == null) {
@@ -119,6 +121,7 @@ public class UserRepository {
             }
 
             @Override
+            @EverythingIsNonNull
             public void onFailure(Call<JsonObject> call, Throwable throwable) {
                 if(throwable instanceof NoConnectivityException){
                     loginState.postError(new NoConnectivityException());

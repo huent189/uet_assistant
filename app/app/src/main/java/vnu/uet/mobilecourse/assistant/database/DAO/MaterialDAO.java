@@ -14,7 +14,6 @@ import vnu.uet.mobilecourse.assistant.model.material.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Dao
 public abstract class MaterialDAO {
@@ -27,16 +26,12 @@ public abstract class MaterialDAO {
     public abstract void insertMaterial(List<Material> materials);
     public ArrayList<Material> insertMaterial(int courseId, CourseOverview... contents){
         ArrayList<Material> updateList = new ArrayList<>();
-        long lastTime = getLastMaterialUpdateTimeByCourse(courseId);
         for (CourseOverview content: contents) {
-            List<Material> filter = content.getMaterials().stream().filter(material -> material.getLastModified() > lastTime).collect(Collectors.toList());
-            if(!filter.isEmpty()){
-                content.getWeekInfo().setCourseId(courseId);
-                insertWeekInfo(content.getWeekInfo());
-                content.getMaterials().forEach(material -> material.setWeekId(content.getWeekInfo().getId()));
-                insertMaterial(content.getMaterials());
-                updateList.addAll(filter);
-            }
+            content.getWeekInfo().setCourseId(courseId);
+            insertWeekInfo(content.getWeekInfo());
+            content.getMaterials().forEach(material -> material.setWeekId(content.getWeekInfo().getId()));
+            insertMaterial(content.getMaterials());
+            updateList.addAll(content.getMaterials());
         }
         return updateList;
     }
@@ -45,10 +40,23 @@ public abstract class MaterialDAO {
     @Transaction
     @Query("SELECT * FROM WeeklyMaterial WHERE courseId = :course_id")
     public abstract LiveData<List<CourseOverview>> getCourseContent(int course_id);
-    @Query("UPDATE Material SET completion = 1 WHERE id = :materialId")
-    public abstract void updateMaterialCompletion(int materialId);
-    @Query("UPDATE Material SET completion = 0 WHERE id = :materialId")
-    public abstract void updateMaterialUnCompletion(int materialId);
+    @Query("UPDATE Material SET completion = :completion WHERE id = :materialId")
+    public abstract void updateCompletion(int materialId, int completion);
+    public void updateMaterialCompletion(int materialId, int completion){
+        updateCompletion(materialId, completion);
+        int courseId = getCourseIdFromMaterial(materialId);
+        double progress = calculateProgress(courseId);
+        Log.d("COURSE_DEBUG", "updateMaterialCompletion: " + progress);
+        updateProgress(courseId, progress);
+    }
+    @Query("SELECT courseId from WeeklyMaterial, Material where Material.id = :materialId and WeeklyMaterial.id = Material.weekId")
+    protected abstract int getCourseIdFromMaterial(int materialId);
+    @Query("UPDATE Course SET progress = :newProgress WHERE id = :id")
+    protected abstract void updateProgress(int id, double newProgress);
+    @Query("select (sum(Material.completion) * 100.0/ COUNT(Material.completion)) from Material, WeeklyMaterial where WeeklyMaterial.courseId = :courseId and WeeklyMaterial.id= Material.weekId and completion != -1")
+    public abstract double calculateProgress(int courseId);
+    @Query("SELECT completion from Material WHERE id = :materialId")
+    public abstract int getMaterialCompletion(int materialId);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertPageContent(List<PageContent> pageContents);
     @Insert(onConflict = OnConflictStrategy.REPLACE)

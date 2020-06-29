@@ -28,9 +28,11 @@ public class CourseContentDeserializer implements JsonDeserializer<CourseOvervie
                     child.setFileName(firstContent.get("filename").getAsString());
                     child.setFileUrl(firstContent.get("fileurl").getAsString());
                 }
-                JsonElement completion = materialElement.getAsJsonObject().get("completiondata");
-                if(completion != null){
-                    child.setCompletion(completion.getAsJsonObject().get("state").getAsInt());
+                int haveCompletion = materialElement.getAsJsonObject().get("completion").getAsInt();
+                if(haveCompletion == 1){
+                    child.setCompletion(materialElement.getAsJsonObject().get("completiondata").getAsJsonObject().get("state").getAsInt());
+                } else {
+                    child.setCompletion(-1);
                 }
                 materials.addLast(child);
             }

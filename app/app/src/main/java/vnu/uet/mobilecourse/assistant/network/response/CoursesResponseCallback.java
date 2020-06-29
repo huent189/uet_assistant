@@ -6,9 +6,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import vnu.uet.mobilecourse.assistant.exception.InvalidLoginException;
+import vnu.uet.mobilecourse.assistant.exception.UnavailableHostException;
 import vnu.uet.mobilecourse.assistant.network.HTTPClient;
 
 import java.lang.reflect.Type;
+import java.net.SocketTimeoutException;
 
 public abstract class CoursesResponseCallback<T> implements Callback<JsonElement> {
     private Type typeParameterClass;
@@ -52,14 +54,18 @@ public abstract class CoursesResponseCallback<T> implements Callback<JsonElement
 
     @Override
     public void onFailure(Call<JsonElement> call, Throwable throwable) {
-        onError(call, new Exception(throwable.getMessage()));
+        if(throwable instanceof SocketTimeoutException){
+            onError(call, new UnavailableHostException(throwable.getMessage()));
+        } else {
+            onError(call, throwable);
+        }
     }
     public abstract void onSuccess(T response);
-    public void onError(Call<JsonElement> call, Exception e){
+    public void onError(Call<JsonElement> call, Throwable throwable){
         Log.e("COURSES", "onError: " + call.request().url() + " "
-                + e.getClass() +  " " + e.getMessage() );
+                + throwable.getClass() +  " " + throwable.getMessage() );
     }
-    private Exception errorCodeToException(String errorcode){
+    private Throwable errorCodeToException(String errorcode){
         switch (errorcode){
             case "invalidlogin":
                 return new InvalidLoginException();

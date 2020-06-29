@@ -6,7 +6,7 @@ import vnu.uet.mobilecourse.assistant.view.MyApplication;
 import java.util.concurrent.TimeUnit;
 
 public class CourseDataSynchronization {
-    static final String TAG = "CourseDataSynchronization";
+    private static final String TAG = "CourseDataSynchronization";
     public static void start(){
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
