@@ -128,7 +128,7 @@ public class RoomProfileFragment extends Fragment {
     private void removeMember(IStudent student) {
         String studentCode = student.getCode();
 
-        mViewModel.removeMember(mRoom.getId(), studentCode)
+        mViewModel.removeMember(mRoom, studentCode)
                 .observe(getViewLifecycleOwner(), stateModel -> {
                     switch (stateModel.getStatus()) {
                         case ERROR:
