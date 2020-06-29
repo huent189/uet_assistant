@@ -54,7 +54,7 @@ public class RenameDialog extends AppCompatDialogFragment {
                 .setNegativeButton("Thoát", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
                     }
                 })
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -84,6 +84,13 @@ public class RenameDialog extends AppCompatDialogFragment {
                         mEtRoomTitle.setText(StringConst.EMPTY);
                     }
                 });
+            }
+        });
+
+        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
             }
         });
 
