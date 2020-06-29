@@ -110,14 +110,26 @@
 
             </com.facebook.shimmer.ShimmerFrameLayout>
 
+            <TextView
+                android:id="@+id/tvCommonTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_x2"
+                android:layout_marginTop="@dimen/margin_x4"
+                android:text="Thông tin chung"
+                android:textColor="@color/primary"
+                android:textSize="@dimen/font_size_list_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvUserId" />
+
             <LinearLayout
                 android:id="@+id/layoutDob"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_x4"
+                android:layout_marginTop="@dimen/margin_x2"
                 android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvUserId">
+                app:layout_constraintTop_toBottomOf="@+id/tvCommonTitle">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -197,9 +209,9 @@
                 android:id="@+id/sflDobAndClass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_x4"
+                android:layout_marginTop="@dimen/margin_x2"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvUserId">
+                app:layout_constraintTop_toBottomOf="@+id/tvCommonTitle">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -214,116 +226,45 @@
 
             </com.facebook.shimmer.ShimmerFrameLayout>
 
-            <LinearLayout
-                android:id="@+id/layoutSetting"
+            <TextView
+                android:id="@+id/tvOther"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_x2"
+                android:layout_marginTop="@dimen/margin_x3"
+                android:text="Thao tác khác"
+                android:textColor="@color/primary"
+                android:textSize="@dimen/font_size_list_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutClass" />
+
+            <vnu.uet.mobilecourse.assistant.view.component.SquareButton
+                android:id="@+id/btnChangeAvatar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_x4"
+                android:text="Thay ảnh đại diện"
+                android:layout_marginTop="@dimen/margin"
+                android:drawableEnd="@drawable/ic_image_32dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layoutClass">
+                app:layout_constraintTop_toBottomOf="@+id/tvOther" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|start"
-                    android:paddingHorizontal="12dp"
-                    android:src="@drawable/ic_settings_32dp"
-                    android:tint="@color/primaryDark" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/list_item_background">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="invisible"
-                        android:paddingVertical="@dimen/margin">
-
-                        <TextView
-                            style="@style/ListTitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/title_uet_class" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical|start"
-                            android:text="@string/title_loading"
-                            android:textSize="@dimen/font_size_item_title" />
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|start"
-                        android:text="@string/title_setting"
-                        android:textSize="@dimen/font_size_item_title" />
-
-                </FrameLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layoutLogout"
+            <vnu.uet.mobilecourse.assistant.view.component.SquareButton
+                android:id="@+id/btnSetting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@string/title_setting"
+                android:drawableEnd="@drawable/ic_settings_32dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layoutSetting">
+                app:layout_constraintTop_toBottomOf="@+id/btnChangeAvatar"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|start"
-                    android:paddingHorizontal="12dp"
-                    android:rotation="90"
-                    android:src="@drawable/ic_vertical_align_bottom_32dp"
-                    android:tint="@color/primaryDark" />
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/list_item_background">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="invisible"
-                        android:paddingVertical="@dimen/margin">
-
-                        <TextView
-                            style="@style/ListTitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/title_uet_class" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical|start"
-                            android:text="@string/title_loading"
-                            android:textSize="@dimen/font_size_item_title" />
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|start"
-                        android:text="@string/title_logout"
-                        android:textSize="@dimen/font_size_item_title" />
-
-                </FrameLayout>
-
-
-            </LinearLayout>
-
+            <vnu.uet.mobilecourse.assistant.view.component.SquareButton
+                android:id="@+id/btnLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_logout"
+                android:drawableEnd="@drawable/ic_vertical_align_bottom_32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btnSetting"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

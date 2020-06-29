@@ -1,10 +1,13 @@
 package vnu.uet.mobilecourse.assistant.model.firebase;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.firestore.Exclude;
 
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 
-public class Member_GroupChatSubCol implements IFirebaseModel, IStudent {
+public class Member_GroupChatSubCol implements IFirebaseModel, IStudent, Parcelable {
     /**
      * member id
      */
@@ -14,6 +17,42 @@ public class Member_GroupChatSubCol implements IFirebaseModel, IStudent {
 
     @Exclude
     private String avatar;
+
+    public Member_GroupChatSubCol() {
+
+    }
+
+    protected Member_GroupChatSubCol(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        role = in.readString();
+        avatar = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(role);
+        dest.writeString(avatar);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Member_GroupChatSubCol> CREATOR = new Creator<Member_GroupChatSubCol>() {
+        @Override
+        public Member_GroupChatSubCol createFromParcel(Parcel in) {
+            return new Member_GroupChatSubCol(in);
+        }
+
+        @Override
+        public Member_GroupChatSubCol[] newArray(int size) {
+            return new Member_GroupChatSubCol[size];
+        }
+    };
 
     @Override
     public String getId() {

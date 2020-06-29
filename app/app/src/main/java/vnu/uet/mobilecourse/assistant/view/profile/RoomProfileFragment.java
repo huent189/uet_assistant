@@ -1,5 +1,7 @@
 package vnu.uet.mobilecourse.assistant.view.profile;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import vnu.uet.mobilecourse.assistant.adapter.VerticalMemberAdapter;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
+import vnu.uet.mobilecourse.assistant.util.FileUtils;
 import vnu.uet.mobilecourse.assistant.view.chat.RenameDialog;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.RoomProfileViewModel;
@@ -91,7 +94,8 @@ public class RoomProfileFragment extends Fragment {
         layoutChangeAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = FileUtils.createImageIntent();
+                startActivityForResult(intent, FileUtils.REQUEST_CODE_IMAGE);
             }
         });
 
@@ -169,5 +173,15 @@ public class RoomProfileFragment extends Fragment {
         });
 
         dialog.show(mActivity.getSupportFragmentManager(), RenameDialog.class.getName());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case FileUtils.REQUEST_CODE_IMAGE:
+                String path = data.getData().getPath();
+                Toast.makeText(mActivity, path, Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }
