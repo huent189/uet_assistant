@@ -102,6 +102,11 @@ public class ChatRepository implements IChatRepository {
         return new ChatDAO().removeMember(groupId, memberId);
     }
 
+    @Override
+    public IStateLiveData<String> changeTitle(String roomId, String[] memberIds, String title) {
+        return new ChatDAO().changeGroupTitle(roomId, memberIds, title);
+    }
+
     public StateLiveData<List<Connection>> getAllConnections() {
         return mConnectionDAO.readAll();
     }

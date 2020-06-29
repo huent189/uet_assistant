@@ -60,4 +60,8 @@ public interface IChatRepository {
     IStateLiveData<List<Member_GroupChatSubCol>> addMember(String roomId, List<Member_GroupChatSubCol> members);
 
     IStateLiveData<String> removeMember(String groupId, String memberId);
+
+    public IStateLiveData<String> changeTitle(String roomId, String[] memberIds, String title);
+
+
 }
