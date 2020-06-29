@@ -26,6 +26,8 @@ public class RenameDialog extends AppCompatDialogFragment {
 
     private OnSubmitListener mListener;
 
+    private InputMethodManager mInputMethodManager;
+
     @NonNull
     @Override
     @SuppressLint("InflateParams")
@@ -39,14 +41,6 @@ public class RenameDialog extends AppCompatDialogFragment {
             String prev = getArguments().getString("title");
             mEtRoomTitle.setText(prev);
         }
-
-        mEtRoomTitle.requestFocus();
-
-        FragmentActivity activity = getActivity();
-        assert activity != null;
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        assert imm != null;
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity(), R.style.Dialog)
                 .setView(view)
@@ -66,8 +60,6 @@ public class RenameDialog extends AppCompatDialogFragment {
                             mListener.onSubmit(text);
                         } catch (Exception ex) {
                             Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                        } finally {
-                            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
                         }
                     }
                 })
@@ -87,14 +79,38 @@ public class RenameDialog extends AppCompatDialogFragment {
             }
         });
 
-        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-            }
-        });
-
         return alertDialog;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        hideKeyboard();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        requestFocus();
+    }
+
+    private void requestFocus() {
+        mEtRoomTitle.requestFocus();
+
+        FragmentActivity activity = getActivity();
+
+        assert activity != null;
+        mInputMethodManager = (InputMethodManager) activity
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        assert mInputMethodManager != null;
+        mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
+    private void hideKeyboard() {
+        mInputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
 
     public void setOnSubmitListener(OnSubmitListener l) {
