@@ -66,6 +66,7 @@ dependencies {
 
     implementation 'com.getbase:floatingactionbutton:1.10.1'
 
+    implementation 'com.google.firebase:firebase-storage:16.0.4'
     annotationProcessor "androidx.room:room-compiler:2.2.5"
     testImplementation 'junit:junit:4.13'
     testImplementation 'android.arch.core:core-testing:1.1.1'
