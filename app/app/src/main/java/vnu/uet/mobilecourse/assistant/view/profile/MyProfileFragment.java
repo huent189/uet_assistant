@@ -87,6 +87,7 @@ public class MyProfileFragment extends Fragment {
         StorageReference avatarRef = new Storage().getAvatar(User.getInstance().getStudentId());
         GlideApp.with(getContext())
                 .load(avatarRef)
+                .placeholder(R.drawable.avatar)
                 .error(R.drawable.avatar)
                 .into(civAvatar);
 
