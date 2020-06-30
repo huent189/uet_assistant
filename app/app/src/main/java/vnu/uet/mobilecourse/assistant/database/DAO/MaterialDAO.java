@@ -104,7 +104,7 @@ public abstract class MaterialDAO {
         LiveData<InternalResourceContent> parent = getInternalResourceParent(id);
         LiveData<List<InternalFile>> children = getInternalFile(id);
         MediatorLiveData<InternalResourceContent> merger = new MediatorLiveData<>();
-//        merger.postValue(parent.getValue());
+        merger.setValue(new InternalResourceContent());
         merger.addSource(parent, internalResourceContent -> {
             InternalResourceContent old = merger.getValue();
             if(old != null) {
@@ -115,10 +115,9 @@ public abstract class MaterialDAO {
         });
         merger.addSource(children, internalFiles -> {
             InternalResourceContent old = merger.getValue();
-            if(old == null){
-                old = new InternalResourceContent();
+            if(old != null){
+                old.setFiles(internalFiles);
             }
-            old.setFiles(internalFiles);
             merger.postValue(old);
         });
         return merger;
