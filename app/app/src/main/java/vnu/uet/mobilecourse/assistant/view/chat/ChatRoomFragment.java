@@ -50,6 +50,8 @@ import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.viewmodel.ChatRoomViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
+import static android.app.Activity.RESULT_OK;
+
 public class ChatRoomFragment extends Fragment {
 
     private MessageAdapter mMessageAdapter;
@@ -401,9 +403,10 @@ public class ChatRoomFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
             case FileUtils.REQUEST_CODE_FILE:
-                Uri uri = data.getData();
-                Toast.makeText(getContext(), uri.getPath(), Toast.LENGTH_SHORT).show();
-                mViewModel.sendAttachment(mRoomId, uri, mMemberIds);
+                if (resultCode == RESULT_OK && data != null) {
+                    Uri uri = data.getData();
+                    Toast.makeText(getContext(), uri.getPath(), Toast.LENGTH_SHORT).show();
+                    mViewModel.sendAttachment(mRoomId, uri, mMemberIds);
 //                        .observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
 //                            @Override
 //                            public void onChanged(StateModel<String> stateModel) {
@@ -414,6 +417,7 @@ public class ChatRoomFragment extends Fragment {
 //                                }
 //                            }
 //                        });
+                }
                 break;
         }
     }
