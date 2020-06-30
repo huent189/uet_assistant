@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
                     ExternalResourceContent.class, InternalFile.class, InternalResourceContent.class,
                     MaterialContent.class, PageContent.class, QuizNoGrade.class, Discussion.class, Post.class
 },
-        version = 10)
+        version = 11)
 public abstract class CoursesDatabase extends RoomDatabase {
     private static volatile CoursesDatabase instance;
     private static final int NUMBER_OF_THREADS = 4;
@@ -90,6 +90,11 @@ public abstract class CoursesDatabase extends RoomDatabase {
                                 @Override
                                 public void migrate(@NonNull SupportSQLiteDatabase supportSQLiteDatabase) {
                                     supportSQLiteDatabase.execSQL("DELETE FROM `Material`");
+                                }
+                            }, new Migration(10, 11) {
+                                @Override
+                                public void migrate(@NonNull SupportSQLiteDatabase supportSQLiteDatabase) {
+                                    supportSQLiteDatabase.execSQL("DROP TABLE IF EXISTS QuizContent;");
                                 }
                             })
                             .fallbackToDestructiveMigrationOnDowngrade()
