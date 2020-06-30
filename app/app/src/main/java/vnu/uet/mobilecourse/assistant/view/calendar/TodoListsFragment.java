@@ -115,6 +115,7 @@ public class TodoListsFragment extends Fragment {
                     shimmerRvTodoLists.setVisibility(View.VISIBLE);
                     mRvTodoLists.setVisibility(View.GONE);
                     emptyView.setVisibility(View.GONE);
+                    break;
 
                 case ERROR:
                     break;
