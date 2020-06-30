@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.Storage;
+package vnu.uet.mobilecourse.assistant.storage;
 
 import android.net.Uri;
 
@@ -13,30 +13,7 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
-interface IStorageInterface {
-
-    /**
-     *
-     * @param groupId id of group chat
-     * @param localPath path to local file
-     * @return
-     */
-    IStateLiveData<String> uploadFileToGroupChat(String groupId, String localPath);
-
-    /**
-     *
-     * @param Id id of user or group
-     * @param localPath path to file in local
-     * @return LiveData contains path to avatar on cloud
-     */
-    IStateLiveData<String> changeAvatar(String Id, String localPath);
-
-
-    StorageReference getAvatar(String Id);
-
-}
-
-public class Storage implements IStorageInterface {
+public class Storage implements IStorage {
     public static final String AVATAR_DIR = "AVATAR";
     public static final String GROUP_DIR = "GROUP";
     public static final String AVATAR_FILENAME = "avatar.jpg";
