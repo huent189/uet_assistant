@@ -93,7 +93,7 @@ public class GroupChat_UserSubColDAO extends FirebaseDAO<GroupChat_UserSubCol> {
                 int otherIdx = (i + 1) % 2;
                 Member_GroupChatSubCol other = groupChat.getMembers().get(otherIdx);
 
-                groupChat_userSubCol.setAvatar(other.getAvatar());
+//                groupChat_userSubCol.setAvatar(other.getAvatar());
                 groupChat_userSubCol.setName(other.getName());
                 groupChat_userSubCol.setId(groupChat.getId());
 
@@ -112,7 +112,7 @@ public class GroupChat_UserSubColDAO extends FirebaseDAO<GroupChat_UserSubCol> {
         else {
             GroupChat_UserSubCol groupChat_userSubCol = new GroupChat_UserSubCol();
             groupChat_userSubCol.setSeen(false);
-            groupChat_userSubCol.setAvatar(groupChat.getAvatar());
+//            groupChat_userSubCol.setAvatar(groupChat.getAvatar());
             groupChat_userSubCol.setName(groupChat.getName());
             groupChat_userSubCol.setId(groupChat.getId());
             groupChat_userSubCol.setLastMessageTime(System.currentTimeMillis() / 1000);
@@ -127,6 +127,13 @@ public class GroupChat_UserSubColDAO extends FirebaseDAO<GroupChat_UserSubCol> {
                 batch.set(groupChatDocRef, groupChat_userSubCol);
             }
         }
+
+        String[] memberIds = groupChat.getMembers().stream()
+                .map(Member_GroupChatSubCol::getId)
+                .toArray(String[]::new);
+
+        batch = new ChatDAO()
+                .appendAdminMessage(batch, groupChat.getId(), memberIds, "Các bạn đã được kết nối");
 
         batch.commit()
                 .addOnFailureListener(addGroupChatState::postError)

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,6 +29,7 @@ import vnu.uet.mobilecourse.assistant.adapter.AllCoursesAdapter;
 import vnu.uet.mobilecourse.assistant.model.ICourse;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
+import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.FriendProfileViewModel;
 
@@ -36,6 +38,8 @@ public class FriendProfileFragment extends Fragment {
     private FriendProfileViewModel mViewModel;
     private NavController mNavController;
     private FragmentActivity mActivity;
+
+    private String mName, mCode;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -54,12 +58,12 @@ public class FriendProfileFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             TextView tvUsername = root.findViewById(R.id.tvUsername);
-            String name = args.getString("name");
-            tvUsername.setText(name);
+            mName = args.getString("name");
+            tvUsername.setText(mName);
 
             TextView tvUserId = root.findViewById(R.id.tvUserId);
-            String code = args.getString("code");
-            tvUserId.setText(code);
+            mCode = args.getString("code");
+            tvUserId.setText(mCode);
 
             TextView tvDob = root.findViewById(R.id.tvDoB);
             TextView tvClass = root.findViewById(R.id.tvClass);
@@ -73,6 +77,12 @@ public class FriendProfileFragment extends Fragment {
                         onChatClick(args);
                     }
                 });
+
+                ImageView mCivAvatar = root.findViewById(R.id.civAvatar);
+
+                new AvatarLoader(mActivity, getViewLifecycleOwner())
+                        .loadUser(mCode, mCivAvatar);
+
             } else {
                 btnChat.setVisibility(View.GONE);
             }
@@ -83,7 +93,7 @@ public class FriendProfileFragment extends Fragment {
             ShimmerFrameLayout sflDobAndClass = root.findViewById(R.id.sflDobAndClass);
             sflDobAndClass.startShimmerAnimation();
 
-            mViewModel.getUserInfo(code).observe(getViewLifecycleOwner(), stateModel -> {
+            mViewModel.getUserInfo(mCode).observe(getViewLifecycleOwner(), stateModel -> {
                 switch (stateModel.getStatus()) {
                     case LOADING:
                         // hide text
@@ -126,7 +136,7 @@ public class FriendProfileFragment extends Fragment {
             sflCommonCourses.startShimmerAnimation();
 
             RecyclerView rvCommonCourses = initializeCommonCoursesView(root);
-            mViewModel.getCommonCourses(code).observe(getViewLifecycleOwner(), stateModel -> {
+            mViewModel.getCommonCourses(mCode).observe(getViewLifecycleOwner(), stateModel -> {
                 switch (stateModel.getStatus()) {
                     case LOADING:
                         // hide
@@ -164,8 +174,8 @@ public class FriendProfileFragment extends Fragment {
             mNavController.navigateUp();
         } else {
             Bundle bundle = new Bundle(prevArgs);
-            bundle.remove("active");
-            bundle.remove("fromChat");
+            bundle.putString("title", mName);
+            bundle.putString("code", mCode);
             bundle.putString("type", GroupChat.DIRECT);
             mNavController.navigate(R.id.action_navigation_friend_profile_to_navigation_chat_room, bundle);
         }

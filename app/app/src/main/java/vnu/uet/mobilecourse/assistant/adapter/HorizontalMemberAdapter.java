@@ -9,10 +9,12 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
+import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
 
 public class HorizontalMemberAdapter extends RecyclerView.Adapter<HorizontalMemberAdapter.ViewHolder> {
@@ -39,7 +41,7 @@ public class HorizontalMemberAdapter extends RecyclerView.Adapter<HorizontalMemb
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final IStudent student = mMembers.get(position);
-        holder.bind(student, () -> {
+        holder.bind(student, mOwner.getViewLifecycleOwner(), () -> {
             mOnClearListener.onClear(student);
             notifyDataSetChanged();
         });
@@ -68,9 +70,12 @@ public class HorizontalMemberAdapter extends RecyclerView.Adapter<HorizontalMemb
             mBtnClear = itemView.findViewById(R.id.btnClear);
         }
 
-        void bind(IStudent student, Runnable callback) {
+        void bind(IStudent student, LifecycleOwner lifecycleOwner, Runnable callback) {
             mTvName.setText(getSimpleName(student.getName()));
             mBtnClear.setOnClickListener(view -> callback.run());
+
+            new AvatarLoader(itemView.getContext(), lifecycleOwner)
+                    .loadUser(student.getCode(), mCivAvatar);
         }
 
         private String getSimpleName(String fullName) {

@@ -52,6 +52,10 @@ public class ChatRepository implements IChatRepository {
         return mUserGroupChatDAO.readAll();
     }
 
+    public IStateLiveData<GroupChat_UserSubCol> getUserGroupChat(String id) {
+        return mUserGroupChatDAO.read(id);
+    }
+
     public IStateLiveData<String> markRoomAsSeen(String id) {
         Map<String, Object> change = new HashMap<>();
         change.put("seen", Boolean.TRUE);
@@ -262,7 +266,7 @@ public class ChatRepository implements IChatRepository {
 
         private GroupChat combineData() {
             room.getMembers().clear();
-            room.setAvatar(userGroupChat.getAvatar());
+//            room.setAvatar(userGroupChat.getAvatar());
             room.setName(userGroupChat.getName());
             room.getMembers().addAll(members);
 

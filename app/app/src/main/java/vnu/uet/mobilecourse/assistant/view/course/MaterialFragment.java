@@ -23,6 +23,7 @@ import vnu.uet.mobilecourse.assistant.model.material.InternalFile;
 import vnu.uet.mobilecourse.assistant.model.material.InternalResourceContent;
 import vnu.uet.mobilecourse.assistant.model.material.MaterialContent;
 import vnu.uet.mobilecourse.assistant.model.material.QuizNoGrade;
+import vnu.uet.mobilecourse.assistant.repository.course.CourseActionRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.MaterialViewModel;
@@ -35,6 +36,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -56,7 +59,6 @@ public class MaterialFragment extends Fragment {
     private TextView mTvAttachmentTitle;
     private ShimmerFrameLayout mSflAttachments;
     private TextView mTvModifyTime, mTvModifyTimeTitle;
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -87,6 +89,8 @@ public class MaterialFragment extends Fragment {
         mTvLimitTimeTitle = root.findViewById(R.id.tvLimitTimeTitle);
 
         mLayoutGradeAndAttempt = root.findViewById(R.id.layoutGradeAndAttempt);
+
+        CheckBox cbDone = root.findViewById(R.id.cbDone);
 
         TextView tvMaxGrade = root.findViewById(R.id.tvMaxGrade);
         TextView tvMaxAttempt = root.findViewById(R.id.tvMaxAttempt);
@@ -205,9 +209,22 @@ public class MaterialFragment extends Fragment {
                 // change status text view if task hasn't complete
                 if (material.getCompletion() != 1) {
                     tvStatus.setText(R.string.material_status_uncomplete);
-                    tvStatus.setCompoundDrawablesWithIntrinsicBounds(0, 0,
-                            R.drawable.ic_unchecked_circle_24dp, 0);
+                    cbDone.setChecked(false);
+                } else {
+                    cbDone.setChecked(true);
                 }
+
+                cbDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        CourseActionRepository repository = new CourseActionRepository();
+                        if (isChecked) {
+                            repository.triggerMaterialCompletion(material);
+                        } else {
+                            repository.triggerMaterialUnCompletion(material);
+                        }
+                    }
+                });
             }
         }
 

@@ -78,7 +78,7 @@ public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> im
     public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
         final IStudent current = mClassMates.get(position);
 
-        holder.bind(current);
+        holder.bind(current, mOwner.getViewLifecycleOwner());
         holder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,11 +1,12 @@
 package vnu.uet.mobilecourse.assistant.view.profile;
 
-import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import vnu.uet.mobilecourse.assistant.adapter.VerticalMemberAdapter;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
+import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.FileUtils;
 import vnu.uet.mobilecourse.assistant.view.chat.RenameDialog;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
@@ -83,6 +85,9 @@ public class RoomProfileFragment extends Fragment {
                     }
                 });
 
+                ImageView civAvatar = root.findViewById(R.id.civAvatar);
+                new AvatarLoader(mActivity, getViewLifecycleOwner())
+                        .loadRoom(roomId, civAvatar);
             }
         }
 
@@ -195,8 +200,11 @@ public class RoomProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
             case FileUtils.REQUEST_CODE_IMAGE:
-                String path = data.getData().getPath();
-                Toast.makeText(mActivity, path, Toast.LENGTH_SHORT).show();
+                Uri uri = data.getData();
+                Toast.makeText(mActivity, uri.getPath(), Toast.LENGTH_SHORT).show();
+
+                mViewModel.changeAvatar(mRoom, uri);
+
                 break;
         }
     }

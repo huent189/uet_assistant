@@ -1,5 +1,7 @@
 package vnu.uet.mobilecourse.assistant.view.chat;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -14,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +24,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -39,10 +43,14 @@ import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
+import vnu.uet.mobilecourse.assistant.util.FileUtils;
 import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.viewmodel.ChatRoomViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+
+import static android.app.Activity.RESULT_OK;
 
 public class ChatRoomFragment extends Fragment {
 
@@ -54,6 +62,7 @@ public class ChatRoomFragment extends Fragment {
     private TextView mTvRoomTitle;
     private MultiAutoCompleteTextView mEtMessage;
     private MenuItem mViewInfoItem;
+    private ImageView mCivAvatar;
 
     private ArrayAdapter<Member_GroupChatSubCol> mMemberListAdapter;
 
@@ -77,6 +86,8 @@ public class ChatRoomFragment extends Fragment {
 
         mEtMessage = root.findViewById(R.id.etMessage);
         mEtMessage.setMovementMethod(new ScrollingMovementMethod());
+
+        mCivAvatar = root.findViewById(R.id.civAvatar);
 
         Bundle args = getArguments();
         if (args != null) {
@@ -134,6 +145,15 @@ public class ChatRoomFragment extends Fragment {
         ImageButton btnSend = root.findViewById(R.id.btnSend);
         btnSend.setOnClickListener(v -> sendTextMessage());
 
+        ImageButton btnAttachment = root.findViewById(R.id.btnAttachment);
+        btnAttachment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = FileUtils.createIntent();
+                startActivityForResult(intent, FileUtils.REQUEST_CODE_FILE);
+            }
+        });
+
         initializeToolbar(root);
 
         return root;
@@ -148,11 +168,17 @@ public class ChatRoomFragment extends Fragment {
             mCode = FirebaseStructureId.getMateId(mRoomId);
         }
 
+        new AvatarLoader(mActivity, getViewLifecycleOwner())
+                .loadUser(mCode, mCivAvatar);
+
         mMemberIds = new String[] {User.getInstance().getStudentId(), mCode};
     }
 
     private void setupGroupChat() {
         setupMention();
+
+        new AvatarLoader(mActivity, getViewLifecycleOwner())
+                .loadUser(mRoomId, mCivAvatar);
 
         mViewModel.getRoomInfo(mRoomId).observe(getViewLifecycleOwner(), stateModel -> {
             switch (stateModel.getStatus()) {
@@ -291,6 +317,10 @@ public class ChatRoomFragment extends Fragment {
         mEtMessage.setText(StringConst.EMPTY);
     }
 
+    private void sendAttachment() {
+
+    }
+
     private Toolbar initializeToolbar(View root) {
         Toolbar toolbar = null;
 
@@ -367,5 +397,28 @@ public class ChatRoomFragment extends Fragment {
         rvChat.setLayoutManager(linearLayoutManager);
 
         return rvChat;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case FileUtils.REQUEST_CODE_FILE:
+                if (resultCode == RESULT_OK && data != null) {
+                    Uri uri = data.getData();
+                    Toast.makeText(getContext(), uri.getPath(), Toast.LENGTH_SHORT).show();
+                    mViewModel.sendAttachment(mRoomId, uri, mMemberIds);
+//                        .observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
+//                            @Override
+//                            public void onChanged(StateModel<String> stateModel) {
+//                                switch (stateModel.getStatus()) {
+//                                    case SUCCESS:
+//                                        refresh();
+//                                        break;
+//                                }
+//                            }
+//                        });
+                }
+                break;
+        }
     }
 }

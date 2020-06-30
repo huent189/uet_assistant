@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,8 +28,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
+import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
-import vnu.uet.mobilecourse.assistant.util.StringConst;
+import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.view.chat.ChatFragment;
 
@@ -66,7 +68,7 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         final GroupChat_UserSubCol current = mChats.get(position);
-        holder.bind(current, mNavController, mOwner.getClass().getSimpleName());
+        holder.bind(current, mNavController, mOwner.getClass().getSimpleName(), mOwner.getViewLifecycleOwner());
     }
 
     @Override
@@ -106,12 +108,21 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
             mLayoutNonSeen = view.findViewById(R.id.layoutNonSeen);
         }
 
-        void bind(GroupChat_UserSubCol chat, NavController navController, String ownerName) {
+        void bind(GroupChat_UserSubCol chat, NavController navController, String ownerName, LifecycleOwner lifecycleOwner) {
             mTvChatGroupTitle.setText(chat.getName());
 
             Date lastMessageTime = DateTimeUtils.fromSecond(chat.getLastMessageTime());
             String lastMessageTimeInStr = DateTimeUtils.TIME_12H_FORMAT.format(lastMessageTime);
             mTvLastMessageTime.setText(lastMessageTimeInStr);
+
+            if (chat.getType().equals(GroupChat.DIRECT)) {
+                String mateId = FirebaseStructureId.getMateId(chat.getId());
+                new AvatarLoader(itemView.getContext(), lifecycleOwner)
+                        .loadUser(mateId, mCivAvatar);
+            } else {
+                new AvatarLoader(itemView.getContext(), lifecycleOwner)
+                        .loadRoom(chat.getId(), mCivAvatar);
+            }
 
             if (chat.isSeen()) {
                 mIvStatus.setImageResource(R.drawable.ic_check_circle_24dp);

@@ -5,23 +5,27 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.navigation.NavController;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
 
 public class ReceiveMessageHolder extends MessageHolder {
 
     private CircleImageView mCivAvatar;
     private TextView mTvName;
+    private LifecycleOwner mLifecycleOwner;
 
-    public ReceiveMessageHolder(@NonNull View itemView) {
+    public ReceiveMessageHolder(@NonNull View itemView, LifecycleOwner lifecycleOwner) {
         super(itemView);
 
         mCivAvatar = itemView.findViewById(R.id.civAvatar);
         mTvName = itemView.findViewById(R.id.tvName);
         mCivAvatar.setVisibility(View.VISIBLE);
+        mLifecycleOwner = lifecycleOwner;
     }
 
     @Override
@@ -43,6 +47,9 @@ public class ReceiveMessageHolder extends MessageHolder {
 
         String simpleName = StringUtils.getLastSegment(message.getFromName(), 2);
         mTvName.setText(simpleName);
+
+        new AvatarLoader(itemView.getContext(), mLifecycleOwner)
+                .loadUser(message.getFromId(), mCivAvatar);
 
         mCivAvatar.setOnClickListener(new View.OnClickListener() {
             @Override

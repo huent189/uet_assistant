@@ -1,18 +1,17 @@
 package vnu.uet.mobilecourse.assistant.adapter.viewholder;
 
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
-import vnu.uet.mobilecourse.assistant.model.firebase.MemberRole;
-import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 
 public abstract class StudentViewHolder extends RecyclerView.ViewHolder {
 
@@ -32,10 +31,15 @@ public abstract class StudentViewHolder extends RecyclerView.ViewHolder {
         mBtnChat = view.findViewById(R.id.btnChat);
     }
 
-    public void bind(IStudent student) {
+    public void bind(IStudent student, LifecycleOwner lifecycleOwner) {
         mTvName.setText(student.getName());
         mTvId.setText(student.getCode());
         mBtnChat.setVisibility(View.VISIBLE);
+
+        if (student.isActive()) {
+            new AvatarLoader(itemView.getContext(), lifecycleOwner)
+                    .loadUser(student.getCode(), mCivAvatar);
+        }
 
         if (!student.isActive()) {
             mBtnChat.setImageResource(R.drawable.ic_warning_24dp);
