@@ -1,17 +1,15 @@
 package vnu.uet.mobilecourse.assistant.util;
 
-import android.graphics.Paint;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import androidx.annotation.NonNull;
-import androidx.core.text.HtmlCompat;
 
 public class StringUtils {
 
@@ -20,9 +18,18 @@ public class StringUtils {
         String regex = "\\(.*?\\)";
         return formatted.replaceAll(regex, "");
     }
-
+    public static boolean compareHTML(String s1, String s2){
+        if(s1.equals(s2)){
+            return true;
+        }
+        String nonHtml1 = Html.fromHtml(s1, Html.FROM_HTML_MODE_COMPACT).toString();
+        String nonHtml2 = Html.fromHtml(s2, Html.FROM_HTML_MODE_COMPACT).toString();
+        nonHtml1 = nonHtml1.replaceAll("\\s","");
+        nonHtml2 = nonHtml2.replaceAll("\\s","");
+        return nonHtml1.equals(nonHtml2);
+    }
     public static String mergePageContent(String intro, String content) {
-        if(intro.equals(content) || content.equals("<p>Như mô tả</p>")){
+        if(content.equals("<p>Như mô tả</p>")|| compareHTML(intro, content)){
             return intro;
         }
         return intro + content;
