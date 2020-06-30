@@ -28,13 +28,14 @@ import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.FileUtils;
+import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
 import vnu.uet.mobilecourse.assistant.viewmodel.MyProfileViewModel;
 
 public class MyProfileFragment extends Fragment {
 
     private MyProfileViewModel mViewModel;
 
-    private CircleImageView mCivAvatar;
+//    private CircleImageView mCivAvatar;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -84,13 +85,17 @@ public class MyProfileFragment extends Fragment {
             }
         });
 
-        mCivAvatar = root.findViewById(R.id.civAvatar);
+        AvatarView avatarView = root.findViewById(R.id.avatarView);
+        avatarView.setLifecycleOwner(getViewLifecycleOwner());
+        avatarView.loadUser(User.getInstance().getStudentId());
 
-        Context context = getContext();
-
-        assert context != null;
-        new AvatarLoader(context, getViewLifecycleOwner())
-                .loadUser(User.getInstance().getStudentId(), mCivAvatar);
+//        mCivAvatar = root.findViewById(R.id.civAvatar);
+//
+//        Context context = getContext();
+//
+//        assert context != null;
+//        new AvatarLoader(context, getViewLifecycleOwner())
+//                .loadUser(User.getInstance().getStudentId(), mCivAvatar);
 
         return root;
     }

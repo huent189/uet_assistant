@@ -27,10 +27,12 @@ import java.util.List;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.AllCoursesAdapter;
 import vnu.uet.mobilecourse.assistant.model.ICourse;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
 import vnu.uet.mobilecourse.assistant.viewmodel.FriendProfileViewModel;
 
 public class FriendProfileFragment extends Fragment {
@@ -78,10 +80,12 @@ public class FriendProfileFragment extends Fragment {
                     }
                 });
 
-                ImageView mCivAvatar = root.findViewById(R.id.civAvatar);
+                AvatarView avatarView = root.findViewById(R.id.avatarView);
+                avatarView.setLifecycleOwner(getViewLifecycleOwner());
+                avatarView.loadUser(mCode);
 
-                new AvatarLoader(mActivity, getViewLifecycleOwner())
-                        .loadUser(mCode, mCivAvatar);
+//                new AvatarLoader(mActivity, getViewLifecycleOwner())
+//                        .loadUser(mCode, mCivAvatar);
 
             } else {
                 btnChat.setVisibility(View.GONE);

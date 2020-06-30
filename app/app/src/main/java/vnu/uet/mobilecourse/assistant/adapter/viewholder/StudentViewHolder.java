@@ -12,10 +12,11 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
+import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
 
 public abstract class StudentViewHolder extends RecyclerView.ViewHolder {
 
-    private CircleImageView mCivAvatar;
+    private AvatarView mAvatarView;
     private TextView mTvName;
     private TextView mTvId;
     private ImageButton mBtnChat;
@@ -25,7 +26,7 @@ public abstract class StudentViewHolder extends RecyclerView.ViewHolder {
     public StudentViewHolder(@NonNull View view) {
         super(view);
 
-        mCivAvatar = view.findViewById(R.id.civAvatar);
+        mAvatarView = view.findViewById(R.id.avatarView);
         mTvName = view.findViewById(R.id.tvName);
         mTvId = view.findViewById(R.id.tvId);
         mBtnChat = view.findViewById(R.id.btnChat);
@@ -41,10 +42,10 @@ public abstract class StudentViewHolder extends RecyclerView.ViewHolder {
             mBtnChat.setBackground(null);
             mBtnChat.setClickable(false);
             mBtnChat.setEnabled(false);
-            mCivAvatar.setImageResource(R.drawable.avatar);
+            mAvatarView.setDefault();
         } else {
-            new AvatarLoader(itemView.getContext(), lifecycleOwner)
-                    .loadUser(student.getCode(), mCivAvatar);
+            mAvatarView.setLifecycleOwner(lifecycleOwner);
+            mAvatarView.loadUser(student.getCode());
 
             if (student.getCode().equals(USER_ID)) {
                 String name = student.getName() + " (tôi)";

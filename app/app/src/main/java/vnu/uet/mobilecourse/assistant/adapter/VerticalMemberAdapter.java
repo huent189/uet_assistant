@@ -23,6 +23,7 @@ import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.DimensionUtils;
+import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
 import vnu.uet.mobilecourse.assistant.view.profile.RoomProfileFragment;
 
 public class VerticalMemberAdapter extends RecyclerView.Adapter<VerticalMemberAdapter.ViewHolder> {
@@ -71,7 +72,7 @@ public class VerticalMemberAdapter extends RecyclerView.Adapter<VerticalMemberAd
 
     static class ViewHolder extends RecyclerView.ViewHolder implements ISwipeToDeleteHolder {
 
-        private CircleImageView mCivAvatar;
+        private AvatarView mAvatarView;
         private TextView mTvName;
         private TextView mTvId;
         private LifecycleOwner mLifecycleOwner;
@@ -79,7 +80,7 @@ public class VerticalMemberAdapter extends RecyclerView.Adapter<VerticalMemberAd
         ViewHolder(@NonNull View view, Fragment owner) {
             super(view);
 
-            mCivAvatar = view.findViewById(R.id.civAvatar);
+            mAvatarView = view.findViewById(R.id.avatarView);
             mTvName = view.findViewById(R.id.tvName);
             mTvId = view.findViewById(R.id.tvId);
             CheckBox checkBox = view.findViewById(R.id.checkbox);
@@ -107,8 +108,8 @@ public class VerticalMemberAdapter extends RecyclerView.Adapter<VerticalMemberAd
                 mTvName.setText(name);
             }
 
-            new AvatarLoader(itemView.getContext(), mLifecycleOwner)
-                    .loadUser(student.getCode(), mCivAvatar);
+            mAvatarView.setLifecycleOwner(mLifecycleOwner);
+            mAvatarView.loadUser(student.getCode());
         }
     }
 }

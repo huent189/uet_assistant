@@ -40,14 +40,24 @@
             android:layout_marginStart="@dimen/margin"
             android:text="@string/title_chat"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/civAvatar" />
+            app:layout_constraintStart_toEndOf="@+id/avatarView" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/civAvatar"
+<!--        <de.hdodenhof.circleimageview.CircleImageView-->
+<!--            android:id="@+id/civAvatar"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_gravity="bottom"-->
+<!--            android:src="@drawable/avatar"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tvMessage"-->
+<!--            app:layout_constraintDimensionRatio="h,1:1"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/tvMessage" />-->
+
+        <vnu.uet.mobilecourse.assistant.view.component.AvatarView
+            android:id="@+id/avatarView"
+            app:showStatus="false"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_gravity="bottom"
-            android:src="@drawable/avatar"
             app:layout_constraintBottom_toBottomOf="@+id/tvMessage"
             app:layout_constraintDimensionRatio="h,1:1"
             app:layout_constraintStart_toStartOf="parent"

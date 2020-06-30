@@ -12,19 +12,20 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
+import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
 
 public class ReceiveMessageHolder extends MessageHolder {
 
-    private CircleImageView mCivAvatar;
+    private AvatarView mAvatarView;
     private TextView mTvName;
     private LifecycleOwner mLifecycleOwner;
 
     public ReceiveMessageHolder(@NonNull View itemView, LifecycleOwner lifecycleOwner) {
         super(itemView);
 
-        mCivAvatar = itemView.findViewById(R.id.civAvatar);
+        mAvatarView = itemView.findViewById(R.id.avatarView);
         mTvName = itemView.findViewById(R.id.tvName);
-        mCivAvatar.setVisibility(View.VISIBLE);
+        mAvatarView.setVisibility(View.VISIBLE);
         mLifecycleOwner = lifecycleOwner;
     }
 
@@ -35,12 +36,12 @@ public class ReceiveMessageHolder extends MessageHolder {
         switch (visibilityType) {
             case SHOW_FULL:
             case HIDE_TIME:
-                mCivAvatar.setVisibility(View.VISIBLE);
+                mAvatarView.setVisibility(View.VISIBLE);
                 mTvName.setVisibility(View.VISIBLE);
                 break;
 
             case HIDE_INFO_N_TIME:
-                mCivAvatar.setVisibility(View.GONE);
+                mAvatarView.setVisibility(View.GONE);
                 mTvName.setVisibility(View.GONE);
                 break;
         }
@@ -48,10 +49,10 @@ public class ReceiveMessageHolder extends MessageHolder {
         String simpleName = StringUtils.getLastSegment(message.getFromName(), 2);
         mTvName.setText(simpleName);
 
-        new AvatarLoader(itemView.getContext(), mLifecycleOwner)
-                .loadUser(message.getFromId(), mCivAvatar);
+        mAvatarView.setLifecycleOwner(mLifecycleOwner);
+        mAvatarView.loadUser(message.getFromId());
 
-        mCivAvatar.setOnClickListener(new View.OnClickListener() {
+        mAvatarView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();

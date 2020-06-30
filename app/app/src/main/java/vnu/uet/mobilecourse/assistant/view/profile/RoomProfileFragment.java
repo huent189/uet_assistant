@@ -28,6 +28,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.FileUtils;
 import vnu.uet.mobilecourse.assistant.view.chat.RenameDialog;
+import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.RoomProfileViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
@@ -85,9 +86,13 @@ public class RoomProfileFragment extends Fragment {
                     }
                 });
 
-                ImageView civAvatar = root.findViewById(R.id.civAvatar);
-                new AvatarLoader(mActivity, getViewLifecycleOwner())
-                        .loadRoom(roomId, civAvatar);
+//                ImageView civAvatar = root.findViewById(R.id.civAvatar);
+//                new AvatarLoader(mActivity, getViewLifecycleOwner())
+//                        .loadRoom(roomId, civAvatar);
+
+                AvatarView avatarView = root.findViewById(R.id.avatarView);
+                avatarView.setLifecycleOwner(getViewLifecycleOwner());
+                avatarView.loadRoom(roomId);
             }
         }
 

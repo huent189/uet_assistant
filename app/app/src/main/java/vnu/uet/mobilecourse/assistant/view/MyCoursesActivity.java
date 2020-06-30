@@ -12,7 +12,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -25,6 +27,7 @@ import vnu.uet.mobilecourse.assistant.alarm.scheduler.TodoScheduler;
 import vnu.uet.mobilecourse.assistant.database.DAO.CourseInfoDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
+import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.NavigationBadgeRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.NetworkChangeReceiver;
@@ -262,6 +265,10 @@ public class MyCoursesActivity extends AppCompatActivity {
 
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mNetworkListener, intentFilter);
+
+        Map<String, Object> change = new HashMap<>();
+        change.put("online", true);
+        FirebaseUserRepository.getInstance().modify(change);
     }
 
     @Override
@@ -269,5 +276,9 @@ public class MyCoursesActivity extends AppCompatActivity {
         super.onPause();
 
         unregisterReceiver(mNetworkListener);
+
+        Map<String, Object> change = new HashMap<>();
+        change.put("online", false);
+        FirebaseUserRepository.getInstance().modify(change);
     }
 }

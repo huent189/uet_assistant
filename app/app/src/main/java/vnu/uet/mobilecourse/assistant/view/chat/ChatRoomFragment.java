@@ -47,6 +47,7 @@ import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.FileUtils;
 import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
+import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
 import vnu.uet.mobilecourse.assistant.viewmodel.ChatRoomViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
@@ -62,7 +63,7 @@ public class ChatRoomFragment extends Fragment {
     private TextView mTvRoomTitle;
     private MultiAutoCompleteTextView mEtMessage;
     private MenuItem mViewInfoItem;
-    private ImageView mCivAvatar;
+    private AvatarView mAvatarView;
 
     private ArrayAdapter<Member_GroupChatSubCol> mMemberListAdapter;
 
@@ -87,7 +88,7 @@ public class ChatRoomFragment extends Fragment {
         mEtMessage = root.findViewById(R.id.etMessage);
         mEtMessage.setMovementMethod(new ScrollingMovementMethod());
 
-        mCivAvatar = root.findViewById(R.id.civAvatar);
+        mAvatarView = root.findViewById(R.id.avatarView);
 
         Bundle args = getArguments();
         if (args != null) {
@@ -168,8 +169,8 @@ public class ChatRoomFragment extends Fragment {
             mCode = FirebaseStructureId.getMateId(mRoomId);
         }
 
-        new AvatarLoader(mActivity, getViewLifecycleOwner())
-                .loadUser(mCode, mCivAvatar);
+        mAvatarView.setLifecycleOwner(getViewLifecycleOwner());
+        mAvatarView.loadUser(mCode);
 
         mMemberIds = new String[] {User.getInstance().getStudentId(), mCode};
     }
@@ -177,8 +178,8 @@ public class ChatRoomFragment extends Fragment {
     private void setupGroupChat() {
         setupMention();
 
-        new AvatarLoader(mActivity, getViewLifecycleOwner())
-                .loadUser(mRoomId, mCivAvatar);
+        mAvatarView.setLifecycleOwner(getViewLifecycleOwner());
+        mAvatarView.loadRoom(mRoomId);
 
         mViewModel.getRoomInfo(mRoomId).observe(getViewLifecycleOwner(), stateModel -> {
             switch (stateModel.getStatus()) {

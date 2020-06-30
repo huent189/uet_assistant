@@ -11,11 +11,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/civAvatar"
+<!--        <de.hdodenhof.circleimageview.CircleImageView-->
+<!--            android:id="@+id/civAvatar"-->
+<!--            android:layout_width="@dimen/img_avatar_size"-->
+<!--            android:layout_height="@dimen/img_avatar_size"-->
+<!--            android:src="@drawable/avatar"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <vnu.uet.mobilecourse.assistant.view.component.AvatarView
+            android:id="@+id/avatarView"
             android:layout_width="@dimen/img_avatar_size"
             android:layout_height="@dimen/img_avatar_size"
-            android:src="@drawable/avatar"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -28,7 +36,7 @@
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/checkbox"
-            app:layout_constraintStart_toEndOf="@+id/civAvatar"
+            app:layout_constraintStart_toEndOf="@+id/avatarView"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView

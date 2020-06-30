@@ -21,11 +21,18 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/civAvatar"
+<!--        <de.hdodenhof.circleimageview.CircleImageView-->
+<!--            android:id="@+id/civAvatar"-->
+<!--            android:layout_width="@dimen/img_avatar_size"-->
+<!--            android:layout_height="@dimen/img_avatar_size"-->
+<!--            android:src="@drawable/avatar" />-->
+
+        <vnu.uet.mobilecourse.assistant.view.component.AvatarView
+            android:id="@+id/avatarView"
+            app:borderWidth="2dp"
             android:layout_width="@dimen/img_avatar_size"
-            android:layout_height="@dimen/img_avatar_size"
-            android:src="@drawable/avatar" />
+            android:layout_height="@dimen/img_avatar_size"/>
+
 
         <LinearLayout
             android:id="@+id/layoutContainer"
@@ -33,11 +40,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/btnChat"
-            app:layout_constraintStart_toEndOf="@+id/civAvatar"
-            app:layout_constraintTop_toTopOf="parent">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvChatGroupTitle"

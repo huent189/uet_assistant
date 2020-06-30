@@ -12,6 +12,7 @@ public class User implements IFirebaseModel {
     private String id;
     private long avatar;
     private int newNotifications;
+    private boolean online;
 
     @Exclude
     private int unseenGroupChat;
@@ -75,6 +76,14 @@ public class User implements IFirebaseModel {
 
     public void setNewNotifications(int newNotifications) {
         this.newNotifications = newNotifications;
+    }
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
     }
 
     @Exclude

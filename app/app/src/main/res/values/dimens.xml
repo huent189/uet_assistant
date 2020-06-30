@@ -37,9 +37,12 @@
 
     <dimen name="img_avatar_size">48dp</dimen>
     <dimen name="big_img_avatar_size">128dp</dimen>
+    <dimen name="avatar_container_size">134dp</dimen>
     <dimen name="small_img_avatar_size">32dp</dimen>
 
     <dimen name="img_notification_icon_size">60dp</dimen>
+
+    <dimen name="profile_banner_height">148dp</dimen>
 
     <!-- Calendar metrics -->
     <dimen name="calendar_cell_height">56dp</dimen>
