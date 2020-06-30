@@ -25,7 +25,12 @@ public class FirebaseStructureId {
         }
 
         return id;
+    }
 
+    public static String getMateId(String directChatId) {
+        return directChatId.replace(BEGIN_PREFIX, StringConst.EMPTY)
+                .replace(USER_CODE, StringConst.EMPTY)
+                .replace(DIRECT_CHAT_PREFIX, StringConst.EMPTY);
     }
 
     @SuppressLint("RestrictedApi")
