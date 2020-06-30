@@ -3,6 +3,7 @@ package vnu.uet.mobilecourse.assistant.repository.firebase;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
@@ -87,18 +88,30 @@ public class ChatRepository implements IChatRepository {
         StateLiveData<String> addGroup = mUserGroupChatDAO.addGroupChat(groupChat);
         StateLiveData<String> addMember = mGroupChatDAO.addMembers(groupChat.getId(), groupChat.getMembers());
 
-        addConnections(groupChat.getMembers());
+        String[] memberIds = groupChat.getMembers().stream()
+                .map(Member_GroupChatSubCol::getId)
+                .toArray(String[]::new);
+
+        addConnections(memberIds);
 
         return new CreateGroupChatState(createGroupState, addMember, addGroup);
     }
 
     @Override
-    public IStateLiveData<List<Member_GroupChatSubCol>> addMember(String roomId, List<Member_GroupChatSubCol> members) {
-        return new AddMemberState(mUserGroupChatDAO.read(roomId), members);
+    public IStateLiveData<List<Member_GroupChatSubCol>> addMember(String roomId, String[] oldMemberIds,
+                                                                  List<Member_GroupChatSubCol> newMembers) {
+        String[] newMemberIds = newMembers.stream()
+                .map(Member_GroupChatSubCol::getId)
+                .toArray(String[]::new);
+
+        addConnections(oldMemberIds, newMemberIds);
+        addConnections(newMemberIds);
+
+        return new AddMemberState(mUserGroupChatDAO.read(roomId), newMembers);
     }
 
     @Override
-    public IStateLiveData<String> removeMember(String groupId, String memberId) {
+    public IStateLiveData<String> removeMember(String groupId, String[] memberIds, String memberId) {
         return new ChatDAO().removeMember(groupId, memberId);
     }
 
@@ -111,18 +124,33 @@ public class ChatRepository implements IChatRepository {
         return mConnectionDAO.readAll();
     }
 
-    private void addConnections(List<Member_GroupChatSubCol> members) {
-        int size = members.size();
+    private void addConnections(String[] memberIds) {
+        int size = memberIds.length;
 
         for (int i = 0; i < size - 1; i++) {
             for (int j = i + 1; j < size; j++) {
-                String fromId = members.get(i).getId();
-                String toId = members.get(j).getId();
+                String fromId = memberIds[i];
+                String toId = memberIds[j];
                 String docId = FirebaseStructureId.connect(fromId, toId);
 
                 Connection connection = new Connection();
                 connection.setId(docId);
                 connection.setStudentIds(fromId, toId);
+                connection.setTimestamp(System.currentTimeMillis() / 1000);
+
+                mConnectionDAO.addUnique(connection);
+            }
+        }
+    }
+
+    private void addConnections(String[] oldIds, String[] newIds) {
+        for (String newId : newIds) {
+            for (String oldId : oldIds) {
+                String docId = FirebaseStructureId.connect(oldId, newId);
+
+                Connection connection = new Connection();
+                connection.setId(docId);
+                connection.setStudentIds(oldId, newId);
                 connection.setTimestamp(System.currentTimeMillis() / 1000);
 
                 mConnectionDAO.addUnique(connection);

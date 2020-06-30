@@ -294,7 +294,7 @@ public class AddMemberFragment extends Fragment {
             if (counter == 0) {
                 Toast.makeText(mActivity, "Bạn chưa chọn thành viên", Toast.LENGTH_SHORT).show();
             } else if (mFromRoomProfile) {
-                mViewModel.addMemberToExistRoom(mRoom.getId(), students)
+                mViewModel.addMemberToExistRoom(mRoom, students)
                         .observe(getViewLifecycleOwner(), stateModel -> {
                             switch (stateModel.getStatus()) {
                                 case ERROR:

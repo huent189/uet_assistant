@@ -1,11 +1,14 @@
 package vnu.uet.mobilecourse.assistant.view.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +23,7 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.util.FileUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.MyProfileViewModel;
 
 public class MyProfileFragment extends Fragment {
@@ -65,50 +69,25 @@ public class MyProfileFragment extends Fragment {
         Date dob = new Date(user.getDob());
         tvDoB.setText(DateTimeUtils.DATE_FORMAT.format(dob));
 
-//        mViewModel.getUserInfo().observe(getViewLifecycleOwner(), stateModel -> {
-//            switch (stateModel.getStatus()) {
-//                case LOADING:
-//                    // hide text
-//                    tvUsername.setVisibility(View.INVISIBLE);
-//                    tvUserId.setVisibility(View.INVISIBLE);
-//                    layoutDob.setVisibility(View.INVISIBLE);
-//                    layoutClass.setVisibility(View.INVISIBLE);
-//
-//                    // show shimmer layout
-//                    sflNameAndId.setVisibility(View.VISIBLE);
-//                    sflDobAndClass.setVisibility(View.VISIBLE);
-//
-//                    break;
-//
-//                case SUCCESS:
-//                    // get user info from state data
-//                    UserInfo userInfo = stateModel.getData();
-//
-//                    // update username and student id
-//                    tvUsername.setText(userInfo.getName());
-//                    tvUserId.setText(userInfo.getId());
-//
-//                    // update day of birth
-//                    Date dob = new Date(userInfo.getDOB());
-//                    tvDoB.setText(DateTimeUtils.DATE_FORMAT.format(dob));
-//
-//                    // update uet class
-//                    tvClass.setText(userInfo.getUetClass());
-//
-//                    // show text
-//                    tvUsername.setVisibility(View.VISIBLE);
-//                    tvUserId.setVisibility(View.VISIBLE);
-//                    layoutDob.setVisibility(View.VISIBLE);
-//                    layoutClass.setVisibility(View.VISIBLE);
-//
-//                    // hide shimmer layout
-//                    sflNameAndId.setVisibility(View.INVISIBLE);
-//                    sflDobAndClass.setVisibility(View.INVISIBLE);
-//
-//                    break;
-//            }
-//        });
+        Button btnChangeAvatar = root.findViewById(R.id.btnChangeAvatar);
+        btnChangeAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = FileUtils.createImageIntent();
+                startActivityForResult(intent, FileUtils.REQUEST_CODE_IMAGE);
+            }
+        });
 
         return root;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode) {
+            case FileUtils.REQUEST_CODE_IMAGE:
+                String path = data.getData().getPath();
+                Toast.makeText(getContext(), path, Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

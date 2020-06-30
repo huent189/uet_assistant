@@ -80,8 +80,9 @@ public class ChatDAO {
 
         for (String memberId :
                 memberIds) {
-
-            DocumentReference groupChatDocRef = userCol.document(memberId).collection(FirebaseCollectionName.GROUP_CHAT).document(groupId);
+            DocumentReference groupChatDocRef = userCol.document(memberId)
+                    .collection(FirebaseCollectionName.GROUP_CHAT)
+                    .document(groupId);
             batch.update(groupChatDocRef, "name",  title);
 
         }

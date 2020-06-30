@@ -76,12 +76,16 @@ public class AddGroupChatViewModel extends ViewModel {
         return mSelectedList;
     }
 
-    public IStateLiveData<List<Member_GroupChatSubCol>> addMemberToExistRoom(String roomId, List<IStudent> students) {
+    public IStateLiveData<List<Member_GroupChatSubCol>> addMemberToExistRoom(GroupChat room, List<IStudent> students) {
         List<Member_GroupChatSubCol> members = students.stream()
                 .map(this::convertToMember)
                 .collect(Collectors.toList());
 
-        return mChatRepo.addMember(roomId, members);
+        String[] memberIds = room.getMembers().stream()
+                .map(Member_GroupChatSubCol::getId)
+                .toArray(String[]::new);
+
+        return mChatRepo.addMember(room.getId(), memberIds, members);
     }
 
     private Member_GroupChatSubCol convertToMember(IStudent student) {
