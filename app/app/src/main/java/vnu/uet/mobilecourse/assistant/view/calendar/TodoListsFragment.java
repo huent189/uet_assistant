@@ -87,7 +87,7 @@ public class TodoListsFragment extends Fragment {
         ShimmerFrameLayout shimmerRvTodoLists = root.findViewById(R.id.shimmerRvTodoLists);
         shimmerRvTodoLists.startShimmerAnimation();
 
-        EmptyView emptyView = root.findViewById(R.id.layoutEmpty);
+        View emptyView = root.findViewById(R.id.layoutEmpty);
 
         mViewModel.getAllTodoLists().observe(getViewLifecycleOwner(), stateModel -> {
             switch (stateModel.getStatus()) {
