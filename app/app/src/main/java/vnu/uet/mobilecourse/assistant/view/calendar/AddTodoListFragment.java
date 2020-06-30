@@ -4,6 +4,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -58,6 +59,7 @@ public class AddTodoListFragment extends Fragment {
                 todoList.setTitle(title);
                 todoList.setDescription(desc);
 
+                @SuppressLint("RestrictedApi")
                 String id = Util.autoId();
                 todoList.setId(id);
 
