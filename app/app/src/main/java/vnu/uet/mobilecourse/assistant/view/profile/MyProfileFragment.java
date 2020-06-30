@@ -24,7 +24,7 @@ import java.util.Date;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.User;
-import vnu.uet.mobilecourse.assistant.storage.Storage;
+import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.FileUtils;
@@ -102,7 +102,7 @@ public class MyProfileFragment extends Fragment {
             case FileUtils.REQUEST_CODE_IMAGE:
                 Uri uri = data.getData();
                 Toast.makeText(getContext(), uri.getPath(), Toast.LENGTH_SHORT).show();
-                new Storage().changeAvatar(User.getInstance().getStudentId(), uri);
+                new StorageAccess().changeAvatar(User.getInstance().getStudentId(), uri);
 //                        .observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
 //                            @Override
 //                            public void onChanged(StateModel<String> stateModel) {

@@ -1,17 +1,24 @@
 package vnu.uet.mobilecourse.assistant.database.DAO;
 
+import android.annotation.SuppressLint;
+
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
+import com.google.firebase.firestore.util.Util;
 
 
 import java.util.List;
 
 import vnu.uet.mobilecourse.assistant.model.IStudent;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.util.FileUtils;
+import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
@@ -84,8 +91,10 @@ public class ChatDAO {
                     .collection(FirebaseCollectionName.GROUP_CHAT)
                     .document(groupId);
             batch.update(groupChatDocRef, "name",  title);
-
         }
+
+        String message = StringUtils.getLastSegment(USERNAME, 2) + " đã đổi tên phòng chat";
+        batch = appendAdminMessage(batch, groupId, memberIds, message);
 
         batch.commit().addOnSuccessListener(aVoid -> {
             changeGroupTitleState.postSuccess(title);
@@ -94,4 +103,35 @@ public class ChatDAO {
         });
         return changeGroupTitleState;
     }
+
+    @SuppressLint("RestrictedApi")
+    public WriteBatch appendAdminMessage(WriteBatch batch, String roomId, String[] memberIds, String content) {
+        // generate message entity
+        Message_GroupChatSubCol message = new Message_GroupChatSubCol();
+        message.setContentType(FileUtils.MIME_TEXT);
+        message.setTimestamp(System.currentTimeMillis() / 1000);
+        message.setFromName("admin");
+        message.setFromId("admin");
+        message.setContent(content);
+        message.setId(Util.autoId());
+
+        DocumentReference newMsgRef = groupChatCol.document(roomId)
+                .collection(FirebaseCollectionName.MESSAGE)
+                .document(message.getId());
+
+        batch.set(newMsgRef, message);
+
+        for (String memberId : memberIds) {
+            DocumentReference groupChatDocRef = userCol.document(memberId)
+                    .collection(FirebaseCollectionName.GROUP_CHAT)
+                    .document(roomId);
+            batch.update(groupChatDocRef, "lastMessage", content,
+                    "lastMessageTime", message.getTimestamp(),
+                    "seen", false);
+        }
+
+        return batch;
+    }
+
+    private static final String USERNAME = User.getInstance().getName();
 }

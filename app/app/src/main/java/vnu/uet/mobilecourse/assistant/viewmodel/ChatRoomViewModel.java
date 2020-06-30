@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.viewmodel;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
 
 import com.google.firebase.firestore.util.Util;
 
@@ -15,6 +16,8 @@ import vnu.uet.mobilecourse.assistant.model.firebase.MemberRole;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.repository.firebase.ChatRepository;
+import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
+import vnu.uet.mobilecourse.assistant.util.FileUtils;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
@@ -42,6 +45,19 @@ public class ChatRoomViewModel extends ViewModel {
 
     public IStateLiveData<String> sendMessage(String roomId, Message_GroupChatSubCol message, String[] memberIds) {
         return mChatRepo.sendMessage(roomId, message, memberIds);
+    }
+
+    @SuppressLint("RestrictedApi")
+    public IStateLiveData<String> sendAttachment(String roomId, Uri uri, String[] memberIds) {
+        Message_GroupChatSubCol message = new Message_GroupChatSubCol();
+        message.setId(Util.autoId());
+        message.setTimestamp(System.currentTimeMillis() / 1000);
+        message.setContent(uri.getLastPathSegment());
+        message.setFromId(STUDENT_ID);
+        message.setFromName(STUDENT_NAME);
+        message.setContentType(FileUtils.getMimeType(uri));
+
+        return new StorageAccess().uploadFileToGroupChat(roomId, uri, message, memberIds);
     }
 
     public IStateLiveData<String> connectAndSendMessage(String roomId, String otherName,
@@ -86,6 +102,8 @@ public class ChatRoomViewModel extends ViewModel {
 
         message.setFromId(User.getInstance().getStudentId());
         message.setFromName(User.getInstance().getName());
+
+        message.setContentType(FileUtils.MIME_TEXT);
 
         message.setTimestamp(System.currentTimeMillis() / 1000);
 

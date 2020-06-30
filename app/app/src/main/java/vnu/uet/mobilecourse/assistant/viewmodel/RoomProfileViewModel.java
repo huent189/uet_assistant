@@ -2,13 +2,11 @@ package vnu.uet.mobilecourse.assistant.viewmodel;
 
 import android.net.Uri;
 
-import java.util.stream.Collectors;
-
 import androidx.lifecycle.ViewModel;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.repository.firebase.ChatRepository;
-import vnu.uet.mobilecourse.assistant.storage.Storage;
+import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
 public class RoomProfileViewModel extends ViewModel {
@@ -42,6 +40,6 @@ public class RoomProfileViewModel extends ViewModel {
                 .map(Member_GroupChatSubCol::getId)
                 .toArray(String[]::new);
 
-        return new Storage().changeGroupAvatar(room.getId(), memberIds, uri);
+        return new StorageAccess().changeGroupAvatar(room.getId(), memberIds, uri);
     }
 }

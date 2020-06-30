@@ -1,6 +1,8 @@
 package vnu.uet.mobilecourse.assistant.util;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.webkit.MimeTypeMap;
 
 public class FileUtils {
 
@@ -23,6 +25,15 @@ public class FileUtils {
         intent.setType(mimeType);
 
         return intent;
+    }
+
+    public static String getMimeType(Uri uri) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(uri.getPath());
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
     }
 
     public static final int REQUEST_CODE_IMAGE = 2000;

@@ -69,6 +69,16 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+                <ImageButton
+                    android:id="@+id/btnAttachment"
+                    style="@style/CircleButton"
+                    android:layout_gravity="bottom"
+                    android:src="@drawable/ic_attach_file_32dp"
+                    android:background="@drawable/primary_button_background"
+                    android:layout_width="@dimen/circle_button_size"
+                    android:layout_height="@dimen/circle_button_size"
+                    tools:ignore="ContentDescription" />
+
                 <MultiAutoCompleteTextView
                     android:id="@+id/etMessage"
                     style="@style/EditText"
@@ -76,7 +86,7 @@
                     android:paddingVertical="10dp"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_marginEnd="@dimen/margin"
+                    android:layout_marginHorizontal="@dimen/margin"
                     android:autofillHints=""
                     android:drawableTint="@color/primary"
                     android:hint="@string/title_chat"

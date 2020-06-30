@@ -8,35 +8,30 @@ import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.database.DAO.UserDAO;
-import vnu.uet.mobilecourse.assistant.model.User;
-import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
-public class Storage implements IStorage {
+public class StorageAccess implements IStorage {
     public static final String AVATAR_DIR = "AVATAR";
     public static final String GROUP_DIR = "GROUP";
     public static final String AVATAR_FILENAME = "avatar.jpg";
     StorageReference storage = FirebaseStorage.getInstance().getReference();
 
     @Override
-    public IStateLiveData<String> uploadFileToGroupChat(String groupId, String localPath, Message_GroupChatSubCol message, String[] memberIds) {
-        Uri fileURI = Uri.fromFile(new File(localPath));
+    public IStateLiveData<String> uploadFileToGroupChat(String groupId, Uri fileURI, Message_GroupChatSubCol message, String[] memberIds) {
         String fileName = normalizeFileName(fileURI);
         IStateLiveData<String> uploadFileState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
-        StorageReference fileRef = storage.child(Storage.GROUP_DIR).child(groupId).child(fileName);
+        StorageReference fileRef = storage.child(StorageAccess.GROUP_DIR).child(groupId).child(fileName);
         fileRef.putFile(fileURI).addOnCompleteListener(task -> {
             if (task.isSuccessful()){
                 // update message
@@ -54,7 +49,8 @@ public class Storage implements IStorage {
                             .document(memberId)
                             .collection(FirebaseCollectionName.GROUP_CHAT)
                             .document(groupId);
-                            batch.update(groupChatSubColRef, "lastMessage", message.getFromName() + " has sent an attachment",
+                            String simpleName = StringUtils.getLastSegment(message.getFromName(), 2);
+                            batch.update(groupChatSubColRef, "lastMessage", simpleName + " đã gửi một tệp tin",
                                                 "lastMessageTime", message.getTimestamp());
                 }
 
@@ -74,7 +70,7 @@ public class Storage implements IStorage {
     @Override
     public IStateLiveData<String> changeAvatar(String Id, Uri fileURI) {
         IStateLiveData<String> changeAvatarState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
-        StorageReference avatarRef = storage.child(Storage.AVATAR_DIR).child(Id).child(Storage.AVATAR_FILENAME);
+        StorageReference avatarRef = storage.child(StorageAccess.AVATAR_DIR).child(Id).child(StorageAccess.AVATAR_FILENAME);
             avatarRef.putFile(fileURI).addOnCompleteListener(task -> { // upload new avatar
                 if (task.isSuccessful()) {
                     Map<String, Object> changes = new HashMap<>();
@@ -91,7 +87,7 @@ public class Storage implements IStorage {
 
     public IStateLiveData<String> changeGroupAvatar(String Id, String[] memberIds, Uri fileURI) {
         IStateLiveData<String> changeAvatarState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
-        StorageReference avatarRef = storage.child(Storage.AVATAR_DIR).child(Id).child(Storage.AVATAR_FILENAME);
+        StorageReference avatarRef = storage.child(StorageAccess.AVATAR_DIR).child(Id).child(StorageAccess.AVATAR_FILENAME);
         avatarRef.putFile(fileURI).addOnCompleteListener(task -> { // upload new avatar
             if (task.isSuccessful()) {
                 Map<String, Object> changes = new HashMap<>();
@@ -122,7 +118,7 @@ public class Storage implements IStorage {
 
     @Override
     public StorageReference getAvatar(String Id) {
-        StorageReference reference = storage.child(Storage.AVATAR_DIR).child(Id).child(Storage.AVATAR_FILENAME);
+        StorageReference reference = storage.child(StorageAccess.AVATAR_DIR).child(Id).child(StorageAccess.AVATAR_FILENAME);
         return reference;
     }
 

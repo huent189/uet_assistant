@@ -14,7 +14,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.repository.firebase.ChatRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
-import vnu.uet.mobilecourse.assistant.storage.Storage;
+import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
 import vnu.uet.mobilecourse.assistant.view.GlideApp;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
@@ -30,7 +30,7 @@ public class AvatarLoader {
 
 
     public void loadUser(String studentCode, ImageView imageView) {
-        StorageReference imageRef = new Storage().getAvatar(studentCode);
+        StorageReference imageRef = new StorageAccess().getAvatar(studentCode);
 
         FirebaseUserRepository.getInstance().search(studentCode)
                 .observe(mLifecycleOwner, new Observer<StateModel<User>>() {
@@ -57,7 +57,7 @@ public class AvatarLoader {
     }
 
     public void loadRoom(String roomId, ImageView imageView) {
-        StorageReference imageRef = new Storage().getAvatar(roomId);
+        StorageReference imageRef = new StorageAccess().getAvatar(roomId);
 
         ChatRepository.getInstance().getUserGroupChat(roomId)
                 .observe(mLifecycleOwner, new Observer<StateModel<GroupChat_UserSubCol>>() {

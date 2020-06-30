@@ -128,6 +128,13 @@ public class GroupChat_UserSubColDAO extends FirebaseDAO<GroupChat_UserSubCol> {
             }
         }
 
+        String[] memberIds = groupChat.getMembers().stream()
+                .map(Member_GroupChatSubCol::getId)
+                .toArray(String[]::new);
+
+        batch = new ChatDAO()
+                .appendAdminMessage(batch, groupChat.getId(), memberIds, "Các bạn đã được kết nối");
+
         batch.commit()
                 .addOnFailureListener(addGroupChatState::postError)
                 .addOnSuccessListener((Void)->
