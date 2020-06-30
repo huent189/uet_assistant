@@ -45,8 +45,7 @@ public class Storage implements IStorage {
 
     @Override
     public StorageReference getAvatar(String Id) {
-        return storage.child(Storage.AVATAR_DIR).child(Id).child(Storage.AVATAR_FILENAME);
+        StorageReference reference = storage.child(Storage.AVATAR_DIR).child(Id).child(Storage.AVATAR_FILENAME);
+        return reference;
     }
-
-
 }
