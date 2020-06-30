@@ -14,46 +14,53 @@
         android:supportsRtl="true"
         android:theme="@style/DarkTheme"
         android:windowSoftInputMode="adjustPan">
+        <service
+            android:name=".MyService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <receiver
             android:name=".alarm.receiver.TodoReceiver"
             android:enabled="true"
-            android:exported="true">
-        </receiver>
+            android:exported="true"></receiver>
         <receiver
             android:name=".alarm.receiver.SessionReceiver"
             android:enabled="true"
-            android:exported="true">
-        </receiver>
+            android:exported="true"></receiver>
         <receiver
             android:name=".alarm.receiver.SubmissionReceiver"
             android:enabled="true"
-            android:exported="true">
-        </receiver>
+            android:exported="true"></receiver>
 
         <activity android:name=".view.LoginFirebaseActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
                     android:host="uet-assistant-d048c.firebaseapp.com"
-                    android:scheme="https"/>
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity
             android:name=".view.MyCoursesActivity"
-            android:launchMode="singleTask"
-            android:label="@string/title_activity_my_courses" />
+            android:label="@string/title_activity_my_courses"
+            android:launchMode="singleTask" />
         <activity
             android:name=".view.LoginActivity"
             android:label="@string/login" />
         <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>
