@@ -86,7 +86,7 @@ public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> im
                 int actionId = 0;
 
                 if (current.getCode().equals(User.getInstance().getStudentId())) {
-                    if (mOwner instanceof ExploreCourseFragment) {
+                    if (mOwner instanceof CourseClassmateFragment) {
                         actionId = R.id.action_navigation_explore_course_to_navigation_my_profile;
                     } else if (mOwner instanceof RoomProfileFragment) {
                         actionId = R.id.action_navigation_room_profile_to_navigation_my_profile;

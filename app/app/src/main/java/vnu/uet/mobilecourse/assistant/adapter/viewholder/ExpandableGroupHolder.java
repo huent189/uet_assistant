@@ -18,6 +18,11 @@ public abstract class ExpandableGroupHolder extends GroupViewHolder {
         mIvExpandArrow = itemView.findViewById(R.id.ivExpandArrow);
     }
 
+    protected void bindArrow(boolean expand) {
+        if (expand) mIvExpandArrow.setRotation(180);
+        else mIvExpandArrow.setRotation(0);
+    }
+
     @Override
     public void expand() {
         animateExpand();

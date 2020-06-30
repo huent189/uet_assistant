@@ -36,32 +36,33 @@ public abstract class StudentViewHolder extends RecyclerView.ViewHolder {
         mTvId.setText(student.getCode());
         mBtnChat.setVisibility(View.VISIBLE);
 
-        if (student.isActive()) {
-            new AvatarLoader(itemView.getContext(), lifecycleOwner)
-                    .loadUser(student.getCode(), mCivAvatar);
-        }
-
         if (!student.isActive()) {
             mBtnChat.setImageResource(R.drawable.ic_warning_24dp);
             mBtnChat.setBackground(null);
             mBtnChat.setClickable(false);
             mBtnChat.setEnabled(false);
-        } else if (student.getCode().equals(USER_ID)) {
-            String name = student.getName() + " (tôi)";
-            mTvName.setText(name);
-            mBtnChat.setVisibility(View.GONE);
+            mCivAvatar.setImageResource(R.drawable.avatar);
         } else {
-            mBtnChat.setImageResource(R.drawable.ic_chat_24dp);
-            mBtnChat.setBackgroundResource(R.drawable.primary_button_background);
-            mBtnChat.setClickable(true);
-            mBtnChat.setEnabled(true);
+            new AvatarLoader(itemView.getContext(), lifecycleOwner)
+                    .loadUser(student.getCode(), mCivAvatar);
 
-            mBtnChat.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onChatClick(student);
-                }
-            });
+            if (student.getCode().equals(USER_ID)) {
+                String name = student.getName() + " (tôi)";
+                mTvName.setText(name);
+                mBtnChat.setVisibility(View.GONE);
+            } else {
+                mBtnChat.setImageResource(R.drawable.ic_chat_24dp);
+                mBtnChat.setBackgroundResource(R.drawable.primary_button_background);
+                mBtnChat.setClickable(true);
+                mBtnChat.setEnabled(true);
+
+                mBtnChat.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onChatClick(student);
+                    }
+                });
+            }
         }
     }
 
