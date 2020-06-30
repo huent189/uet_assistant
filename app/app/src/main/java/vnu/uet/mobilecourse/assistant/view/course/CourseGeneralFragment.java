@@ -75,10 +75,11 @@ public class CourseGeneralFragment extends Fragment {
 
             if (course instanceof Course) {
                 Course cast = (Course) course;
-
-                float progress = (float) cast.getProgress();
-                tvProgress.setText(String.format(Locale.ROOT, "%.0f%%", progress));
-                cpbProgress.setProgressWithAnimation(progress);
+                mViewModel.getProgress(cast.getId()).observe(getViewLifecycleOwner(), p ->{
+                    float progress = p.floatValue();
+                    tvProgress.setText(String.format(Locale.ROOT, "%.0f%%", progress));
+                    cpbProgress.setProgressWithAnimation(progress);
+                });
             }
 
             initializeGeneralMaterialsView(root, course);

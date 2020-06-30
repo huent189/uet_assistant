@@ -41,5 +41,7 @@ public abstract class CoursesDAO {
     public abstract void deleteAll();
     @Query("SELECT id, title as name FROM course")
     public abstract List<IdNamePair> getAllCourseName();
+    @Query("SELECT progress FROM COURSE WHERE id = :courseId")
+    public abstract LiveData<Double> getProgress(int courseId);
     //TODO: clear all table
 }

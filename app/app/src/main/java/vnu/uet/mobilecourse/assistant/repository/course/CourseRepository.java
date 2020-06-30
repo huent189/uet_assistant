@@ -362,4 +362,7 @@ public class CourseRepository {
             return merged;
         }
     }
+    public LiveData<Double> getProgress(int courseId){
+        return coursesDAO.getProgress(courseId);
+    }
 }
