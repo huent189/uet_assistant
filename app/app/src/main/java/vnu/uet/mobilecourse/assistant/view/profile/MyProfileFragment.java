@@ -16,14 +16,18 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Date;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
+import vnu.uet.mobilecourse.assistant.storage.Storage;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.FileUtils;
+import vnu.uet.mobilecourse.assistant.view.GlideApp;
 import vnu.uet.mobilecourse.assistant.viewmodel.MyProfileViewModel;
 
 public class MyProfileFragment extends Fragment {
@@ -78,6 +82,15 @@ public class MyProfileFragment extends Fragment {
             }
         });
 
+        CircleImageView civAvatar = root.findViewById(R.id.civAvatar);
+
+        StorageReference avatarRef = new Storage().getAvatar(User.getInstance().getStudentId());
+        GlideApp.with(getContext())
+                .load(avatarRef)
+                .placeholder(R.drawable.avatar)
+                .error(R.drawable.avatar)
+                .into(civAvatar);
+
         return root;
     }
 
@@ -87,6 +100,7 @@ public class MyProfileFragment extends Fragment {
             case FileUtils.REQUEST_CODE_IMAGE:
                 String path = data.getData().getPath();
                 Toast.makeText(getContext(), path, Toast.LENGTH_SHORT).show();
+                new Storage().changeAvatar(User.getInstance().getStudentId(), path);
                 break;
         }
     }

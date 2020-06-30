@@ -84,6 +84,7 @@ public class ChatDAO {
                     .collection(FirebaseCollectionName.GROUP_CHAT)
                     .document(groupId);
             batch.update(groupChatDocRef, "name",  title);
+
         }
 
         batch.commit().addOnSuccessListener(aVoid -> {

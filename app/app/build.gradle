@@ -66,6 +66,7 @@ dependencies {
 
     implementation 'com.getbase:floatingactionbutton:1.10.1'
 
+    implementation 'com.google.firebase:firebase-storage:19.1.1'
     annotationProcessor "androidx.room:room-compiler:2.2.5"
     testImplementation 'junit:junit:4.13'
     testImplementation 'android.arch.core:core-testing:1.1.1'
@@ -76,4 +77,8 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.6'
     implementation 'com.google.guava:guava:27.0.1-android'
+
+    implementation 'com.firebaseui:firebase-ui-storage:4.3.2'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 }
