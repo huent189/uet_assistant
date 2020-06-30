@@ -277,6 +277,8 @@ public class ChatRoomFragment extends Fragment {
         String content = mEtMessage.getText().toString();
         Log.d("CHAT", "sendMessage: " + content);
 
+        if (content.isEmpty()) return;
+
         Message_GroupChatSubCol message = mViewModel.generateTextMessage(content, mMemberIds);
 
         // first message in directed chat

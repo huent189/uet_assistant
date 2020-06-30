@@ -2,10 +2,12 @@ package vnu.uet.mobilecourse.assistant.repository.firebase;
 
 import java.util.Map;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.database.DAO.UserDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.repository.cache.FirebaseUserCache;
+import vnu.uet.mobilecourse.assistant.util.NetworkChangeReceiver;
 import vnu.uet.mobilecourse.assistant.util.NetworkUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -58,7 +60,49 @@ public class FirebaseUserRepository {
         return mDao.increaseNotifications(STUDENT_ID);
     }
 
+    public IStateLiveData<Boolean> onlineState(String id) {
+        return new OnlineState(search(id), NetworkChangeReceiver.getLiveData());
+    }
+
     public IStateLiveData<User> add(User user) {
         return mDao.add(user);
+    }
+
+    public static class OnlineState extends StateMediatorLiveData<Boolean> {
+
+        private int networkStatus;
+        private boolean online;
+
+        public OnlineState(StateLiveData<User> user, LiveData<Integer> network) {
+            addSource(user, new Observer<StateModel<User>>() {
+                @Override
+                public void onChanged(StateModel<User> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case LOADING:
+                            postLoading();
+                            break;
+
+                        case ERROR:
+                            postError(stateModel.getError());
+                            break;
+
+                        case SUCCESS:
+                            online = stateModel.getData().isOnline();
+                            postSuccess(isOnline());
+                    }
+                }
+            });
+
+            addSource(network, new Observer<Integer>() {
+                @Override
+                public void onChanged(Integer integer) {
+                    networkStatus = integer;
+                }
+            });
+        }
+
+        private boolean isOnline() {
+            return online && networkStatus != NetworkUtils.TYPE_NOT_CONNECTED;
+        }
     }
 }

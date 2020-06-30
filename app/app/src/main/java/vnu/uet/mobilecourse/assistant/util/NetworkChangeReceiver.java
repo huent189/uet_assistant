@@ -8,12 +8,13 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
-    private MutableLiveData<Integer> liveData = new MutableLiveData<>();
+    private static MutableLiveData<Integer> liveData = new MutableLiveData<>();
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
@@ -28,5 +29,9 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
     public void observe(@NonNull LifecycleOwner owner, @NonNull Observer<? super Integer> observer) {
         liveData.observe(owner, observer);
+    }
+
+    public static LiveData<Integer> getLiveData() {
+        return liveData;
     }
 }

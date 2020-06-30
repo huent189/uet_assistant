@@ -117,9 +117,28 @@ public class AvatarView extends FrameLayout {
     }
 
     public void loadStatus(String id) {
-        FirebaseUserRepository.getInstance().search(id).observe(mLifecycleOwner, new Observer<StateModel<User>>() {
+//        FirebaseUserRepository.getInstance().search(id).observe(mLifecycleOwner, new Observer<StateModel<User>>() {
+//            @Override
+//            public void onChanged(StateModel<User> stateModel) {
+//                switch (stateModel.getStatus()) {
+//                    case LOADING:
+//                    case ERROR:
+//                        mIvStatus.setVisibility(GONE);
+//                        break;
+//
+//                    case SUCCESS:
+//                        int networkStatus = NetworkUtils.getConnectivityStatus(getContext());
+//                        boolean isOnline = stateModel.getData().isOnline()
+//                                && networkStatus != NetworkUtils.TYPE_NOT_CONNECTED;
+//                        mIvStatus.setVisibility(isOnline ? VISIBLE : GONE);
+//                        break;
+//                }
+//            }
+//        });
+
+        FirebaseUserRepository.getInstance().onlineState(id).observe(mLifecycleOwner, new Observer<StateModel<Boolean>>() {
             @Override
-            public void onChanged(StateModel<User> stateModel) {
+            public void onChanged(StateModel<Boolean> stateModel) {
                 switch (stateModel.getStatus()) {
                     case LOADING:
                     case ERROR:
@@ -127,10 +146,7 @@ public class AvatarView extends FrameLayout {
                         break;
 
                     case SUCCESS:
-                        int networkStatus = NetworkUtils.getConnectivityStatus(getContext());
-                        boolean isOnline = stateModel.getData().isOnline()
-                                && networkStatus != NetworkUtils.TYPE_NOT_CONNECTED;
-                        mIvStatus.setVisibility(isOnline ? VISIBLE : GONE);
+                        mIvStatus.setVisibility(stateModel.getData() ? VISIBLE : GONE);
                         break;
                 }
             }

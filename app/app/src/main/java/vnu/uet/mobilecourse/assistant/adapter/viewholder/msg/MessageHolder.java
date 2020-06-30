@@ -20,7 +20,9 @@ import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
+import vnu.uet.mobilecourse.assistant.view.component.CardAttachment;
 import vnu.uet.mobilecourse.assistant.view.component.ChatBox;
+import vnu.uet.mobilecourse.assistant.view.component.CustomImageView;
 import vnu.uet.mobilecourse.assistant.view.component.MyClickableSpan;
 
 public abstract class MessageHolder extends RecyclerView.ViewHolder {
@@ -28,11 +30,39 @@ public abstract class MessageHolder extends RecyclerView.ViewHolder {
     private TextView mTvTime;
     private TextView mTvMessage;
 
+    private CustomImageView mImageView;
+    private CardAttachment mCardAttachment;
+
     protected MessageHolder(@NonNull View itemView) {
         super(itemView);
 
         mTvTime = itemView.findViewById(R.id.tvTime);
         mTvMessage = itemView.findViewById(R.id.tvMessage);
+        mImageView = itemView.findViewById(R.id.customImageView);
+        mCardAttachment = itemView.findViewById(R.id.cardAttachment);
+    }
+
+    private boolean checkAttachment(Message_GroupChatSubCol message) {
+        String contentType = message.getContentType();
+        if (contentType != null && contentType.startsWith("text/")) {
+            mImageView.setVisibility(View.GONE);
+            mCardAttachment.setVisibility(View.GONE);
+            mTvMessage.setVisibility(View.VISIBLE);
+            return false;
+        } else if (contentType != null && contentType.startsWith("image/")) {
+            String path = message.getAttachmentPath();
+            mImageView.setImage(path);
+            mImageView.setVisibility(View.VISIBLE);
+            mCardAttachment.setVisibility(View.GONE);
+            mTvMessage.setVisibility(View.GONE);
+        } else {
+            String path = message.getAttachmentPath();
+            mCardAttachment.setAttachment(path);
+            mImageView.setVisibility(View.GONE);
+            mCardAttachment.setVisibility(View.VISIBLE);
+            mTvMessage.setVisibility(View.GONE);
+        }
+        return true;
     }
 
     public void bind(Message_GroupChatSubCol message, int visibilityType, NavController navController) {
@@ -47,45 +77,49 @@ public abstract class MessageHolder extends RecyclerView.ViewHolder {
                 break;
         }
 
-        String rawContent = message.getContent();
-        SpannableStringBuilder formatContent = StringUtils.convertHtml(rawContent);
-
-        insertClickable(formatContent, new OnMentionClickListener() {
-            @Override
-            public void onClick(String memberId) {
-                Bundle bundle = new Bundle();
-                bundle.putString("code", memberId);
-                bundle.putBoolean("active", true);
-                bundle.putBoolean("fromChat", true);
-
-                navController.navigate(R.id.action_navigation_chat_room_to_navigation_friend_profile, bundle);
-            }
-        });
-
-        mTvMessage.setText(formatContent);
-        mTvMessage.setMovementMethod(LinkMovementMethod.getInstance());
-
         String time = DateTimeUtils.generateViewText(message.getTimestamp());
         mTvTime.setText(time);
 
-        itemView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                int paddingEnd = itemView.getPaddingEnd();
-                int paddingStart = itemView.getPaddingStart();
-                int maxWidth = itemView.getWidth() - (paddingEnd + paddingStart);
+        boolean haveAttachment = checkAttachment(message);
 
-                Log.d(getClass().getSimpleName(), "bind: " + maxWidth);
+        if (!haveAttachment) {
+            String rawContent = message.getContent();
+            SpannableStringBuilder formatContent = StringUtils.convertHtml(rawContent);
 
-                if (mTvMessage instanceof ChatBox) {
-                    ((ChatBox) mTvMessage).reduce(maxWidth);
+            insertClickable(formatContent, new OnMentionClickListener() {
+                @Override
+                public void onClick(String memberId) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("code", memberId);
+                    bundle.putBoolean("active", true);
+                    bundle.putBoolean("fromChat", true);
+
+                    navController.navigate(R.id.action_navigation_chat_room_to_navigation_friend_profile, bundle);
                 }
+            });
 
-                itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            mTvMessage.setText(formatContent);
+            mTvMessage.setMovementMethod(LinkMovementMethod.getInstance());
 
-                showView();
-            }
-        });
+            itemView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    int paddingEnd = itemView.getPaddingEnd();
+                    int paddingStart = itemView.getPaddingStart();
+                    int maxWidth = itemView.getWidth() - (paddingEnd + paddingStart);
+
+                    Log.d(getClass().getSimpleName(), "bind: " + maxWidth);
+
+                    if (mTvMessage instanceof ChatBox) {
+                        ((ChatBox) mTvMessage).reduce(maxWidth);
+                    }
+
+                    itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                    showView();
+                }
+            });
+        }
     }
 
     private void insertClickable(SpannableStringBuilder ssb, OnMentionClickListener l) {
