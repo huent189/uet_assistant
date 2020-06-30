@@ -133,7 +133,7 @@ public class FirebaseAuthenticationService {
         User user = new User();
         String id = email.replace(StringConst.VNU_EMAIL_DOMAIN, StringConst.EMPTY);
         user.setId(id);
-        user.setAvatar(null);
+//        user.setAvatar(null);
         user.setNewNotifications(1);
 
         return user;

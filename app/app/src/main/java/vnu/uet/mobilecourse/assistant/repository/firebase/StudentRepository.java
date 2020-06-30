@@ -120,7 +120,7 @@ public class StudentRepository {
                 clone.setAvatar(null);
             } else {
                 clone.setActive(true);
-                clone.setAvatar(userModel.getAvatar());
+//                clone.setAvatar(userModel.getAvatar());
             }
 
             return clone;

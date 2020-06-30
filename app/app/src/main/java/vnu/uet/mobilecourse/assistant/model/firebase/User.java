@@ -10,7 +10,7 @@ import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol
 public class User implements IFirebaseModel {
 
     private String id;
-    private String avatar;
+    private long avatar;
     private int newNotifications;
 
     @Exclude
@@ -34,11 +34,11 @@ public class User implements IFirebaseModel {
         this.id = id;
     }
 
-    public String getAvatar() {
+    public long getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(String avatar) {
+    public void setAvatar(long avatar) {
         this.avatar = avatar;
     }
 

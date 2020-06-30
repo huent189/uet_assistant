@@ -112,7 +112,7 @@ public class ParticipantRepository {
                                             case SUCCESS:
                                                 User user = profileState.getData();
                                                 participant.setActive(true);
-                                                participant.setAvatar(user.getAvatar());
+//                                                participant.setAvatar(user.getAvatar());
                                                 postSuccess(participants);
                                         }
                                     });
