@@ -74,10 +74,7 @@ public class Storage implements IStorage {
     @Override
     public IStateLiveData<String> changeAvatar(String Id, Uri fileURI) {
         IStateLiveData<String> changeAvatarState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
-//        Uri fileURI = Uri.fromFile(new File(localPath));
-        // delete old avatar
         StorageReference avatarRef = storage.child(Storage.AVATAR_DIR).child(Id).child(Storage.AVATAR_FILENAME);
-//        avatarRef.delete().addOnSuccessListener(aVoid -> { // delete old avatar
             avatarRef.putFile(fileURI).addOnCompleteListener(task -> { // upload new avatar
                 if (task.isSuccessful()) {
                     Map<String, Object> changes = new HashMap<>();
@@ -88,7 +85,6 @@ public class Storage implements IStorage {
                     changeAvatarState.postError(task.getException());
                 }
             });
-//        });
 
         return changeAvatarState;
     }
