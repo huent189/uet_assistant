@@ -59,7 +59,6 @@ public class MaterialFragment extends Fragment {
     private TextView mTvAttachmentTitle;
     private ShimmerFrameLayout mSflAttachments;
     private TextView mTvModifyTime, mTvModifyTimeTitle;
-    private CheckBox mCbDone;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -91,7 +90,7 @@ public class MaterialFragment extends Fragment {
 
         mLayoutGradeAndAttempt = root.findViewById(R.id.layoutGradeAndAttempt);
 
-        mCbDone = root.findViewById(R.id.cbDone);
+        CheckBox cbDone = root.findViewById(R.id.cbDone);
 
         TextView tvMaxGrade = root.findViewById(R.id.tvMaxGrade);
         TextView tvMaxAttempt = root.findViewById(R.id.tvMaxAttempt);
@@ -210,12 +209,12 @@ public class MaterialFragment extends Fragment {
                 // change status text view if task hasn't complete
                 if (material.getCompletion() != 1) {
                     tvStatus.setText(R.string.material_status_uncomplete);
-                    mCbDone.setChecked(false);
+                    cbDone.setChecked(false);
                 } else {
-                    mCbDone.setChecked(true);
+                    cbDone.setChecked(true);
                 }
 
-                mCbDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                cbDone.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         CourseActionRepository repository = new CourseActionRepository();

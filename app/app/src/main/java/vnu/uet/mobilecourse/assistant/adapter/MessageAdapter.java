@@ -81,7 +81,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageHolder> {
         View view = mOwner.getLayoutInflater()
                 .inflate(R.layout.layout_receive_message_item, parent, false);
 
-        return new ReceiveMessageHolder(view);
+        return new ReceiveMessageHolder(view, mOwner.getViewLifecycleOwner());
     }
 
     private MessageHolder generateSendMessageViewHolder(@NonNull ViewGroup parent) {

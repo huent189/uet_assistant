@@ -89,6 +89,37 @@ public class Storage implements IStorage {
         return changeAvatarState;
     }
 
+    public IStateLiveData<String> changeGroupAvatar(String Id, String[] memberIds, Uri fileURI) {
+        IStateLiveData<String> changeAvatarState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
+        StorageReference avatarRef = storage.child(Storage.AVATAR_DIR).child(Id).child(Storage.AVATAR_FILENAME);
+        avatarRef.putFile(fileURI).addOnCompleteListener(task -> { // upload new avatar
+            if (task.isSuccessful()) {
+                Map<String, Object> changes = new HashMap<>();
+                changes.put("avatar", System.currentTimeMillis() / 1000);
+
+                WriteBatch batch = FirebaseFirestore.getInstance().batch();
+
+                for (String memberId : memberIds) {
+                    DocumentReference memberDocRef = FirebaseFirestore.getInstance()
+                            .collection(FirebaseCollectionName.USER)
+                            .document(memberId)
+                            .collection(FirebaseCollectionName.GROUP_CHAT)
+                            .document(Id);
+
+                    batch.update(memberDocRef, changes);
+                }
+
+                batch.commit();
+
+                changeAvatarState.postSuccess(avatarRef.getPath());
+            } else {
+                changeAvatarState.postError(task.getException());
+            }
+        });
+
+        return changeAvatarState;
+    }
+
     @Override
     public StorageReference getAvatar(String Id) {
         StorageReference reference = storage.child(Storage.AVATAR_DIR).child(Id).child(Storage.AVATAR_FILENAME);

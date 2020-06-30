@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.view.profile;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,31 +15,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.signature.MediaStoreSignature;
-import com.bumptech.glide.signature.ObjectKey;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.StorageMetadata;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.User;
-import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
-import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
 import vnu.uet.mobilecourse.assistant.storage.Storage;
+import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.FileUtils;
-import vnu.uet.mobilecourse.assistant.view.GlideApp;
-import vnu.uet.mobilecourse.assistant.view.component.MyStorageKey;
 import vnu.uet.mobilecourse.assistant.viewmodel.MyProfileViewModel;
-import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class MyProfileFragment extends Fragment {
 
@@ -96,41 +86,15 @@ public class MyProfileFragment extends Fragment {
 
         mCivAvatar = root.findViewById(R.id.civAvatar);
 
-        refresh();
+        Context context = getContext();
+
+        assert context != null;
+        new AvatarLoader(context, getViewLifecycleOwner())
+                .loadUser(User.getInstance().getStudentId(), mCivAvatar);
 
         return root;
     }
 
-    private StorageReference avatarRef = new Storage().getAvatar(User.getInstance().getStudentId());
-
-    private void refresh() {
-        FirebaseUserRepository.getInstance().search(User.getInstance().getStudentId()).observe(getViewLifecycleOwner(), new Observer<StateModel<vnu.uet.mobilecourse.assistant.model.firebase.User>>() {
-            @Override
-            public void onChanged(StateModel<vnu.uet.mobilecourse.assistant.model.firebase.User> stateModel) {
-                switch (stateModel.getStatus()) {
-                    case SUCCESS:
-                        long time = stateModel.getData().getAvatar();
-                        GlideApp.with(getContext())
-                                .load(avatarRef)
-                                .signature(new ObjectKey(time))
-                                .placeholder(R.drawable.avatar)
-                                .error(R.drawable.avatar)
-                                .into(mCivAvatar);
-                }
-            }
-        });
-
-
-
-        GlideApp.with(getContext())
-                .load(avatarRef)
-                .placeholder(R.drawable.avatar)
-                .error(R.drawable.avatar)
-//                .signature(new MyStorageKey(avatarRef))
-//                .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                .skipMemoryCache(true)
-                .into(mCivAvatar);
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

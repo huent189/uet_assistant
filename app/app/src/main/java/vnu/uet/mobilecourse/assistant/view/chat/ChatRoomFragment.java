@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.viewmodel.ChatRoomViewModel;
@@ -54,6 +56,7 @@ public class ChatRoomFragment extends Fragment {
     private TextView mTvRoomTitle;
     private MultiAutoCompleteTextView mEtMessage;
     private MenuItem mViewInfoItem;
+    private ImageView mCivAvatar;
 
     private ArrayAdapter<Member_GroupChatSubCol> mMemberListAdapter;
 
@@ -77,6 +80,8 @@ public class ChatRoomFragment extends Fragment {
 
         mEtMessage = root.findViewById(R.id.etMessage);
         mEtMessage.setMovementMethod(new ScrollingMovementMethod());
+
+        mCivAvatar = root.findViewById(R.id.civAvatar);
 
         Bundle args = getArguments();
         if (args != null) {
@@ -148,11 +153,17 @@ public class ChatRoomFragment extends Fragment {
             mCode = FirebaseStructureId.getMateId(mRoomId);
         }
 
+        new AvatarLoader(mActivity, getViewLifecycleOwner())
+                .loadUser(mCode, mCivAvatar);
+
         mMemberIds = new String[] {User.getInstance().getStudentId(), mCode};
     }
 
     private void setupGroupChat() {
         setupMention();
+
+        new AvatarLoader(mActivity, getViewLifecycleOwner())
+                .loadUser(mRoomId, mCivAvatar);
 
         mViewModel.getRoomInfo(mRoomId).observe(getViewLifecycleOwner(), stateModel -> {
             switch (stateModel.getStatus()) {

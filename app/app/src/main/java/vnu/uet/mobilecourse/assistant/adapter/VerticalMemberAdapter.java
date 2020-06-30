@@ -12,6 +12,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,8 +21,7 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.ISwipeToDeleteHolder;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
-import vnu.uet.mobilecourse.assistant.model.firebase.MemberRole;
-import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.DimensionUtils;
 import vnu.uet.mobilecourse.assistant.view.profile.RoomProfileFragment;
 
@@ -74,6 +74,7 @@ public class VerticalMemberAdapter extends RecyclerView.Adapter<VerticalMemberAd
         private CircleImageView mCivAvatar;
         private TextView mTvName;
         private TextView mTvId;
+        private LifecycleOwner mLifecycleOwner;
 
         ViewHolder(@NonNull View view, Fragment owner) {
             super(view);
@@ -93,6 +94,8 @@ public class VerticalMemberAdapter extends RecyclerView.Adapter<VerticalMemberAd
                 mTvName.setTextColor(Color.WHITE);
                 mTvName.setTypeface(Typeface.create((Typeface) null, Typeface.NORMAL));
             }
+
+            mLifecycleOwner = owner.getViewLifecycleOwner();
         }
 
         void bind(IStudent student) {
@@ -103,6 +106,9 @@ public class VerticalMemberAdapter extends RecyclerView.Adapter<VerticalMemberAd
                 String name = student.getName() + " (tôi)";
                 mTvName.setText(name);
             }
+
+            new AvatarLoader(itemView.getContext(), mLifecycleOwner)
+                    .loadUser(student.getCode(), mCivAvatar);
         }
     }
 }

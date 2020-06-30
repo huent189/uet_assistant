@@ -1,23 +1,15 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -25,11 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
-import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
-import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
-import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.view.chat.AddMemberFragment;
-import vnu.uet.mobilecourse.assistant.view.chat.ChatFragment;
 
 public class SuggestionMemberAdapter extends RecyclerView.Adapter<SuggestionMemberAdapter.ViewHolder> {
 
@@ -99,6 +88,9 @@ public class SuggestionMemberAdapter extends RecyclerView.Adapter<SuggestionMemb
         void bind(IStudent student, CompoundButton.OnCheckedChangeListener listener, AddMemberFragment fragment) {
             mTvName.setText(student.getName());
             mTvId.setText(student.getCode());
+
+            new AvatarLoader(itemView.getContext(), fragment.getViewLifecycleOwner())
+                    .loadUser(student.getCode(), mCivAvatar);
 
             fragment.getViewModel().isSelected(student).observe(fragment.getViewLifecycleOwner(), new Observer<Boolean>() {
                 @Override

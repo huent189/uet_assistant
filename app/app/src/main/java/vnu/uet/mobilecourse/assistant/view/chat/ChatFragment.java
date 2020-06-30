@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,7 +28,9 @@ import java.util.List;
 
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.ChatGroupAdapter;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
+import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.viewmodel.ChatViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
@@ -74,6 +77,10 @@ public class ChatFragment extends Fragment {
                 mNavController.navigate(R.id.action_navigation_chat_to_navigation_search_student);
             }
         });
+
+        ImageView myAvatarView = root.findViewById(R.id.civAvatar);
+        new AvatarLoader(mActivity, getViewLifecycleOwner())
+                .loadUser(User.getInstance().getStudentId(), myAvatarView);
 
         return root;
     }
