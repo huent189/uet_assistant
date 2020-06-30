@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.database;
+package vnu.uet.mobilecourse.assistant.Storage;
 
 import android.net.Uri;
 
@@ -30,6 +30,7 @@ interface IStorageInterface {
      * @return LiveData contains path to avatar on cloud
      */
     IStateLiveData<String> changeAvatar(String Id, String localPath);
+
 
     StorageReference getAvatar(String Id);
 
