@@ -30,7 +30,6 @@ public class Storage implements IStorage {
         Uri fileURI = Uri.fromFile(new File(localPath));
         // delete old avatar
         StorageReference avatarRef = storage.child(Storage.AVATAR_DIR).child(Id).child(Storage.AVATAR_FILENAME);
-        avatarRef.delete().addOnSuccessListener(aVoid -> { // delete old avatar
             avatarRef.putFile(fileURI).addOnCompleteListener(task -> { // upload new avatar
                 if (task.isSuccessful()) {
                     changeAvatarState.postSuccess(avatarRef.getPath());
@@ -38,7 +37,6 @@ public class Storage implements IStorage {
                     changeAvatarState.postError(task.getException());
                 }
             });
-        });
 
         return changeAvatarState;
     }
