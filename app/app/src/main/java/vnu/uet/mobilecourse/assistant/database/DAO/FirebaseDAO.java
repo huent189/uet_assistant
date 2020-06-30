@@ -70,6 +70,21 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateMediatorLiveData<T> response = new StateMediatorLiveData<>();
         response.postLoading();
 
+        if (mDataList.getValue() != null) {
+            // filter the selected document by id
+            T doc = mDataList.getValue().getData().stream()
+                    .filter(d -> d.getId().equals(id))
+                    .findFirst()
+                    .orElse(null);
+
+            // in case can't not found document
+            // we will post loading state
+            // (or error state .-. idk)
+            if (doc == null) handleDocumentNotFound(response, id);
+                // post success state when find the doc
+            else response.postSuccess(doc);
+        }
+
         // output state live data will bind with mDataList
         // when mDataList change, output from this function
         // will auto update data

@@ -16,6 +16,7 @@ import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.adapter.viewholder.ExpandableGroupHolder;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.MaterialViewHolder;
 import vnu.uet.mobilecourse.assistant.model.CourseOverview;
 import vnu.uet.mobilecourse.assistant.model.Material;
@@ -83,20 +84,20 @@ public class CourseContentAdapter extends
         }
     }
 
-    static class WeeklyMaterialViewHolder extends GroupViewHolder {
-        private TextView mTvWeeklyTitle;
+    static class WeeklyMaterialViewHolder extends ExpandableGroupHolder {
 
-        private ImageView mIvExpandArrow;
+        private TextView mTvWeeklyTitle;
 
         WeeklyMaterialViewHolder(@NonNull View itemView) {
             super(itemView);
 
             mTvWeeklyTitle = itemView.findViewById(R.id.tvTitle);
-            mIvExpandArrow = itemView.findViewById(R.id.ivExpandArrow);
         }
 
         void bind(ExpandableCourseContent content) {
             mTvWeeklyTitle.setText(content.getTitle());
         }
     }
+
+
 }

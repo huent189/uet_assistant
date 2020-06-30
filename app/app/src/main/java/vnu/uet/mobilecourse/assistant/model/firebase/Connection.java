@@ -8,7 +8,7 @@ public class Connection implements IFirebaseModel {
     private String id;
     private List<String> studentIds;
     private long timestamp;
-    private long counter;
+    private long counter = 1;
 
     @Override
     public String getId() {

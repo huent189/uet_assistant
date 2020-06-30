@@ -9,6 +9,7 @@ import com.google.firebase.firestore.WriteBatch;
 import java.util.List;
 
 import vnu.uet.mobilecourse.assistant.model.IStudent;
+import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -70,5 +71,26 @@ public class ChatDAO {
         });
 
         return removeMemberState;
+    }
+
+    public StateLiveData<String> changeGroupTitle(String groupId, String[] memberIds, String title){
+        StateLiveData<String> changeGroupTitleState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
+
+        WriteBatch batch = db.batch();
+
+        for (String memberId :
+                memberIds) {
+            DocumentReference groupChatDocRef = userCol.document(memberId)
+                    .collection(FirebaseCollectionName.GROUP_CHAT)
+                    .document(groupId);
+            batch.update(groupChatDocRef, "name",  title);
+        }
+
+        batch.commit().addOnSuccessListener(aVoid -> {
+            changeGroupTitleState.postSuccess(title);
+        }).addOnFailureListener(e -> {
+            changeGroupTitleState.postError(e);
+        });
+        return changeGroupTitleState;
     }
 }

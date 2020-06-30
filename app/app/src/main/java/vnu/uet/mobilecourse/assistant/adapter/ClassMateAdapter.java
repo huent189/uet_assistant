@@ -21,6 +21,7 @@ import vnu.uet.mobilecourse.assistant.adapter.viewholder.StudentViewHolder;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
+import vnu.uet.mobilecourse.assistant.view.course.CourseClassmateFragment;
 import vnu.uet.mobilecourse.assistant.view.course.ExploreCourseFragment;
 import vnu.uet.mobilecourse.assistant.view.profile.RoomProfileFragment;
 
@@ -62,7 +63,7 @@ public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> im
 
                 int actionId = 0;
 
-                if (mOwner instanceof ExploreCourseFragment) {
+                if (mOwner instanceof CourseClassmateFragment) {
                     actionId = R.id.action_navigation_explore_course_to_navigation_chat_room;
                 } else if (mOwner instanceof RoomProfileFragment) {
                     actionId = R.id.action_navigation_room_profile_to_navigation_chat_room;
@@ -97,7 +98,7 @@ public class ClassMateAdapter extends RecyclerView.Adapter<StudentViewHolder> im
                     bundle.putString("avatar", current.getAvatar());
                     bundle.putBoolean("active", current.isActive());
 
-                    if (mOwner instanceof ExploreCourseFragment) {
+                    if (mOwner instanceof CourseClassmateFragment) {
                         actionId = R.id.action_navigation_explore_course_to_navigation_friend_profile;
                     } else if (mOwner instanceof RoomProfileFragment) {
                         actionId = R.id.action_navigation_room_profile_to_navigation_friend_profile;

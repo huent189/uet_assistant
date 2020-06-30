@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/margin"
+    android:paddingHorizontal="@dimen/margin_x2"
+    android:paddingTop="@dimen/margin_x3">
+
+    <EditText
+        android:id="@+id/etRoomTitle"
+        style="@style/EditText"
+        android:layout_width="match_parent"
+        android:hint="@string/hint_set_room_chat_title"
+        android:inputType="text" />
+
+</LinearLayout>

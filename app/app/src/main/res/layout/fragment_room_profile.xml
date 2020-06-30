@@ -57,10 +57,11 @@
 
             <TextView
                 android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_x2"
                 android:layout_marginTop="16dp"
-                android:text="Nguyễn Tùng Lâm"
+                android:textAlignment="center"
                 android:textSize="@dimen/font_size_large_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -78,60 +79,80 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
-            <LinearLayout
+<!--            <LinearLayout-->
+<!--                android:id="@+id/layout_rename"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="@dimen/margin"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:background="@drawable/ripple_highlight"-->
+<!--                android:paddingVertical="@dimen/margin_x2"-->
+<!--                android:paddingHorizontal="@dimen/margin_x2"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/tvCommonTitle">-->
+
+<!--                <TextView-->
+<!--                    style="@style/ListItemTitle"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Đổi tên phòng chat"/>-->
+
+<!--                <ImageView-->
+<!--                    android:layout_marginStart="@dimen/margin_x2"-->
+<!--                    android:layout_width="24dp"-->
+<!--                    android:layout_height="24dp"-->
+<!--                    android:src="@drawable/ic_create_24dp"/>-->
+
+<!--            </LinearLayout>-->
+
+            <vnu.uet.mobilecourse.assistant.view.component.SquareButton
                 android:id="@+id/layout_rename"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin"
-                android:gravity="center_vertical"
-                android:background="@drawable/ripple_highlight"
-                android:paddingVertical="@dimen/margin_x2"
-                android:paddingHorizontal="@dimen/margin_x2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvCommonTitle">
-
-                <TextView
-                    style="@style/ListItemTitle"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Đổi tên phòng chat"/>
-
-                <ImageView
-                    android:layout_marginStart="@dimen/margin_x2"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_create_24dp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_change_avatar"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:background="@drawable/ripple_highlight"
-                android:paddingVertical="@dimen/margin_x2"
-                android:paddingHorizontal="@dimen/margin_x2"
+                android:text="Đổi tên phòng chat"
+                android:drawableEnd="@drawable/ic_create_24dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_rename">
+                app:layout_constraintTop_toBottomOf="@+id/tvCommonTitle" />
 
-                <TextView
-                    style="@style/ListItemTitle"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Thay ảnh đại diện"/>
+            <vnu.uet.mobilecourse.assistant.view.component.SquareButton
+                android:id="@+id/layout_change_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Thay ảnh đại diện"
+                android:drawableEnd="@drawable/ic_image_32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_rename" />
 
-                <ImageView
-                    android:layout_marginStart="@dimen/margin_x2"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_image_32dp"/>
+<!--            <LinearLayout-->
+<!--                android:id="@+id/layout_change_avatar"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:visibility="invisible"-->
+<!--                android:background="@drawable/ripple_highlight"-->
+<!--                android:paddingVertical="@dimen/margin_x2"-->
+<!--                android:paddingHorizontal="@dimen/margin_x2"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/layout_rename">-->
 
-            </LinearLayout>
+<!--                <TextView-->
+<!--                    style="@style/ListItemTitle"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Thay ảnh đại diện"/>-->
+
+<!--                <ImageView-->
+<!--                    android:layout_marginStart="@dimen/margin_x2"-->
+<!--                    android:layout_width="24dp"-->
+<!--                    android:layout_height="24dp"-->
+<!--                    android:src="@drawable/ic_image_32dp"/>-->
+
+<!--            </LinearLayout>-->
 
             <TextView
                 android:id="@+id/tvMemberTitle"
@@ -156,32 +177,41 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvMemberTitle" />
 
-            <LinearLayout
+            <vnu.uet.mobilecourse.assistant.view.component.SquareButton
                 android:id="@+id/layout_add_member"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:background="@drawable/ripple_highlight"
-                android:paddingVertical="@dimen/margin_x2"
-                android:paddingHorizontal="@dimen/margin_x2"
+                android:text="Thêm thành viên"
+                android:drawableEnd="@drawable/ic_group_add_24dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rvMembers">
+                app:layout_constraintTop_toBottomOf="@+id/rvMembers"/>
 
-                <TextView
-                    style="@style/ListItemTitle"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Thêm thành viên"/>
+<!--            <LinearLayout-->
+<!--                android:id="@+id/layout_add_member"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:background="@drawable/ripple_highlight"-->
+<!--                android:paddingVertical="@dimen/margin_x2"-->
+<!--                android:paddingHorizontal="@dimen/margin_x2"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/rvMembers">-->
 
-                <ImageView
-                    android:layout_marginStart="@dimen/margin_x2"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_group_add_24dp"/>
+<!--                <TextView-->
+<!--                    style="@style/ListItemTitle"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Thêm thành viên"/>-->
 
-            </LinearLayout>
+<!--                <ImageView-->
+<!--                    android:layout_marginStart="@dimen/margin_x2"-->
+<!--                    android:layout_width="24dp"-->
+<!--                    android:layout_height="24dp"-->
+<!--                    android:src="@drawable/ic_group_add_24dp"/>-->
+<!---->
+<!--            </LinearLayout>-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
