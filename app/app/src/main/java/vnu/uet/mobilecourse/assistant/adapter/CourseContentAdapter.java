@@ -21,6 +21,7 @@ import vnu.uet.mobilecourse.assistant.adapter.viewholder.MaterialViewHolder;
 import vnu.uet.mobilecourse.assistant.model.CourseOverview;
 import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.material.CourseConstant;
+import vnu.uet.mobilecourse.assistant.view.course.CourseProgressFragment;
 import vnu.uet.mobilecourse.assistant.viewmodel.expandable.ExpandableCourseContent;
 
 import java.util.List;
@@ -29,11 +30,11 @@ public class CourseContentAdapter extends
         ExpandableRecyclerViewAdapter<CourseContentAdapter.WeeklyMaterialViewHolder, MaterialViewHolder> {
 
     private List<CourseOverview> mContents;
-    private Fragment mOwner;
+    private CourseProgressFragment mOwner;
     private LayoutInflater mInflater;
     private NavController mNavController;
 
-    public CourseContentAdapter(List<CourseOverview> contents, Fragment owner) {
+    public CourseContentAdapter(List<CourseOverview> contents, CourseProgressFragment owner) {
         super(ExpandableCourseContent.convert(contents));
 
         this.mOwner = owner;
@@ -60,7 +61,12 @@ public class CourseContentAdapter extends
         View view = mInflater
                 .inflate(R.layout.layout_material_item, parent, false);
 
-        return new MaterialViewHolder(view, mNavController);
+        return new MaterialViewHolder(view, mNavController) {
+            @Override
+            protected void onCompleteChange() {
+                mOwner.saveRecycleViewState();
+            }
+        };
     }
 
     @Override

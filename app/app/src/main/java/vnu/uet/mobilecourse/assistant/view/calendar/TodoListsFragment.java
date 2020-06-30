@@ -21,6 +21,7 @@ import vnu.uet.mobilecourse.assistant.adapter.viewholder.TodoViewHolder;
 import vnu.uet.mobilecourse.assistant.alarm.scheduler.TodoScheduler;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.model.firebase.TodoList;
+import vnu.uet.mobilecourse.assistant.view.component.EmptyView;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.CalendarViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.expandable.ExpandableTodoList;
@@ -34,6 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -82,24 +84,39 @@ public class TodoListsFragment extends Fragment {
         mRecyclerViewState = mViewModel.getTodoListViewState();
 //        restoreRecycleViewState();
 
+        ShimmerFrameLayout shimmerRvTodoLists = root.findViewById(R.id.shimmerRvTodoLists);
+        shimmerRvTodoLists.startShimmerAnimation();
+
+        View emptyView = root.findViewById(R.id.layoutEmpty);
+
         mViewModel.getAllTodoLists().observe(getViewLifecycleOwner(), stateModel -> {
             switch (stateModel.getStatus()) {
                 case SUCCESS:
-                    List<TodoList> todoLists = stateModel.getData();
-                    mAdapter = new TodoListAdapter(todoLists, TodoListsFragment.this);
-                    mRvTodoLists.setAdapter(mAdapter);
-//                    mAdapter.onRestoreInstanceState(args);
+                    shimmerRvTodoLists.setVisibility(View.GONE);
 
-                    restoreRecycleViewState();
+                    List<TodoList> todoLists = stateModel.getData();
+
+                    if (todoLists.isEmpty()) {
+                        mRvTodoLists.setVisibility(View.GONE);
+                        emptyView.setVisibility(View.VISIBLE);
+                    } else {
+                        mRvTodoLists.setVisibility(View.VISIBLE);
+                        emptyView.setVisibility(View.GONE);
+
+                        mAdapter = new TodoListAdapter(todoLists, TodoListsFragment.this);
+                        mRvTodoLists.setAdapter(mAdapter);
+
+                        restoreRecycleViewState();
+                    }
 
                     break;
 
                 case LOADING:
-                case ERROR:
-                    if (mAdapter != null) {
-//                        mAdapter.onSaveInstanceState(args);
-                    }
+                    shimmerRvTodoLists.setVisibility(View.VISIBLE);
+                    mRvTodoLists.setVisibility(View.GONE);
+                    emptyView.setVisibility(View.GONE);
 
+                case ERROR:
                     break;
             }
         });

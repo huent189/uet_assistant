@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.view.course;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.CourseContentAdapter;
+import vnu.uet.mobilecourse.assistant.adapter.TodoListAdapter;
 import vnu.uet.mobilecourse.assistant.model.Course;
 import vnu.uet.mobilecourse.assistant.model.ICourse;
 import vnu.uet.mobilecourse.assistant.viewmodel.CourseProgressViewModel;
@@ -27,9 +29,15 @@ import static vnu.uet.mobilecourse.assistant.model.material.CourseConstant.Mater
 public class CourseProgressFragment extends Fragment {
 
     private CourseProgressViewModel mViewModel;
-    private int mPrevTopItemPosition;
+
     private LinearLayoutManager mLayoutManager;
     private CourseContentAdapter mAdapter;
+
+    private RecyclerView mRvMaterials;
+
+    private Bundle mRecyclerViewState;
+
+//    private int mPrevTopItemPosition;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,9 +54,9 @@ public class CourseProgressFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_course_progress, container, false);
 
         // find rvMaterials
-        RecyclerView rvMaterials = root.findViewById(R.id.rvMaterials);
+        mRvMaterials = root.findViewById(R.id.rvMaterials);
         mLayoutManager = new LinearLayoutManager(getContext());
-        rvMaterials.setLayoutManager(mLayoutManager);
+        mRvMaterials.setLayoutManager(mLayoutManager);
 
         // find shimmer layout & start shimmer animation
         ShimmerFrameLayout shimmerRvTasks = root.findViewById(R.id.shimmerRvTasks);
@@ -67,7 +75,7 @@ public class CourseProgressFragment extends Fragment {
                 // contents haven't loaded yet
                 // then show shimmer layout & hide rvMaterials
                 if (contents == null) {
-                    rvMaterials.setVisibility(View.INVISIBLE);
+                    mRvMaterials.setVisibility(View.INVISIBLE);
                     shimmerRvTasks.setVisibility(View.VISIBLE);
                 }
 
@@ -75,7 +83,7 @@ public class CourseProgressFragment extends Fragment {
                 // then hide shimmer layout
                 // setup recycle view adapter & show rvMaterials
                 else {
-                    rvMaterials.setVisibility(View.VISIBLE);
+                    mRvMaterials.setVisibility(View.VISIBLE);
                     shimmerRvTasks.setVisibility(View.GONE);
 
                     // update new adapter with newest data
@@ -83,19 +91,19 @@ public class CourseProgressFragment extends Fragment {
                             .filter(item -> !item.getWeekInfo().getTitle().equals(GENERAL))
                             .collect(Collectors.toList());
                     mAdapter = new CourseContentAdapter(contents, CourseProgressFragment.this);
-                    rvMaterials.setAdapter(mAdapter);
+                    mRvMaterials.setAdapter(mAdapter);
 
-                    // restore expandable state
-                    mAdapter.onRestoreInstanceState(args);
+
+
+                    restoreRecycleViewState();
 
                     // restore scroll position
-                    mLayoutManager.scrollToPosition(mPrevTopItemPosition);
                 }
             });
         } else {
             TextView tvEnrollError = root.findViewById(R.id.tvEnrollError);
             tvEnrollError.setVisibility(View.VISIBLE);
-            rvMaterials.setVisibility(View.GONE);
+            mRvMaterials.setVisibility(View.GONE);
             shimmerRvTasks.setVisibility(View.GONE);
         }
 
@@ -107,13 +115,36 @@ public class CourseProgressFragment extends Fragment {
         super.onPause();
 
         // save expandable state
-        Bundle savedInstanceState = getArguments();
-        if (savedInstanceState != null && mAdapter != null) {
-            mAdapter.onSaveInstanceState(savedInstanceState);
-        }
-
-        mPrevTopItemPosition = mLayoutManager.findFirstCompletelyVisibleItemPosition();
+        saveRecycleViewState();
     }
 
+    private static final String KEY_RECYCLER_STATE = CourseContentAdapter.class.getName();
+
+    public void saveRecycleViewState() {
+        mRecyclerViewState = new Bundle();
+
+        Parcelable onSaveInstanceState = mLayoutManager.onSaveInstanceState();
+        mRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, onSaveInstanceState);
+        mAdapter.onSaveInstanceState(mRecyclerViewState);
+
+        if (mRecyclerViewState != null && mAdapter != null) {
+            mAdapter.onSaveInstanceState(mRecyclerViewState);
+        }
+
+//        mPrevTopItemPosition = mLayoutManager.findFirstCompletelyVisibleItemPosition();
+    }
+
+    public void restoreRecycleViewState() {
+        if (mRecyclerViewState != null) {
+            // restore expandable state
+            mAdapter.onRestoreInstanceState(mRecyclerViewState);
+
+            mAdapter.onRestoreInstanceState(mRecyclerViewState);
+            Parcelable onSaveInstanceState = mRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
+            mLayoutManager.onRestoreInstanceState(onSaveInstanceState);
+
+//            mLayoutManager.scrollToPosition(mPrevTopItemPosition);
+        }
+    }
 
 }
