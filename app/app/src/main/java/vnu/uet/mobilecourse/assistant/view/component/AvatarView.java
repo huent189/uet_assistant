@@ -16,9 +16,11 @@ import androidx.lifecycle.Observer;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
+import vnu.uet.mobilecourse.assistant.network.error_detector.NetworkUtil;
 import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.DimensionUtils;
+import vnu.uet.mobilecourse.assistant.util.NetworkUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class AvatarView extends FrameLayout {
@@ -125,7 +127,9 @@ public class AvatarView extends FrameLayout {
                         break;
 
                     case SUCCESS:
-                        boolean isOnline = stateModel.getData().isOnline();
+                        int networkStatus = NetworkUtils.getConnectivityStatus(getContext());
+                        boolean isOnline = stateModel.getData().isOnline()
+                                && networkStatus != NetworkUtils.TYPE_NOT_CONNECTED;
                         mIvStatus.setVisibility(isOnline ? VISIBLE : GONE);
                         break;
                 }
