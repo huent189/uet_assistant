@@ -81,12 +81,13 @@ public class MaterialViewHolder extends ChildViewHolder {
 
         mCbTaskStatus.setOnCheckedChangeListener((buttonView, isChecked) -> {
             CourseActionRepository repository = new CourseActionRepository();
-
             if (isChecked) {
                 repository.triggerMaterialCompletion(material);
             } else {
                 repository.triggerMaterialUnCompletion(material);
             }
+
+            onCompleteChange();
         });
 
         itemView.setOnClickListener(v -> {
@@ -103,5 +104,9 @@ public class MaterialViewHolder extends ChildViewHolder {
             mNavController.navigate(actionId, bundle);
 
         });
+    }
+
+    protected void onCompleteChange() {
+
     }
 }
