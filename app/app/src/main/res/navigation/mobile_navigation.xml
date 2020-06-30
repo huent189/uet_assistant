@@ -207,7 +207,9 @@
         tools:layout="@layout/fragment_add_member" >
         <action
             android:id="@+id/action_navigation_add_member_to_navigation_chat_room"
-            app:destination="@id/navigation_chat_room" />
+            app:destination="@id/navigation_chat_room"
+            app:popUpTo="@+id/navigation_add_member"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_navigation_add_member_to_navigation_set_room_title"
             app:destination="@id/navigation_set_room_title" />

@@ -149,8 +149,6 @@ public class ChatRoomFragment extends Fragment {
         }
 
         mMemberIds = new String[] {User.getInstance().getStudentId(), mCode};
-
-        if (mViewInfoItem != null) mViewInfoItem.setEnabled(true);
     }
 
     private void setupGroupChat() {
@@ -333,7 +331,10 @@ public class ChatRoomFragment extends Fragment {
         inflater.inflate(R.menu.chat_room_toolbar_menu, menu);
 
         mViewInfoItem = menu.findItem(R.id.action_view_info);
-        mViewInfoItem.setEnabled(false);
+
+        if (GroupChat.GROUP.equals(mType)) {
+            mViewInfoItem.setEnabled(false);
+        }
     }
 
     @Override

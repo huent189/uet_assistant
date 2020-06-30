@@ -322,6 +322,8 @@ public class AddMemberFragment extends Fragment {
 
                     bundle.putString("type", GroupChat.DIRECT);
 
+                    mViewModel.clearData();
+
                     mNavController.navigate(R.id.action_navigation_add_member_to_navigation_chat_room, bundle);
 
                 } else {
