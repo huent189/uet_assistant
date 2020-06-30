@@ -1,6 +1,10 @@
 package vnu.uet.mobilecourse.assistant.storage;
 
+import android.net.Uri;
+
 import com.google.firebase.storage.StorageReference;
+
+import java.net.URI;
 
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
@@ -22,7 +26,7 @@ public interface IStorage {
      * @param localPath path to file in local
      * @return LiveData contains path to avatar on cloud
      */
-    IStateLiveData<String> changeAvatar(String Id, String localPath);
+    IStateLiveData<String> changeAvatar(String Id, Uri uri);
 
     String denormalizeFileName(String localPath);
 

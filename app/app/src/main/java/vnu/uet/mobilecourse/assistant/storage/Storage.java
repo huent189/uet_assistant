@@ -9,9 +9,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
+import vnu.uet.mobilecourse.assistant.database.DAO.UserDAO;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
@@ -66,27 +72,31 @@ public class Storage implements IStorage {
     }
 
     @Override
-    public IStateLiveData<String> changeAvatar(String Id, String localPath) {
+    public IStateLiveData<String> changeAvatar(String Id, Uri fileURI) {
         IStateLiveData<String> changeAvatarState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
-        Uri fileURI = Uri.fromFile(new File(localPath));
+//        Uri fileURI = Uri.fromFile(new File(localPath));
         // delete old avatar
         StorageReference avatarRef = storage.child(Storage.AVATAR_DIR).child(Id).child(Storage.AVATAR_FILENAME);
-        avatarRef.delete().addOnSuccessListener(aVoid -> { // delete old avatar
+//        avatarRef.delete().addOnSuccessListener(aVoid -> { // delete old avatar
             avatarRef.putFile(fileURI).addOnCompleteListener(task -> { // upload new avatar
                 if (task.isSuccessful()) {
+                    Map<String, Object> changes = new HashMap<>();
+                    changes.put("avatar", System.currentTimeMillis() / 1000);
+                    new UserDAO().update(Id, changes);
                     changeAvatarState.postSuccess(avatarRef.getPath());
                 } else {
                     changeAvatarState.postError(task.getException());
                 }
             });
-        });
+//        });
 
         return changeAvatarState;
     }
 
     @Override
     public StorageReference getAvatar(String Id) {
-        return storage.child(Storage.AVATAR_DIR).child(Id).child(Storage.AVATAR_FILENAME);
+        StorageReference reference = storage.child(Storage.AVATAR_DIR).child(Id).child(Storage.AVATAR_FILENAME);
+        return reference;
     }
 
     @Override
