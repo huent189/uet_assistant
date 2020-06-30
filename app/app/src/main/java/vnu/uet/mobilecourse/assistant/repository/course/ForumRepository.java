@@ -15,7 +15,7 @@ import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
 import vnu.uet.mobilecourse.assistant.model.forum.DiscussionComparator;
 import vnu.uet.mobilecourse.assistant.model.forum.InterestedDiscussion;
 import vnu.uet.mobilecourse.assistant.model.forum.Post;
-import vnu.uet.mobilecourse.assistant.network.HTTPClient;
+import vnu.uet.mobilecourse.assistant.network.CourseClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
 import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
@@ -37,7 +37,7 @@ public class ForumRepository {
     private static ForumRepository instance;
 
     public ForumRepository() {
-        sender = HTTPClient.getInstance().request(CourseRequest.class);
+        sender = CourseClient.getInstance().request(CourseRequest.class);
         forumDAO = CoursesDatabase.getDatabase().forumDAO();
         interestDAO = new InterestedDiscussionDAO();
     }

@@ -30,4 +30,9 @@ public interface NotificationType {
      * submission deadline
      */
     int SUBMISSION = 6;
+
+    /**
+     *  final exam schedule changed
+     */
+    int FINAL_EXAM = 7;
 }

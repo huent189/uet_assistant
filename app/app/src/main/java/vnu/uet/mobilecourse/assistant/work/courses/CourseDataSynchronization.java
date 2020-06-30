@@ -14,8 +14,14 @@ public class CourseDataSynchronization {
         PeriodicWorkRequest syncDataWork = new PeriodicWorkRequest.Builder(CourseSyncDataWorker.class, 15, TimeUnit.MINUTES)
                 .setConstraints(constraints)
                 .build();
-        WorkManager.getInstance(MyApplication.getInstance().getApplicationContext())
-                .enqueueUniquePeriodicWork(TAG, ExistingPeriodicWorkPolicy.REPLACE, syncDataWork);
+        PeriodicWorkRequest syncFinalExam = new PeriodicWorkRequest.Builder(SyncFinalExamWorker.class, 1, TimeUnit.DAYS)
+                .setConstraints(constraints)
+                .build();
+        WorkManager manager = WorkManager.getInstance(MyApplication.getInstance().getApplicationContext());
+        manager.enqueueUniquePeriodicWork(TAG + "_courses", ExistingPeriodicWorkPolicy.REPLACE, syncDataWork);
+        manager.enqueueUniquePeriodicWork(TAG + "_portal", ExistingPeriodicWorkPolicy.REPLACE, syncFinalExam);
+
+
     }
 
 }

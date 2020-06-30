@@ -18,12 +18,12 @@ import vnu.uet.mobilecourse.assistant.view.MyApplication;
 
 import java.io.IOException;
 
-public class HTTPClient {
+public class CourseClient {
     private Retrofit coursesClient;
     private static final String COURSES_BASE_URL = "https://courses.uet.vnu.edu.vn";
     private Gson gson;
-    private static HTTPClient instance;
-    private HTTPClient(){
+    private static CourseClient instance;
+    private CourseClient(){
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(new ConnectivityInterceptor(MyApplication.getInstance().getApplicationContext()))
                 .addInterceptor(new Interceptor() {
@@ -51,9 +51,9 @@ public class HTTPClient {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }
-    public static HTTPClient getInstance(){
+    public static CourseClient getInstance(){
         if(instance == null){
-            instance = new HTTPClient();
+            instance = new CourseClient();
         }
         return instance;
     }

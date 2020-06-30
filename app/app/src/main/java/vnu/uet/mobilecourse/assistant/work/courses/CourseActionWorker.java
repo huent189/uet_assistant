@@ -7,7 +7,7 @@ import androidx.work.WorkerParameters;
 import com.google.gson.JsonElement;
 import retrofit2.Response;
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
-import vnu.uet.mobilecourse.assistant.network.HTTPClient;
+import vnu.uet.mobilecourse.assistant.network.CourseClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class CourseActionWorker extends Worker {
         if(id != -1){
             int completion = CoursesDatabase.getDatabase().materialDAO().getMaterialCompletion(id);
             try {
-                 Response<JsonElement> response = HTTPClient.getInstance().request(CourseRequest.class).updateMaterialCompletion(id, completion).execute();
+                 Response<JsonElement> response = CourseClient.getInstance().request(CourseRequest.class).updateMaterialCompletion(id, completion).execute();
                 if(!response.isSuccessful()){
                     return Result.failure();
                 }

@@ -142,7 +142,7 @@ public abstract class MaterialDAO {
             " QuizNoGrade.name as materialName, timeOpen as startTime, timeClose as endTime" +
             " from Course, Material, QuizNoGrade " +
             "WHERE Course.id = QuizNoGrade.courseId and Material.id = QuizNoGrade.materialId " +
-            "and QuizNoGrade.id = (:ids)")
+            "and QuizNoGrade.id in (:ids)")
     public abstract List<Submission> getQuizSubmissions(List<Integer> ids);
     @Query("SELECT Course.id as courseId, Course.code as courseName, Material.type, Material.completion as isCompleted, materialId," +
             " AssignmentContent.name as materialName, startDate as startTime, deadline as endTime" +

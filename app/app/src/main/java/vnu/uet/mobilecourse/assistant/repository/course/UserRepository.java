@@ -18,7 +18,7 @@ import vnu.uet.mobilecourse.assistant.exception.InvalidLoginException;
 import vnu.uet.mobilecourse.assistant.exception.NoConnectivityException;
 import vnu.uet.mobilecourse.assistant.exception.UnavailableHostException;
 import vnu.uet.mobilecourse.assistant.model.User;
-import vnu.uet.mobilecourse.assistant.network.HTTPClient;
+import vnu.uet.mobilecourse.assistant.network.CourseClient;
 import vnu.uet.mobilecourse.assistant.network.request.UserRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
 import vnu.uet.mobilecourse.assistant.network.response.LoginResponse;
@@ -34,7 +34,7 @@ public class UserRepository {
     public StateLiveData<String> makeLoginRequest(String studentId, String password){
         clearSession();
         final StateLiveData<String> liveLoginResponse = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
-        UserRequest userRequest = HTTPClient.getInstance().request(UserRequest.class);
+        UserRequest userRequest = CourseClient.getInstance().request(UserRequest.class);
         Call<JsonElement> call = userRequest.login(studentId, password);
         Log.d("LOGIN", "param: " + studentId + " " + password);
         call.enqueue(new CoursesResponseCallback<LoginResponse>(LoginResponse.class) {
@@ -100,7 +100,7 @@ public class UserRepository {
             loginState.postError(new Exception("require login"));
             return loginState;
         }
-        HTTPClient.getInstance().request(UserRequest.class).getUserId().enqueue(new Callback<JsonObject>() {
+        CourseClient.getInstance().request(UserRequest.class).getUserId().enqueue(new Callback<JsonObject>() {
             @Override
             @EverythingIsNonNull
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
