@@ -70,7 +70,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateMediatorLiveData<T> response = new StateMediatorLiveData<>();
         response.postLoading();
 
-        if (mDataList.getValue() != null) {
+        if (mDataList.getValue() != null && mDataList.getValue().getData() != null) {
             // filter the selected document by id
             T doc = mDataList.getValue().getData().stream()
                     .filter(d -> d.getId().equals(id))

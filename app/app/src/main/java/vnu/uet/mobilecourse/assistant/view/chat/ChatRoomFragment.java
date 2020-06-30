@@ -1,6 +1,5 @@
 package vnu.uet.mobilecourse.assistant.view.chat;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -19,10 +18,7 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.firestore.util.Util;
-
 import java.util.List;
-import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,13 +41,10 @@ import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
-import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.ChatRoomViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class ChatRoomFragment extends Fragment {
-
-    private static final String STUDENT_ID = User.getInstance().getStudentId();
 
     private MessageAdapter mMessageAdapter;
     private FragmentActivity mActivity;
@@ -84,6 +77,113 @@ public class ChatRoomFragment extends Fragment {
 
         mEtMessage = root.findViewById(R.id.etMessage);
         mEtMessage.setMovementMethod(new ScrollingMovementMethod());
+
+        Bundle args = getArguments();
+        if (args != null) {
+            mTitle = args.getString("title");
+            mTvRoomTitle = root.findViewById(R.id.tvRoomTitle);
+            mTvRoomTitle.setText(mTitle);
+
+            RecyclerView rvChat = initializeListView(root);
+
+            mType = args.getString("type");
+            mRoomId = args.getString("roomId");
+            mCode = args.getString("code");
+
+            if (GroupChat.DIRECT.equals(mType)) {
+                setupDirectChat();
+            } else {
+                setupGroupChat();
+            }
+
+            mViewModel.markAsSeen(mRoomId);
+
+            mViewModel.getAllMessages(mRoomId)
+                    .observe(getViewLifecycleOwner(), stateModel -> {
+                        Log.d(ChatRoomFragment.class.getSimpleName(), "onChanged: " + stateModel.getStatus());
+
+                        switch (stateModel.getStatus()) {
+                            case SUCCESS:
+                                List<Message_GroupChatSubCol> messages = stateModel.getData();
+
+                                if (messages.isEmpty()) {
+                                    mEmptyRoom = true;
+                                } else {
+                                    mMessageAdapter = new MessageAdapter(messages, ChatRoomFragment.this);
+                                    rvChat.setAdapter(mMessageAdapter);
+                                    mEmptyRoom = false;
+                                }
+
+                                break;
+
+                            case ERROR:
+                                Exception error = stateModel.getError();
+                                if (error instanceof DocumentNotFoundException) {
+                                    Toast.makeText(getContext(), "Chat room not created yet.", Toast.LENGTH_SHORT).show();
+                                    Log.d(ChatRoomFragment.class.getSimpleName(), "Chat room not created yet.");
+                                } else {
+                                    Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Log.d(ChatRoomFragment.class.getSimpleName(), "Error: " + error.getMessage());
+                                }
+
+                                break;
+                        }
+                    });
+        }
+
+        ImageButton btnSend = root.findViewById(R.id.btnSend);
+        btnSend.setOnClickListener(v -> sendTextMessage());
+
+        initializeToolbar(root);
+
+        return root;
+    }
+
+    private void setupDirectChat() {
+        if (mRoomId == null) {
+            mRoomId = FirebaseStructureId.directedChat(mCode);
+        }
+
+        if (mCode == null) {
+            mCode = FirebaseStructureId.getMateId(mRoomId);
+        }
+
+        mMemberIds = new String[] {User.getInstance().getStudentId(), mCode};
+
+        if (mViewInfoItem != null) mViewInfoItem.setEnabled(true);
+    }
+
+    private void setupGroupChat() {
+        setupMention();
+
+        mViewModel.getRoomInfo(mRoomId).observe(getViewLifecycleOwner(), stateModel -> {
+            switch (stateModel.getStatus()) {
+                case SUCCESS:
+                    mRoom = stateModel.getData();
+
+                    List<Member_GroupChatSubCol> members = mRoom.getMembers();
+                    mMemberIds = members.stream()
+                            .map(Member_GroupChatSubCol::getId)
+                            .toArray(String[]::new);
+
+                    mMemberListAdapter = new MentionAdapter(mActivity, members);
+                    mEtMessage.setAdapter(mMemberListAdapter);
+
+                    mTitle = mRoom.getName();
+                    mTvRoomTitle.setText(mTitle);
+
+                    if (mViewInfoItem != null) mViewInfoItem.setEnabled(true);
+
+                    break;
+
+                case ERROR:
+                    Toast.makeText(mActivity, "Không lấy được thông tin phòng chat", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        });
+    }
+
+    private void setupMention() {
         mEtMessage.setThreshold(1);
 
         // Create a new Tokenizer which will get text after '@' and terminate on ' '
@@ -146,150 +246,6 @@ public class ChatRoomFragment extends Fragment {
         });
 
         mEtMessage.setDropDownBackgroundResource(R.drawable.list_item_background);
-
-//        mEtMessage.addTextChangedListener(new TextWatcher() {
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                Layout layout = mEtMessage.getLayout();
-//                int pos = mEtMessage.getSelectionStart();
-//                int line = layout.getLineForOffset(pos);
-//                int baseline = layout.getLineBaseline(line);
-//
-//                int bottom = mEtMessage.getHeight();
-//
-//                mEtMessage.setDropDownVerticalOffset(baseline - bottom);
-//            }
-//
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//            }
-//        });
-
-        Bundle args = getArguments();
-        if (args != null) {
-            mTitle = args.getString("title");
-            mTvRoomTitle = root.findViewById(R.id.tvRoomTitle);
-            mTvRoomTitle.setText(mTitle);
-
-            RecyclerView rvChat = initializeListView(root);
-
-            mType = args.getString("type");
-
-            mCode = args.getString("code");
-            if (mCode != null && GroupChat.DIRECT.equals(mType)) {
-                mMemberIds = new String[] {User.getInstance().getStudentId(), mCode};
-            }
-
-            mRoomId = args.getString("roomId");
-            if (mRoomId == null && mType.equals(GroupChat.DIRECT)) {
-                mRoomId = FirebaseStructureId.directedChat(mCode);
-            }
-
-            mViewModel.markAsSeen(mRoomId);
-
-            mViewModel.getRoomInfo(mRoomId).observe(getViewLifecycleOwner(), new Observer<StateModel<GroupChat>>() {
-                @Override
-                public void onChanged(StateModel<GroupChat> stateModel) {
-                    switch (stateModel.getStatus()) {
-                        case SUCCESS:
-                            mRoom = stateModel.getData();
-
-                            List<Member_GroupChatSubCol> members = mRoom.getMembers();
-                            mMemberIds = members.stream()
-                                    .map(Member_GroupChatSubCol::getId)
-                                    .toArray(String[]::new);
-
-                            if (GroupChat.DIRECT.equals(mType) && mCode == null) {
-                                mCode = findFirstOtherId(mMemberIds);
-                            } else {
-                                mTitle = mRoom.getName();
-                                mTvRoomTitle.setText(mTitle);
-                            }
-
-                            if (mViewInfoItem != null) mViewInfoItem.setEnabled(true);
-
-//                            mMemberListAdapter = new ArrayAdapter<>(mActivity,
-//                                    android.R.layout.simple_dropdown_item_1line,
-//                                    members.stream()
-//                                            .map(Member_GroupChatSubCol::getId)
-//                                            .collect(Collectors.toList()));
-
-                            mMemberListAdapter = new MentionAdapter(mActivity, members);
-                            mEtMessage.setAdapter(mMemberListAdapter);
-
-                            break;
-
-                        case ERROR:
-                            Toast.makeText(mActivity, "Không lấy được thông tin phòng chat", Toast.LENGTH_SHORT).show();
-                            break;
-                    }
-                }
-            });
-
-            mViewModel.getAllMessages(mRoomId)
-                    .observe(getViewLifecycleOwner(), new Observer<StateModel<List<Message_GroupChatSubCol>>>() {
-                        @Override
-                        public void onChanged(StateModel<List<Message_GroupChatSubCol>> stateModel) {
-                            Log.d(ChatRoomFragment.class.getSimpleName(), "onChanged: " + stateModel.getStatus());
-
-                            switch (stateModel.getStatus()) {
-                                case SUCCESS:
-                                    List<Message_GroupChatSubCol> messages = stateModel.getData();
-
-                                    if (messages.isEmpty()) {
-                                        mEmptyRoom = true;
-                                    } else {
-                                        mMessageAdapter = new MessageAdapter(messages, ChatRoomFragment.this);
-                                        rvChat.setAdapter(mMessageAdapter);
-                                        mEmptyRoom = false;
-                                    }
-
-                                    break;
-
-                                case ERROR:
-                                    Exception error = stateModel.getError();
-                                    if (error instanceof DocumentNotFoundException) {
-                                        Toast.makeText(getContext(), "Chat room not created yet.", Toast.LENGTH_SHORT).show();
-                                        Log.d(ChatRoomFragment.class.getSimpleName(), "Chat room not created yet.");
-                                    } else {
-                                        Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                                        Log.d(ChatRoomFragment.class.getSimpleName(), "Error: " + error.getMessage());
-                                    }
-
-                                    break;
-                            }
-                        }
-                    });
-        }
-
-        ImageButton btnSend = root.findViewById(R.id.btnSend);
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendTextMessage();
-            }
-        });
-
-        initializeToolbar(root);
-
-        return root;
-    }
-
-    private String findFirstOtherId(String[] memberIds) {
-        String otherId = null;
-        for (String id : memberIds) {
-            if (!id.equals(STUDENT_ID)) {
-                otherId = id;
-                break;
-            }
-        }
-
-        return otherId;
     }
 
     private void sendTextMessage() {
@@ -301,22 +257,19 @@ public class ChatRoomFragment extends Fragment {
         // first message in directed chat
         if (GroupChat.DIRECT.equals(mType) && mEmptyRoom) {
             mViewModel.connectAndSendMessage(mRoomId, mTitle, message, mMemberIds)
-                    .observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
-                        @Override
-                        public void onChanged(StateModel<String> stateModel) {
-                            switch (stateModel.getStatus()) {
-                                case SUCCESS:
-                                    if (stateModel.getData().equals(ChatRoomViewModel.CONNECTED_MSG)) {
-                                        Toast.makeText(mActivity, stateModel.getData(), Toast.LENGTH_SHORT).show();
-                                    }
+                    .observe(getViewLifecycleOwner(), stateModel -> {
+                        switch (stateModel.getStatus()) {
+                            case SUCCESS:
+                                if (stateModel.getData().equals(ChatRoomViewModel.CONNECTED_MSG)) {
+                                    Toast.makeText(mActivity, stateModel.getData(), Toast.LENGTH_SHORT).show();
+                                }
 
-                                    break;
+                                break;
 
-                                case ERROR:
-                                    Toast.makeText(mActivity, "Không thể gửi tin nhắn - "
-                                            + stateModel.getError().getMessage(), Toast.LENGTH_SHORT).show();
-                                    break;
-                            }
+                            case ERROR:
+                                Toast.makeText(mActivity, "Không thể gửi tin nhắn - "
+                                        + stateModel.getError().getMessage(), Toast.LENGTH_SHORT).show();
+                                break;
                         }
                     });
         }
