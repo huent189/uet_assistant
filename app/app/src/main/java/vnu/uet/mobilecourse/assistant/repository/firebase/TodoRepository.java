@@ -175,7 +175,7 @@ public class TodoRepository implements ITodoRepository {
 
         DeepTodoListsStateLiveData(@NonNull StateLiveData<List<TodoList>> shallowTodoLists,
                                           @NonNull StateLiveData<List<Todo>> todos) {
-            super(new StateModel<>(StateStatus.LOADING));
+//            super(new StateModel<>(StateStatus.LOADING));
 
             this.mShallowLists = new ArrayList<>();
             this.mItems = new ArrayList<>();
