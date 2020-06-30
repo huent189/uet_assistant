@@ -1,17 +1,8 @@
 package vnu.uet.mobilecourse.assistant.database.DAO;
 
 import android.util.Log;
-
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.IFirebaseModel;
@@ -19,6 +10,9 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateMediatorLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
+
+import java.util.List;
+import java.util.Map;
 
 public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebaseDAO<T> {
     protected static final String TAG = FirebaseDAO.class.getSimpleName();
@@ -70,7 +64,7 @@ public abstract class FirebaseDAO<T extends IFirebaseModel> implements IFirebase
         StateMediatorLiveData<T> response = new StateMediatorLiveData<>();
         response.postLoading();
 
-        if (mDataList.getValue() != null) {
+        if (mDataList.getValue() != null && mDataList.getValue().getData() != null) {
             // filter the selected document by id
             T doc = mDataList.getValue().getData().stream()
                     .filter(d -> d.getId().equals(id))
