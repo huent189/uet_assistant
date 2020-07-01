@@ -179,6 +179,7 @@ public class ChatRoomViewModel extends ViewModel {
 
                         case SUCCESS:
                             postSuccess(CONNECTED_MSG);
+                            message.setTimestamp(message.getTimestamp() + 1);
 
                             addSource(mChatRepo.sendMessage(roomId, message, memberIds), new Observer<StateModel<String>>() {
                                 @Override

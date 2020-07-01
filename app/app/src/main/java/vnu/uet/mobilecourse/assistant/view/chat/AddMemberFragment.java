@@ -93,6 +93,7 @@ public class AddMemberFragment extends Fragment {
         CheckBox checkBox = layoutSearchResult.findViewById(R.id.checkbox);
         ImageView ivWarning = layoutSearchResult.findViewById(R.id.ivWarning);
         AvatarView avatarView = layoutSearchResult.findViewById(R.id.avatarView);
+        avatarView.setLifecycleOwner(getViewLifecycleOwner());
 
         ShimmerFrameLayout shimmerSearchResult = root.findViewById(R.id.shimmerSearchResult);
         shimmerSearchResult.startShimmerAnimation();
@@ -164,8 +165,8 @@ public class AddMemberFragment extends Fragment {
                     public void onChanged(StateModel<UserInfo> stateModel) {
                         switch (stateModel.getStatus()) {
                             case SUCCESS:
-                                if (!mFromRoomProfile || (!isMember(stateModel.getData()))
-                                        || stateModel.getData().getCode().equals(User.getInstance().getStudentId())) {
+                                if ((!mFromRoomProfile || (!isMember(stateModel.getData())))
+                                        && !stateModel.getData().getCode().equals(User.getInstance().getStudentId())) {
                                     layoutSearchResult.setVisibility(View.VISIBLE);
                                     shimmerSearchResult.setVisibility(View.GONE);
 
