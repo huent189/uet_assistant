@@ -1,17 +1,23 @@
 package vnu.uet.mobilecourse.assistant.storage;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 
+import androidx.annotation.NonNull;
 import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.database.DAO.UserDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
@@ -132,4 +138,27 @@ public class StorageAccess implements IStorage {
         return Long.toString(unixTime) + fileURI.getLastPathSegment();
     }
 
+    public IStateLiveData<String> changeAvatarFromCamera(String id, Bitmap photo) {
+        IStateLiveData<String> changeAvatarState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        photo.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+
+        byte[] b = stream.toByteArray();
+        StorageReference avatarRef = storage.child(StorageAccess.AVATAR_DIR).child(id).child(StorageAccess.AVATAR_FILENAME);
+        avatarRef.putBytes(b)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    changeAvatarState.postSuccess(avatarRef.getPath());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    changeAvatarState.postError(e);
+                }
+            });
+
+        return changeAvatarState;
+    }
 }

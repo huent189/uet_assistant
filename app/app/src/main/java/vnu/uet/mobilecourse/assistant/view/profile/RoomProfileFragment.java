@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.storage.StorageReference;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -25,13 +27,17 @@ import vnu.uet.mobilecourse.assistant.adapter.VerticalMemberAdapter;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
+import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.FileUtils;
 import vnu.uet.mobilecourse.assistant.view.chat.RenameDialog;
 import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
+import vnu.uet.mobilecourse.assistant.view.component.FullscreenImageView;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.RoomProfileViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+
+import static android.app.Activity.RESULT_OK;
 
 public class RoomProfileFragment extends Fragment {
 
@@ -93,6 +99,12 @@ public class RoomProfileFragment extends Fragment {
                 AvatarView avatarView = root.findViewById(R.id.avatarView);
                 avatarView.setLifecycleOwner(getViewLifecycleOwner());
                 avatarView.loadRoom(roomId);
+                avatarView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showAvatarFullscreen();
+                    }
+                });
             }
         }
 
@@ -201,14 +213,26 @@ public class RoomProfileFragment extends Fragment {
         dialog.show(mActivity.getSupportFragmentManager(), RenameDialog.class.getName());
     }
 
+    private void showAvatarFullscreen() {
+        FullscreenImageView d = new FullscreenImageView(mActivity, "Ảnh đại diện");
+
+        StorageReference imageRef = new StorageAccess().getAvatar(mRoom.getId());
+
+        if (imageRef != null) {
+            d.setPhotoReference(imageRef);
+            d.show();
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
             case FileUtils.REQUEST_CODE_IMAGE:
-                Uri uri = data.getData();
-                Toast.makeText(mActivity, uri.getPath(), Toast.LENGTH_SHORT).show();
-
-                mViewModel.changeAvatar(mRoom, uri);
+                if (resultCode == RESULT_OK && data != null) {
+                    Uri uri = data.getData();
+                    Toast.makeText(mActivity, uri.getPath(), Toast.LENGTH_SHORT).show();
+                    mViewModel.changeAvatar(mRoom, uri);
+                }
 
                 break;
         }

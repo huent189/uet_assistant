@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@color/backgroundLight"
+    android:layout_height="match_parent">
+
+    <vnu.uet.mobilecourse.assistant.view.component.SquareButton
+        android:id="@+id/btnLibrary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chọn ảnh từ thư viện"
+        android:drawableEnd="@drawable/ic_photo_library_24dp"/>
+
+    <vnu.uet.mobilecourse.assistant.view.component.SquareButton
+        android:id="@+id/btnCamera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:text="Chụp ảnh"
+        android:drawableEnd="@drawable/ic_camera_alt_24dp"/>
+
+</LinearLayout>

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
@@ -24,6 +25,7 @@ public class CardAttachment extends CardView {
     private LayoutInflater mInflater;
 
     private TextView mTvName, mTvSize;
+    private ShimmerFrameLayout mSfl;
 
     public CardAttachment(@NonNull Context context) {
         super(context);
@@ -50,7 +52,11 @@ public class CardAttachment extends CardView {
             View root = mInflater.inflate(R.layout.card_attachment_base, this);
             root.setBackgroundResource(0);
             mTvName = root.findViewById(R.id.tvAttachmentName);
+            mTvName.setVisibility(GONE);
             mTvSize = root.findViewById(R.id.tvAttachmentSize);
+            mTvSize.setVisibility(GONE);
+            mSfl = root.findViewById(R.id.sfl);
+            mSfl.setVisibility(VISIBLE);
         }
     }
 
@@ -63,6 +69,10 @@ public class CardAttachment extends CardView {
                 long kbs = storageMetadata.getSizeBytes() / 1024;
                 String size = kbs + "KB";
                 mTvSize.setText(size);
+
+                mSfl.setVisibility(GONE);
+                mTvName.setVisibility(VISIBLE);
+                mTvSize.setVisibility(VISIBLE);
             }
         });
     }

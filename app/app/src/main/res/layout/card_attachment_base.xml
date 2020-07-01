@@ -28,7 +28,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin"
-            android:text="Trước đây mình có viết bài kể về một bạn nam còn trẻ, phạm tội do thiếu hiểu biết pháp luật (vì giúp tiêu thụ các tài sản mà bạn cậu ta ăn cắp được) và đi tù một thời gian ngắn. Nhưng khi đã chấp hành xong án phạt tù và trở về, cậu ta không còn hòa nhập được với cuộc sống nữa, vì hầu như mọi người xung quanh đều bới móc lại sai lầm cũ của cậu, gạt cậu khỏi cộng đồng."
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,8 +35,37 @@
             style="@style/ListTitle"
             android:id="@+id/tvAttachmentSize"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nan" />
+            android:layout_height="wrap_content" />
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/sfl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/ListItemTitle"
+                    android:layout_width="140dp"
+                    android:background="@color/backgroundLight"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    style="@style/ListTitle"
+                    android:layout_width="100dp"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:background="@color/backgroundLight"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
     </LinearLayout>
 
