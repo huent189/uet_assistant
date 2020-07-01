@@ -104,7 +104,7 @@ public abstract class MaterialDAO {
         LiveData<InternalResourceContent> parent = getInternalResourceParent(id);
         LiveData<List<InternalFile>> children = getInternalFile(id);
         MediatorLiveData<InternalResourceContent> merger = new MediatorLiveData<>();
-//        merger.postValue(parent.getValue());
+        merger.setValue(new InternalResourceContent());
         merger.addSource(parent, internalResourceContent -> {
             InternalResourceContent old = merger.getValue();
             if(old != null) {
@@ -115,10 +115,9 @@ public abstract class MaterialDAO {
         });
         merger.addSource(children, internalFiles -> {
             InternalResourceContent old = merger.getValue();
-            if(old == null){
-                old = new InternalResourceContent();
+            if(old != null){
+                old.setFiles(internalFiles);
             }
-            old.setFiles(internalFiles);
             merger.postValue(old);
         });
         return merger;
@@ -143,7 +142,7 @@ public abstract class MaterialDAO {
             " QuizNoGrade.name as materialName, timeOpen as startTime, timeClose as endTime" +
             " from Course, Material, QuizNoGrade " +
             "WHERE Course.id = QuizNoGrade.courseId and Material.id = QuizNoGrade.materialId " +
-            "and QuizNoGrade.id = (:ids)")
+            "and QuizNoGrade.id in (:ids)")
     public abstract List<Submission> getQuizSubmissions(List<Integer> ids);
     @Query("SELECT Course.id as courseId, Course.code as courseName, Material.type, Material.completion as isCompleted, materialId," +
             " AssignmentContent.name as materialName, startDate as startTime, deadline as endTime" +

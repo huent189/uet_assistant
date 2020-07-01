@@ -6,23 +6,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.facebook.shimmer.ShimmerFrameLayout;
-
-import java.util.stream.Collectors;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.CourseContentAdapter;
-import vnu.uet.mobilecourse.assistant.adapter.TodoListAdapter;
 import vnu.uet.mobilecourse.assistant.model.Course;
 import vnu.uet.mobilecourse.assistant.model.ICourse;
 import vnu.uet.mobilecourse.assistant.viewmodel.CourseProgressViewModel;
+
+import java.util.stream.Collectors;
 
 import static vnu.uet.mobilecourse.assistant.model.material.CourseConstant.MaterialType.GENERAL;
 
@@ -125,7 +122,7 @@ public class CourseProgressFragment extends Fragment {
 
         Parcelable onSaveInstanceState = mLayoutManager.onSaveInstanceState();
         mRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, onSaveInstanceState);
-        mAdapter.onSaveInstanceState(mRecyclerViewState);
+//        mAdapter.onSaveInstanceState(mRecyclerViewState);
 
         if (mRecyclerViewState != null && mAdapter != null) {
             mAdapter.onSaveInstanceState(mRecyclerViewState);

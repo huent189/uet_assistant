@@ -15,7 +15,7 @@ import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
 import vnu.uet.mobilecourse.assistant.model.forum.DiscussionComparator;
 import vnu.uet.mobilecourse.assistant.model.forum.InterestedDiscussion;
 import vnu.uet.mobilecourse.assistant.model.forum.Post;
-import vnu.uet.mobilecourse.assistant.network.HTTPClient;
+import vnu.uet.mobilecourse.assistant.network.CourseClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
 import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,7 @@ public class ForumRepository {
     private static ForumRepository instance;
 
     public ForumRepository() {
-        sender = HTTPClient.getInstance().request(CourseRequest.class);
+        sender = CourseClient.getInstance().request(CourseRequest.class);
         forumDAO = CoursesDatabase.getDatabase().forumDAO();
         interestDAO = new InterestedDiscussionDAO();
     }
@@ -65,6 +66,13 @@ public class ForumRepository {
     }
     public IStateLiveData<Discussion> getDiscussionById (int discussionId){
         LiveData<Discussion> discussion = forumDAO.getDiscussionById(discussionId);
+        new Thread(() -> {
+            try {
+                updatePostByDiscussion(discussionId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
         StateMediatorLiveData<InterestedDiscussion> interest = getFollowingDiscussion(discussionId);
         StateMediatorLiveData<Discussion> mergeLiveData = new StateMediatorLiveData<>();
         mergeLiveData.postLoading();
@@ -173,7 +181,7 @@ public class ForumRepository {
                 Log.d("REPO_UPDATE", "onSuccess: " + lastTime);
                 updateList.addAll(Arrays.stream(response)
                         .filter(p -> p.getTimeCreated() > lastTime).collect(Collectors.toList()));
-                forumDAO.insertPost(Arrays.asList(response));
+                forumDAO.insertPost(updateList);
             }
         };
         handler.onResponse(call, call.execute());
@@ -311,6 +319,10 @@ public class ForumRepository {
 
             return discussions;
         }
+    }
+
+    public synchronized  List<InterestedDiscussion> getInterestedSynchronize() throws ExecutionException, InterruptedException {
+        return interestDAO.getAllSynchronize();
     }
 }
 

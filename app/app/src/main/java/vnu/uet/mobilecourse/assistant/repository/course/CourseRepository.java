@@ -11,7 +11,7 @@ import vnu.uet.mobilecourse.assistant.database.DAO.GradeDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.MaterialDAO;
 import vnu.uet.mobilecourse.assistant.model.*;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
-import vnu.uet.mobilecourse.assistant.network.HTTPClient;
+import vnu.uet.mobilecourse.assistant.network.CourseClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
 import vnu.uet.mobilecourse.assistant.repository.cache.CommonCourseCache;
@@ -120,7 +120,7 @@ public class CourseRepository {
 
     public ArrayList<Integer> updateMyCourses() throws IOException {
         ArrayList<Integer> courseIds = new ArrayList<>();
-        Call<JsonElement> call = HTTPClient.getInstance().request(CourseRequest.class).getMyCoures(User.getInstance().getUserId());
+        Call<JsonElement> call = CourseClient.getInstance().request(CourseRequest.class).getMyCoures(User.getInstance().getUserId());
         CoursesResponseCallback<Course[]> handler = new CoursesResponseCallback<Course[]>(Course[].class) {
             @Override
             public void onSuccess(Course[] response) {
@@ -137,7 +137,7 @@ public class CourseRepository {
 
     public List<Material> updateCourseContent(int courseId) throws IOException {
         ArrayList<Material> updateList = new ArrayList<>();
-        Call<JsonElement> call = HTTPClient.getInstance().request(CourseRequest.class).getCourseContent(courseId);
+        Call<JsonElement> call = CourseClient.getInstance().request(CourseRequest.class).getCourseContent(courseId);
         CoursesResponseCallback<CourseOverview[]> hanler = new CoursesResponseCallback<CourseOverview[]>(CourseOverview[].class) {
             @Override
             public void onSuccess(CourseOverview[] response) {
@@ -172,7 +172,7 @@ public class CourseRepository {
     }
 
     public void updateCourseGrade(int courseId) {
-        HTTPClient.getInstance().request(CourseRequest.class)
+        CourseClient.getInstance().request(CourseRequest.class)
                 .getCourseGrade(courseId + "", User.getInstance().getUserId())
                 .enqueue(new CoursesResponseCallback<Grade[]>(Grade[].class) {
                     @Override
@@ -185,7 +185,7 @@ public class CourseRepository {
     }
 
 //    public void synchronizeAccessTime(){
-//        HTTPClient.getInstance().request(CourseRequest.class).getMyCoures(User.getInstance().getUserId())
+//        CourseClient.getInstance().request(CourseRequest.class).getMyCoures(User.getInstance().getUserId())
 //                .enqueue(new CoursesResponseCallback<Course[]>(Course[].class) {
 //                    @Override
 //                    public void onSuccess(Course[] response) {
@@ -361,5 +361,8 @@ public class CourseRepository {
 
             return merged;
         }
+    }
+    public LiveData<Double> getProgress(int courseId){
+        return coursesDAO.getProgress(courseId);
     }
 }

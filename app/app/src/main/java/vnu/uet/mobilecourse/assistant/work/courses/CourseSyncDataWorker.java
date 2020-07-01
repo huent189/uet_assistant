@@ -16,6 +16,7 @@ import vnu.uet.mobilecourse.assistant.database.querymodel.IdNamePair;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.event.CourseSubmissionEvent;
 import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
+import vnu.uet.mobilecourse.assistant.model.forum.InterestedDiscussion;
 import vnu.uet.mobilecourse.assistant.model.forum.Post;
 import vnu.uet.mobilecourse.assistant.model.material.AssignmentContent;
 import vnu.uet.mobilecourse.assistant.model.material.MaterialContent;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -116,7 +118,7 @@ public class CourseSyncDataWorker extends Worker {
                 }
             });
             List<MaterialContent> materials = materialRepository.updateAll();
-            List<Discussion> discussions = updateForum();
+            List<Discussion> discussions = getFollowingDiscussionUpdate();
             scheduleSubmissionEvent(materials.stream().filter(m -> m instanceof QuizNoGrade).map(MaterialContent::getId).collect(Collectors.toList()),
                     materials.stream().filter(m -> m instanceof AssignmentContent).map(MaterialContent::getId).collect(Collectors.toList()));
             if(User.getInstance().getEnableSyncNoti()){
@@ -154,11 +156,22 @@ public class CourseSyncDataWorker extends Worker {
         } catch (IOException e) {
             e.printStackTrace();
             return Result.retry();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
         }
         return Result.success();
     }
-    private List<Discussion> updateForum() throws IOException {
-        return forumRepository.updateAllDiscussion();
+    private List<Discussion> getFollowingDiscussionUpdate() throws IOException, ExecutionException, InterruptedException {
+        List<Discussion> updateList = forumRepository.updateAllDiscussion();
+        List<InterestedDiscussion> interested = forumRepository.getInterestedSynchronize();
+        return updateList.stream().filter(discussion -> {
+            for(InterestedDiscussion i : interested){
+                if(discussion.getId() == i.getDiscussionId()){
+                    return  true;
+                }
+            }
+            return false;
+        }).collect(Collectors.toList());
     }
     private void scheduleSubmissionEvent(List<Integer> quizIds, List<Integer> assignIds){
         List<CourseSubmissionEvent> events = materialRepository.getSubmissionEventFromNow(quizIds, assignIds);

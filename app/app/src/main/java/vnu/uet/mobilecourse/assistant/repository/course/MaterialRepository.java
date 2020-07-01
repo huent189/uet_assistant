@@ -9,7 +9,7 @@ import vnu.uet.mobilecourse.assistant.database.DAO.MaterialDAO;
 import vnu.uet.mobilecourse.assistant.database.querymodel.Submission;
 import vnu.uet.mobilecourse.assistant.model.event.CourseSubmissionEvent;
 import vnu.uet.mobilecourse.assistant.model.material.*;
-import vnu.uet.mobilecourse.assistant.network.HTTPClient;
+import vnu.uet.mobilecourse.assistant.network.CourseClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class MaterialRepository {
-    private static final int DAY_DURATION = 24 * 60 *60;
+    private static final int DAY_DURATION_SECOND = 24 * 60 *60;
 
     private static MaterialRepository instance;
 
@@ -27,7 +27,7 @@ public class MaterialRepository {
     private MaterialDAO materialDAO;
 
     private MaterialRepository() {
-        sender = HTTPClient.getInstance().request(CourseRequest.class);
+        sender = CourseClient.getInstance().request(CourseRequest.class);
         materialDAO = CoursesDatabase.getDatabase().materialDAO();
     }
 
@@ -248,7 +248,7 @@ public class MaterialRepository {
             calendar.clear();
             calendar.set(year, month, day);
             long startTime = calendar.getTimeInMillis() / 1000;
-            long endTime = calendar.getTimeInMillis() / 1000 + DAY_DURATION;
+            long endTime = calendar.getTimeInMillis() / 1000 + DAY_DURATION_SECOND;
             List<Submission> materials = queryCourseSubmission(startTime, endTime);
             ArrayList<CourseSubmissionEvent> events = new ArrayList<>();
             materials.forEach(materialWithCourse -> {

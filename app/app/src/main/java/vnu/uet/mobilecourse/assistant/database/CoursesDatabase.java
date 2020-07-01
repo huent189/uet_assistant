@@ -6,10 +6,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
-import vnu.uet.mobilecourse.assistant.database.DAO.CoursesDAO;
-import vnu.uet.mobilecourse.assistant.database.DAO.ForumDAO;
-import vnu.uet.mobilecourse.assistant.database.DAO.GradeDAO;
-import vnu.uet.mobilecourse.assistant.database.DAO.MaterialDAO;
+import vnu.uet.mobilecourse.assistant.database.DAO.*;
 import vnu.uet.mobilecourse.assistant.model.*;
 import vnu.uet.mobilecourse.assistant.model.forum.Discussion;
 import vnu.uet.mobilecourse.assistant.model.forum.Post;
@@ -21,9 +18,10 @@ import java.util.concurrent.Executors;
 
 @Database(entities = {Course.class, Grade.class, WeeklyMaterial.class, Material.class, AssignmentContent.class,
                     ExternalResourceContent.class, InternalFile.class, InternalResourceContent.class,
-                    MaterialContent.class, PageContent.class, QuizNoGrade.class, Discussion.class, Post.class
+                    MaterialContent.class, PageContent.class, QuizNoGrade.class, Discussion.class, Post.class,
+                    FinalExam.class
 },
-        version = 10)
+        version = 12)
 public abstract class CoursesDatabase extends RoomDatabase {
     private static volatile CoursesDatabase instance;
     private static final int NUMBER_OF_THREADS = 4;
@@ -33,6 +31,7 @@ public abstract class CoursesDatabase extends RoomDatabase {
     public abstract GradeDAO gradeDAO();
     public abstract MaterialDAO materialDAO();
     public abstract ForumDAO forumDAO();
+    public abstract PortalDAO portalDAO();
     public static CoursesDatabase getDatabase() {
         if (instance == null) {
             synchronized (CoursesDatabase.class) {
@@ -90,6 +89,16 @@ public abstract class CoursesDatabase extends RoomDatabase {
                                 @Override
                                 public void migrate(@NonNull SupportSQLiteDatabase supportSQLiteDatabase) {
                                     supportSQLiteDatabase.execSQL("DELETE FROM `Material`");
+                                }
+                            }, new Migration(10, 11) {
+                                @Override
+                                public void migrate(@NonNull SupportSQLiteDatabase supportSQLiteDatabase) {
+                                    supportSQLiteDatabase.execSQL("DROP TABLE IF EXISTS QuizContent;");
+                                }
+                            }, new Migration(11, 12) {
+                                @Override
+                                public void migrate(@NonNull SupportSQLiteDatabase supportSQLiteDatabase) {
+                                    supportSQLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS `FinalExam` (`classCode` TEXT NOT NULL, `className` TEXT, `examTime` INTEGER NOT NULL, `place` TEXT, `form` TEXT, `IdNumber` TEXT, PRIMARY KEY(`classCode`))");
                                 }
                             })
                             .fallbackToDestructiveMigrationOnDowngrade()

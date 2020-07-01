@@ -8,13 +8,13 @@ import retrofit2.Response;
 import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
 import vnu.uet.mobilecourse.assistant.exception.HostIsNotReachable;
 import vnu.uet.mobilecourse.assistant.model.Material;
-import vnu.uet.mobilecourse.assistant.network.HTTPClient;
+import vnu.uet.mobilecourse.assistant.network.CourseClient;
 import vnu.uet.mobilecourse.assistant.network.request.CourseRequest;
 import vnu.uet.mobilecourse.assistant.network.response.CoursesResponseCallback;
 import vnu.uet.mobilecourse.assistant.work.courses.CourseActionSynchronization;
 
 public class CourseActionRepository {
-    private CourseRequest sender = HTTPClient.getInstance().request(CourseRequest.class);
+    private CourseRequest sender = CourseClient.getInstance().request(CourseRequest.class);
     private CoursesDatabase database = CoursesDatabase.getDatabase();
     public void triggerCourseView(int courseId){
         CoursesDatabase.databaseWriteExecutor.execute(()->{

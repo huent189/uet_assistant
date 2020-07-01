@@ -7,7 +7,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vnu.uet.mobilecourse.assistant.exception.InvalidLoginException;
 import vnu.uet.mobilecourse.assistant.exception.UnavailableHostException;
-import vnu.uet.mobilecourse.assistant.network.HTTPClient;
+import vnu.uet.mobilecourse.assistant.network.CourseClient;
 
 import java.lang.reflect.Type;
 import java.net.SocketTimeoutException;
@@ -36,14 +36,14 @@ public abstract class CoursesResponseCallback<T> implements Callback<JsonElement
             if(deserializeElement != null){
                 JsonElement realResponse = response.body().getAsJsonObject().get(deserializeElement);
                 if(realResponse != null){
-                    onSuccess(HTTPClient.getInstance().getGson()
+                    onSuccess(CourseClient.getInstance().getGson()
                             .fromJson(realResponse, typeParameterClass));
                 }
                 else {
                     onError(call, new Exception("structure not match"));
                 }
             } else {
-                onSuccess(HTTPClient.getInstance().getGson().fromJson(response.body(), typeParameterClass));
+                onSuccess(CourseClient.getInstance().getGson().fromJson(response.body(), typeParameterClass));
             }
             Log.d("COURSES", "onResponse: " + call.request().url());
 
