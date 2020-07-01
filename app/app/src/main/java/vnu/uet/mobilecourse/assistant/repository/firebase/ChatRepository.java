@@ -111,12 +111,12 @@ public class ChatRepository implements IChatRepository {
         addConnections(oldMemberIds, newMemberIds);
         addConnections(newMemberIds);
 
-        return new AddMemberState(mUserGroupChatDAO.read(roomId), newMembers);
+        return new AddMemberState(mUserGroupChatDAO.read(roomId), newMembers, oldMemberIds);
     }
 
     @Override
     public IStateLiveData<String> removeMember(String groupId, String[] memberIds, String memberId) {
-        return new ChatDAO().removeMember(groupId, memberId);
+        return new ChatDAO().removeMember(groupId, memberIds, memberId);
     }
 
     @Override
@@ -413,7 +413,9 @@ public class ChatRepository implements IChatRepository {
 
     static class AddMemberState extends StateMediatorLiveData<List<Member_GroupChatSubCol>> {
 
-        public AddMemberState(StateMediatorLiveData<GroupChat_UserSubCol> roomState, List<Member_GroupChatSubCol> students) {
+        public AddMemberState(StateMediatorLiveData<GroupChat_UserSubCol> roomState,
+                              List<Member_GroupChatSubCol> students,
+                              String[] oldMemberIds) {
             postLoading();
 
             addSource(roomState, new Observer<StateModel<GroupChat_UserSubCol>>() {
@@ -433,7 +435,7 @@ public class ChatRepository implements IChatRepository {
 
                             GroupChat_UserSubCol clone = cloneRoom(stateModel.getData());
 
-                            StateLiveData<String> addState = new ChatDAO().addMember(clone, students);
+                            StateLiveData<String> addState = new ChatDAO().addMember(clone, oldMemberIds, students);
                             addSource(addState, new Observer<StateModel<String>>() {
                                 @Override
                                 public void onChanged(StateModel<String> stateModel) {

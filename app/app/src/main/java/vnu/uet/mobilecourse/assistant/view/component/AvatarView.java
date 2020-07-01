@@ -114,6 +114,7 @@ public class AvatarView extends FrameLayout {
             return;
 
         mLoader.loadRoom(id, mCivAvatar);
+        mIvStatus.setVisibility(GONE);
     }
 
     public void loadStatus(String id) {

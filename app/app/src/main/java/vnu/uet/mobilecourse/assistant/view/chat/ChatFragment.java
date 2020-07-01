@@ -33,6 +33,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
+import vnu.uet.mobilecourse.assistant.viewmodel.AddGroupChatViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.ChatViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
@@ -49,6 +50,9 @@ public class ChatFragment extends Fragment {
         mActivity = getActivity();
 
         if (mActivity != null) {
+            AddGroupChatViewModel prevViewModel = new ViewModelProvider(mActivity).get(AddGroupChatViewModel.class);
+            prevViewModel.clearData();
+
             mNavController = Navigation.findNavController(mActivity, R.id.nav_host_fragment);
         }
 

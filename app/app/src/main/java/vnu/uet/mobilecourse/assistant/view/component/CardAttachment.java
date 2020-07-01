@@ -56,6 +56,7 @@ public class CardAttachment extends CardView {
             mTvSize = root.findViewById(R.id.tvAttachmentSize);
             mTvSize.setVisibility(GONE);
             mSfl = root.findViewById(R.id.sfl);
+            mSfl.startShimmerAnimation();
             mSfl.setVisibility(VISIBLE);
         }
     }

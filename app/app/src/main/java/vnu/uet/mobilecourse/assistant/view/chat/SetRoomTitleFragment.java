@@ -18,6 +18,7 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.VerticalMemberAdapter;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
+import vnu.uet.mobilecourse.assistant.util.NetworkUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.AddGroupChatViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
@@ -49,7 +50,7 @@ public class SetRoomTitleFragment extends Fragment {
 
         mActivity = getActivity();
         if (mActivity != null) {
-            mViewModel = new ViewModelProvider(this).get(AddGroupChatViewModel.class);
+            mViewModel = new ViewModelProvider(mActivity).get(AddGroupChatViewModel.class);
             mNavController = Navigation.findNavController(mActivity, R.id.nav_host_fragment);
         }
 

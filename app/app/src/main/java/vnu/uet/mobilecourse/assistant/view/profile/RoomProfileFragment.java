@@ -1,5 +1,7 @@
 package vnu.uet.mobilecourse.assistant.view.profile;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -143,13 +145,32 @@ public class RoomProfileFragment extends Fragment implements IAvatarChangableFra
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int position = viewHolder.getAdapterPosition();
                 final IStudent item = mMemberAdapter.getStudent(position);
-
-                removeMember(item);
+                showAlert(item);
             }
         };
 
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
         itemTouchhelper.attachToRecyclerView(mRvMembers);
+    }
+
+    private void showAlert(IStudent student) {
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity(), R.style.Dialog)
+                .setTitle("Xóa " + student.getName() + "khỏi phòng")
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mMemberAdapter.notifyDataSetChanged();
+                    }
+                })
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        removeMember(student);
+                    }
+                })
+                .create();
+
+        alertDialog.show();
     }
 
     private void removeMember(IStudent student) {

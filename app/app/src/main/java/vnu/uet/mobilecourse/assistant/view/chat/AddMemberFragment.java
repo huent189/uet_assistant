@@ -67,7 +67,7 @@ public class AddMemberFragment extends Fragment {
 
         mActivity = getActivity();
         if (mActivity != null) {
-            mViewModel = new ViewModelProvider(this).get(AddGroupChatViewModel.class);
+            mViewModel = new ViewModelProvider(mActivity).get(AddGroupChatViewModel.class);
             mNavController = Navigation.findNavController(mActivity, R.id.nav_host_fragment);
         }
 
@@ -352,7 +352,7 @@ public class AddMemberFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
 
-        mViewModel.clearData();
+//        mViewModel.clearData();
     }
 
     public AddGroupChatViewModel getViewModel() {

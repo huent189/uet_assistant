@@ -9,7 +9,9 @@ import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.firestore.util.Util;
 
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
@@ -34,7 +36,7 @@ public class ChatDAO {
         userCol = db.collection(FirebaseCollectionName.USER);
     }
 
-    public StateLiveData<String> addMember(GroupChat_UserSubCol group, List<Member_GroupChatSubCol> members) {
+    public StateLiveData<String> addMember(GroupChat_UserSubCol group, String[] oldMemberIds, List<Member_GroupChatSubCol> members) {
         StateLiveData<String> addMemberState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
         WriteBatch batch = db.batch();
 
@@ -52,6 +54,14 @@ public class ChatDAO {
             batch.set(groupDocRef, group);
         }
 
+        String[] memberIds = new String[oldMemberIds.length + members.size()];
+        System.arraycopy(oldMemberIds, 0, memberIds, 0, oldMemberIds.length);
+        System.arraycopy(members.stream().map(Member_GroupChatSubCol::getId).toArray(String[]::new),
+                0, memberIds, oldMemberIds.length, members.size());
+
+        String simpleName = StringUtils.getLastSegment(USERNAME, 2);
+        appendAdminMessage(batch, group.getId(), memberIds, simpleName + " đã thêm " + members.size() + " thành viên mới");
+
         batch.commit().addOnFailureListener(e -> {
             addMemberState.postError(e);
         }).addOnSuccessListener(aVoid -> {
@@ -61,7 +71,7 @@ public class ChatDAO {
         return addMemberState;
     }
 
-    public StateLiveData<String> removeMember(String groupId, String memberId) {
+    public StateLiveData<String> removeMember(String groupId, String[] memberIds, String memberId) {
         StateLiveData<String> removeMemberState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
         WriteBatch batch = db.batch();
 
@@ -70,6 +80,17 @@ public class ChatDAO {
 
         // remove group from member
         batch.delete(userCol.document(memberId).collection(FirebaseCollectionName.GROUP_CHAT).document(groupId));
+
+        String[] newMemberIds = new String[memberIds.length - 1];
+        int i = 0;
+        for (String id : memberIds) {
+            if (!id.equals(memberId)) {
+                newMemberIds[i++] = id;
+            }
+        }
+
+        String simpleName = StringUtils.getLastSegment(USERNAME, 2);
+        appendAdminMessage(batch, groupId, newMemberIds, simpleName + " đã xóa " + memberId + " khỏi phòng");
 
         batch.commit().addOnFailureListener(e -> {
             removeMemberState.postError(e);

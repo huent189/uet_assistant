@@ -1,9 +1,12 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -33,6 +36,7 @@ import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
+import vnu.uet.mobilecourse.assistant.view.GlideApp;
 import vnu.uet.mobilecourse.assistant.view.chat.ChatFragment;
 import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
 
@@ -54,8 +58,14 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
     @NonNull
     @Override
     public ChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mOwner.getLayoutInflater()
-                .inflate(R.layout.layout_group_chat_item, parent, false);
+        LayoutInflater inflater = mOwner.getLayoutInflater();
+
+        View view;
+        if (viewType == TYPE_SEEN) {
+            view = inflater.inflate(R.layout.layout_group_chat_item, parent, false);
+        } else {
+            view = inflater.inflate(R.layout.layout_unseen_group_chat_item, parent, false);
+        }
 
         Activity activity = mOwner.getActivity();
 
@@ -66,6 +76,14 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
 
         return new ChatViewHolder(view);
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        return mChats.get(position).isSeen() ? TYPE_SEEN : TYPE_UNSEEN;
+    }
+
+    private static final int TYPE_SEEN = 0;
+    private static final int TYPE_UNSEEN = 1;
 
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
@@ -95,7 +113,7 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
         private ImageView mIvStatus;
         private View mLayoutTime;
         private View mLayoutContainer;
-        private View mLayoutNonSeen;
+        private View mIvNew;
 
         ChatViewHolder(@NonNull View view) {
             super(view);
@@ -107,7 +125,7 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
             mIvStatus = view.findViewById(R.id.ivStatus);
             mLayoutTime = view.findViewById(R.id.layoutTime);
             mLayoutContainer = view.findViewById(R.id.layoutContainer);
-            mLayoutNonSeen = view.findViewById(R.id.layoutNonSeen);
+//            mIvNew = view.findViewById(R.id.ivNew);
         }
 
         void bind(GroupChat_UserSubCol chat, NavController navController, String ownerName, LifecycleOwner lifecycleOwner) {
@@ -126,20 +144,39 @@ public class ChatGroupAdapter extends RecyclerView.Adapter<ChatGroupAdapter.Chat
                 mAvatarView.loadRoom(chat.getId());
             }
 
-            if (chat.isSeen()) {
-                mIvStatus.setImageResource(R.drawable.ic_check_circle_24dp);
-                mIvStatus.setScaleX(1.25f);
-                mIvStatus.setScaleY(1.25f);
+            mIvStatus.setImageDrawable(null);
 
-                mTvLastMessage.setTypeface(null, Typeface.NORMAL);
+            if (chat.isSeen()) {
+//                GlideApp.with(itemView.getContext())
+//                        .load(R.drawable.ic_check_circle_24dp)
+//                        .into(mIvStatus);
+//                Drawable drawable = itemView.getContext().getApplicationContext()
+//                        .getResources().getDrawable(R.drawable.ic_check_circle_24dp, null);
+////                mIvStatus.setImageResource(R.drawable.ic_check_circle_24dp);
+//                mIvStatus.setImageDrawable(drawable);
+//                mIvStatus.setScaleX(1.25f);
+//                mIvStatus.setScaleY(1.25f);
+//                mIvStatus.setVisibility(View.VISIBLE);
+//                mIvNew.setVisibility(View.GONE);
+
+//                mTvLastMessage.setTypeface(null, Typeface.NORMAL);
 
 //                mLayoutNonSeen.setVisibility(View.GONE);
             } else {
-                mIvStatus.setImageResource(R.drawable.circle);
-                mIvStatus.setScaleX(1f);
-                mIvStatus.setScaleY(1f);
+//                GlideApp.with(itemView.getContext())
+//                        .load(R.drawable.circle)
+//                        .into(mIvStatus);
+//                Drawable drawable = itemView.getContext().getApplicationContext()
+//                        .getResources().getDrawable(R.drawable.circle, null);
+//                mIvStatus.setImageDrawable(drawable);
+//
+////                mIvStatus.setImageResource(R.drawable.circle);
+//                mIvStatus.setScaleX(1f);
+//                mIvStatus.setScaleY(1f);
+//                mIvStatus.setVisibility(View.GONE);
+//                mIvNew.setVisibility(View.VISIBLE);
 
-                mTvLastMessage.setTypeface(null, Typeface.BOLD);
+//                mTvLastMessage.setTypeface(null, Typeface.BOLD);
 
 //                mLayoutNonSeen.setVisibility(View.VISIBLE);
             }

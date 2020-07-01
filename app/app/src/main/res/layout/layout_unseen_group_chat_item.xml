@@ -60,6 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
+                    android:textStyle="bold"
                     android:ellipsize="end"
 
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -104,9 +105,9 @@
         <ImageView
             android:id="@+id/ivStatus"
             android:layout_marginStart="@dimen/margin_x2"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:src="@drawable/ic_check_circle_24dp"/>
+            android:layout_width="@dimen/new_message_dot"
+            android:layout_height="@dimen/new_message_dot"
+            android:src="@drawable/circle"/>
 
     </LinearLayout>
 
