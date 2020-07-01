@@ -58,17 +58,13 @@ public class PortalRepository {
     }
 
     public LiveData<List<FinalExam>> getFinalExamByDay(Date date) {
-
-
         new Thread(() -> {
             try {
                 syncFinalExams();
-            } catch (Exception ex) {
-
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }).start();
-
-
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int year = calendar.get(Calendar.YEAR);
