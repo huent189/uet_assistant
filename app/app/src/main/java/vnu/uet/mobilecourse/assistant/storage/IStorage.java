@@ -4,8 +4,6 @@ import android.net.Uri;
 
 import com.google.firebase.storage.StorageReference;
 
-import java.net.URI;
-
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 
@@ -31,5 +29,7 @@ public interface IStorage {
     String denormalizeFileName(String localPath);
 
     StorageReference getAvatar(String Id);
+
+    IStateLiveData<String> downLoadFile(String cloudFileName);
 
 }

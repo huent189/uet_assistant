@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.storage;
 
 import android.net.Uri;
+import android.os.Environment;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -13,12 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.database.DAO.UserDAO;
-import vnu.uet.mobilecourse.assistant.model.User;
-import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -95,6 +92,24 @@ public class Storage implements IStorage {
         return reference;
     }
 
+    @Override
+    public IStateLiveData<String> downLoadFile(String cloudPath) {
+        StorageReference fileRef = storage.child(cloudPath.substring(1));
+        File localFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileRef.getName());
+
+        IStateLiveData<String> downloadFileState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
+
+        fileRef.getFile(localFile).addOnCompleteListener(task -> {
+            if (task.isComplete()) {
+                downloadFileState.postSuccess("Download file success");
+            } else {
+                downloadFileState.postError(task.getException());
+            }
+        });
+
+        return downloadFileState;
+
+    }
     @Override
     public String denormalizeFileName(String localPath) {
         return localPath.substring(10);
