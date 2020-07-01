@@ -139,9 +139,13 @@ public class MaterialRepository {
             public void onSuccess(PageContent[] response) {
                 long lastTime = materialDAO.getLastUpdateTime(PageContent.class);
                 Log.d("REPO_UPDATE", "onSuccess: " + lastTime);
-                updateList.addAll(Arrays.stream(response)
-                        .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
-                materialDAO.insertPageContent(updateList);
+                if(lastTime == -1){
+                    materialDAO.insertPageContent(Arrays.asList(response));
+                } else {
+                    updateList.addAll(Arrays.stream(response)
+                            .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
+                    materialDAO.insertPageContent(updateList);
+                }
             }
         };
         handler.onResponse(call, call.execute());
@@ -157,9 +161,14 @@ public class MaterialRepository {
             public void onSuccess(ExternalResourceContent[] response) {
                 long lastTime = materialDAO.getLastUpdateTime(ExternalResourceContent.class);
                 Log.d("REPO_UPDATE", "onSuccess: " + lastTime);
-                updateList.addAll(Arrays.stream(response)
-                        .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
-                materialDAO.insertExternalResourceContent(updateList);
+                if(lastTime == -1){
+                    materialDAO.insertExternalResourceContent(Arrays.asList(response));
+                }
+                else {
+                    updateList.addAll(Arrays.stream(response)
+                            .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
+                    materialDAO.insertExternalResourceContent(updateList);
+                }
             }
         };
         handler.onResponse(call, call.execute());
@@ -175,9 +184,14 @@ public class MaterialRepository {
             public void onSuccess(MaterialContent[] response) {
                 long lastTime = materialDAO.getLastUpdateTime(MaterialContent.class);
                 Log.d("REPO_UPDATE", "onSuccess: " + lastTime);
-                updateList.addAll(Arrays.stream(response)
-                        .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
-                materialDAO.insertMaterialContent(updateList);
+                if(lastTime == -1){
+                    materialDAO.insertMaterialContent(Arrays.asList(response));
+                } else {
+                    updateList.addAll(Arrays.stream(response)
+                            .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
+                    materialDAO.insertMaterialContent(updateList);
+                }
+
             }
         };
         handler.onResponse(call, call.execute());
@@ -193,10 +207,15 @@ public class MaterialRepository {
             public void onSuccess(InternalResourceContent[] response) {
                 long lastTime = materialDAO.getLastUpdateTime(InternalResourceContent.class);
                 Log.d("REPO_UPDATE", "onSuccess: " + lastTime);
-                updateList.addAll(Arrays.stream(response)
-                        .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
-//                materialDAO.insertInternalResource(Arrays.asList(response));
-                materialDAO.insertInternalResource(updateList);
+                if(lastTime == -1){
+                    materialDAO.insertInternalResource(Arrays.asList(response));
+                }
+                else {
+                    updateList.addAll(Arrays.stream(response)
+                            .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
+                    materialDAO.insertInternalResource(updateList);
+                }
+
             }
         };
         handler.onResponse(call, call.execute());
@@ -211,9 +230,14 @@ public class MaterialRepository {
             public void onSuccess(AssignmentContent[] response) {
                 long lastTime = materialDAO.getLastUpdateTime(AssignmentContent.class);
                 Log.d("REPO_UPDATE", "onSuccess: " + lastTime);
-                updateList.addAll(Arrays.stream(response)
-                        .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
-                materialDAO.insertAssignments(updateList);
+                if(lastTime == -1){
+                    materialDAO.insertAssignments(Arrays.asList(response));
+                }else {
+                    updateList.addAll(Arrays.stream(response)
+                            .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
+                    materialDAO.insertAssignments(updateList);
+                }
+
             }
         };
         handler.onResponse(call, call.execute());
@@ -227,9 +251,14 @@ public class MaterialRepository {
                 = new CoursesResponseCallback<QuizNoGrade[]>(QuizNoGrade[].class, "quizzes") {
             @Override
             public void onSuccess(QuizNoGrade[] response) {
-                updateList.addAll(Arrays.stream(response).filter(quiz -> !existId.contains(quiz.getId()))
-                        .collect(Collectors.toList()));
-                materialDAO.insertQuizzes(updateList);
+                List<QuizNoGrade> tmp = Arrays.stream(response).filter(quiz -> !existId.contains(quiz.getId()))
+                        .collect(Collectors.toList());
+                if(tmp.size() != response.length){
+                    updateList.addAll(tmp);
+                }else {
+                    updateList.addAll(tmp.stream().filter(q -> q.getTimeOpen() >= System.currentTimeMillis() / 1000).collect(Collectors.toList()));
+                }
+                materialDAO.insertQuizzes(tmp);
             }
         };
         handler.onResponse(call, call.execute());

@@ -36,7 +36,7 @@ public class PortalRepository {
         }
         if(old == null || old.isEmpty()){
             dao.insertFinalExam(newList);
-            return newList;
+            return null;
         } else {
             List<FinalExam> updateExams = newList.stream().filter(exam -> !old.contains(exam)).collect(Collectors.toList());
             dao.insertFinalExam(updateExams);
