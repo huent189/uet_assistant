@@ -14,6 +14,15 @@ public class Member_GroupChatSubCol implements IFirebaseModel, IStudent, Parcela
     private String id;
     private String name;
     private String role;
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     @Exclude
     private String avatar;

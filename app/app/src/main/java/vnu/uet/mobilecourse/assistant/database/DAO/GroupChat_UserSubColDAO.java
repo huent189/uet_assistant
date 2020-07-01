@@ -108,6 +108,7 @@ public class GroupChat_UserSubColDAO extends FirebaseDAO<GroupChat_UserSubCol> {
             }
 
         }
+
         // group chat
         else {
             GroupChat_UserSubCol groupChat_userSubCol = new GroupChat_UserSubCol();
