@@ -3,7 +3,6 @@ package vnu.uet.mobilecourse.assistant.work.courses;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.content.Context;
-import android.text.Html;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -71,20 +70,28 @@ public class CourseSyncDataWorker extends Worker {
     private Notification_UserSubCol generateNotification(Discussion discussion) throws IOException {
         ForumPostNotification notification = new ForumPostNotification();
         List<Post> posts = forumRepository.updatePostByDiscussion(discussion.getId());
-        List<String> postMessages = posts.stream().sorted(new Comparator<Post>() {
+        notification.setId(Util.autoId());
+        notification.setNotifyTime(System.currentTimeMillis() / 1000);
+        notification.setDiscussionId(discussion.getId());
+        if(discussion.getTimeModified() == discussion.getTimeCreated()){
+            notification.setTitle(discussion.getAuthorName() + " vừa tạo cuộc thảo luận mới ");
+            notification.setDescription(discussion.getName() + "\n" + discussion.getMessage());
+            return notification;
+        }
+        List<String> postAuthor = posts.stream().sorted(new Comparator<Post>() {
             @Override
             public int compare(Post o1, Post o2) {
                 if(o1.getTimeCreated() == o2.getTimeCreated()) return 0;
                 return o1.getTimeCreated() < o2.getTimeCreated() ? -1 : 1;
             }
-        }).map(post -> post.getAuthorName()+ ": "
-                + Html.fromHtml(post.getMessage(), Html.FROM_HTML_SEPARATOR_LINE_BREAK_PARAGRAPH).toString().replace('\n', ' '))
-                .collect(Collectors.toList());
-        notification.setId(Util.autoId());
+        }).map(post -> post.getAuthorName()).distinct().collect(Collectors.toList());
+
+        if(postAuthor.size() == 1){
+            notification.setDescription(postAuthor.get(0) + " vừa trả lời cuộc thảo luận này");
+        } else {
+            notification.setDescription(postAuthor.get(0) + " và "+ (postAuthor.size() - 1) + " người khác vừa trả lời cuộc thảo luận này");
+        }
         notification.setTitle(discussion.getName());
-        notification.setDescription(String.join("\n", postMessages));
-        notification.setNotifyTime(System.currentTimeMillis() / 1000);
-        notification.setDiscussionId(discussion.getId());
         return notification;
     }
     private void pushNotification(Context context, Notification_UserSubCol instance){
@@ -121,19 +128,19 @@ public class CourseSyncDataWorker extends Worker {
             List<Discussion> discussions = getFollowingDiscussionUpdate();
             scheduleSubmissionEvent(materials.stream().filter(m -> m instanceof QuizNoGrade).map(MaterialContent::getId).collect(Collectors.toList()),
                     materials.stream().filter(m -> m instanceof AssignmentContent).map(MaterialContent::getId).collect(Collectors.toList()));
-            if(User.getInstance().getEnableSyncNoti()){
-                if(materials.size() != 0){
-                    List<IdNamePair> courseNames = database.coursesDAO().getAllCourseName();
-                    Map<Integer, String> idNameMap = courseNames.stream()
-                            .collect(Collectors.toMap(IdNamePair::getId, IdNamePair::getName));
-                    for (MaterialContent content:materials) {
-                        Notification_UserSubCol notification;
-                        notification = generateNotification(content, idNameMap.get(content.getCourseId()));
-                        NotificationRepository.getInstance().add(notification);
-                        NavigationBadgeRepository.getInstance().increaseNewNotifications();
-                        pushNotification(mContext, notification);
-                    }
+            if(materials.size() != 0){
+                List<IdNamePair> courseNames = database.coursesDAO().getAllCourseName();
+                Map<Integer, String> idNameMap = courseNames.stream()
+                        .collect(Collectors.toMap(IdNamePair::getId, IdNamePair::getName));
+                for (MaterialContent content:materials) {
+                    Notification_UserSubCol notification;
+                    notification = generateNotification(content, idNameMap.get(content.getCourseId()));
+                    NotificationRepository.getInstance().add(notification);
+                    NavigationBadgeRepository.getInstance().increaseNewNotifications();
+                    pushNotification(mContext, notification);
                 }
+            }
+            if(User.getInstance().getEnableSyncNoti()){
                 if(discussions.size() != 0){
                     discussions.forEach(new Consumer<Discussion>() {
                         @Override
@@ -165,6 +172,7 @@ public class CourseSyncDataWorker extends Worker {
         List<Discussion> updateList = forumRepository.updateAllDiscussion();
         List<InterestedDiscussion> interested = forumRepository.getInterestedSynchronize();
         return updateList.stream().filter(discussion -> {
+            if (discussion.getTimeCreated() == discussion.getTimeModified()) return true;
             for(InterestedDiscussion i : interested){
                 if(discussion.getId() == i.getDiscussionId()){
                     return  true;
