@@ -34,7 +34,7 @@ public class SessionScheduler extends Scheduler<CourseSession> {
     protected Intent buildIntent(CourseSession session) {
         Intent intent = new Intent(mContext, SessionReceiver.class);
         intent.setAction(ACTION);
-        intent.putExtra("session", ParcelableUtils.toByteArray(session));
+        intent.putExtra("session", ParcelableUtils.toBytes(session));
         return intent;
     }
 

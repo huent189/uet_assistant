@@ -29,7 +29,7 @@ public class TodoScheduler extends Scheduler<Todo> {
     protected Intent buildIntent(Todo todo) {
         Intent intent = new Intent(mContext, TodoReceiver.class);
         intent.setAction(ACTION);
-        intent.putExtra("todo", ParcelableUtils.toByteArray(todo));
+        intent.putExtra("todo", ParcelableUtils.toBytes(todo));
         return intent;
     }
 

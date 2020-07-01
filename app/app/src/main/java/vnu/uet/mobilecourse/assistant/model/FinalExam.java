@@ -1,5 +1,8 @@
 package vnu.uet.mobilecourse.assistant.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -8,7 +11,7 @@ import vnu.uet.mobilecourse.assistant.util.FbAndCourseMap;
 
 import java.util.Date;
 @Entity()
-public class FinalExam implements IEvent {
+public class FinalExam implements IEvent, Parcelable {
     @PrimaryKey
     @NonNull
     private String classCode;
@@ -17,6 +20,46 @@ public class FinalExam implements IEvent {
     private String place;
     private String form;
     private String IdNumber;
+
+    public FinalExam() {
+
+    }
+
+    protected FinalExam(Parcel in) {
+        classCode = in.readString();
+        className = in.readString();
+        examTime = in.readLong();
+        place = in.readString();
+        form = in.readString();
+        IdNumber = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(classCode);
+        dest.writeString(className);
+        dest.writeLong(examTime);
+        dest.writeString(place);
+        dest.writeString(form);
+        dest.writeString(IdNumber);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<FinalExam> CREATOR = new Creator<FinalExam>() {
+        @Override
+        public FinalExam createFromParcel(Parcel in) {
+            return new FinalExam(in);
+        }
+
+        @Override
+        public FinalExam[] newArray(int size) {
+            return new FinalExam[size];
+        }
+    };
 
     public String getClassCode() {
         return classCode;

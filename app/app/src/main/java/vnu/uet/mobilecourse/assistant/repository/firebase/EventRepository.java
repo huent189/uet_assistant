@@ -6,8 +6,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
+import vnu.uet.mobilecourse.assistant.model.FinalExam;
 import vnu.uet.mobilecourse.assistant.model.event.CourseSessionEvent;
 import vnu.uet.mobilecourse.assistant.model.event.CourseSubmissionEvent;
 import vnu.uet.mobilecourse.assistant.model.event.DailyEventList;
@@ -19,6 +21,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.repository.cache.DailyEventCache;
 import vnu.uet.mobilecourse.assistant.repository.course.CourseRepository;
 import vnu.uet.mobilecourse.assistant.repository.course.MaterialRepository;
+import vnu.uet.mobilecourse.assistant.repository.course.PortalRepository;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.SessionConverter;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
@@ -64,9 +67,10 @@ public class EventRepository {
             StateLiveData<List<CourseInfo>> allCourseInfo = mCourseRepo.getAllCourseInfos();
             StateLiveData<List<CourseSubmissionEvent>> submissionEvents = mMaterialRepo
                     .getDailyCourseSubmissionEvent(date);
+            LiveData<List<FinalExam>> exams = new PortalRepository().getFinalExamByDay(date);
 
             IStateLiveData<DailyEventList> liveData =
-                    new MergeDailyEventLiveData(date, allTodo, allCourseInfo, submissionEvents);
+                    new MergeDailyEventLiveData(date, allTodo, allCourseInfo, exams, submissionEvents);
 
             mCache.put(dateInString, liveData);
             return liveData;
@@ -78,19 +82,38 @@ public class EventRepository {
         private List<Todo> todoList;
         private List<CourseSessionEvent> courseSessions;
         private List<CourseSubmissionEvent> submissionEvents;
+        private List<FinalExam> finalExams;
 
         private boolean todoSuccess;
         private boolean courseSessionSuccess;
         private boolean submissionSuccess;
+        private boolean examSuccess;
 
         private Date date;
 
         public MergeDailyEventLiveData(Date date, StateLiveData<List<Todo>> todoList,
                                        StateLiveData<List<CourseInfo>> courseInfo,
+                                       LiveData<List<FinalExam>> exams,
                                        StateLiveData<List<CourseSubmissionEvent>> submissionEvents) {
             postLoading();
 
             this.date = date;
+
+            addSource(exams, new Observer<List<FinalExam>>() {
+                @Override
+                public void onChanged(List<FinalExam> results) {
+                    if (results == null) postLoading();
+                    else {
+                        examSuccess = true;
+                        finalExams = results;
+
+                        if (examSuccess && todoSuccess && courseSessionSuccess && submissionSuccess) {
+                            DailyEventList dailyEventList = combineData();
+                            postSuccess(dailyEventList);
+                        }
+                    }
+                }
+            });
 
             addSource(todoList, new Observer<StateModel<List<Todo>>>() {
                 @Override
@@ -116,7 +139,7 @@ public class EventRepository {
 
                             setTodoList(todoByDay);
 
-                            if (todoSuccess && courseSessionSuccess && submissionSuccess) {
+                            if (examSuccess && todoSuccess && courseSessionSuccess && submissionSuccess) {
                                 DailyEventList dailyEventList = combineData();
                                 postSuccess(dailyEventList);
                             }
@@ -144,7 +167,7 @@ public class EventRepository {
                             submissionSuccess = true;
                             setSubmissionEvents(stateModel.getData());
 
-                            if (todoSuccess && courseSessionSuccess && submissionSuccess) {
+                            if (examSuccess && todoSuccess && courseSessionSuccess && submissionSuccess) {
                                 DailyEventList dailyEventList = combineData();
                                 postSuccess(dailyEventList);
                             }
@@ -189,7 +212,7 @@ public class EventRepository {
 
                             setCourseSessions(courseSessionEvents);
 
-                            if (todoSuccess && courseSessionSuccess && submissionSuccess) {
+                            if (examSuccess && todoSuccess && courseSessionSuccess && submissionSuccess) {
                                 DailyEventList dailyEventList = combineData();
                                 postSuccess(dailyEventList);
                             }
@@ -216,6 +239,7 @@ public class EventRepository {
             dailyEventList.addAll(todoList);
             dailyEventList.addAll(courseSessions);
             dailyEventList.addAll(submissionEvents);
+            dailyEventList.addAll(finalExams);
 
             return dailyEventList;
         }

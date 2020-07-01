@@ -57,7 +57,18 @@ public class PortalRepository {
         return exam;
     }
 
-    public LiveData<FinalExam> getFinalExamByDay(Date date){
+    public LiveData<List<FinalExam>> getFinalExamByDay(Date date) {
+
+
+        new Thread(() -> {
+            try {
+                syncFinalExams();
+            } catch (Exception ex) {
+
+            }
+        }).start();
+
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         int year = calendar.get(Calendar.YEAR);

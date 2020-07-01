@@ -30,7 +30,7 @@ public class SubmissionScheduler extends Scheduler<CourseSubmissionEvent> {
     protected Intent buildIntent(CourseSubmissionEvent event) {
         Intent intent = new Intent(mContext, SubmissionReceiver.class);
         intent.setAction(ACTION);
-        intent.putExtra("submission", ParcelableUtils.toByteArray(event));
+        intent.putExtra("submission", ParcelableUtils.toBytes(event));
         return intent;
     }
 

@@ -20,5 +20,5 @@ public interface PortalDAO {
     @Query("SELECT * FROM FinalExam WHERE classCode = :code")
     FinalExam getExamByCourseCode(String code);
     @Query("SELECT * FROM FinalExam WHERE examTime >= :start and examTime <= :end")
-    LiveData<FinalExam> getExamByTime(long start, long end);
+    LiveData<List<FinalExam>> getExamByTime(long start, long end);
 }

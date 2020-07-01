@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 public class ParcelableUtils {
 
-    public static byte[] toByteArray(Parcelable parcelable) {
+    public static byte[] toBytes(Parcelable parcelable) {
         Parcel parcel = Parcel.obtain();
 
         parcelable.writeToParcel(parcel, 0);

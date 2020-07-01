@@ -23,27 +23,22 @@
             </intent-filter>
         </service>
 
-<!--        <service-->
-<!--            android:name=".java.MyFirebaseMessagingService"-->
-<!--            android:exported="false"-->
-<!--            android:directBootAware="true">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="com.google.firebase.MESSAGING_EVENT" />-->
-<!--            </intent-filter>-->
-<!--        </service>-->
-
+        <receiver
+            android:name=".alarm.receiver.ExamReceiver"
+            android:enabled="true"
+            android:exported="true" />
         <receiver
             android:name=".alarm.receiver.TodoReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
         <receiver
             android:name=".alarm.receiver.SessionReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
         <receiver
             android:name=".alarm.receiver.SubmissionReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
 
         <activity android:name=".view.LoginFirebaseActivity">
             <intent-filter>

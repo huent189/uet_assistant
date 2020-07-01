@@ -2,11 +2,14 @@ package vnu.uet.mobilecourse.assistant.alarm.scheduler;
 
 import android.content.Context;
 import android.content.Intent;
+
+import vnu.uet.mobilecourse.assistant.alarm.receiver.ExamReceiver;
 import vnu.uet.mobilecourse.assistant.model.FinalExam;
+import vnu.uet.mobilecourse.assistant.util.ParcelableUtils;
 
 public class ExamScheduler extends Scheduler<FinalExam> {
     public static final String ACTION = "REMIND_FINAL_EXAM";
-    public static final int REMIND_BEFORE_EXAM = 15 * 60 * 60 * 1000;
+    public static final int REMIND_BEFORE_EXAM = 15 * 60 * 1000;
     private static ExamScheduler instance;
     public static ExamScheduler getInstance(Context context){
         if (instance == null){
@@ -20,8 +23,10 @@ public class ExamScheduler extends Scheduler<FinalExam> {
 
     @Override
     protected Intent buildIntent(FinalExam model) {
-        //TODO: @tungtobi
-        return null;
+        Intent intent = new Intent(mContext, ExamReceiver.class);
+        intent.setAction(ACTION);
+        intent.putExtra("exam", ParcelableUtils.toBytes(model));
+        return intent;
     }
 
     @Override
