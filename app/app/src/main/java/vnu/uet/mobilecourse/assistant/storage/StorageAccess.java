@@ -167,6 +167,11 @@ public class StorageAccess implements IStorage {
     }
 
     @Override
+    public IStateLiveData<String> downLoadFile(String cloudFileName) {
+        return null;
+    }
+
+    @Override
     public String denormalizeFileName(String localPath) {
         return localPath.substring(10);
     }
