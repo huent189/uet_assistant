@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.storage;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -13,6 +14,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -164,6 +166,25 @@ public class StorageAccess implements IStorage {
     public StorageReference getAvatar(String Id) {
         StorageReference reference = storage.child(StorageAccess.AVATAR_DIR).child(Id).child(StorageAccess.AVATAR_FILENAME);
         return reference;
+    }
+
+    @Override
+    public IStateLiveData<String> downLoadFile(String cloudPath) {
+        StorageReference fileRef = storage.child(cloudPath.substring(1));
+        File localFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileRef.getName());
+
+        IStateLiveData<String> downloadFileState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
+
+        fileRef.getFile(localFile).addOnCompleteListener(task -> {
+            if (task.isComplete()) {
+                downloadFileState.postSuccess("Download file success");
+            } else {
+                downloadFileState.postError(task.getException());
+            }
+        });
+
+        return downloadFileState;
+
     }
 
     @Override

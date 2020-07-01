@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -16,8 +17,12 @@ import com.google.firebase.storage.StorageReference;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
 import vnu.uet.mobilecourse.assistant.view.GlideApp;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 public class CardAttachment extends CardView {
 
@@ -74,6 +79,35 @@ public class CardAttachment extends CardView {
                 mSfl.setVisibility(GONE);
                 mTvName.setVisibility(VISIBLE);
                 mTvSize.setVisibility(VISIBLE);
+            }
+        });
+
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onDownload(path);
+            }
+        });
+    }
+
+    protected void onDownload(String path) {
+        IStateLiveData<String> downloadState = new StorageAccess().downLoadFile(path);
+        downloadState.observeForever(new Observer<StateModel<String>>() {
+            @Override
+            public void onChanged(StateModel<String> stateModel) {
+                switch (stateModel.getStatus()) {
+                    case SUCCESS:
+                        Toast.makeText(mContext, "Tải về thành công", Toast.LENGTH_SHORT).show();
+                        downloadState.removeObserver(this);
+
+                        break;
+
+                    case ERROR:
+                        Toast.makeText(mContext, "Tải về thất bại", Toast.LENGTH_SHORT).show();
+                        downloadState.removeObserver(this);
+
+                        break;
+                }
             }
         });
     }
