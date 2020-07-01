@@ -1,5 +1,7 @@
 package vnu.uet.mobilecourse.assistant.util;
 
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.webkit.MimeTypeMap;
@@ -27,12 +29,16 @@ public class FileUtils {
         return intent;
     }
 
-    public static String getMimeType(Uri uri) {
+    public static String getMimeType(Context context, Uri uri) {
         String type = null;
-        String extension = MimeTypeMap.getFileExtensionFromUrl(uri.getPath());
-        if (extension != null) {
-            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-        }
+//        String extension = MimeTypeMap.getFileExtensionFromUrl(uri.getPath());
+//        if (extension != null) {
+//            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+//        }
+        ContentResolver cR = context.getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        type = cR.getType(uri);
+
         return type;
     }
 

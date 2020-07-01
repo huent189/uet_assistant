@@ -176,7 +176,7 @@ public class StorageAccess implements IStorage {
         IStateLiveData<String> downloadFileState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
 
         fileRef.getFile(localFile).addOnCompleteListener(task -> {
-            if (task.isComplete()) {
+            if (task.isSuccessful()) {
                 downloadFileState.postSuccess("Download file success");
             } else {
                 downloadFileState.postError(task.getException());
