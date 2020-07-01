@@ -44,13 +44,13 @@ public class AvatarLoader {
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
 //                                            .signature(new ObjectKey(time))
-                    .placeholder(R.drawable.avatar)
+//                    .placeholder(R.drawable.avatar)
                     .error(R.drawable.avatar)
                     .into(imageView);
         } else {
             GlideApp.with(mContext)
                     .load(imageRef)
-                    .placeholder(R.drawable.avatar)
+//                    .placeholder(R.drawable.avatar)
                     .error(R.drawable.avatar)
 //                .diskCacheStrategy(DiskCacheStrategy.NONE)
 //                .skipMemoryCache(true)
@@ -70,7 +70,7 @@ public class AvatarLoader {
                                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                                             .skipMemoryCache(true)
 //                                            .signature(new ObjectKey(time))
-                                            .placeholder(R.drawable.avatar)
+//                                            .placeholder(R.drawable.avatar)
                                             .error(R.drawable.avatar)
                                             .into(imageView);
                                 }
