@@ -6,9 +6,11 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.Map;
 
+import vnu.uet.mobilecourse.assistant.model.firebase.OnlineState;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -20,6 +22,10 @@ public class UserDAO extends FirebaseDocReadOnlyDAO<User> {
     private static final CollectionReference USER_COLLECTION_REF = FirebaseFirestore
             .getInstance()
             .collection(FirebaseCollectionName.USER);
+
+    private static final CollectionReference ONLINE_COLLECTION_REF = FirebaseFirestore
+            .getInstance()
+            .collection(FirebaseCollectionName.ONLINE_STATUS);
 
     public UserDAO() {
         super(USER_COLLECTION_REF);
@@ -33,8 +39,17 @@ public class UserDAO extends FirebaseDocReadOnlyDAO<User> {
         // add document into firestore db
         // *note: if this operation executed without internet connection
         // state of the response won't change (still loading)
-        mColReference.document(user.getId())
-                .set(user)
+        WriteBatch batch = FirebaseFirestore.getInstance().batch();
+        batch.set(mColReference.document(user.getId()), user);
+
+        // add online state
+        OnlineState state = new OnlineState();
+        state.setId(user.getId());
+        state.setState(false);
+        batch.set(ONLINE_COLLECTION_REF.document(user.getId()), state);
+
+        // commit
+        batch.commit()
                 .addOnSuccessListener(aVoid -> {
                     response.postSuccess(user);
                     Log.d(TAG, "Add a new user: " + user.getId());

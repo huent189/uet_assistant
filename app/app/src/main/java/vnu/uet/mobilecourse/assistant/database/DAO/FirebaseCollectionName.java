@@ -6,7 +6,6 @@ public interface FirebaseCollectionName {
     String TODO = "todo";
     String COURSE = "course";
     String GROUP_CHAT = "groupChat";
-//    String GROUP_CHAT_SUB_COL = "groupChat_subCol";
     String NOTIFICATION = "notification";
     String PARTICIPANT = "participant";
     String MEMBER = "member";
@@ -14,6 +13,7 @@ public interface FirebaseCollectionName {
     String USER_INFO = "userInfo";
     String INTERESTED_DISCUSSION = "interestedDiscussion";
     String CONNECTION = "connection";
+    String ONLINE_STATUS = "online";
 
     @Deprecated
     String ENROLLMENT = "enrollment";

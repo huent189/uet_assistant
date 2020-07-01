@@ -321,9 +321,7 @@ public class MyCoursesActivity extends AppCompatActivity implements ActivityComp
         IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(mNetworkListener, intentFilter);
 
-        Map<String, Object> change = new HashMap<>();
-        change.put("online", true);
-        FirebaseUserRepository.getInstance().modify(change);
+        FirebaseUserRepository.getInstance().changeOnlineState(true);
     }
 
     @Override
@@ -332,8 +330,6 @@ public class MyCoursesActivity extends AppCompatActivity implements ActivityComp
 
         unregisterReceiver(mNetworkListener);
 
-        Map<String, Object> change = new HashMap<>();
-        change.put("online", false);
-        FirebaseUserRepository.getInstance().modify(change);
+        FirebaseUserRepository.getInstance().changeOnlineState(false);
     }
 }
