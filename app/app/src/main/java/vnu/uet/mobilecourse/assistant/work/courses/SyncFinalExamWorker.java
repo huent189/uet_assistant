@@ -8,6 +8,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import com.google.firebase.firestore.util.Util;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.alarm.scheduler.ExamScheduler;
 import vnu.uet.mobilecourse.assistant.model.FinalExam;
 import vnu.uet.mobilecourse.assistant.model.notification.FinalExamNotification;
 import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
@@ -54,6 +55,7 @@ public class SyncFinalExamWorker extends Worker {
             NotificationRepository.getInstance().add(notification);
             NavigationBadgeRepository.getInstance().increaseNewNotifications();
             pushNotification(mContext, notification);
+            updateList.forEach(exam -> ExamScheduler.getInstance(mContext).schedule(exam));
         } catch (ParseException e) {
             e.printStackTrace();
             return Result.failure();

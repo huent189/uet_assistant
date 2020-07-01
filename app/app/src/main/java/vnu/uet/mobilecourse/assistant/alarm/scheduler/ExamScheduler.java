@@ -8,7 +8,7 @@ public class ExamScheduler extends Scheduler<FinalExam> {
     public static final String ACTION = "REMIND_FINAL_EXAM";
     public static final int REMIND_BEFORE_EXAM = 15 * 60 * 60 * 1000;
     private static ExamScheduler instance;
-    public ExamScheduler getInstance(Context context){
+    public static ExamScheduler getInstance(Context context){
         if (instance == null){
             instance = new ExamScheduler(context);
         }
