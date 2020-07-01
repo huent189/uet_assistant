@@ -21,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
+        android:textStyle="italic"
         android:paddingHorizontal="@dimen/margin_x2"
         android:layout_marginBottom="@dimen/margin"
         android:id="@+id/tvMessage"

@@ -130,7 +130,7 @@ public class FinalExam implements IEvent, Parcelable {
 
     @Override
     public String getCategory() {
-        return FbAndCourseMap.cleanCode(className);
+        return FbAndCourseMap.cleanCode(classCode);
     }
 
     @Override
