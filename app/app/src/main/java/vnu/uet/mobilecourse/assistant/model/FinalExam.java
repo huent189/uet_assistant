@@ -3,10 +3,12 @@ package vnu.uet.mobilecourse.assistant.model;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import vnu.uet.mobilecourse.assistant.model.event.IEvent;
+import vnu.uet.mobilecourse.assistant.util.FbAndCourseMap;
 
 import java.util.Date;
 @Entity()
-public class FinalExam {
+public class FinalExam implements IEvent {
     @PrimaryKey
     @NonNull
     private String classCode;
@@ -78,4 +80,23 @@ public class FinalExam {
                 && place.equals(exam.place) && IdNumber.equals(exam.IdNumber));
     }
 
+    @Override
+    public String getTitle() {
+        return "Thi cuối kỳ: " + className;
+    }
+
+    @Override
+    public String getCategory() {
+        return FbAndCourseMap.cleanCode(className);
+    }
+
+    @Override
+    public Date getTime() {
+        return new Date(examTime);
+    }
+
+    @Override
+    public boolean isCompleted() {
+        return examTime > System.currentTimeMillis();
+    }
 }
