@@ -11,13 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.repository.firebase.ChatRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
 import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
 import vnu.uet.mobilecourse.assistant.view.GlideApp;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
 public class AvatarLoader {
 
@@ -33,6 +36,27 @@ public class AvatarLoader {
     public void loadUser(String studentCode, ImageView imageView) {
         StorageReference imageRef = new StorageAccess().getAvatar(studentCode);
 
+        IStateLiveData<User> liveData = FirebaseUserRepository.getInstance().search(studentCode);
+
+        if (liveData.getValue() != null && liveData.getValue().getStatus() == StateStatus.SUCCESS) {
+            GlideApp.with(mContext)
+                    .load(imageRef)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+//                                            .signature(new ObjectKey(time))
+                    .placeholder(R.drawable.avatar)
+                    .error(R.drawable.avatar)
+                    .into(imageView);
+        } else {
+            GlideApp.with(mContext)
+                    .load(imageRef)
+                    .placeholder(R.drawable.avatar)
+                    .error(R.drawable.avatar)
+//                .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                .skipMemoryCache(true)
+                    .into(imageView);
+        }
+
         FirebaseUserRepository.getInstance().search(studentCode)
                 .observe(mLifecycleOwner, new Observer<StateModel<User>>() {
                     @Override
@@ -43,7 +67,7 @@ public class AvatarLoader {
                                     long time = stateModel.getData().getAvatar();
                                     GlideApp.with(mContext)
                                             .load(imageRef)
-//                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
                                             .skipMemoryCache(true)
 //                                            .signature(new ObjectKey(time))
                                             .placeholder(R.drawable.avatar)
@@ -54,13 +78,11 @@ public class AvatarLoader {
                     }
                 });
 
-        GlideApp.with(mContext)
-                .load(imageRef)
-                .placeholder(R.drawable.avatar)
-                .error(R.drawable.avatar)
-//                .diskCacheStrategy(DiskCacheStrategy.NONE)
-//                .skipMemoryCache(true)
-                .into(imageView);
+
+    }
+
+    private void forceUpdate() {
+
     }
 
     public void loadRoom(String roomId, ImageView imageView) {
