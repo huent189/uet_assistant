@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class MaterialRepository {
-    private static final int DAY_DURATION = 24 * 60 *60;
+    private static final int DAY_DURATION_SECOND = 24 * 60 *60;
 
     private static MaterialRepository instance;
 
@@ -248,7 +248,7 @@ public class MaterialRepository {
             calendar.clear();
             calendar.set(year, month, day);
             long startTime = calendar.getTimeInMillis() / 1000;
-            long endTime = calendar.getTimeInMillis() / 1000 + DAY_DURATION;
+            long endTime = calendar.getTimeInMillis() / 1000 + DAY_DURATION_SECOND;
             List<Submission> materials = queryCourseSubmission(startTime, endTime);
             ArrayList<CourseSubmissionEvent> events = new ArrayList<>();
             materials.forEach(materialWithCourse -> {

@@ -47,7 +47,7 @@ public class SyncFinalExamWorker extends Worker {
     public Result doWork() {
         try {
             portalRepository.syncFinalExams();
-            List<FinalExam> updateList = portalRepository.getUpdateExams();
+            List<FinalExam> updateList = portalRepository.syncFinalExams();
             if(updateList == null || updateList.isEmpty()){
                 return Result.success();
             }
