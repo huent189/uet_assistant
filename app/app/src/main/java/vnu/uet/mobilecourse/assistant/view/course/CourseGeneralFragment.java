@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,12 +27,16 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.CourseGeneralMaterialAdapter;
 import vnu.uet.mobilecourse.assistant.adapter.CourseSessionAdapter;
 import vnu.uet.mobilecourse.assistant.model.Course;
+import vnu.uet.mobilecourse.assistant.model.FinalExam;
 import vnu.uet.mobilecourse.assistant.model.ICourse;
 import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
+import vnu.uet.mobilecourse.assistant.repository.course.PortalRepository;
+import vnu.uet.mobilecourse.assistant.util.FbAndCourseMap;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.viewmodel.CourseGeneralViewModel;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 import static vnu.uet.mobilecourse.assistant.model.material.CourseConstant.MaterialType.GENERAL;
 
@@ -67,6 +72,14 @@ public class CourseGeneralFragment extends Fragment {
 
             TextView tvCourseId = root.findViewById(R.id.tvCourseId);
             tvCourseId.setText(course.getCode());
+
+            String cleanCode = FbAndCourseMap.cleanCode(course.getCode());
+            new PortalRepository().getFinalExamByCourse(cleanCode).observe(getViewLifecycleOwner(), new Observer<StateModel<FinalExam>>() {
+                @Override
+                public void onChanged(StateModel<FinalExam> finalExamStateModel) {
+                    System.out.println();
+                }
+            });
 
             TextView tvCredits = root.findViewById(R.id.tvCredits);
 

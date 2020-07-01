@@ -97,8 +97,9 @@ public class AvatarLoader {
                                 long time = stateModel.getData().getAvatar();
                                 GlideApp.with(mContext)
                                         .load(imageRef)
-                                        .signature(new ObjectKey(time))
-                                        .placeholder(R.drawable.avatar)
+                                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                        .skipMemoryCache(true)
+//                                        .signature(new ObjectKey(time))
                                         .error(R.drawable.avatar)
                                         .into(imageView);
                         }
@@ -107,7 +108,6 @@ public class AvatarLoader {
 
         GlideApp.with(mContext)
                 .load(imageRef)
-                .placeholder(R.drawable.avatar)
                 .error(R.drawable.avatar)
                 .into(imageView);
     }
