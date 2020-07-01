@@ -12,11 +12,14 @@ import android.widget.TextView;
 
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -33,6 +36,7 @@ import vnu.uet.mobilecourse.assistant.model.Material;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.repository.course.PortalRepository;
+import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.FbAndCourseMap;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
 import vnu.uet.mobilecourse.assistant.viewmodel.CourseGeneralViewModel;
@@ -73,11 +77,36 @@ public class CourseGeneralFragment extends Fragment {
             TextView tvCourseId = root.findViewById(R.id.tvCourseId);
             tvCourseId.setText(course.getCode());
 
+            CardView cvFinalExam = root.findViewById(R.id.cvFinalExam);
+            TextView tvTime = cvFinalExam.findViewById(R.id.tvTime);
+            TextView tvRoom = cvFinalExam.findViewById(R.id.tvRoom);
+            TextView tvFormat = cvFinalExam.findViewById(R.id.tvFormat);
+            TextView tvSBD = cvFinalExam.findViewById(R.id.tvSBD);
             String cleanCode = FbAndCourseMap.cleanCode(course.getCode());
             new PortalRepository().getFinalExamByCourse(cleanCode).observe(getViewLifecycleOwner(), new Observer<StateModel<FinalExam>>() {
                 @Override
-                public void onChanged(StateModel<FinalExam> finalExamStateModel) {
-                    System.out.println();
+                public void onChanged(StateModel<FinalExam> stateModel) {
+                    switch (stateModel.getStatus()) {
+                        case SUCCESS:
+                            cvFinalExam.setVisibility(View.VISIBLE);
+                            FinalExam exam = stateModel.getData();
+                            tvTime.setText(DateTimeUtils.DATE_TIME_FORMAT.format(exam.getTime()));
+
+                            String place = exam.getPlace();
+//                            place = place.replaceAll("<[^>]>", StringConst.EMPTY);
+                            tvRoom.setText(place);
+
+                            String form = exam.getForm();
+                            if (form.isEmpty()) form = "Không có";
+                            tvFormat.setText(form);
+
+                            tvSBD.setText(exam.getIdNumber());
+                            break;
+
+                        default:
+                            cvFinalExam.setVisibility(View.GONE);
+                            break;
+                    }
                 }
             });
 

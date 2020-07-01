@@ -33,7 +33,7 @@ public class PortalClient {
             e.setForm(cols.get(13).text());
             e.setIdNumber(cols.get(5).text());
             e.setExamTime(dateFormat.parse(cols.get(8).text() + " " + cols.get(9).text()));
-            e.setPlace(cols.get(12).text() + " - " + cols.get(11));
+            e.setPlace(cols.get(12).text() + ", " + cols.get(11).text());
             finalExams.add(e);
         }
         return finalExams;
