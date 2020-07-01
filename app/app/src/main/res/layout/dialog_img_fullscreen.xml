@@ -18,17 +18,32 @@
         android:layout_height="wrap_content"
         android:background="#33000000"
         app:elevation="0dp"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.Toolbar
-            style="@style/Toolbar"
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        </androidx.appcompat.widget.Toolbar>
+            <androidx.appcompat.widget.Toolbar
+                style="@style/Toolbar"
+                android:id="@+id/toolbar"
+                app:title="Hình ảnh"
+                android:layout_width="match_parent"/>
+
+            <ImageButton
+                android:id="@+id/btnDownload"
+                android:background="@drawable/transparent_button_background"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginEnd="@dimen/margin"
+                android:padding="@dimen/margin"
+                android:src="@drawable/ic_file_download_24dp"/>
+
+        </FrameLayout>
+
 
     </com.google.android.material.appbar.AppBarLayout>
 

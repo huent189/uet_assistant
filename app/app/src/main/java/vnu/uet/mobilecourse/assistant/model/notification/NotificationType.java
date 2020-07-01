@@ -1,4 +1,4 @@
-package vnu.uet.mobilecourse.assistant.model.firebase;
+package vnu.uet.mobilecourse.assistant.model.notification;
 
 public interface NotificationType {
     /**
