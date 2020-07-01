@@ -26,12 +26,19 @@
             android:layout_width="match_parent"
             app:menu="@menu/chat_room_toolbar_menu">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/civAvatar"
-                android:layout_width="@dimen/small_img_avatar_size"
-                android:layout_height="@dimen/small_img_avatar_size"
+<!--            <de.hdodenhof.circleimageview.CircleImageView-->
+<!--                android:id="@+id/civAvatar"-->
+<!--                android:layout_width="@dimen/small_img_avatar_size"-->
+<!--                android:layout_height="@dimen/small_img_avatar_size"-->
+<!--                android:layout_marginEnd="@dimen/margin"-->
+<!--                android:src="@drawable/avatar" />-->
+
+            <vnu.uet.mobilecourse.assistant.view.component.AvatarView
+                android:id="@+id/avatarView"
+                app:borderWidth="1dp"
                 android:layout_marginEnd="@dimen/margin"
-                android:src="@drawable/avatar" />
+                android:layout_width="@dimen/small_img_avatar_size"
+                android:layout_height="@dimen/small_img_avatar_size" />
 
             <TextView
                 android:id="@+id/tvRoomTitle"

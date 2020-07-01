@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView android:id="@+id/cvContainer"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/background"
+    app:cardCornerRadius="@dimen/small_radius"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:background="@drawable/edit_text_background"
+        android:layout_width="wrap_content"
+        android:minWidth="220dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_x2">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_attach_file_32dp"
+            android:padding="@dimen/small_margin"
+            android:background="@drawable/circle"/>
+
+        <TextView
+            style="@style/ListItemTitle"
+            android:id="@+id/tvAttachmentName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            style="@style/ListTitle"
+            android:id="@+id/tvAttachmentSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/sfl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/ListItemTitle"
+                    android:layout_width="140dp"
+                    android:background="@color/backgroundLight"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    style="@style/ListTitle"
+                    android:layout_width="100dp"
+                    android:layout_marginTop="@dimen/small_margin"
+                    android:background="@color/backgroundLight"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

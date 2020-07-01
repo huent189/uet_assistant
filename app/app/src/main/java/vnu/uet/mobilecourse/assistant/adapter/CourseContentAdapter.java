@@ -86,7 +86,9 @@ public class CourseContentAdapter extends
 
         if (group instanceof ExpandableCourseContent) {
             ExpandableCourseContent content = (ExpandableCourseContent) group;
-            holder.bind(content);
+            int index = expandableList.groups.indexOf(content);
+            boolean expand = expandableList.expandedGroupIndexes[index];
+            holder.bind(content, expand);
         }
     }
 
@@ -100,7 +102,8 @@ public class CourseContentAdapter extends
             mTvWeeklyTitle = itemView.findViewById(R.id.tvTitle);
         }
 
-        void bind(ExpandableCourseContent content) {
+        void bind(ExpandableCourseContent content, boolean expand) {
+            bindArrow(expand);
             mTvWeeklyTitle.setText(content.getTitle());
         }
     }

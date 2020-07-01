@@ -19,6 +19,7 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.view.chat.AddMemberFragment;
+import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
 
 public class SuggestionMemberAdapter extends RecyclerView.Adapter<SuggestionMemberAdapter.ViewHolder> {
 
@@ -71,7 +72,7 @@ public class SuggestionMemberAdapter extends RecyclerView.Adapter<SuggestionMemb
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private CircleImageView mCivAvatar;
+        private AvatarView mAvatarView;
         private TextView mTvName;
         private TextView mTvId;
         private CheckBox mCheckbox;
@@ -79,7 +80,7 @@ public class SuggestionMemberAdapter extends RecyclerView.Adapter<SuggestionMemb
         ViewHolder(@NonNull View view) {
             super(view);
 
-            mCivAvatar = view.findViewById(R.id.civAvatar);
+            mAvatarView = view.findViewById(R.id.avatarView);
             mTvName = view.findViewById(R.id.tvName);
             mTvId = view.findViewById(R.id.tvId);
             mCheckbox = view.findViewById(R.id.checkbox);
@@ -89,8 +90,10 @@ public class SuggestionMemberAdapter extends RecyclerView.Adapter<SuggestionMemb
             mTvName.setText(student.getName());
             mTvId.setText(student.getCode());
 
-            new AvatarLoader(itemView.getContext(), fragment.getViewLifecycleOwner())
-                    .loadUser(student.getCode(), mCivAvatar);
+//            new AvatarLoader(itemView.getContext(), fragment.getViewLifecycleOwner())
+//                    .loadUser(student.getCode(), mCivAvatar);
+            mAvatarView.setLifecycleOwner(fragment.getViewLifecycleOwner());
+            mAvatarView.loadUser(student.getCode());
 
             fragment.getViewModel().isSelected(student).observe(fragment.getViewLifecycleOwner(), new Observer<Boolean>() {
                 @Override

@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.view.profile;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.storage.StorageReference;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,14 +28,19 @@ import vnu.uet.mobilecourse.assistant.adapter.VerticalMemberAdapter;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
+import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.FileUtils;
 import vnu.uet.mobilecourse.assistant.view.chat.RenameDialog;
+import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
+import vnu.uet.mobilecourse.assistant.view.component.FullscreenImageView;
 import vnu.uet.mobilecourse.assistant.view.component.SwipeToDeleteCallback;
 import vnu.uet.mobilecourse.assistant.viewmodel.RoomProfileViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
-public class RoomProfileFragment extends Fragment {
+import static android.app.Activity.RESULT_OK;
+
+public class RoomProfileFragment extends Fragment implements IAvatarChangableFragment {
 
     private RoomProfileViewModel mViewModel;
     private NavController mNavController;
@@ -85,9 +93,19 @@ public class RoomProfileFragment extends Fragment {
                     }
                 });
 
-                ImageView civAvatar = root.findViewById(R.id.civAvatar);
-                new AvatarLoader(mActivity, getViewLifecycleOwner())
-                        .loadRoom(roomId, civAvatar);
+//                ImageView civAvatar = root.findViewById(R.id.civAvatar);
+//                new AvatarLoader(mActivity, getViewLifecycleOwner())
+//                        .loadRoom(roomId, civAvatar);
+
+                AvatarView avatarView = root.findViewById(R.id.avatarView);
+                avatarView.setLifecycleOwner(getViewLifecycleOwner());
+                avatarView.loadRoom(roomId);
+                avatarView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showAvatarFullscreen();
+                    }
+                });
             }
         }
 
@@ -101,8 +119,7 @@ public class RoomProfileFragment extends Fragment {
         layoutChangeAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = FileUtils.createImageIntent();
-                startActivityForResult(intent, FileUtils.REQUEST_CODE_IMAGE);
+                showMenuDialog();
             }
         });
 
@@ -196,16 +213,53 @@ public class RoomProfileFragment extends Fragment {
         dialog.show(mActivity.getSupportFragmentManager(), RenameDialog.class.getName());
     }
 
+    private void showAvatarFullscreen() {
+        FullscreenImageView d = new FullscreenImageView(mActivity, "Ảnh đại diện");
+
+        StorageReference imageRef = new StorageAccess().getAvatar(mRoom.getId());
+
+        if (imageRef != null) {
+            d.setPhotoReference(imageRef);
+            d.show();
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
             case FileUtils.REQUEST_CODE_IMAGE:
-                Uri uri = data.getData();
-                Toast.makeText(mActivity, uri.getPath(), Toast.LENGTH_SHORT).show();
-
-                mViewModel.changeAvatar(mRoom, uri);
+                if (resultCode == RESULT_OK && data != null) {
+                    Uri uri = data.getData();
+                    Toast.makeText(mActivity, uri.getPath(), Toast.LENGTH_SHORT).show();
+                    mViewModel.changeAvatar(mRoom, uri);
+                }
 
                 break;
+
+            case FileUtils.REQUEST_CODE_CAMERA:
+                if (resultCode == RESULT_OK && data != null) {
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    mViewModel.changeAvatarFromCamera(mRoom, photo);
+                }
+                break;
         }
+    }
+
+    @Override
+    public void chooseFromLibrary() {
+        Intent intent = FileUtils.createImageIntent();
+        startActivityForResult(intent, FileUtils.REQUEST_CODE_IMAGE);
+    }
+
+    @Override
+    public void chooseFromCamera() {
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, FileUtils.REQUEST_CODE_CAMERA);
+    }
+
+    @Override
+    public void showMenuDialog() {
+        ChangeAvatarDialog dialog = new ChangeAvatarDialog(this);
+        dialog.show(getActivity().getSupportFragmentManager(), ChangeAvatarDialog.class.getName());
     }
 }

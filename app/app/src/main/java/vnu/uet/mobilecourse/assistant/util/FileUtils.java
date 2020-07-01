@@ -38,6 +38,7 @@ public class FileUtils {
 
     public static final int REQUEST_CODE_IMAGE = 2000;
     public static final int REQUEST_CODE_FILE = 1999;
+    public static final int REQUEST_CODE_CAMERA = 2001;
 
     public static final String MIME_IMAGE = "image/*";
     public static final String MIME_AUDIO = "audio/*";

@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Date;
 import java.util.List;
@@ -27,10 +28,14 @@ import java.util.List;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.AllCoursesAdapter;
 import vnu.uet.mobilecourse.assistant.model.ICourse;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
+import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
+import vnu.uet.mobilecourse.assistant.view.component.FullscreenImageView;
 import vnu.uet.mobilecourse.assistant.viewmodel.FriendProfileViewModel;
 
 public class FriendProfileFragment extends Fragment {
@@ -78,10 +83,19 @@ public class FriendProfileFragment extends Fragment {
                     }
                 });
 
-                ImageView mCivAvatar = root.findViewById(R.id.civAvatar);
+                AvatarView avatarView = root.findViewById(R.id.avatarView);
+                avatarView.setLifecycleOwner(getViewLifecycleOwner());
+                avatarView.loadUser(mCode);
 
-                new AvatarLoader(mActivity, getViewLifecycleOwner())
-                        .loadUser(mCode, mCivAvatar);
+                avatarView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showAvatarFullscreen();
+                    }
+                });
+
+//                new AvatarLoader(mActivity, getViewLifecycleOwner())
+//                        .loadUser(mCode, mCivAvatar);
 
             } else {
                 btnChat.setVisibility(View.GONE);
@@ -167,6 +181,17 @@ public class FriendProfileFragment extends Fragment {
         }
 
         return root;
+    }
+
+    private void showAvatarFullscreen() {
+        FullscreenImageView d = new FullscreenImageView(mActivity, "Ảnh đại diện");
+
+        StorageReference imageRef = new StorageAccess().getAvatar(mCode);
+
+        if (imageRef != null) {
+            d.setPhotoReference(imageRef);
+            d.show();
+        }
     }
 
     private void onChatClick(Bundle prevArgs) {

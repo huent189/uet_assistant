@@ -32,6 +32,7 @@ import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
+import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
 import vnu.uet.mobilecourse.assistant.viewmodel.ChatViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
@@ -78,9 +79,9 @@ public class ChatFragment extends Fragment {
             }
         });
 
-        ImageView myAvatarView = root.findViewById(R.id.civAvatar);
-        new AvatarLoader(mActivity, getViewLifecycleOwner())
-                .loadUser(User.getInstance().getStudentId(), myAvatarView);
+        AvatarView avatarView = root.findViewById(R.id.avatarView);
+        avatarView.setLifecycleOwner(getViewLifecycleOwner());
+        avatarView.loadUser(User.getInstance().getStudentId());
 
         return root;
     }

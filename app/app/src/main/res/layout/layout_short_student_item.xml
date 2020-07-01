@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingVertical="@dimen/margin_x2"
     android:paddingHorizontal="@dimen/margin"
@@ -18,16 +18,22 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/civAvatar"
+<!--            <de.hdodenhof.circleimageview.CircleImageView-->
+<!--                android:id="@+id/civAvatar"-->
+<!--                android:layout_width="@dimen/img_avatar_size"-->
+<!--                android:layout_height="@dimen/img_avatar_size"-->
+<!--                android:src="@drawable/avatar" />-->
+
+            <vnu.uet.mobilecourse.assistant.view.component.AvatarView
+                android:id="@+id/avatarView"
+                app:borderWidth="1dp"
                 android:layout_width="@dimen/img_avatar_size"
-                android:layout_height="@dimen/img_avatar_size"
-                android:src="@drawable/avatar" />
+                android:layout_height="@dimen/img_avatar_size" />
 
             <TextView
                 android:id="@+id/tvName"
                 android:layout_marginTop="@dimen/margin"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:ellipsize="end"

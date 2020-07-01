@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant.view.profile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.Date;
 
@@ -28,13 +31,18 @@ import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.FileUtils;
+import vnu.uet.mobilecourse.assistant.view.chat.RenameDialog;
+import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
+import vnu.uet.mobilecourse.assistant.view.component.FullscreenImageView;
 import vnu.uet.mobilecourse.assistant.viewmodel.MyProfileViewModel;
 
-public class MyProfileFragment extends Fragment {
+import static android.app.Activity.RESULT_OK;
+
+public class MyProfileFragment extends Fragment implements IAvatarChangableFragment {
 
     private MyProfileViewModel mViewModel;
 
-    private CircleImageView mCivAvatar;
+//    private CircleImageView mCivAvatar;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -79,41 +87,70 @@ public class MyProfileFragment extends Fragment {
         btnChangeAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = FileUtils.createImageIntent();
-                startActivityForResult(intent, FileUtils.REQUEST_CODE_IMAGE);
+                showMenuDialog();
             }
         });
 
-        mCivAvatar = root.findViewById(R.id.civAvatar);
+        AvatarView avatarView = root.findViewById(R.id.avatarView);
+        avatarView.setLifecycleOwner(getViewLifecycleOwner());
+        avatarView.loadUser(User.getInstance().getStudentId());
 
-        Context context = getContext();
-
-        assert context != null;
-        new AvatarLoader(context, getViewLifecycleOwner())
-                .loadUser(User.getInstance().getStudentId(), mCivAvatar);
+        avatarView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAvatarFullscreen();
+            }
+        });
 
         return root;
     }
 
+    @Override
+    public void showMenuDialog() {
+        ChangeAvatarDialog dialog = new ChangeAvatarDialog(this);
+        dialog.show(getActivity().getSupportFragmentManager(), ChangeAvatarDialog.class.getName());
+    }
+
+    private void showAvatarFullscreen() {
+        FullscreenImageView d = new FullscreenImageView(getContext(), "Ảnh đại diện");
+
+        StorageReference imageRef = new StorageAccess().getAvatar(User.getInstance().getStudentId());
+
+        if (imageRef != null) {
+            d.setPhotoReference(imageRef);
+            d.show();
+        }
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
             case FileUtils.REQUEST_CODE_IMAGE:
-                Uri uri = data.getData();
-                Toast.makeText(getContext(), uri.getPath(), Toast.LENGTH_SHORT).show();
-                new StorageAccess().changeAvatar(User.getInstance().getStudentId(), uri);
-//                        .observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
-//                            @Override
-//                            public void onChanged(StateModel<String> stateModel) {
-//                                switch (stateModel.getStatus()) {
-//                                    case SUCCESS:
-//                                        refresh();
-//                                        break;
-//                                }
-//                            }
-//                        });
+                if (resultCode == RESULT_OK && data != null) {
+                    Uri uri = data.getData();
+                    Toast.makeText(getContext(), uri.getPath(), Toast.LENGTH_SHORT).show();
+                    mViewModel.changeAvatarFromFile(uri);
+                }
+                break;
+
+            case FileUtils.REQUEST_CODE_CAMERA:
+                if (resultCode == RESULT_OK && data != null) {
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    mViewModel.changeAvatarFromCamera(photo);
+                }
                 break;
         }
+    }
+
+    @Override
+    public void chooseFromLibrary() {
+        Intent intent = FileUtils.createImageIntent();
+        startActivityForResult(intent, FileUtils.REQUEST_CODE_IMAGE);
+    }
+
+    @Override
+    public void chooseFromCamera() {
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, FileUtils.REQUEST_CODE_CAMERA);
     }
 }

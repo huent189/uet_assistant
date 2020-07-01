@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.adapter;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,7 +94,9 @@ public class TodoListAdapter extends
 
         if (group instanceof ExpandableTodoList) {
             ExpandableTodoList content = (ExpandableTodoList) group;
-            holder.bind(content);
+            int index = expandableList.groups.indexOf(content);
+            boolean expand = expandableList.expandedGroupIndexes[index];
+            holder.bind(content, expand);
         }
     }
 
@@ -109,7 +112,9 @@ public class TodoListAdapter extends
             mTvTitle = itemView.findViewById(R.id.tvTitle);
         }
 
-        void bind(ExpandableTodoList content) {
+        void bind(ExpandableTodoList content, boolean expand) {
+            bindArrow(expand);
+
             mTvTitle.setText(content.getTitle());
 
             mTodoList = content;

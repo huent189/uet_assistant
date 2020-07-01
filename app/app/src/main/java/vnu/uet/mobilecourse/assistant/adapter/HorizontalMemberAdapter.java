@@ -16,6 +16,7 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
+import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
 
 public class HorizontalMemberAdapter extends RecyclerView.Adapter<HorizontalMemberAdapter.ViewHolder> {
 
@@ -58,14 +59,14 @@ public class HorizontalMemberAdapter extends RecyclerView.Adapter<HorizontalMemb
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private CircleImageView mCivAvatar;
+        private AvatarView mAvatarView;
         private TextView mTvName;
         private ImageButton mBtnClear;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            mCivAvatar = itemView.findViewById(R.id.civAvatar);
+            mAvatarView = itemView.findViewById(R.id.avatarView);
             mTvName = itemView.findViewById(R.id.tvName);
             mBtnClear = itemView.findViewById(R.id.btnClear);
         }
@@ -74,8 +75,8 @@ public class HorizontalMemberAdapter extends RecyclerView.Adapter<HorizontalMemb
             mTvName.setText(getSimpleName(student.getName()));
             mBtnClear.setOnClickListener(view -> callback.run());
 
-            new AvatarLoader(itemView.getContext(), lifecycleOwner)
-                    .loadUser(student.getCode(), mCivAvatar);
+            mAvatarView.setLifecycleOwner(lifecycleOwner);
+            mAvatarView.loadUser(student.getCode());
         }
 
         private String getSimpleName(String fullName) {

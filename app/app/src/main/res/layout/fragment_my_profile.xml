@@ -36,26 +36,46 @@
             <View
                 android:id="@+id/view"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="@dimen/profile_banner_height"
                 android:background="@color/primary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/civAvatar"
+            <ImageView
+                android:layout_width="@dimen/avatar_container_size"
+                android:layout_height="@dimen/avatar_container_size"
+                android:background="@drawable/circle"
+                android:backgroundTint="@color/background"
+                app:layout_constraintBottom_toBottomOf="@+id/avatarView"
+                app:layout_constraintEnd_toEndOf="@+id/avatarView"
+                app:layout_constraintStart_toStartOf="@+id/avatarView"
+                app:layout_constraintTop_toTopOf="@+id/avatarView" />
+
+            <vnu.uet.mobilecourse.assistant.view.component.AvatarView
+                android:id="@+id/avatarView"
                 android:layout_width="@dimen/big_img_avatar_size"
                 android:layout_height="@dimen/big_img_avatar_size"
-                android:layout_marginTop="@dimen/margin_x6"
-                android:background="@drawable/circle"
-                android:backgroundTint="@color/white"
-                android:src="@drawable/avatar"
-                app:civ_border_color="@color/background"
-                app:civ_border_width="4dp"
                 app:layout_constraintBottom_toBottomOf="@+id/view"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view" />
+
+<!--            <de.hdodenhof.circleimageview.CircleImageView-->
+<!--                android:id="@+id/civAvatar"-->
+<!--                android:layout_width="@dimen/big_img_avatar_size"-->
+<!--                android:layout_height="@dimen/big_img_avatar_size"-->
+<!--                android:visibility="invisible"-->
+<!--                android:layout_marginTop="@dimen/margin_x6"-->
+<!--                android:background="@drawable/circle"-->
+<!--                android:backgroundTint="@color/white"-->
+<!--                android:src="@drawable/avatar"-->
+<!--                app:civ_border_color="@color/background"-->
+<!--                app:civ_border_width="4dp"-->
+<!--                app:layout_constraintBottom_toBottomOf="@+id/view"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/view" />-->
 
             <TextView
                 android:id="@+id/tvUsername"
@@ -67,7 +87,7 @@
                 android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/civAvatar" />
+                app:layout_constraintTop_toBottomOf="@+id/avatarView" />
 
             <TextView
                 android:id="@+id/tvUserId"
@@ -87,7 +107,7 @@
                 android:layout_marginTop="@dimen/margin_x2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/civAvatar">
+                app:layout_constraintTop_toBottomOf="@+id/avatarView">
 
                 <LinearLayout
                     android:layout_width="match_parent"

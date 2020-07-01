@@ -8,6 +8,11 @@
         <attr name="textContent" format="string"/>
     </declare-styleable>
 
+    <declare-styleable name="AvatarView">
+        <attr name="borderWidth" format="dimension"/>
+        <attr name="showStatus" format="boolean"/>
+    </declare-styleable>
+
     <attr name="squareButtonStyle" format="reference"/>
 
 </resources>

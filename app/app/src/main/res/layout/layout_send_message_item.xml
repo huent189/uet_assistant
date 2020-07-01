@@ -20,12 +20,24 @@
         android:orientation="vertical"
         android:paddingEnd="@dimen/margin_x2"
         android:paddingStart="88dp"
+        android:gravity="end"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <vnu.uet.mobilecourse.assistant.view.component.ChatBox
             android:id="@+id/tvMessage"
             style="@style/SendMessage"/>
+
+        <vnu.uet.mobilecourse.assistant.view.component.CustomImageView
+            android:visibility="gone"
+            android:id="@+id/customImageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <vnu.uet.mobilecourse.assistant.view.component.CardAttachment
+            android:id="@+id/cardAttachment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 

@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingVertical="@dimen/small_margin_2"
-    android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -30,28 +29,63 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/font_size_small"
-            app:layout_constraintBottom_toTopOf="@+id/tvMessage"
-            app:layout_constraintStart_toStartOf="@+id/tvMessage"
+            app:layout_constraintBottom_toTopOf="@+id/layoutContainer"
+            app:layout_constraintStart_toStartOf="@+id/layoutContainer"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <vnu.uet.mobilecourse.assistant.view.component.ChatBox
-            android:id="@+id/tvMessage"
-            style="@style/ReceiveMessage"
+        <LinearLayout
+            android:id="@+id/layoutContainer"
             android:layout_marginStart="@dimen/margin"
-            android:text="@string/title_chat"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/civAvatar" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/civAvatar"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_gravity="bottom"
-            android:src="@drawable/avatar"
-            app:layout_constraintBottom_toBottomOf="@+id/tvMessage"
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/avatarView">
+
+            <vnu.uet.mobilecourse.assistant.view.component.ChatBox
+                android:id="@+id/tvMessage"
+                style="@style/ReceiveMessage"
+                android:layout_marginBottom="@dimen/margin"
+                android:text="@string/title_chat"/>
+
+
+            <vnu.uet.mobilecourse.assistant.view.component.CustomImageView
+                android:id="@+id/customImageView"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <vnu.uet.mobilecourse.assistant.view.component.CardAttachment
+                android:id="@+id/cardAttachment"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
+
+<!--        <de.hdodenhof.circleimageview.CircleImageView-->
+<!--            android:id="@+id/civAvatar"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_gravity="bottom"-->
+<!--            android:src="@drawable/avatar"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/tvMessage"-->
+<!--            app:layout_constraintDimensionRatio="h,1:1"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/tvMessage" />-->
+
+        <vnu.uet.mobilecourse.assistant.view.component.AvatarView
+            android:id="@+id/avatarView"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            app:layout_constraintBottom_toBottomOf="@+id/layoutContainer"
             app:layout_constraintDimensionRatio="h,1:1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tvMessage" />
+            app:layout_constraintTop_toTopOf="@+id/layoutContainer"
+            app:layout_constraintVertical_bias="0.0"
+            app:showStatus="false" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
