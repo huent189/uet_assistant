@@ -274,7 +274,7 @@ public class ChatRoomFragment extends Fragment {
     }
 
     private void sendTextMessage() {
-        String content = mEtMessage.getText().toString();
+        String content = mEtMessage.getText().toString().trim();
         Log.d("CHAT", "sendMessage: " + content);
 
         if (content.isEmpty()) return;
@@ -318,10 +318,6 @@ public class ChatRoomFragment extends Fragment {
 
 
         mEtMessage.setText(StringConst.EMPTY);
-    }
-
-    private void sendAttachment() {
-
     }
 
     private Toolbar initializeToolbar(View root) {

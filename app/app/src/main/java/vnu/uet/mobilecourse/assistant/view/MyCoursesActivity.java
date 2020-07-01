@@ -47,7 +47,7 @@ public class MyCoursesActivity extends AppCompatActivity {
 
     private NavigationBadgeRepository mNavigationBadgeRepo = NavigationBadgeRepository.getInstance();
 
-    private NetworkChangeReceiver mNetworkListener = new NetworkChangeReceiver();
+    private NetworkChangeReceiver mNetworkListener = NetworkChangeReceiver.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

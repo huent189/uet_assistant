@@ -61,7 +61,7 @@ public class FirebaseUserRepository {
     }
 
     public IStateLiveData<Boolean> onlineState(String id) {
-        return new OnlineState(search(id), NetworkChangeReceiver.getLiveData());
+        return new OnlineState(search(id), NetworkChangeReceiver.getInstance().getLiveData());
     }
 
     public IStateLiveData<User> add(User user) {
@@ -97,12 +97,13 @@ public class FirebaseUserRepository {
                 @Override
                 public void onChanged(Integer integer) {
                     networkStatus = integer;
+                    postSuccess(isOnline());
                 }
             });
         }
 
         private boolean isOnline() {
-            return online && networkStatus != NetworkUtils.TYPE_NOT_CONNECTED;
+            return online && networkStatus != NetworkUtils.STATUS_NOT_CONNECTED;
         }
     }
 }

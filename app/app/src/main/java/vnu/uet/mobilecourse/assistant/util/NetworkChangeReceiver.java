@@ -14,7 +14,17 @@ import androidx.lifecycle.Observer;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
-    private static MutableLiveData<Integer> liveData = new MutableLiveData<>();
+    private static NetworkChangeReceiver instance;
+
+    public static NetworkChangeReceiver getInstance() {
+        if (instance == null) {
+            instance = new NetworkChangeReceiver();
+        }
+
+        return instance;
+    }
+
+    private MutableLiveData<Integer> liveData = new MutableLiveData<>();
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
@@ -31,7 +41,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         liveData.observe(owner, observer);
     }
 
-    public static LiveData<Integer> getLiveData() {
+    public LiveData<Integer> getLiveData() {
         return liveData;
     }
 }
