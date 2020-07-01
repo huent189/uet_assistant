@@ -14,6 +14,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
+import vnu.uet.mobilecourse.assistant.database.CoursesDatabase;
 import vnu.uet.mobilecourse.assistant.exception.InvalidLoginException;
 import vnu.uet.mobilecourse.assistant.exception.NoConnectivityException;
 import vnu.uet.mobilecourse.assistant.exception.UnavailableHostException;
@@ -143,5 +144,10 @@ public class UserRepository {
         new FirebaseAuthenticationService().sendLinkLoginToMail(User.getInstance().getEmail(), liveLoginResponse);
 
         return liveLoginResponse;
+    }
+
+    public void signOut(){
+        SharedPreferencesManager.clearAll();
+        CoursesDatabase.getDatabase().clearAllTables();
     }
 }
