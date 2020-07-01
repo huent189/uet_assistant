@@ -1,5 +1,6 @@
 package vnu.uet.mobilecourse.assistant.viewmodel;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import androidx.lifecycle.ViewModel;
@@ -41,5 +42,13 @@ public class RoomProfileViewModel extends ViewModel {
                 .toArray(String[]::new);
 
         return new StorageAccess().changeGroupAvatar(room.getId(), memberIds, uri);
+    }
+
+    public IStateLiveData<String> changeAvatarFromCamera(GroupChat room, Bitmap photo) {
+        String[] memberIds = room.getMembers().stream()
+                .map(Member_GroupChatSubCol::getId)
+                .toArray(String[]::new);
+
+        return new StorageAccess().changeRoomAvatarFromCamera(room.getId(), memberIds, photo);
     }
 }

@@ -129,14 +129,14 @@ public class MyProfileFragment extends Fragment implements IAvatarChangableFragm
                 if (resultCode == RESULT_OK && data != null) {
                     Uri uri = data.getData();
                     Toast.makeText(getContext(), uri.getPath(), Toast.LENGTH_SHORT).show();
-                    new StorageAccess().changeAvatar(User.getInstance().getStudentId(), uri);
+                    mViewModel.changeAvatarFromFile(uri);
                 }
                 break;
 
             case FileUtils.REQUEST_CODE_CAMERA:
                 if (resultCode == RESULT_OK && data != null) {
                     Bitmap photo = (Bitmap) data.getExtras().get("data");
-                    new StorageAccess().changeAvatarFromCamera(User.getInstance().getStudentId(), photo);
+                    mViewModel.changeAvatarFromCamera(photo);
                 }
                 break;
         }

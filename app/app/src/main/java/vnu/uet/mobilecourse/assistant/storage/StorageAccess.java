@@ -122,6 +122,44 @@ public class StorageAccess implements IStorage {
         return changeAvatarState;
     }
 
+    public IStateLiveData<String> changeRoomAvatarFromCamera(String id, String[] memberIds, Bitmap photo) {
+        IStateLiveData<String> changeAvatarState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
+
+        StorageReference avatarRef = storage.child(StorageAccess.AVATAR_DIR).child(id).child(StorageAccess.AVATAR_FILENAME);
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        photo.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+
+        byte[] b = stream.toByteArray();
+
+        avatarRef.putBytes(b).addOnCompleteListener(task -> { // upload new avatar
+            if (task.isSuccessful()) {
+                Map<String, Object> changes = new HashMap<>();
+                changes.put("avatar", System.currentTimeMillis() / 1000);
+
+                WriteBatch batch = FirebaseFirestore.getInstance().batch();
+
+                for (String memberId : memberIds) {
+                    DocumentReference memberDocRef = FirebaseFirestore.getInstance()
+                            .collection(FirebaseCollectionName.USER)
+                            .document(memberId)
+                            .collection(FirebaseCollectionName.GROUP_CHAT)
+                            .document(id);
+
+                    batch.update(memberDocRef, changes);
+                }
+
+                batch.commit();
+
+                changeAvatarState.postSuccess(avatarRef.getPath());
+            } else {
+                changeAvatarState.postError(task.getException());
+            }
+        });
+
+        return changeAvatarState;
+    }
+
     @Override
     public StorageReference getAvatar(String Id) {
         StorageReference reference = storage.child(StorageAccess.AVATAR_DIR).child(Id).child(StorageAccess.AVATAR_FILENAME);

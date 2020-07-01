@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.view.profile;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -39,7 +40,7 @@ import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
 import static android.app.Activity.RESULT_OK;
 
-public class RoomProfileFragment extends Fragment {
+public class RoomProfileFragment extends Fragment implements IAvatarChangableFragment {
 
     private RoomProfileViewModel mViewModel;
     private NavController mNavController;
@@ -118,8 +119,7 @@ public class RoomProfileFragment extends Fragment {
         layoutChangeAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = FileUtils.createImageIntent();
-                startActivityForResult(intent, FileUtils.REQUEST_CODE_IMAGE);
+                showMenuDialog();
             }
         });
 
@@ -235,6 +235,31 @@ public class RoomProfileFragment extends Fragment {
                 }
 
                 break;
+
+            case FileUtils.REQUEST_CODE_CAMERA:
+                if (resultCode == RESULT_OK && data != null) {
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    mViewModel.changeAvatarFromCamera(mRoom, photo);
+                }
+                break;
         }
+    }
+
+    @Override
+    public void chooseFromLibrary() {
+        Intent intent = FileUtils.createImageIntent();
+        startActivityForResult(intent, FileUtils.REQUEST_CODE_IMAGE);
+    }
+
+    @Override
+    public void chooseFromCamera() {
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, FileUtils.REQUEST_CODE_CAMERA);
+    }
+
+    @Override
+    public void showMenuDialog() {
+        ChangeAvatarDialog dialog = new ChangeAvatarDialog(this);
+        dialog.show(getActivity().getSupportFragmentManager(), ChangeAvatarDialog.class.getName());
     }
 }
