@@ -29,7 +29,6 @@ import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
-import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.FileUtils;
 import vnu.uet.mobilecourse.assistant.view.chat.RenameDialog;
 import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
@@ -216,12 +215,8 @@ public class RoomProfileFragment extends Fragment implements IAvatarChangableFra
     private void showAvatarFullscreen() {
         FullscreenImageView d = new FullscreenImageView(mActivity, "Ảnh đại diện");
 
-        StorageReference imageRef = new StorageAccess().getAvatar(mRoom.getId());
-
-        if (imageRef != null) {
-            d.setPhotoReference(imageRef);
-            d.show();
-        }
+        d.loadRoom(mRoom.getId(), getViewLifecycleOwner());
+        d.show();
     }
 
     @Override

@@ -1,6 +1,5 @@
 package vnu.uet.mobilecourse.assistant.view.profile;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -13,25 +12,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.Date;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
-import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.FileUtils;
-import vnu.uet.mobilecourse.assistant.view.chat.RenameDialog;
 import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
 import vnu.uet.mobilecourse.assistant.view.component.FullscreenImageView;
 import vnu.uet.mobilecourse.assistant.viewmodel.MyProfileViewModel;
@@ -41,8 +35,6 @@ import static android.app.Activity.RESULT_OK;
 public class MyProfileFragment extends Fragment implements IAvatarChangableFragment {
 
     private MyProfileViewModel mViewModel;
-
-//    private CircleImageView mCivAvatar;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -114,12 +106,8 @@ public class MyProfileFragment extends Fragment implements IAvatarChangableFragm
     private void showAvatarFullscreen() {
         FullscreenImageView d = new FullscreenImageView(getContext(), "Ảnh đại diện");
 
-        StorageReference imageRef = new StorageAccess().getAvatar(User.getInstance().getStudentId());
-
-        if (imageRef != null) {
-            d.setPhotoReference(imageRef);
-            d.show();
-        }
+        d.loadUser(User.getInstance().getStudentId(), getViewLifecycleOwner());
+        d.show();
     }
 
     @Override

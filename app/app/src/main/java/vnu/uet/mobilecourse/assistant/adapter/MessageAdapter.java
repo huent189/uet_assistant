@@ -26,6 +26,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 import de.hdodenhof.circleimageview.CircleImageView;
 import vnu.uet.mobilecourse.assistant.R;
+import vnu.uet.mobilecourse.assistant.adapter.viewholder.msg.AdminMessageHolder;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.msg.MessageHolder;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.msg.ReceiveMessageHolder;
 import vnu.uet.mobilecourse.assistant.adapter.viewholder.msg.SendMessageHolder;
@@ -43,6 +44,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageHolder> {
 
     private static final int MSG_RECEIVE_TYPE = 0;
     private static final int MSG_SEND_TYPE = 1;
+    private static final int MSG_ADMIN_TYPE = 2;
 
     private Fragment mOwner;
     private List<Message_GroupChatSubCol> mMessages;
@@ -63,8 +65,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageHolder> {
 
         if (viewType == MSG_RECEIVE_TYPE) {
             holder = generateReceiveMessageViewHolder(parent);
-        } else {
+        } else if (viewType == MSG_SEND_TYPE) {
             holder = generateSendMessageViewHolder(parent);
+        } else {
+            holder = generateAdminMessageViewHolder(parent);
         }
 
         Activity activity = mOwner.getActivity();
@@ -89,6 +93,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageHolder> {
                 .inflate(R.layout.layout_send_message_item, parent, false);
 
         return new SendMessageHolder(view);
+    }
+
+    private MessageHolder generateAdminMessageViewHolder(@NonNull ViewGroup parent) {
+        View view =  mOwner.getLayoutInflater()
+                .inflate(R.layout.layout_admin_message_item, parent, false);
+
+        return new AdminMessageHolder(view);
     }
 
     @Override
@@ -133,9 +144,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageHolder> {
 
         if (STUDENT_ID.equals(fromId)) {
             return MSG_SEND_TYPE;
-        } else {
+        } else if (fromId.equals("admin")) {
+            return MSG_ADMIN_TYPE;
+        } else
             return MSG_RECEIVE_TYPE;
-        }
     }
 
 //    static class SendMessageViewHolder extends MessageViewHolder {

@@ -41,7 +41,7 @@ public class ReceiveMessageHolder extends MessageHolder {
                 break;
 
             case HIDE_INFO_N_TIME:
-                mAvatarView.setVisibility(View.GONE);
+                mAvatarView.setVisibility(View.INVISIBLE);
                 mTvName.setVisibility(View.GONE);
                 break;
         }

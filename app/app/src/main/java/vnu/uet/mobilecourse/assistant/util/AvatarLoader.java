@@ -3,6 +3,7 @@ package vnu.uet.mobilecourse.assistant.util;
 import android.content.Context;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.signature.ObjectKey;
 import com.google.firebase.storage.StorageReference;
 
@@ -38,13 +39,17 @@ public class AvatarLoader {
                     public void onChanged(StateModel<User> stateModel) {
                         switch (stateModel.getStatus()) {
                             case SUCCESS:
-                                long time = stateModel.getData().getAvatar();
-                                GlideApp.with(mContext)
-                                        .load(imageRef)
-                                        .signature(new ObjectKey(time))
-                                        .placeholder(R.drawable.avatar)
-                                        .error(R.drawable.avatar)
-                                        .into(imageView);
+                                if (NetworkUtils.getConnectivityStatus(mContext) != NetworkUtils.TYPE_NOT_CONNECTED) {
+                                    long time = stateModel.getData().getAvatar();
+                                    GlideApp.with(mContext)
+                                            .load(imageRef)
+//                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                            .skipMemoryCache(true)
+//                                            .signature(new ObjectKey(time))
+                                            .placeholder(R.drawable.avatar)
+                                            .error(R.drawable.avatar)
+                                            .into(imageView);
+                                }
                         }
                     }
                 });
@@ -53,6 +58,8 @@ public class AvatarLoader {
                 .load(imageRef)
                 .placeholder(R.drawable.avatar)
                 .error(R.drawable.avatar)
+//                .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                .skipMemoryCache(true)
                 .into(imageView);
     }
 

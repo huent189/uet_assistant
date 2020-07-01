@@ -186,12 +186,8 @@ public class FriendProfileFragment extends Fragment {
     private void showAvatarFullscreen() {
         FullscreenImageView d = new FullscreenImageView(mActivity, "Ảnh đại diện");
 
-        StorageReference imageRef = new StorageAccess().getAvatar(mCode);
-
-        if (imageRef != null) {
-            d.setPhotoReference(imageRef);
-            d.show();
-        }
+        d.loadUser(mCode, getViewLifecycleOwner());
+        d.show();
     }
 
     private void onChatClick(Bundle prevArgs) {

@@ -188,6 +188,9 @@ public class StorageAccess implements IStorage {
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Map<String, Object> changes = new HashMap<>();
+                    changes.put("avatar", System.currentTimeMillis() / 1000);
+                    new UserDAO().update(id, changes);
                     changeAvatarState.postSuccess(avatarRef.getPath());
                 }
             }).addOnFailureListener(new OnFailureListener() {

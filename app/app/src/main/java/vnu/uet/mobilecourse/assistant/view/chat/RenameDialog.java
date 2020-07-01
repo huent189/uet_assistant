@@ -51,18 +51,7 @@ public class RenameDialog extends AppCompatDialogFragment {
 
                     }
                 })
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            String text = mEtRoomTitle.getText().toString();
-                            text = text.trim();
-                            mListener.onSubmit(text);
-                        } catch (Exception ex) {
-                            Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
+                .setPositiveButton("OK", null)
                 .setNeutralButton("Xóa", null)
                 .create();
 
@@ -76,10 +65,36 @@ public class RenameDialog extends AppCompatDialogFragment {
                         mEtRoomTitle.setText(StringConst.EMPTY);
                     }
                 });
+
+                Button btnSubmit = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                btnSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onSubmit();
+                    }
+                });
             }
         });
 
         return alertDialog;
+    }
+
+    private void onSubmit() {
+        try {
+            String text = mEtRoomTitle.getText().toString();
+            text = text.trim();
+
+            if (text.isEmpty()) {
+                Toast.makeText(getContext(), "Tên không thể để trống", Toast.LENGTH_SHORT).show();
+            } else {
+                mListener.onSubmit(text);
+                dismiss();
+            }
+
+        } catch (Exception ex) {
+            Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+            dismiss();
+        }
     }
 
     @Override

@@ -50,8 +50,13 @@ public class AddGroupChatViewModel extends ViewModel {
 
     public synchronized void addMember(IStudent student) {
         List<IStudent> list = mSelectedList.getValue();
+
         assert list != null;
-        list.add(student);
+
+        boolean isExist = list.stream()
+                .anyMatch(stu -> stu.getCode().equals(student.getCode()));
+
+        if (!isExist) list.add(student);
 
         mSelectedList.postValue(list);
     }
@@ -169,6 +174,15 @@ public class AddGroupChatViewModel extends ViewModel {
                             removeSource(connections);
 
                             mConnections = stateModel.getData();
+                            mConnections.removeIf(connection -> {
+                                List<String> ids = connection.getStudentIds();
+
+                                if (ids.size() != 2)
+                                    return true;
+
+                                return ids.get(0).equals(ids.get(1));
+                            });
+
                             mStudentMap = new HashMap<>();
 
                             mConnections.forEach(connection -> {

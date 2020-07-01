@@ -32,6 +32,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,7 +49,7 @@ public class SetRoomTitleFragment extends Fragment {
 
         mActivity = getActivity();
         if (mActivity != null) {
-            mViewModel = new ViewModelProvider(mActivity).get(AddGroupChatViewModel.class);
+            mViewModel = new ViewModelProvider(this).get(AddGroupChatViewModel.class);
             mNavController = Navigation.findNavController(mActivity, R.id.nav_host_fragment);
         }
 

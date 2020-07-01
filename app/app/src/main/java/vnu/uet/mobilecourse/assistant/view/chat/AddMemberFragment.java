@@ -19,13 +19,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import vnu.uet.mobilecourse.assistant.adapter.HorizontalMemberAdapter;
 import vnu.uet.mobilecourse.assistant.adapter.SuggestionMemberAdapter;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
+import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
 import vnu.uet.mobilecourse.assistant.viewmodel.AddGroupChatViewModel;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,6 +44,7 @@ import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddMemberFragment extends Fragment {
@@ -63,7 +67,7 @@ public class AddMemberFragment extends Fragment {
 
         mActivity = getActivity();
         if (mActivity != null) {
-            mViewModel = new ViewModelProvider(mActivity).get(AddGroupChatViewModel.class);
+            mViewModel = new ViewModelProvider(this).get(AddGroupChatViewModel.class);
             mNavController = Navigation.findNavController(mActivity, R.id.nav_host_fragment);
         }
 
@@ -88,6 +92,7 @@ public class AddMemberFragment extends Fragment {
         TextView tvId = layoutSearchResult.findViewById(R.id.tvId);
         CheckBox checkBox = layoutSearchResult.findViewById(R.id.checkbox);
         ImageView ivWarning = layoutSearchResult.findViewById(R.id.ivWarning);
+        AvatarView avatarView = layoutSearchResult.findViewById(R.id.avatarView);
 
         ShimmerFrameLayout shimmerSearchResult = root.findViewById(R.id.shimmerSearchResult);
         shimmerSearchResult.startShimmerAnimation();
@@ -159,7 +164,8 @@ public class AddMemberFragment extends Fragment {
                     public void onChanged(StateModel<UserInfo> stateModel) {
                         switch (stateModel.getStatus()) {
                             case SUCCESS:
-                                if (!mFromRoomProfile || (!isMember(stateModel.getData()))) {
+                                if (!mFromRoomProfile || (!isMember(stateModel.getData()))
+                                        || stateModel.getData().getCode().equals(User.getInstance().getStudentId())) {
                                     layoutSearchResult.setVisibility(View.VISIBLE);
                                     shimmerSearchResult.setVisibility(View.GONE);
 
@@ -179,10 +185,14 @@ public class AddMemberFragment extends Fragment {
                                     if (mSearchResult.isActive()) {
                                         ivWarning.setVisibility(View.GONE);
                                         checkBox.setVisibility(View.VISIBLE);
+                                        avatarView.loadUser(mSearchResult.getCode());
                                     } else {
                                         ivWarning.setVisibility(View.VISIBLE);
                                         checkBox.setVisibility(View.GONE);
                                     }
+                                } else {
+                                    layoutSearchResult.setVisibility(View.GONE);
+                                    shimmerSearchResult.setVisibility(View.GONE);
                                 }
 
                                 break;
@@ -335,6 +345,13 @@ public class AddMemberFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mViewModel.clearData();
     }
 
     public AddGroupChatViewModel getViewModel() {
