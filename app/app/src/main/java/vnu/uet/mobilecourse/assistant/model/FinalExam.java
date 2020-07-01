@@ -140,6 +140,6 @@ public class FinalExam implements IEvent, Parcelable {
 
     @Override
     public boolean isCompleted() {
-        return examTime > System.currentTimeMillis();
+        return examTime < System.currentTimeMillis();
     }
 }

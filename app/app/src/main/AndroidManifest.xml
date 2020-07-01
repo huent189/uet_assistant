@@ -14,6 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/DarkTheme"
+        android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustPan">
         <service
             android:name=".MyService"
