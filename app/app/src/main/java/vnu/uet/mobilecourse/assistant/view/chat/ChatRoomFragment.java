@@ -320,9 +320,11 @@ public class ChatRoomFragment extends Fragment {
 //        String[] memberIds = mMembers.keySet().toArray(new String[0]);
 //        Message_GroupChatSubCol message = mViewModel.generateTextMessage(content, memberIds);
 
+        String title = mType.equals(GroupChat.DIRECT) ? USERNAME : mTitle;
+
         // first message in directed chat
         if (GroupChat.DIRECT.equals(mType) && mEmptyRoom) {
-            mViewModel.connectAndSendMessage(mRoomId, mTitle, message, mMemberIds, mTokens)
+            mViewModel.connectAndSendMessage(mRoomId, title, message, mMemberIds, mTokens)
                     .observe(getViewLifecycleOwner(), stateModel -> {
                         switch (stateModel.getStatus()) {
                             case SUCCESS:
@@ -341,7 +343,7 @@ public class ChatRoomFragment extends Fragment {
         }
         // other cases
         else {
-            mViewModel.sendMessage(mRoomId, mTitle, message, mMemberIds, mTokens)
+            mViewModel.sendMessage(mRoomId, title, message, mMemberIds, mTokens)
                     .observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
                         @Override
                         public void onChanged(StateModel<String> stateModel) {
@@ -437,6 +439,8 @@ public class ChatRoomFragment extends Fragment {
         return rvChat;
     }
 
+    private static final String USERNAME = User.getInstance().getName();
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
@@ -444,7 +448,8 @@ public class ChatRoomFragment extends Fragment {
                 if (resultCode == RESULT_OK && data != null) {
                     Uri uri = data.getData();
                     Toast.makeText(getContext(), uri.getPath(), Toast.LENGTH_SHORT).show();
-                    mViewModel.sendAttachment(mRoomId, mTitle, uri, mMemberIds, mTokens, getContext().getApplicationContext());
+                    String title = mType.equals(GroupChat.DIRECT) ? USERNAME : mTitle;
+                    mViewModel.sendAttachment(mRoomId, title, uri, mMemberIds, mTokens, getContext().getApplicationContext());
 //                        .observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
 //                            @Override
 //                            public void onChanged(StateModel<String> stateModel) {
