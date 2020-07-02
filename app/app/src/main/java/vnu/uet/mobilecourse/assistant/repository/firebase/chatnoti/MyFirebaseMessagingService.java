@@ -85,6 +85,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //        messageToken.setId(USER_ID);
 //        messageToken.setTimeUpdated();
 //        messageToken.setToken(token);
+        if(User.getInstance().getEmail() == null) {
+            return;
+        }
         Map<String, Object> changes = new HashMap<>();
         changes.put("token", token);
         changes.put("timeUpdated", System.currentTimeMillis() / 1000);
