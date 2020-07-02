@@ -11,12 +11,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.firebase.storage.StorageReference;
-
-import java.util.Date;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,14 +18,17 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.User;
-import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
 import vnu.uet.mobilecourse.assistant.util.FileUtils;
+import vnu.uet.mobilecourse.assistant.view.MainActivity;
 import vnu.uet.mobilecourse.assistant.view.component.AvatarView;
 import vnu.uet.mobilecourse.assistant.view.component.FullscreenImageView;
 import vnu.uet.mobilecourse.assistant.viewmodel.MyProfileViewModel;
+
+import java.util.Date;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -83,6 +80,17 @@ public class MyProfileFragment extends Fragment implements IAvatarChangableFragm
             @Override
             public void onClick(View v) {
                 showMenuDialog();
+            }
+        });
+
+        Button btnLogout = root.findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mViewModel.signOut();
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
             }
         });
 

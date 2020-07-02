@@ -52,6 +52,5 @@ public class SharedPreferencesManager {
 
     public static void clearAll(){
         initPreference();
-        preferences.edit().clear().apply();
     }
 }

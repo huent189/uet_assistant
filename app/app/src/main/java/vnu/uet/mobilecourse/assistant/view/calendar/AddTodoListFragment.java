@@ -58,6 +58,7 @@ public class AddTodoListFragment extends Fragment {
                 TodoList todoList = new TodoList();
 
                 String title = etTitle.getText().toString();
+                title = title.trim();
                 String desc = etDescription.getText().toString();
                 todoList.setTitle(title);
                 todoList.setDescription(desc);

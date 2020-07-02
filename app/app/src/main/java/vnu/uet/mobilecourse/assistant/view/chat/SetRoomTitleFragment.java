@@ -1,16 +1,19 @@
 package vnu.uet.mobilecourse.assistant.view.chat;
 
+import android.os.Bundle;
+import android.util.Log;
+import android.view.*;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-
-import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,22 +21,9 @@ import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.adapter.VerticalMemberAdapter;
 import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
-import vnu.uet.mobilecourse.assistant.util.NetworkUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.AddGroupChatViewModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -107,6 +97,7 @@ public class SetRoomTitleFragment extends Fragment {
         // Handle item selection
         if (item.getItemId() == R.id.action_next) {
             String title = mEtRoomTitle.getText().toString();
+            title = title.trim();
 
             if (title.isEmpty()) {
                 Toast.makeText(mActivity, "Bạn chưa đặt tên nhóm", Toast.LENGTH_SHORT).show();

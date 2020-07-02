@@ -1,29 +1,22 @@
 package vnu.uet.mobilecourse.assistant.view.calendar;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
-import com.google.firebase.firestore.util.Util;
-
-import java.text.ParseException;
-import java.util.Date;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import com.google.firebase.firestore.util.Util;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.alarm.receiver.TodoReceiver;
 import vnu.uet.mobilecourse.assistant.alarm.scheduler.TodoScheduler;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.util.DateTimeUtils;
+
+import java.text.ParseException;
+import java.util.Date;
 
 public class AddTodoFragment extends TodoFragment {
 
@@ -84,6 +77,7 @@ public class AddTodoFragment extends TodoFragment {
         todo.setOwnerId(ownerId);
 
         String title = mEtTodoTitle.getText().toString();
+        title = title.trim();
         todo.setTitle(title);
 
         String desc = mEtDescription.getText().toString();

@@ -6,6 +6,7 @@ import android.net.Uri;
 import androidx.lifecycle.ViewModel;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
+import vnu.uet.mobilecourse.assistant.repository.course.UserRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.StudentRepository;
 import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
@@ -26,5 +27,9 @@ public class MyProfileViewModel extends ViewModel {
 
     public IStateLiveData<String> changeAvatarFromCamera(Bitmap photo) {
         return new StorageAccess().changeAvatarFromCamera(STUDENT_ID, photo);
+    }
+
+    public void signOut(){
+        new UserRepository().signOut();
     }
 }

@@ -36,7 +36,7 @@ public class SyncFinalExamWorker extends Worker {
         notification.setTitle("Lịch thi của bạn đã được cập nhật");
         StringBuilder desc = new StringBuilder("Lịch thi các môn học sau đã được thay đổi");
         for(FinalExam exam : exams){
-            desc.append(exam.getClassName());
+            desc.append("\n"+exam.getClassName());
         }
         notification.setDescription(desc.toString());
         notification.setNotifyTime(System.currentTimeMillis() / 1000);

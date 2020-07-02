@@ -147,7 +147,10 @@ public class UserRepository {
     }
 
     public void signOut(){
-        SharedPreferencesManager.clearAll();
-        CoursesDatabase.getDatabase().clearAllTables();
+        new Thread(()->{
+            SharedPreferencesManager.clearAll();
+            CoursesDatabase.getDatabase().clearAllTables();
+        }).start();
+        FirebaseAuth.getInstance().signOut();
     }
 }
