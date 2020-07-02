@@ -44,7 +44,7 @@ public class ChatRoomViewModel extends ViewModel {
         return mChatRepo.markRoomAsSeen(roomId);
     }
 
-    public IStateLiveData<String> sendMessage(String roomId, Message_GroupChatSubCol message, String[] memberIds) {
+    public IStateLiveData<String> sendMessage(String roomId, Message_GroupChatSubCol message, String[] memberIds, String[] tokens) {
         return mChatRepo.sendMessage(roomId, message, memberIds);
     }
 
@@ -62,8 +62,8 @@ public class ChatRoomViewModel extends ViewModel {
     }
 
     public IStateLiveData<String> connectAndSendMessage(String roomId, String otherName,
-                                                        Message_GroupChatSubCol message, String[] memberIds) {
-        return new FirstMessageLiveData(roomId, message, otherName, memberIds);
+                                                        Message_GroupChatSubCol message, String[] memberIds, String[] tokens) {
+        return new FirstMessageLiveData(roomId, message, otherName, memberIds, tokens);
     }
 
     private StateMediatorLiveData<GroupChat> createDirectedChat(String roomId, String otherName, String otherCode) {
@@ -159,7 +159,7 @@ public class ChatRoomViewModel extends ViewModel {
 
     class FirstMessageLiveData extends StateMediatorLiveData<String> {
 
-        FirstMessageLiveData(String roomId, Message_GroupChatSubCol message, String otherName, String[] memberIds) {
+        FirstMessageLiveData(String roomId, Message_GroupChatSubCol message, String otherName, String[] memberIds, String[] tokens) {
             postLoading();
 
             String otherId = findOtherId(memberIds);

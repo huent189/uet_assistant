@@ -14,6 +14,7 @@ public interface FirebaseCollectionName {
     String INTERESTED_DISCUSSION = "interestedDiscussion";
     String CONNECTION = "connection";
     String ONLINE_STATUS = "online";
+    String TOKEN = "token";
 
     @Deprecated
     String ENROLLMENT = "enrollment";

@@ -180,7 +180,7 @@ public class ChatRoomFragment extends Fragment {
             switch (stateModel.getStatus()) {
                 case SUCCESS:
                     mRoom = stateModel.getData();
-
+                    extractTokens();
 
                     break;
 
@@ -213,6 +213,8 @@ public class ChatRoomFragment extends Fragment {
                     mTitle = mRoom.getName();
                     mTvRoomTitle.setText(mTitle);
 
+                    extractTokens();
+
                     if (mViewInfoItem != null) mViewInfoItem.setEnabled(true);
 
                     break;
@@ -225,10 +227,9 @@ public class ChatRoomFragment extends Fragment {
     }
 
     private void extractTokens() {
-        mRoom.getMembers().stream()
+        mTokens = mRoom.getMembers().stream()
                 .filter(member -> !member.getId().equals(User.getInstance().getStudentId()))
-                .map(m)
-                .collect(Collectors.toList())
+                .map(Member_GroupChatSubCol::getToken).toArray(String[]::new);
     }
 
     private void setupMention() {
@@ -306,7 +307,7 @@ public class ChatRoomFragment extends Fragment {
 
         // first message in directed chat
         if (GroupChat.DIRECT.equals(mType) && mEmptyRoom) {
-            mViewModel.connectAndSendMessage(mRoomId, mTitle, message, mMemberIds)
+            mViewModel.connectAndSendMessage(mRoomId, mTitle, message, mMemberIds, mTokens)
                     .observe(getViewLifecycleOwner(), stateModel -> {
                         switch (stateModel.getStatus()) {
                             case SUCCESS:
@@ -325,7 +326,7 @@ public class ChatRoomFragment extends Fragment {
         }
         // other cases
         else {
-            mViewModel.sendMessage(mRoomId, message, mMemberIds)
+            mViewModel.sendMessage(mRoomId, message, mMemberIds, mTokens)
                     .observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
                         @Override
                         public void onChanged(StateModel<String> stateModel) {
