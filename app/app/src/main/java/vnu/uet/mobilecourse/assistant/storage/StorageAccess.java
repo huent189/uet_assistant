@@ -1,8 +1,14 @@
 package vnu.uet.mobilecourse.assistant.storage;
 
+import android.content.ContentUris;
+import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
