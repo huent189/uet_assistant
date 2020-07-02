@@ -8,7 +8,7 @@ public class MessageToken implements IFirebaseModel {
 
     @Override
     public String getId() {
-        return null;
+        return id;
     }
 
     public void setId(String id) {

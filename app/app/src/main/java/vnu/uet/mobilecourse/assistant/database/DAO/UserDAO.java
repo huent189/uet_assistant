@@ -10,6 +10,7 @@ import com.google.firebase.firestore.WriteBatch;
 
 import java.util.Map;
 
+import vnu.uet.mobilecourse.assistant.model.firebase.MessageToken;
 import vnu.uet.mobilecourse.assistant.model.firebase.OnlineState;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
@@ -47,6 +48,12 @@ public class UserDAO extends FirebaseDocReadOnlyDAO<User> {
         state.setId(user.getId());
         state.setState(false);
         batch.set(ONLINE_COLLECTION_REF.document(user.getId()), state);
+
+        MessageToken token = new MessageToken();
+        token.setId(user.getId());
+        token.setTimeUpdated(System.currentTimeMillis()/1000);
+        token.setToken("");
+        batch.set(FirebaseFirestore.getInstance().collection(FirebaseCollectionName.TOKEN).document(user.getId()), token);
 
         // commit
         batch.commit()

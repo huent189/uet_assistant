@@ -320,11 +320,10 @@ public class ChatRoomFragment extends Fragment {
 //        String[] memberIds = mMembers.keySet().toArray(new String[0]);
 //        Message_GroupChatSubCol message = mViewModel.generateTextMessage(content, memberIds);
 
-        String title = mType.equals(GroupChat.DIRECT) ? USERNAME : mTitle;
 
         // first message in directed chat
         if (GroupChat.DIRECT.equals(mType) && mEmptyRoom) {
-            mViewModel.connectAndSendMessage(mRoomId, title, message, mMemberIds, mTokens)
+            mViewModel.connectAndSendMessage(mRoomId, mTitle, message, mMemberIds, mTokens)
                     .observe(getViewLifecycleOwner(), stateModel -> {
                         switch (stateModel.getStatus()) {
                             case SUCCESS:
@@ -343,6 +342,8 @@ public class ChatRoomFragment extends Fragment {
         }
         // other cases
         else {
+            String title = mType.equals(GroupChat.DIRECT) ? USERNAME : mTitle;
+
             mViewModel.sendMessage(mRoomId, title, message, mMemberIds, mTokens)
                     .observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
                         @Override
