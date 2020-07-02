@@ -21,7 +21,10 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,8 +45,10 @@ import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.MessageToken;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
+import vnu.uet.mobilecourse.assistant.util.ChatRoomTracker;
 import vnu.uet.mobilecourse.assistant.util.FileUtils;
 import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
@@ -69,7 +74,7 @@ public class ChatRoomFragment extends Fragment {
 
     private String mCode, mTitle, mType, mRoomId;
     private boolean mEmptyRoom = false;
-    private String[] mMemberIds;
+    private String[] mMemberIds, mTokens;
     private GroupChat mRoom;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -107,8 +112,6 @@ public class ChatRoomFragment extends Fragment {
             } else {
                 setupGroupChat();
             }
-
-            mViewModel.markAsSeen(mRoomId);
 
             mViewModel.getAllMessages(mRoomId)
                     .observe(getViewLifecycleOwner(), stateModel -> {
@@ -172,14 +175,35 @@ public class ChatRoomFragment extends Fragment {
         mAvatarView.setLifecycleOwner(getViewLifecycleOwner());
         mAvatarView.loadUser(mCode);
 
+//        mMembers = new HashMap<>();
+//        mMembers.put(User.getInstance().getStudentId(), StringConst.EMPTY);
         mMemberIds = new String[] {User.getInstance().getStudentId(), mCode};
+
+        mViewModel.getToken(mCode).observe(getViewLifecycleOwner(), stateModel -> {
+            switch (stateModel.getStatus()) {
+                case SUCCESS:
+                    MessageToken token = stateModel.getData();
+                    mTokens = new String[] {token.getToken()};
+//                    mMembers.put(mCode, token.getToken());
+
+                    break;
+
+                case ERROR:
+                    Toast.makeText(mActivity, "Không lấy được thông tin phòng chat", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        });
     }
+
+
 
     private void setupGroupChat() {
         setupMention();
 
         mAvatarView.setLifecycleOwner(getViewLifecycleOwner());
         mAvatarView.loadRoom(mRoomId);
+
+//        mMembers = new HashMap<>();
 
         mViewModel.getRoomInfo(mRoomId).observe(getViewLifecycleOwner(), stateModel -> {
             switch (stateModel.getStatus()) {
@@ -188,14 +212,25 @@ public class ChatRoomFragment extends Fragment {
 
                     List<Member_GroupChatSubCol> members = mRoom.getMembers();
                     mMemberIds = members.stream()
+                            .filter(member -> !member.getId().equals(User.getInstance().getStudentId()))
                             .map(Member_GroupChatSubCol::getId)
                             .toArray(String[]::new);
+//                    mMembers.clear();
+//                    members.forEach(member -> {
+//                        mMembers.put(member.getId(), member.getToken());
+//                    });
 
                     mMemberListAdapter = new MentionAdapter(mActivity, members);
                     mEtMessage.setAdapter(mMemberListAdapter);
 
                     mTitle = mRoom.getName();
                     mTvRoomTitle.setText(mTitle);
+
+                    mTokens = mRoom.getMembers().stream()
+                                .filter(member -> !member.getId().equals(User.getInstance().getStudentId()))
+                                .map(Member_GroupChatSubCol::getToken).toArray(String[]::new);
+
+//                    extractTokens();
 
                     if (mViewInfoItem != null) mViewInfoItem.setEnabled(true);
 
@@ -207,6 +242,12 @@ public class ChatRoomFragment extends Fragment {
             }
         });
     }
+
+//    private void extractTokens() {
+//        mTokens = mRoom.getMembers().stream()
+//                .filter(member -> !member.getId().equals(User.getInstance().getStudentId()))
+//                .map(Member_GroupChatSubCol::getToken).toArray(String[]::new);
+//    }
 
     private void setupMention() {
         mEtMessage.setThreshold(1);
@@ -280,10 +321,13 @@ public class ChatRoomFragment extends Fragment {
         if (content.isEmpty()) return;
 
         Message_GroupChatSubCol message = mViewModel.generateTextMessage(content, mMemberIds);
+//        String[] memberIds = mMembers.keySet().toArray(new String[0]);
+//        Message_GroupChatSubCol message = mViewModel.generateTextMessage(content, memberIds);
+
 
         // first message in directed chat
         if (GroupChat.DIRECT.equals(mType) && mEmptyRoom) {
-            mViewModel.connectAndSendMessage(mRoomId, mTitle, message, mMemberIds)
+            mViewModel.connectAndSendMessage(mRoomId, mTitle, message, mMemberIds, mTokens)
                     .observe(getViewLifecycleOwner(), stateModel -> {
                         switch (stateModel.getStatus()) {
                             case SUCCESS:
@@ -302,7 +346,9 @@ public class ChatRoomFragment extends Fragment {
         }
         // other cases
         else {
-            mViewModel.sendMessage(mRoomId, message, mMemberIds)
+            String title = mType.equals(GroupChat.DIRECT) ? USERNAME : mTitle;
+
+            mViewModel.sendMessage(mRoomId, title, message, mMemberIds, mTokens)
                     .observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
                         @Override
                         public void onChanged(StateModel<String> stateModel) {
@@ -398,6 +444,8 @@ public class ChatRoomFragment extends Fragment {
         return rvChat;
     }
 
+    private static final String USERNAME = User.getInstance().getName();
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         switch (requestCode) {
@@ -405,7 +453,8 @@ public class ChatRoomFragment extends Fragment {
                 if (resultCode == RESULT_OK && data != null) {
                     Uri uri = data.getData();
                     Toast.makeText(getContext(), uri.getPath(), Toast.LENGTH_SHORT).show();
-                    mViewModel.sendAttachment(mRoomId, uri, mMemberIds);
+                    String title = mType.equals(GroupChat.DIRECT) ? USERNAME : mTitle;
+                    mViewModel.sendAttachment(mRoomId, title, uri, mMemberIds, mTokens, getContext().getApplicationContext());
 //                        .observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
 //                            @Override
 //                            public void onChanged(StateModel<String> stateModel) {
@@ -419,5 +468,27 @@ public class ChatRoomFragment extends Fragment {
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        ChatRoomTracker.getInstance().setCurrentRoom(mRoomId);
+        mViewModel.markAsSeen(mRoomId);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mViewModel.markAsSeen(mRoomId);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        ChatRoomTracker.getInstance().outRoom();
     }
 }

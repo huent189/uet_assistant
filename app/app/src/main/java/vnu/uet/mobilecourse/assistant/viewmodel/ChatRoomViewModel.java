@@ -1,11 +1,13 @@
 package vnu.uet.mobilecourse.assistant.viewmodel;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.net.Uri;
 
 import com.google.firebase.firestore.util.Util;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import androidx.lifecycle.Observer;
@@ -14,6 +16,7 @@ import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.MemberRole;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.MessageToken;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.repository.firebase.ChatRepository;
 import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
@@ -43,26 +46,30 @@ public class ChatRoomViewModel extends ViewModel {
         return mChatRepo.markRoomAsSeen(roomId);
     }
 
-    public IStateLiveData<String> sendMessage(String roomId, Message_GroupChatSubCol message, String[] memberIds) {
-        return mChatRepo.sendMessage(roomId, message, memberIds);
+    public IStateLiveData<String> sendMessage(String roomId, String title, Message_GroupChatSubCol message, String[] memberIds, String[] tokens) {
+        return mChatRepo.sendMessage(roomId, message, memberIds, tokens, title);
+    }
+
+    public IStateLiveData<MessageToken> getToken(String id) {
+        return mChatRepo.getToken(id);
     }
 
     @SuppressLint("RestrictedApi")
-    public IStateLiveData<String> sendAttachment(String roomId, Uri uri, String[] memberIds) {
+    public IStateLiveData<String> sendAttachment(String roomId, String roomName, Uri uri, String[] memberIds, String[] tokens, Context context) {
         Message_GroupChatSubCol message = new Message_GroupChatSubCol();
         message.setId(Util.autoId());
         message.setTimestamp(System.currentTimeMillis() / 1000);
         message.setContent(uri.getLastPathSegment());
         message.setFromId(STUDENT_ID);
         message.setFromName(STUDENT_NAME);
-        message.setContentType(FileUtils.getMimeType(uri));
+        message.setContentType(FileUtils.getMimeType(context, uri));
 
-        return new StorageAccess().uploadFileToGroupChat(roomId, uri, message, memberIds);
+        return new StorageAccess().uploadFileToGroupChat(roomId, uri, message, memberIds, tokens, roomName);
     }
 
     public IStateLiveData<String> connectAndSendMessage(String roomId, String otherName,
-                                                        Message_GroupChatSubCol message, String[] memberIds) {
-        return new FirstMessageLiveData(roomId, message, otherName, memberIds);
+                                                        Message_GroupChatSubCol message, String[] memberIds, String[] tokens) {
+        return new FirstMessageLiveData(roomId, message, otherName, memberIds, tokens);
     }
 
     private StateMediatorLiveData<GroupChat> createDirectedChat(String roomId, String otherName, String otherCode) {
@@ -158,9 +165,10 @@ public class ChatRoomViewModel extends ViewModel {
 
     class FirstMessageLiveData extends StateMediatorLiveData<String> {
 
-        FirstMessageLiveData(String roomId, Message_GroupChatSubCol message, String otherName, String[] memberIds) {
+        FirstMessageLiveData(String roomId, Message_GroupChatSubCol message, String otherName, String[] memberIds, String[] tokens) {
             postLoading();
 
+//            String[] memberIds = members.keySet().toArray(new String[0]);
             String otherId = findOtherId(memberIds);
 
             StateMediatorLiveData<GroupChat> createLiveData = createDirectedChat(roomId, otherName, otherId);
@@ -181,7 +189,7 @@ public class ChatRoomViewModel extends ViewModel {
                             postSuccess(CONNECTED_MSG);
                             message.setTimestamp(message.getTimestamp() + 1);
 
-                            addSource(mChatRepo.sendMessage(roomId, message, memberIds), new Observer<StateModel<String>>() {
+                            addSource(mChatRepo.sendMessage(roomId, message, memberIds, tokens, User.getInstance().getName()), new Observer<StateModel<String>>() {
                                 @Override
                                 public void onChanged(StateModel<String> stateModel) {
                                     switch (stateModel.getStatus()) {

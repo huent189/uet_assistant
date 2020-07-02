@@ -17,6 +17,8 @@ import com.google.firebase.storage.StorageReference;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
@@ -136,7 +138,16 @@ public class RoomProfileFragment extends Fragment implements IAvatarChangableFra
 
         enableSwipeToDelete();
 
+        initializeToolbar(root);
+
         return root;
+    }
+
+    private void initializeToolbar(View root) {
+        if (mActivity instanceof AppCompatActivity) {
+            Toolbar toolbar = root.findViewById(R.id.toolbar);
+            ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
+        }
     }
 
     private void enableSwipeToDelete() {

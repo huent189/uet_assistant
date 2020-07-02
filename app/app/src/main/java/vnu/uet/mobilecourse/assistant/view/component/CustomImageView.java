@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -85,6 +86,9 @@ public class CustomImageView extends CardView {
         mImageRef = FirebaseStorage.getInstance().getReference().child(path);
         GlideApp.with(mContext)
                 .load(mImageRef)
+                .placeholder(R.drawable.transparent_button_background)
+//                .skipMemoryCache(true)
+//                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .error(R.drawable.avatar)
                 .into(mImageView);
     }

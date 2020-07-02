@@ -1,6 +1,9 @@
 package vnu.uet.mobilecourse.assistant.view.component;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +20,7 @@ import com.google.firebase.storage.StorageReference;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
@@ -111,4 +115,5 @@ public class CardAttachment extends CardView {
             }
         });
     }
+
 }

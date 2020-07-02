@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -180,7 +182,17 @@ public class FriendProfileFragment extends Fragment {
             });
         }
 
+        initializeToolbar(root);
+
         return root;
+    }
+
+    private void initializeToolbar(View root) {
+        if (mActivity instanceof AppCompatActivity) {
+            Toolbar toolbar = root.findViewById(R.id.toolbar);
+
+            ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
+        }
     }
 
     private void showAvatarFullscreen() {

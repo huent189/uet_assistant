@@ -12,13 +12,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.util.Util;
 
-import java.util.Map;
-import java.util.concurrent.Callable;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.BuildConfig;
-import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
+import vnu.uet.mobilecourse.assistant.model.notification.NotificationType;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.UserInfo;
 import vnu.uet.mobilecourse.assistant.model.notification.AdminNotification;

@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:name=".view.MyApplication"
         android:allowBackup="true"
@@ -17,11 +18,13 @@
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustPan">
         <service
-            android:name=".MyService"
+            android:name=".repository.firebase.chatnoti.MyFirebaseMessagingService"
+            android:enabled="true"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
+
         </service>
 
         <receiver

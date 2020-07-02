@@ -16,7 +16,7 @@ public interface IStorage {
      * @return
      */
 //    IStateLiveData<String> uploadFileToGroupChat(String groupId, String localPath);
-    IStateLiveData<String> uploadFileToGroupChat(String groupId, Uri fileURI, Message_GroupChatSubCol message, String[] memberIds);
+    IStateLiveData<String> uploadFileToGroupChat(String groupId, Uri fileURI, Message_GroupChatSubCol message, String[] memberIds, String[] tokes, String groupName);
 
     /**
      *

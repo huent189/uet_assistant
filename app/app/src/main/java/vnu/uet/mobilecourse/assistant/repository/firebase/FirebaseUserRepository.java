@@ -1,10 +1,13 @@
 package vnu.uet.mobilecourse.assistant.repository.firebase;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import vnu.uet.mobilecourse.assistant.database.DAO.OnlineStateDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.UserDAO;
+import vnu.uet.mobilecourse.assistant.model.firebase.OnlineState;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.repository.cache.FirebaseUserCache;
 import vnu.uet.mobilecourse.assistant.util.NetworkChangeReceiver;
@@ -21,6 +24,8 @@ public class FirebaseUserRepository {
     private UserDAO mDao;
     private FirebaseUserCache mCache;
 
+    private OnlineStateDAO mOnlineDao;
+
     private static final String STUDENT_ID = vnu.uet.mobilecourse.assistant.model.User
             .getInstance().getStudentId();
 
@@ -35,6 +40,7 @@ public class FirebaseUserRepository {
     private FirebaseUserRepository() {
         mDao = new UserDAO();
         mCache = new FirebaseUserCache();
+        mOnlineDao = new OnlineStateDAO();
     }
 
     public StateLiveData<User> search(String id) {
@@ -61,22 +67,28 @@ public class FirebaseUserRepository {
     }
 
     public IStateLiveData<Boolean> onlineState(String id) {
-        return new OnlineState(search(id), NetworkChangeReceiver.getInstance().getLiveData());
+        return new OnlineStateLiveData(mOnlineDao.read(id), NetworkChangeReceiver.getInstance().getLiveData());
+    }
+
+    public IStateLiveData<String> changeOnlineState(boolean state) {
+        Map<String, Object> change = new HashMap<>();
+        change.put("state", state);
+        return mOnlineDao.update(STUDENT_ID, state);
     }
 
     public IStateLiveData<User> add(User user) {
         return mDao.add(user);
     }
 
-    public static class OnlineState extends StateMediatorLiveData<Boolean> {
+    public static class OnlineStateLiveData extends StateMediatorLiveData<Boolean> {
 
         private int networkStatus;
         private boolean online;
 
-        public OnlineState(StateLiveData<User> user, LiveData<Integer> network) {
-            addSource(user, new Observer<StateModel<User>>() {
+        public OnlineStateLiveData(StateLiveData<OnlineState> onlineState, LiveData<Integer> network) {
+            addSource(onlineState, new Observer<StateModel<OnlineState>>() {
                 @Override
-                public void onChanged(StateModel<User> stateModel) {
+                public void onChanged(StateModel<OnlineState> stateModel) {
                     switch (stateModel.getStatus()) {
                         case LOADING:
                             postLoading();
@@ -87,7 +99,7 @@ public class FirebaseUserRepository {
                             break;
 
                         case SUCCESS:
-                            online = stateModel.getData().isOnline();
+                            online = stateModel.getData().isState();
                             postSuccess(isOnline());
                     }
                 }

@@ -1,5 +1,7 @@
 package vnu.uet.mobilecourse.assistant.view.calendar;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -31,6 +33,7 @@ public class AddTodoListFragment extends Fragment {
 
     private CalendarSharedViewModel mViewModel;
     private NavController mNavController;
+    private FragmentActivity mActivity;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -85,7 +88,17 @@ public class AddTodoListFragment extends Fragment {
             }
         });
 
+        initializeToolbar(root);
+
         return root;
+    }
+
+    private void initializeToolbar(View root) {
+        if (mActivity instanceof AppCompatActivity) {
+            Toolbar toolbar = root.findViewById(R.id.toolbar);
+
+            ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
+        }
     }
 
     private static final String FAILURE_MESSAGE = "Tạo danh sách không thành công";
