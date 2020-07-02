@@ -113,8 +113,6 @@ public class ChatRoomFragment extends Fragment {
                 setupGroupChat();
             }
 
-            mViewModel.markAsSeen(mRoomId);
-
             mViewModel.getAllMessages(mRoomId)
                     .observe(getViewLifecycleOwner(), stateModel -> {
                         Log.d(ChatRoomFragment.class.getSimpleName(), "onChanged: " + stateModel.getStatus());
@@ -196,6 +194,8 @@ public class ChatRoomFragment extends Fragment {
             }
         });
     }
+
+
 
     private void setupGroupChat() {
         setupMention();
@@ -471,6 +471,14 @@ public class ChatRoomFragment extends Fragment {
         super.onResume();
 
         ChatRoomTracker.getInstance().setCurrentRoom(mRoomId);
+        mViewModel.markAsSeen(mRoomId);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mViewModel.markAsSeen(mRoomId);
     }
 
     @Override
