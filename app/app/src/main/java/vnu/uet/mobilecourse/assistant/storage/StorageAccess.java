@@ -29,6 +29,8 @@ import androidx.annotation.NonNull;
 import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.database.DAO.UserDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.repository.firebase.chatnoti.Data;
+import vnu.uet.mobilecourse.assistant.repository.firebase.chatnoti.MyFirebaseMessagingService;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -42,7 +44,7 @@ public class StorageAccess implements IStorage {
     StorageReference storage = FirebaseStorage.getInstance().getReference();
 
     @Override
-    public IStateLiveData<String> uploadFileToGroupChat(String groupId, Uri fileURI, Message_GroupChatSubCol message, String[] memberIds) {
+    public IStateLiveData<String> uploadFileToGroupChat(String groupId, Uri fileURI, Message_GroupChatSubCol message, String[] memberIds, String[] tokens, String groupName) {
         String fileName = normalizeFileName(fileURI);
         IStateLiveData<String> uploadFileState = new StateLiveData<>(new StateModel<>(StateStatus.LOADING));
         StorageReference fileRef = storage.child(StorageAccess.GROUP_DIR).child(groupId).child(fileName);
@@ -67,6 +69,10 @@ public class StorageAccess implements IStorage {
                             batch.update(groupChatSubColRef, "lastMessage", simpleName + " đã gửi một tệp tin",
                                                 "lastMessageTime", message.getTimestamp());
                 }
+
+
+                Data data = new Data(groupId, groupName, message.getFromName(), " đã gửi một tệp đính kèm");
+                new MyFirebaseMessagingService().pushNoti(data, tokens);
 
                 batch.commit().addOnSuccessListener(aVoid -> {
                     uploadFileState.postSuccess(fileRef.getPath());
