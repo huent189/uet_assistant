@@ -33,11 +33,17 @@ public class NotificationHelper {
     public Notification build(@NonNull Context context, @NonNull String channelId,
                               int iconResId, String title, String content) {
 
+        return build(context, channelId, iconResId, title, content, NotificationsFragment.class.getName());
+    }
+
+    public Notification build(@NonNull Context context, @NonNull String channelId,
+                              int iconResId, String title, String content, String destFragment) {
+
         // Create an Intent for the activity you want to start
         Intent resultIntent = new Intent(context, MyCoursesActivity.class);
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         resultIntent.setAction(ACTION_OPEN);
-        resultIntent.putExtra("fragment", NotificationsFragment.class.getName());
+        resultIntent.putExtra("fragment", destFragment);
 
         // Create the TaskStackBuilder and add the intent, which inflates the back stack
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);

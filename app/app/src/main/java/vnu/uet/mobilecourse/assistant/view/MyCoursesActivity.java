@@ -39,6 +39,7 @@ import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
 import vnu.uet.mobilecourse.assistant.util.NetworkChangeReceiver;
 import vnu.uet.mobilecourse.assistant.util.NetworkUtils;
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
+import vnu.uet.mobilecourse.assistant.view.chat.ChatFragment;
 import vnu.uet.mobilecourse.assistant.view.notification.NotificationsFragment;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 import vnu.uet.mobilecourse.assistant.work.courses.CourseDataSynchronization;
@@ -200,6 +201,8 @@ public class MyCoursesActivity extends AppCompatActivity implements ActivityComp
             if (menuFragment != null) {
                 if (menuFragment.equals(NotificationsFragment.class.getName())) {
                     mNavController.navigate(R.id.action_navigation_courses_to_navigation_notifications);
+                } else if (menuFragment.equals(ChatFragment.class.getName())) {
+                    mNavController.navigate(R.id.action_navigation_courses_to_navigation_chat);
                 }
             }
         }
