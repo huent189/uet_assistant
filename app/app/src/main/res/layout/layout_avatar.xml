@@ -34,8 +34,6 @@
                 android:tint="#0f0"
                 android:padding="2dp"
                 android:visibility="gone"
-                android:background="@drawable/circle"
-                android:backgroundTint="@color/background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"

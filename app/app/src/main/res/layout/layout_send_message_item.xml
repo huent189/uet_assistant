@@ -31,7 +31,7 @@
         <vnu.uet.mobilecourse.assistant.view.component.CustomImageView
             android:visibility="gone"
             android:id="@+id/customImageView"
-            android:layout_width="match_parent"
+            android:layout_width="240dp"
             android:layout_height="wrap_content" />
 
         <vnu.uet.mobilecourse.assistant.view.component.CardAttachment
