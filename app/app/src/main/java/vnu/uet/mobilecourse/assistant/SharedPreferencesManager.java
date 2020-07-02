@@ -2,6 +2,7 @@ package vnu.uet.mobilecourse.assistant;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.view.MyApplication;
 
 public class SharedPreferencesManager {
@@ -52,5 +53,7 @@ public class SharedPreferencesManager {
 
     public static void clearAll(){
         initPreference();
+        preferences.edit().clear().commit();
+        User.getInstance().reset();
     }
 }

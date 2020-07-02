@@ -1,9 +1,7 @@
 package vnu.uet.mobilecourse.assistant.model;
 
 import android.app.AlarmManager;
-
 import vnu.uet.mobilecourse.assistant.SharedPreferencesManager;
-import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
 
 public class User {
@@ -123,4 +121,8 @@ public class User {
     private static final String CLASS = "UET_CLASS";
     private static final String ENABLE_SYNC_NOTI = "ENABLE_SYNC_NOTI";
     private static final String LAST_SYNC_TIME = "LAST_SYNC_TIME";
+
+    public void reset(){
+        user = new User();
+    }
 }

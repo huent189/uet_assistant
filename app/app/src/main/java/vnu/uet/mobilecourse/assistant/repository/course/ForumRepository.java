@@ -155,15 +155,20 @@ public class ForumRepository {
             @Override
             public void onSuccess(Discussion[] response) {
                 long lastTime = forumDAO.getDiscussionLastUpdate(forumId);
-                updateList.addAll(Arrays.stream(response)
-                        .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
-                updateList.forEach(new Consumer<Discussion>() {
-                    @Override
-                    public void accept(Discussion discussion) {
-                        discussion.setForumId(forumId);
-                    }
-                });
-                forumDAO.insertDiscussion(updateList);
+                if(lastTime != -1 ){
+                    updateList.addAll(Arrays.stream(response)
+                            .filter(p -> p.getTimeModified() > lastTime).collect(Collectors.toList()));
+                    updateList.forEach(new Consumer<Discussion>() {
+                        @Override
+                        public void accept(Discussion discussion) {
+                            discussion.setForumId(forumId);
+                        }
+                    });
+                    forumDAO.insertDiscussion(updateList);
+                }
+                else {
+                    forumDAO.insertDiscussion(Arrays.asList(response));
+                }
             }
         };
         handler.onResponse(call, call.execute());
