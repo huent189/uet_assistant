@@ -174,6 +174,12 @@ public class RoomProfileFragment extends Fragment implements IAvatarChangableFra
                         removeMember(student);
                     }
                 })
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        mMemberAdapter.notifyDataSetChanged();
+                    }
+                })
                 .create();
 
         alertDialog.show();
