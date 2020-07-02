@@ -44,7 +44,7 @@ public class FirebaseAuthenticationService {
 
         actionCodeSettings =
                 ActionCodeSettings.newBuilder()
-                        .setUrl("https://uet-assistant-d048c.firebaseapp.com/") // This is deeplink, not dynamiclink
+                        .setUrl("http://uet-assisstant.ddns.net/") // This is deeplink, not dynamiclink
                         // This must be true
                         .setHandleCodeInApp(true)
                         .setAndroidPackageName(BuildConfig.APPLICATION_ID, false, null)
