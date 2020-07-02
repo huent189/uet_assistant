@@ -9,19 +9,20 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import vnu.uet.mobilecourse.assistant.model.event.EventComparator;
+import vnu.uet.mobilecourse.assistant.model.firebase.MessageToken;
 import vnu.uet.mobilecourse.assistant.model.firebase.Todo;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
 
-public class TokenDAO extends FirebaseDAO<Todo> {
+public class TokenDAO extends FirebaseDAO<MessageToken> {
 
     public TokenDAO() {
-        super(FirebaseFirestore.getInstance().collection(FirebaseCollectionName.TODO));
+        super(FirebaseFirestore.getInstance().collection(FirebaseCollectionName.TOKEN));
     }
 
     @Override
-    public StateLiveData<List<Todo>> readAll() {
+    public StateLiveData<List<MessageToken>> readAll() {
         // this live data will only initialize once
         // data change will auto update by 'addSnapshotListener'
         // to listen for data changes
@@ -31,7 +32,7 @@ public class TokenDAO extends FirebaseDAO<Todo> {
 
             // listen data from firebase
             // query all document owned by current user
-            mColReference.whereEqualTo("ownerId", STUDENT_ID)
+            mColReference
                     // order
 //                    .orderBy("deadline", Query.Direction.DESCENDING)
                     // listen for data change
@@ -48,10 +49,9 @@ public class TokenDAO extends FirebaseDAO<Todo> {
                         }
                         // query completed with snapshots
                         else {
-                            List<Todo> allLists = snapshots.getDocuments().stream()
-                                    .map(snapshot -> snapshot.toObject(Todo.class))
+                            List<MessageToken> allLists = snapshots.getDocuments().stream()
+                                    .map(snapshot -> snapshot.toObject(MessageToken.class))
                                     .filter(Objects::nonNull)
-                                    .sorted(new EventComparator())
                                     .collect(Collectors.toList());
 
                             mDataList.postSuccess(allLists);

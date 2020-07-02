@@ -43,6 +43,7 @@ import vnu.uet.mobilecourse.assistant.exception.DocumentNotFoundException;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.MessageToken;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
 import vnu.uet.mobilecourse.assistant.util.ChatRoomTracker;
@@ -176,11 +177,11 @@ public class ChatRoomFragment extends Fragment {
 
         mMemberIds = new String[] {User.getInstance().getStudentId(), mCode};
 
-        mViewModel.getRoomInfo(mRoomId).observe(getViewLifecycleOwner(), stateModel -> {
+        mViewModel.getToken(mCode).observe(getViewLifecycleOwner(), stateModel -> {
             switch (stateModel.getStatus()) {
                 case SUCCESS:
-                    mRoom = stateModel.getData();
-                    extractTokens();
+                    MessageToken token = stateModel.getData();
+                    mTokens = new String[] {token.getToken()};
 
                     break;
 

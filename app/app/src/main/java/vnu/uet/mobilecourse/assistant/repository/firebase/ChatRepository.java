@@ -13,10 +13,12 @@ import vnu.uet.mobilecourse.assistant.database.DAO.GroupChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChat_UserSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Member_GroupChatSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Message_GroupChatSubColDAO;
+import vnu.uet.mobilecourse.assistant.database.DAO.TokenDAO;
 import vnu.uet.mobilecourse.assistant.model.firebase.Connection;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.MessageToken;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
@@ -99,6 +101,10 @@ public class ChatRepository implements IChatRepository {
         addConnections(memberIds);
 
         return new CreateGroupChatState(createGroupState, addMember, addGroup);
+    }
+
+    public IStateLiveData<MessageToken> getToken(String id) {
+        return new TokenDAO().read(id);
     }
 
     @Override

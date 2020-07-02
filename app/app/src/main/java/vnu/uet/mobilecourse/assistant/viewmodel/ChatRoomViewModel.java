@@ -15,6 +15,7 @@ import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.MemberRole;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.MessageToken;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.repository.firebase.ChatRepository;
 import vnu.uet.mobilecourse.assistant.storage.StorageAccess;
@@ -46,6 +47,10 @@ public class ChatRoomViewModel extends ViewModel {
 
     public IStateLiveData<String> sendMessage(String roomId, Message_GroupChatSubCol message, String[] memberIds, String[] tokens) {
         return mChatRepo.sendMessage(roomId, message, memberIds);
+    }
+
+    public IStateLiveData<MessageToken> getToken(String id) {
+        return mChatRepo.getToken(id);
     }
 
     @SuppressLint("RestrictedApi")

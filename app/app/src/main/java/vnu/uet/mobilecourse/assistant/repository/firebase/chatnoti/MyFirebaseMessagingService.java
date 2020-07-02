@@ -17,6 +17,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -27,8 +28,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
+import vnu.uet.mobilecourse.assistant.database.DAO.TokenDAO;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.MessageToken;
 import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.util.ChatRoomTracker;
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
@@ -82,7 +85,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         updateToken(token);
     }
 
+    private static final String USER_ID = User.getInstance().getStudentId();
+
     public void updateToken(String token) {
+        // add collection token
+        MessageToken messageToken = new MessageToken();
+        messageToken.setId(USER_ID);
+        messageToken.setTimeUpdated(System.currentTimeMillis() / 1000);
+        messageToken.setToken(token);
+        new TokenDAO().add(USER_ID, messageToken);
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(FirebaseCollectionName.USER)
                 .document(User.getInstance().getStudentId())
