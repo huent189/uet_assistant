@@ -7,6 +7,7 @@ import android.net.Uri;
 import com.google.firebase.firestore.util.Util;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import androidx.lifecycle.Observer;
@@ -45,8 +46,8 @@ public class ChatRoomViewModel extends ViewModel {
         return mChatRepo.markRoomAsSeen(roomId);
     }
 
-    public IStateLiveData<String> sendMessage(String roomId, Message_GroupChatSubCol message, String[] memberIds, String[] tokens) {
-        return mChatRepo.sendMessage(roomId, message, memberIds);
+    public IStateLiveData<String> sendMessage(String roomId, Message_GroupChatSubCol message, Map<String, String> members) {
+        return mChatRepo.sendMessage(roomId, message, members);
     }
 
     public IStateLiveData<MessageToken> getToken(String id) {
@@ -54,7 +55,7 @@ public class ChatRoomViewModel extends ViewModel {
     }
 
     @SuppressLint("RestrictedApi")
-    public IStateLiveData<String> sendAttachment(String roomId, Uri uri, String[] memberIds, Context context) {
+    public IStateLiveData<String> sendAttachment(String roomId, String roomName, Uri uri, String[] memberIds, Context context) {
         Message_GroupChatSubCol message = new Message_GroupChatSubCol();
         message.setId(Util.autoId());
         message.setTimestamp(System.currentTimeMillis() / 1000);
@@ -67,8 +68,8 @@ public class ChatRoomViewModel extends ViewModel {
     }
 
     public IStateLiveData<String> connectAndSendMessage(String roomId, String otherName,
-                                                        Message_GroupChatSubCol message, String[] memberIds, String[] tokens) {
-        return new FirstMessageLiveData(roomId, message, otherName, memberIds, tokens);
+                                                        Message_GroupChatSubCol message, Map<String, String> members) {
+        return new FirstMessageLiveData(roomId, message, otherName, members);
     }
 
     private StateMediatorLiveData<GroupChat> createDirectedChat(String roomId, String otherName, String otherCode) {
@@ -164,9 +165,10 @@ public class ChatRoomViewModel extends ViewModel {
 
     class FirstMessageLiveData extends StateMediatorLiveData<String> {
 
-        FirstMessageLiveData(String roomId, Message_GroupChatSubCol message, String otherName, String[] memberIds, String[] tokens) {
+        FirstMessageLiveData(String roomId, Message_GroupChatSubCol message, String otherName, Map<String, String> members) {
             postLoading();
 
+            String[] memberIds = members.keySet().toArray(new String[0]);
             String otherId = findOtherId(memberIds);
 
             StateMediatorLiveData<GroupChat> createLiveData = createDirectedChat(roomId, otherName, otherId);
@@ -187,7 +189,7 @@ public class ChatRoomViewModel extends ViewModel {
                             postSuccess(CONNECTED_MSG);
                             message.setTimestamp(message.getTimestamp() + 1);
 
-                            addSource(mChatRepo.sendMessage(roomId, message, memberIds), new Observer<StateModel<String>>() {
+                            addSource(mChatRepo.sendMessage(roomId, message, members), new Observer<StateModel<String>>() {
                                 @Override
                                 public void onChanged(StateModel<String> stateModel) {
                                     switch (stateModel.getStatus()) {
