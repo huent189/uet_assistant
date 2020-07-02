@@ -16,13 +16,6 @@
         android:theme="@style/DarkTheme"
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustPan">
-        <service
-            android:name=".MyService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
 
         <receiver
             android:name=".alarm.receiver.ExamReceiver"
