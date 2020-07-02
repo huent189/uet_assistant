@@ -1,5 +1,8 @@
 package vnu.uet.mobilecourse.assistant.repository.firebase.chatnoti;
 
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -23,7 +26,9 @@ import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
-    private String token;
+    public MyFirebaseMessagingService() {
+    }
+
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
@@ -49,9 +54,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             for (String groupId :
                     groupIds) {
                 DocumentReference memberRef = db.collection(FirebaseCollectionName.GROUP_CHAT)
-                                                    .document(groupId)
-                                                    .collection(FirebaseCollectionName.MEMBER)
-                                                    .document(User.getInstance().getStudentId());
+                        .document(groupId)
+                        .collection(FirebaseCollectionName.MEMBER)
+                        .document(User.getInstance().getStudentId());
                 batch.update(memberRef, "token", token);
             }
 
