@@ -90,11 +90,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     public void updateToken(String token) {
         // add collection token
-        MessageToken messageToken = new MessageToken();
-        messageToken.setId(USER_ID);
-        messageToken.setTimeUpdated(System.currentTimeMillis() / 1000);
-        messageToken.setToken(token);
-        new TokenDAO().add(USER_ID, messageToken);
+//        MessageToken messageToken = new MessageToken();
+//        messageToken.setId(USER_ID);
+//        messageToken.setTimeUpdated();
+//        messageToken.setToken(token);
+        Map<String, Object> changes = new HashMap<>();
+        changes.put("token", token);
+        changes.put("timeUpdated", System.currentTimeMillis() / 1000);
+        new TokenDAO().update(USER_ID, changes);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(FirebaseCollectionName.USER)
