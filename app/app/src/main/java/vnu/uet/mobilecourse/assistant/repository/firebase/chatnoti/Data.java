@@ -1,50 +1,40 @@
 package vnu.uet.mobilecourse.assistant.repository.firebase.chatnoti;
 
 public class Data {
-    private String user;
-    private String body;
-    private String title;
-    private String sented;
+    private String groupId;
+    private String groupName;
+    private String senderName;
+    private String content;
 
-    public String getUser() {
-        return user;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 
-    public String getBody() {
-        return body;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setBody(String body) {
-        this.body = body;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
-    public String getTitle() {
-        return title;
+    public String getSenderName() {
+        return senderName;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 
-    public String getSented() {
-        return sented;
+    public String getContent() {
+        return content;
     }
 
-    public void setSented(String sented) {
-        this.sented = sented;
-    }
-
-    public Data() {
-    }
-
-    public Data(String user, String body, String title, String sented) {
-        this.user = user;
-        this.body = body;
-        this.title = title;
-        this.sented = sented;
+    public void setContent(String content) {
+        this.content = content;
     }
 }

@@ -12,9 +12,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.JsonObject;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
@@ -23,7 +21,6 @@ import retrofit2.Response;
 import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
-import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private String token;
@@ -38,7 +35,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onNewToken(@NonNull String token) {
-        // TODO: update token to server
         updateToken(token);
     }
 
