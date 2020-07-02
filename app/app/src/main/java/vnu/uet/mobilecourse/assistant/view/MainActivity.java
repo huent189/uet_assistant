@@ -20,6 +20,8 @@ import vnu.uet.mobilecourse.assistant.exception.NoConnectivityException;
 import vnu.uet.mobilecourse.assistant.exception.UnavailableHostException;
 import vnu.uet.mobilecourse.assistant.repository.FirebaseAuthenticationService;
 import vnu.uet.mobilecourse.assistant.repository.course.UserRepository;
+import vnu.uet.mobilecourse.assistant.repository.firebase.chatnoti.Data;
+import vnu.uet.mobilecourse.assistant.repository.firebase.chatnoti.MyFirebaseMessagingService;
 import vnu.uet.mobilecourse.assistant.repository.firebase.chatnoti.MyFirebaseMessagingService;
 
 public class MainActivity extends AppCompatActivity {

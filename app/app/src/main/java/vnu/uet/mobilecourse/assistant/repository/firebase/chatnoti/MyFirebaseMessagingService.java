@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -114,5 +115,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 // TODO: fail
             }
         });
+    }
+
+    public JsonObject buildNotificationPayload(Data data){
+        String token = "dVPq05uZRpOu9pYaf5JIJK:APA91bFLTU6XvALk2TzZ55liRuTROZVOupf7UMtzLV8kWB4-tVZx6Mo0qleMvHCEu4kvZT5eyFQLA2XQ06oDJfyL82aZKwyjXa-fSHZS25bvFonr7QyOAarIq2vj4Dj1U6t60u3nrJnQ";
+        JsonObject payload = new JsonObject();
+
+        payload.addProperty("to", token);
+        payload.add("data", data.toJSON());
+
+        return payload;
     }
 }
