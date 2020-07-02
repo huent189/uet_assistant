@@ -64,7 +64,7 @@ public class ChatRoomViewModel extends ViewModel {
         message.setFromName(STUDENT_NAME);
         message.setContentType(FileUtils.getMimeType(context, uri));
 
-        return new StorageAccess().uploadFileToGroupChat(roomId, roomName, uri, message, memberIds, tokens);
+        return new StorageAccess().uploadFileToGroupChat(roomId, uri, message, memberIds, tokens, roomName);
     }
 
     public IStateLiveData<String> connectAndSendMessage(String roomId, String otherName,
