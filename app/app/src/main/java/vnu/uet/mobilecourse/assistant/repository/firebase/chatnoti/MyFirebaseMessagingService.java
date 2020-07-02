@@ -29,6 +29,7 @@ import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
+import vnu.uet.mobilecourse.assistant.util.ChatRoomTracker;
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.view.chat.ChatFragment;
@@ -39,13 +40,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     }
 
-
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         Map<String, String> data = remoteMessage.getData();
-        pushNotification(getApplicationContext(), data);
+
+        String roomId = data.get("groupId");
+        if (!isAlreadyInRoom(roomId)) {
+            pushNotification(getApplicationContext(), data);
+        }
 
         Log.d("OnMess: ", "onMessageReceived: " + remoteMessage.getData());
+    }
+
+    private boolean isAlreadyInRoom(String roomId) {
+        String currentRoomId = ChatRoomTracker.getInstance().getCurrentRoom();
+
+        return currentRoomId != null && currentRoomId.equals(roomId);
     }
 
     protected void pushNotification(Context context, Map<String, String> data) {

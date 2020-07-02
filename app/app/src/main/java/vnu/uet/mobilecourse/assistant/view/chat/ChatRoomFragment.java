@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,6 +45,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.util.AvatarLoader;
+import vnu.uet.mobilecourse.assistant.util.ChatRoomTracker;
 import vnu.uet.mobilecourse.assistant.util.FileUtils;
 import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.util.StringConst;
@@ -69,7 +71,7 @@ public class ChatRoomFragment extends Fragment {
 
     private String mCode, mTitle, mType, mRoomId;
     private boolean mEmptyRoom = false;
-    private String[] mMemberIds;
+    private String[] mMemberIds, mTokens;
     private GroupChat mRoom;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -173,6 +175,20 @@ public class ChatRoomFragment extends Fragment {
         mAvatarView.loadUser(mCode);
 
         mMemberIds = new String[] {User.getInstance().getStudentId(), mCode};
+
+        mViewModel.getRoomInfo(mRoomId).observe(getViewLifecycleOwner(), stateModel -> {
+            switch (stateModel.getStatus()) {
+                case SUCCESS:
+                    mRoom = stateModel.getData();
+
+
+                    break;
+
+                case ERROR:
+                    Toast.makeText(mActivity, "Không lấy được thông tin phòng chat", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        });
     }
 
     private void setupGroupChat() {
@@ -206,6 +222,13 @@ public class ChatRoomFragment extends Fragment {
                     break;
             }
         });
+    }
+
+    private void extractTokens() {
+        mRoom.getMembers().stream()
+                .filter(member -> !member.getId().equals(User.getInstance().getStudentId()))
+                .map(m)
+                .collect(Collectors.toList())
     }
 
     private void setupMention() {
@@ -419,5 +442,19 @@ public class ChatRoomFragment extends Fragment {
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        ChatRoomTracker.getInstance().setCurrentRoom(mRoomId);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        ChatRoomTracker.getInstance().outRoom();
     }
 }
