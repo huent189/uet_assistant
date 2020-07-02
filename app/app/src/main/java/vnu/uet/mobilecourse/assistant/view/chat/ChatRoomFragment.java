@@ -74,7 +74,7 @@ public class ChatRoomFragment extends Fragment {
 
     private String mCode, mTitle, mType, mRoomId;
     private boolean mEmptyRoom = false;
-    private Map<String, String> mMembers;
+    private String[] mMemberIds, mTokens;
     private GroupChat mRoom;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -177,16 +177,16 @@ public class ChatRoomFragment extends Fragment {
         mAvatarView.setLifecycleOwner(getViewLifecycleOwner());
         mAvatarView.loadUser(mCode);
 
-        mMembers = new HashMap<>();
-        mMembers.put(User.getInstance().getStudentId(), StringConst.EMPTY);
-//        mMemberIds = new String[] {User.getInstance().getStudentId(), mCode};
+//        mMembers = new HashMap<>();
+//        mMembers.put(User.getInstance().getStudentId(), StringConst.EMPTY);
+        mMemberIds = new String[] {User.getInstance().getStudentId(), mCode};
 
         mViewModel.getToken(mCode).observe(getViewLifecycleOwner(), stateModel -> {
             switch (stateModel.getStatus()) {
                 case SUCCESS:
                     MessageToken token = stateModel.getData();
-//                    mTokens = new String[] {token.getToken()};
-                    mMembers.put(mCode, token.getToken());
+                    mTokens = new String[] {token.getToken()};
+//                    mMembers.put(mCode, token.getToken());
 
                     break;
 
@@ -203,7 +203,7 @@ public class ChatRoomFragment extends Fragment {
         mAvatarView.setLifecycleOwner(getViewLifecycleOwner());
         mAvatarView.loadRoom(mRoomId);
 
-        mMembers = new HashMap<>();
+//        mMembers = new HashMap<>();
 
         mViewModel.getRoomInfo(mRoomId).observe(getViewLifecycleOwner(), stateModel -> {
             switch (stateModel.getStatus()) {
@@ -211,13 +211,14 @@ public class ChatRoomFragment extends Fragment {
                     mRoom = stateModel.getData();
 
                     List<Member_GroupChatSubCol> members = mRoom.getMembers();
-//                    mMemberIds = members.stream()
-//                            .map(Member_GroupChatSubCol::getId)
-//                            .toArray(String[]::new);
-                    mMembers.clear();
-                    members.forEach(member -> {
-                        mMembers.put(member.getId(), member.getToken());
-                    });
+                    mMemberIds = members.stream()
+                            .filter(member -> !member.getId().equals(User.getInstance().getStudentId()))
+                            .map(Member_GroupChatSubCol::getId)
+                            .toArray(String[]::new);
+//                    mMembers.clear();
+//                    members.forEach(member -> {
+//                        mMembers.put(member.getId(), member.getToken());
+//                    });
 
                     mMemberListAdapter = new MentionAdapter(mActivity, members);
                     mEtMessage.setAdapter(mMemberListAdapter);
@@ -315,13 +316,13 @@ public class ChatRoomFragment extends Fragment {
 
         if (content.isEmpty()) return;
 
-//        Message_GroupChatSubCol message = mViewModel.generateTextMessage(content, mMemberIds);
-        String[] memberIds = mMembers.keySet().toArray(new String[0]);
-        Message_GroupChatSubCol message = mViewModel.generateTextMessage(content, memberIds);
+        Message_GroupChatSubCol message = mViewModel.generateTextMessage(content, mMemberIds);
+//        String[] memberIds = mMembers.keySet().toArray(new String[0]);
+//        Message_GroupChatSubCol message = mViewModel.generateTextMessage(content, memberIds);
 
         // first message in directed chat
         if (GroupChat.DIRECT.equals(mType) && mEmptyRoom) {
-            mViewModel.connectAndSendMessage(mRoomId, mTitle, message, mMembers)
+            mViewModel.connectAndSendMessage(mRoomId, mTitle, message, mMemberIds, mTokens)
                     .observe(getViewLifecycleOwner(), stateModel -> {
                         switch (stateModel.getStatus()) {
                             case SUCCESS:
@@ -340,7 +341,7 @@ public class ChatRoomFragment extends Fragment {
         }
         // other cases
         else {
-            mViewModel.sendMessage(mRoomId, message, mMembers)
+            mViewModel.sendMessage(mRoomId, mTitle, message, mMemberIds, mTokens)
                     .observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
                         @Override
                         public void onChanged(StateModel<String> stateModel) {
