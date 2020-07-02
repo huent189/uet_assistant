@@ -12,14 +12,19 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -36,6 +41,7 @@ import vnu.uet.mobilecourse.assistant.model.firebase.CourseSession;
 import vnu.uet.mobilecourse.assistant.repository.firebase.FirebaseUserRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.NavigationBadgeRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.TodoRepository;
+import vnu.uet.mobilecourse.assistant.repository.firebase.chatnoti.MyFirebaseMessagingService;
 import vnu.uet.mobilecourse.assistant.util.NetworkChangeReceiver;
 import vnu.uet.mobilecourse.assistant.util.NetworkUtils;
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
@@ -64,6 +70,8 @@ public class MyCoursesActivity extends AppCompatActivity implements ActivityComp
         setContentView(R.layout.activity_my_courses);
 
         mNavView = findViewById(R.id.nav_view);
+
+        setupFCMToken();
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -206,6 +214,24 @@ public class MyCoursesActivity extends AppCompatActivity implements ActivityComp
                 }
             }
         }
+    }
+
+    private void setupFCMToken() {
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnSuccessListener(this, new OnSuccessListener<InstanceIdResult>() {
+                    @Override
+                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                        String token = instanceIdResult.getToken();
+                        Log.i("FCM Token", token);
+                        MyFirebaseMessagingService service = new MyFirebaseMessagingService();
+                        service.updateToken(token);
+                    }
+                }).addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void setupNavigationBadges() {

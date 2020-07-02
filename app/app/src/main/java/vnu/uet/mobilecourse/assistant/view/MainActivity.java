@@ -32,22 +32,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mBtnAccess = findViewById(R.id.btnAccess);
-
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnSuccessListener(this, new OnSuccessListener<InstanceIdResult>() {
-                    @Override
-                    public void onSuccess(InstanceIdResult instanceIdResult) {
-                        String token = instanceIdResult.getToken();
-                        Log.i("FCM Token", token);
-                        MyFirebaseMessagingService service = new MyFirebaseMessagingService();
-                        service.updateToken(token);
-                    }
-                }).addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        e.printStackTrace();
-                    }
-                });
     }
 
     public void accessCourses(View view) {
