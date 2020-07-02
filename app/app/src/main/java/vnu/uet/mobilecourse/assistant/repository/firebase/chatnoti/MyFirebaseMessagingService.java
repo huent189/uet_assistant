@@ -16,6 +16,7 @@ import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -94,7 +95,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         });
     }
 
-    public void send(JsonObject payload){
+    public void pushNoti(Data data, String[] tokens){
+        JsonObject payload = buildNotificationPayload(data, tokens);
         Client.getApiService().sendNotification(payload).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -108,11 +110,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         });
     }
 
-    public JsonObject buildNotificationPayload(Data data){
-        String token = "dVPq05uZRpOu9pYaf5JIJK:APA91bFLTU6XvALk2TzZ55liRuTROZVOupf7UMtzLV8kWB4-tVZx6Mo0qleMvHCEu4kvZT5eyFQLA2XQ06oDJfyL82aZKwyjXa-fSHZS25bvFonr7QyOAarIq2vj4Dj1U6t60u3nrJnQ";
+    private JsonObject buildNotificationPayload(Data data, String[] tokens){
+//        tokens = new String[] {"dVPq05uZRpOu9pYaf5JIJK:APA91bFLTU6XvALk2TzZ55liRuTROZVOupf7UMtzLV8kWB4-tVZx6Mo0qleMvHCEu4kvZT5eyFQLA2XQ06oDJfyL82aZKwyjXa-fSHZS25bvFonr7QyOAarIq2vj4Dj1U6t60u3nrJnQ"};
         JsonObject payload = new JsonObject();
+        JsonArray registration_ids = new JsonArray();
+        for (String token :
+                tokens) {
+            registration_ids.add(token);
+        }
 
-        payload.addProperty("to", token);
+        payload.add("registration_ids", registration_ids);
         payload.add("data", data.toJSON());
 
         return payload;
