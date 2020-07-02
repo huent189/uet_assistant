@@ -90,7 +90,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     public void updateToken(String token) {
         // add collection token
-//        MessageToken messageToken = new MessageToken();
+        MessageToken messageToken = new MessageToken();
 //        messageToken.setId(USER_ID);
 //        messageToken.setTimeUpdated();
 //        messageToken.setToken(token);

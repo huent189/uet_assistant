@@ -90,7 +90,7 @@ public class ChatRepository implements IChatRepository {
 
         // send push noti
         Data data = new Data(groupId, groupName, message.getFromName(), message.getContent());
-        if (message.getMentions() != null) {
+        if (!message.getMentions().isEmpty()) {
             data.setContent(message.getFromName() + " đã nhắc đến " + message.getMentions());
         }
         new MyFirebaseMessagingService().pushNoti(data, tokens);
