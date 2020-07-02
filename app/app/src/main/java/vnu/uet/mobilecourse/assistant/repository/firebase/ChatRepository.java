@@ -18,6 +18,8 @@ import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.Message_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.repository.firebase.chatnoti.Data;
+import vnu.uet.mobilecourse.assistant.repository.firebase.chatnoti.MyFirebaseMessagingService;
 import vnu.uet.mobilecourse.assistant.util.FirebaseStructureId;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
@@ -79,10 +81,18 @@ public class ChatRepository implements IChatRepository {
     }
 
     @Override
-    public StateMediatorLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message, String[] memberIds) {
+    public StateMediatorLiveData<String> sendMessage(String groupId, Message_GroupChatSubCol message, String[] memberIds, String []tokens , String groupName) {
         StateLiveData<Message_GroupChatSubCol> addMessageState= new Message_GroupChatSubColDAO(groupId).add(message.getId(), message);
         StateLiveData<String> updateLastMessage = new GroupChat_UserSubColDAO()
                 .updateLastMessage(groupId, memberIds, message);
+
+        // send push noti
+        Data data = new Data(groupId, groupName, message.getFromName(), message.getContent());
+        if (message.getMentions() != null) {
+            data.setContent(message.getFromName() + " đã nhắc đến " + message.getMentions());
+        }
+        new MyFirebaseMessagingService().pushNoti(data, tokens);
+
         return new SendMessageState(groupId, addMessageState, updateLastMessage, memberIds);
     }
 
