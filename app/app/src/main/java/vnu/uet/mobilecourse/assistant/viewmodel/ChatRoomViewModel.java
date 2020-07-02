@@ -1,6 +1,7 @@
 package vnu.uet.mobilecourse.assistant.viewmodel;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.net.Uri;
 
 import com.google.firebase.firestore.util.Util;
@@ -48,14 +49,14 @@ public class ChatRoomViewModel extends ViewModel {
     }
 
     @SuppressLint("RestrictedApi")
-    public IStateLiveData<String> sendAttachment(String roomId, Uri uri, String[] memberIds) {
+    public IStateLiveData<String> sendAttachment(String roomId, Uri uri, String[] memberIds, Context context) {
         Message_GroupChatSubCol message = new Message_GroupChatSubCol();
         message.setId(Util.autoId());
         message.setTimestamp(System.currentTimeMillis() / 1000);
         message.setContent(uri.getLastPathSegment());
         message.setFromId(STUDENT_ID);
         message.setFromName(STUDENT_NAME);
-        message.setContentType(FileUtils.getMimeType(uri));
+        message.setContentType(FileUtils.getMimeType(context, uri));
 
         return new StorageAccess().uploadFileToGroupChat(roomId, uri, message, memberIds);
     }

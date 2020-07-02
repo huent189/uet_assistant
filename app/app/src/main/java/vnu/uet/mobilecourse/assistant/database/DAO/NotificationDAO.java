@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vnu.uet.mobilecourse.assistant.exception.UnsupportedNotificationException;
-import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
+import vnu.uet.mobilecourse.assistant.model.notification.FinalExamNotification;
+import vnu.uet.mobilecourse.assistant.model.notification.NotificationType;
 import vnu.uet.mobilecourse.assistant.model.notification.AdminNotification;
 import vnu.uet.mobilecourse.assistant.model.notification.CourseAttendantNotification;
 import vnu.uet.mobilecourse.assistant.model.notification.ForumPostNotification;
@@ -146,6 +147,14 @@ public class NotificationDAO extends FirebaseDAO<Notification_UserSubCol> {
                     assert materialId != null;
                     ((SubmissionNotification) notification).setMaterialId(materialId.intValue());
                     ((SubmissionNotification) notification).setMaterialType(materialType);
+
+                    break;
+                }
+
+                case NotificationType.FINAL_EXAM: {
+                    notification = new FinalExamNotification();
+                    String courseCode = snapshot.getString("courseCode");
+                    ((FinalExamNotification) notification).setCourseCode(courseCode);
 
                     break;
                 }

@@ -135,6 +135,9 @@ public class ChatRepository implements IChatRepository {
             for (int j = i + 1; j < size; j++) {
                 String fromId = memberIds[i];
                 String toId = memberIds[j];
+
+                if (fromId.equals(toId)) continue;
+
                 String docId = FirebaseStructureId.connect(fromId, toId);
 
                 Connection connection = new Connection();
@@ -150,6 +153,8 @@ public class ChatRepository implements IChatRepository {
     private void addConnections(String[] oldIds, String[] newIds) {
         for (String newId : newIds) {
             for (String oldId : oldIds) {
+                if (oldId.equals(newId)) continue;
+
                 String docId = FirebaseStructureId.connect(oldId, newId);
 
                 Connection connection = new Connection();

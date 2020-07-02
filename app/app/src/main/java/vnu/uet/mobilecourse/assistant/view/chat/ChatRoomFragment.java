@@ -405,7 +405,7 @@ public class ChatRoomFragment extends Fragment {
                 if (resultCode == RESULT_OK && data != null) {
                     Uri uri = data.getData();
                     Toast.makeText(getContext(), uri.getPath(), Toast.LENGTH_SHORT).show();
-                    mViewModel.sendAttachment(mRoomId, uri, mMemberIds);
+                    mViewModel.sendAttachment(mRoomId, uri, mMemberIds, getContext().getApplicationContext());
 //                        .observe(getViewLifecycleOwner(), new Observer<StateModel<String>>() {
 //                            @Override
 //                            public void onChanged(StateModel<String> stateModel) {

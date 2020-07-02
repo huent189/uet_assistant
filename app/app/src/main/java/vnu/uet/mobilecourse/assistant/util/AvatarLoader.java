@@ -4,14 +4,12 @@ import android.content.Context;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.signature.ObjectKey;
 import com.google.firebase.storage.StorageReference;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
 import vnu.uet.mobilecourse.assistant.R;
-import vnu.uet.mobilecourse.assistant.model.IStudent;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.User;
 import vnu.uet.mobilecourse.assistant.repository.firebase.ChatRepository;
@@ -81,10 +79,6 @@ public class AvatarLoader {
 
     }
 
-    private void forceUpdate() {
-
-    }
-
     public void loadRoom(String roomId, ImageView imageView) {
         StorageReference imageRef = new StorageAccess().getAvatar(roomId);
 
@@ -100,7 +94,7 @@ public class AvatarLoader {
                                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                                         .skipMemoryCache(true)
 //                                        .signature(new ObjectKey(time))
-                                        .error(R.drawable.avatar)
+                                        .error(R.drawable.img_admin_bot)
                                         .into(imageView);
                         }
                     }
@@ -108,7 +102,7 @@ public class AvatarLoader {
 
         GlideApp.with(mContext)
                 .load(imageRef)
-                .error(R.drawable.avatar)
+                .error(R.drawable.img_admin_bot)
                 .into(imageView);
     }
 

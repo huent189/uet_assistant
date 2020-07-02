@@ -19,7 +19,10 @@ import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import vnu.uet.mobilecourse.assistant.R;
 import vnu.uet.mobilecourse.assistant.model.User;
@@ -94,7 +97,19 @@ public class MyProfileFragment extends Fragment implements IAvatarChangableFragm
             }
         });
 
+        initializeToolbar(root);
+
         return root;
+    }
+
+    private void initializeToolbar(View root) {
+        FragmentActivity mActivity = getActivity();
+
+        if (mActivity instanceof AppCompatActivity) {
+            Toolbar toolbar = root.findViewById(R.id.toolbar);
+
+            ((AppCompatActivity) mActivity).setSupportActionBar(toolbar);
+        }
     }
 
     @Override

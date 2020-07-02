@@ -3,7 +3,6 @@ package vnu.uet.mobilecourse.assistant.model.notification;
 import com.google.firebase.firestore.Exclude;
 
 import vnu.uet.mobilecourse.assistant.model.firebase.CourseInfo;
-import vnu.uet.mobilecourse.assistant.model.firebase.NotificationType;
 
 public class CourseAttendantNotification extends Notification_UserSubCol {
 
