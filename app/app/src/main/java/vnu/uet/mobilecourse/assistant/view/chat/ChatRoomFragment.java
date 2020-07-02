@@ -226,6 +226,10 @@ public class ChatRoomFragment extends Fragment {
                     mTitle = mRoom.getName();
                     mTvRoomTitle.setText(mTitle);
 
+                    mTokens = mRoom.getMembers().stream()
+                                .filter(member -> !member.getId().equals(User.getInstance().getStudentId()))
+                                .map(Member_GroupChatSubCol::getToken).toArray(String[]::new);
+
 //                    extractTokens();
 
                     if (mViewInfoItem != null) mViewInfoItem.setEnabled(true);

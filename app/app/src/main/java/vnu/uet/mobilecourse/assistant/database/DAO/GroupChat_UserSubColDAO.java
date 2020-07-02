@@ -150,7 +150,7 @@ public class GroupChat_UserSubColDAO extends FirebaseDAO<GroupChat_UserSubCol> {
 
         WriteBatch batch = db.batch();
         for (String memberId : memberIds) {
-            if (memberId.equals(message.getFromId()){
+            if (memberId.equals(message.getFromId())){
                 continue;
             }
             DocumentReference docRef = db.collection(FirebaseCollectionName.USER)
