@@ -13,7 +13,9 @@ import vnu.uet.mobilecourse.assistant.exception.UnavailableHostException;
 import vnu.uet.mobilecourse.assistant.repository.FirebaseAuthenticationService;
 import vnu.uet.mobilecourse.assistant.repository.course.UserRepository;
 import vnu.uet.mobilecourse.assistant.repository.firebase.chatnoti.Data;
+
 import vnu.uet.mobilecourse.assistant.repository.firebase.chatnoti.MyFirebaseMessagingService;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -26,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        MyFirebaseMessagingService myFirebaseMessagingService = new MyFirebaseMessagingService();
-        myFirebaseMessagingService.pushNoti(myFirebaseMessagingService.buildNotificationPayload(new Data("a", "b", "c", "d"),new String[]{}));
+//        MyFirebaseMessagingService myFirebaseMessagingService = new MyFirebaseMessagingService();
+//        myFirebaseMessagingService.pushNoti(new Data("a", "b", "c", "d"),new String[]{});
 
         mBtnAccess = findViewById(R.id.btnAccess);
     }
