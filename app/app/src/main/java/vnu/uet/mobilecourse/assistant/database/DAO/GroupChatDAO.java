@@ -18,8 +18,12 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
+
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat;
 import vnu.uet.mobilecourse.assistant.model.firebase.Member_GroupChatSubCol;
+import vnu.uet.mobilecourse.assistant.model.firebase.MessageToken;
+import vnu.uet.mobilecourse.assistant.viewmodel.state.IStateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateLiveData;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateModel;
 import vnu.uet.mobilecourse.assistant.viewmodel.state.StateStatus;
@@ -133,6 +137,20 @@ public class GroupChatDAO extends FirebaseDocReadOnlyDAO<GroupChat> {
         batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                for (Member_GroupChatSubCol member:
+                        members) {
+                    IStateLiveData<MessageToken> liveData = new TokenDAO().read(member.getId());
+                    liveData.observeForever(new Observer<StateModel<MessageToken>>() {
+                        @Override
+                        public void onChanged(StateModel<MessageToken> stateModel) {
+                            switch (stateModel.getStatus()) {
+                                case SUCCESS:
+                                    liveData.removeObserver(this);
+                                    FirebaseFirestore.getInstance().collection(FirebaseCollectionName.GROUP_CHAT).document(groupId).collection(FirebaseCollectionName.MEMBER).document(member.getId()).update("token", stateModel.getData().getToken());
+                            }
+                        }
+                    });
+                }
                 addMemberState.postSuccess("add member success");
             }
         }).addOnFailureListener(new OnFailureListener() {

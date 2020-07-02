@@ -7,8 +7,12 @@ import java.util.stream.Collectors;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import vnu.uet.mobilecourse.assistant.database.DAO.ChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.ConnectionDAO;
+import vnu.uet.mobilecourse.assistant.database.DAO.FirebaseCollectionName;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChatDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.GroupChat_UserSubColDAO;
 import vnu.uet.mobilecourse.assistant.database.DAO.Member_GroupChatSubColDAO;
