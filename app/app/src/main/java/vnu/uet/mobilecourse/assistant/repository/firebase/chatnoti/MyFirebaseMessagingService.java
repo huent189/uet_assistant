@@ -1,29 +1,16 @@
 package vnu.uet.mobilecourse.assistant.repository.firebase.chatnoti;
 
 import android.app.Notification;
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
-import android.os.IBinder;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
-
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,11 +20,16 @@ import vnu.uet.mobilecourse.assistant.database.DAO.TokenDAO;
 import vnu.uet.mobilecourse.assistant.model.User;
 import vnu.uet.mobilecourse.assistant.model.firebase.GroupChat_UserSubCol;
 import vnu.uet.mobilecourse.assistant.model.firebase.MessageToken;
-import vnu.uet.mobilecourse.assistant.model.notification.Notification_UserSubCol;
 import vnu.uet.mobilecourse.assistant.util.ChatRoomTracker;
 import vnu.uet.mobilecourse.assistant.util.NotificationHelper;
 import vnu.uet.mobilecourse.assistant.util.StringUtils;
 import vnu.uet.mobilecourse.assistant.view.chat.ChatFragment;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -86,7 +78,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         updateToken(token);
     }
 
-    private static final String USER_ID = User.getInstance().getStudentId();
 
     public void updateToken(String token) {
         // add collection token
@@ -97,7 +88,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Map<String, Object> changes = new HashMap<>();
         changes.put("token", token);
         changes.put("timeUpdated", System.currentTimeMillis() / 1000);
-        new TokenDAO().update(USER_ID, changes);
+        new TokenDAO().update(User.getInstance().getStudentId(), changes);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection(FirebaseCollectionName.USER)
