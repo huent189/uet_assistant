@@ -16,3 +16,5 @@
 |1| Đăng nhập | Sinh viên đăng nhập vào ứng dụng thông qua tài khoản uetmail. |
 |2| Xem hồ sơ cá nhân | Sinh viên sau khi đăng nhập vào ứng dụng có thể xem được thông tin hồ sơ cá nhân, bao gồm: Họ tên, mã số sinh viên, ngày sinh, lớp khóa học, ảnh đại diện,... |
 |3| Xem thời khóa biểu | Sinh viên có thể mở lịch biểu trên ứng dụng và xem được lịch học các lớp học phần, hạn nộp bài tập, điểm danh... |
+|4|Xem thông tin lớp học phần|Sinh viên có thể xem được thông tin chi tiết của khóa học, bao gồm: mã lớp học phần, thông tin giảng viên, danh sách sinh viên đăng ký, tài liệu môn học, quy chế lớp học, tiến độ học tập...|
+|5|Xem điểm| Sinh viên có thể xem điểm các bài tập của các môn học. Từ đó ứng dụng sẽ phân tích và đề xuất phương pháp phát huy hoặc cải thiện kết quả học tập.|
