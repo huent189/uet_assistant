@@ -18,3 +18,7 @@
 |3| Xem thời khóa biểu | Sinh viên có thể mở lịch biểu trên ứng dụng và xem được lịch học các lớp học phần, hạn nộp bài tập, điểm danh... |
 |4|Xem thông tin lớp học phần|Sinh viên có thể xem được thông tin chi tiết của khóa học, bao gồm: mã lớp học phần, thông tin giảng viên, danh sách sinh viên đăng ký, tài liệu môn học, quy chế lớp học, tiến độ học tập...|
 |5|Xem điểm| Sinh viên có thể xem điểm các bài tập của các môn học. Từ đó ứng dụng sẽ phân tích và đề xuất phương pháp phát huy hoặc cải thiện kết quả học tập.|
+|6|Nhận thông báo mới từ lớp học|Sinh viên sẽ nhận được nhận thông báo tức thì về tin nhắn và các thông báo mới về lớp học phần từ giảng viên.|
+|7|  Tạo lời nhắc nhở, danh sách công việc cần làm| Sinh viên có thể tự do lên lịch nhắc nhở, tạo danh sách công việc cần làm phục vụ cho quá trình học, làm bài tập về nhà hay làm bài tâp lớn. |
+|8| Nhắc nhở lịch học/ lịch nộp bài tập/ lịch kiểm tra |Sinh viên sẽ nhận được nhận thông báo tức thì khi đến hạn nộp bài tập, lịch kiểm tra, hay nhắc nhở, danh sách công việc cần làm (do sinh viên tự tạo).|
+|9|Liên lạc, trao đổi|Sinh viên có thể dễ dàng nhắn tin, trao đổi với giảng viên lớp học phần, hay các thành viên khác trong lớp nhằm phục vụ cho quá trình học tập, làm bài tập nhóm,...|
