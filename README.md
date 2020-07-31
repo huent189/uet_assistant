@@ -9,6 +9,8 @@
 
 ![img](https://i.imgur.com/hRLaMhV.jpg)
 
+[Xem thêm](https://photos.app.goo.gl/hkMYKDRX2D7W1mUx9)
+
 ## Các tính năng chính
 
 | STT        | Tên chức năng           | Mô tả  |
